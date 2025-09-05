@@ -6,16 +6,14 @@ import { LoginPage } from "./screens/login-page/login-page.component";
 import { Home } from "./screens/home/home.component";
 
 @NgModule({
-  declarations: [
+  imports: [
+    BrowserModule,
+    AppRouting,
     AppComponent,
     LoginPage,
     Home
   ],
-  imports: [
-    BrowserModule,
-    AppRouting
-  ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: []
 })
 export class AppModule {}

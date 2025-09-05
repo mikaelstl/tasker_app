@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { SearchComponent } from '../misc/search/search.component';
+import { SearchComponent } from '../misc/search-field/search.component';
 import { CreateButton } from '../buttons/create-btn/create-btn.component';
 import { ChatComponent } from '../cards/chat/chat.component';
 import { ScrollerComponent } from '../misc/scroller/scroller.component';

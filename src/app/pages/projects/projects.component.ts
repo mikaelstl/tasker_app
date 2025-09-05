@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CreateButton } from '../../components/buttons/create-btn/create-btn.component';
-import { SearchComponent } from '../../components/misc/search/search.component';
+import { SearchComponent } from '../../components/misc/search-field/search.component';
 import { Avatar } from '../../components/misc/avatar/avatar.component';
 import { Team } from '../../components/team/team.component';
 import { ProgressLabel } from '../../components/misc/progress-label/progress-label.component';

@@ -3,7 +3,7 @@
 :host {
   width: 100%;
 
-  .search {
+  .search-field {
     display: flex;
     gap: 30px;
   
@@ -13,7 +13,7 @@
     border-top: 2px solid $items;
     border-bottom: 2px solid $items;
   
-    #search-field {
+    #search {
       display: flex;
       gap: 10px;
   

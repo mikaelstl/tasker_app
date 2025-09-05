@@ -3,14 +3,16 @@ import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroBellSolid, heroClipboardSolid } from '@ng-icons/heroicons/solid';
 import { Avatar } from '../../misc/avatar/avatar.component';
 import { Router } from '@angular/router';
+import { LogoIcon } from "../../icons/logo-icon/logo-icon.component";
 
 @Component({
   selector: 'app-bar',
   standalone: true,
   imports: [
     NgIconComponent,
-    Avatar
-  ],
+    Avatar,
+    LogoIcon
+],
   providers: [ 
     provideIcons({ 
       heroBellSolid,

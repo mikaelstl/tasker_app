@@ -5,7 +5,7 @@ import { heroAdjustmentsHorizontal } from '@ng-icons/heroicons/outline';
 import { heroAdjustmentsHorizontalSolid, heroMagnifyingGlassSolid } from '@ng-icons/heroicons/solid';
 
 @Component({
-  selector: 'search',
+  selector: 'search-field',
   standalone: true,
   imports: [
     NgIconComponent
