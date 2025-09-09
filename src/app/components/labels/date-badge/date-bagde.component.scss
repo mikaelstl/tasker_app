@@ -1,12 +1,7 @@
 @import '../../../../assets/styles/palette.scss';
 
-.date {
+.tsk-date-badge {
   display: flex;
   align-items: center;
-
-  p {
-    font-weight: 500;
-    font-size: 14px;
-    margin-left: 10px;
-  }
+  gap: 6px;
 }

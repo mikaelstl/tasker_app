@@ -1,11 +1,13 @@
 <div class="project-card" (click)="openProject()">
-  <div class="header">
-    <h6>{{ data.title }}</h6>
-    <p>{{ data.description }}</p>
+  <div class="tsk-leading">
+    <div class="text">
+      <tsk-title>{{ data.title }}</tsk-title>
+      <subtitle>{{ data.description }}</subtitle>
+    </div>
+    <tsk-date-badge/>
   </div>
-  <progress-label id="progress"/>
-  <div class="infos">
-    <date-label id="date"/>
-    <team id="team"/>
+  <div class="tsk-trealing">
+    <badge content="Pending"/>
+    <team/>
   </div>
 </div>

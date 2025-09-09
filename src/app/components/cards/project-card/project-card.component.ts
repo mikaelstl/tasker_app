@@ -1,18 +1,22 @@
 import { Component, Input } from '@angular/core';
-import { ProgressLabel } from '../../misc/progress-label/progress-label.component';
-import { DateLabel } from '../../labels/date-label/date-label.component';
+import { TskDateBadge } from '../../labels/date-badge/date-badge.component';
 import { Team } from '../../team/team.component';
 import { Project } from '../../../service/project';
 import { Router } from '@angular/router';
+import { Subtitle } from "../../base/subtitle/subtitle.component";
+import { TskTitle } from "../../base/title/title.component";
+import { Badge } from "../../labels/badge/badge.component";
 
 @Component({
   selector: 'project-card',
   standalone: true,
   imports: [
-    ProgressLabel,
-    DateLabel,
+    TskDateBadge,
     Team,
-  ],
+    Subtitle,
+    TskTitle,
+    Badge
+],
   templateUrl: './project-card.component.html',
   styleUrl: './project-card.component.scss'
 })

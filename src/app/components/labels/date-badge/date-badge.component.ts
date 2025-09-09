@@ -1,21 +1,23 @@
 import { Component } from '@angular/core';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroCalendarSolid } from '@ng-icons/heroicons/solid';
+import { TskText } from "../../base/text/text.component";
 
 @Component({
-  selector: 'date-label',
+  selector: 'tsk-date-badge',
   standalone: true,
   imports: [
-    NgIconComponent
+    NgIconComponent,
+    TskText
   ],
   providers: [
     provideIcons({
       heroCalendarSolid
     })
   ],
-  templateUrl: './date-label.component.html',
-  styleUrl: './date-label.component.scss'
+  templateUrl: './date-bagde.component.html',
+  styleUrl: './date-bagde.component.scss'
 })
-export class DateLabel {
+export class TskDateBadge {
 
 }
