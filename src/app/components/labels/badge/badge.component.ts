@@ -11,7 +11,7 @@ import { Component, Input } from '@angular/core';
   styleUrl: './badge.component.scss'
 })
 export class Badge {
-  @Input() content: string = '+n';
+  @Input() content: string = '';
 
   @Input() color: 'red' | 'blue' = 'red';
 

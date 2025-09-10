@@ -1,6 +1,6 @@
 <div class="content">
   <div class="recent">
-    <h6>Recent</h6>
+    <tsk-title>Recent</tsk-title>
     <scroller axis="horizontal">
       @for (project of projects; track $index) {
         <project-card />
@@ -9,7 +9,7 @@
   </div>
 
   <div class="friends">
-    <h6>Online</h6>
+    <tsk-title>Online</tsk-title>
     <div id="scroller">
       @for (project of projects; track $index) {
         <user/>
@@ -18,7 +18,7 @@
   </div>
 
   <div class="week">
-    <h6>To this Week</h6>
+    <tsk-title>To this Week</tsk-title>
     <div id="scroller">
       @for (project of projects; track $index) {
         <task-card/>

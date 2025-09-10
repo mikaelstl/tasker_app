@@ -7,27 +7,28 @@
   width: 210px; height: 100%;
 
   background-color: $tool-bars;
-
+  
   nav {
     display: grid;
     grid-auto-flow: row;
     gap: 10px;
-
+    
     border-bottom: 1px solid $gray;
-
+    
     padding: 10px 0px;
   }
-
+  
   .nav-item {
     display: flex;
     align-items: start;
     
     width: 100%;
-
+    
     padding: 10px 20px;
-
+    
     background: none;
-
+    
+    font-size: 16px;
     font-weight: 600;
 
     cursor: pointer;
@@ -36,7 +37,7 @@
       margin-right: 10px;
     }
 
-    border: 1px solid blue
+    // border: 1px solid blue
   }
 
   .log-out {

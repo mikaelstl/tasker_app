@@ -4,6 +4,8 @@ import { ProgressLabel } from '../../components/misc/progress-label/progress-lab
 import { ScrollerComponent } from '../../components/misc/scroller/scroller.component';
 import { User } from '../../components/user/user.component';
 import { TaskCard } from '../../components/cards/task-card/task-card.component';
+import { TskText } from '../../components/base/text/text.component';
+import { TskTitle } from '../../components/base/title/title.component';
 
 @Component({
   selector: 'workspace',
@@ -12,7 +14,9 @@ import { TaskCard } from '../../components/cards/task-card/task-card.component';
     ProjectCard,
     ScrollerComponent,
     User,
-    TaskCard
+    TaskCard,
+    TskText,
+    TskTitle
   ],
   templateUrl: './workspace.component.html',
   styleUrl: './workspace.component.scss'

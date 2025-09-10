@@ -1,34 +1,42 @@
 @import '../../../../assets/styles/palette.scss';
 
 .task-card {
-  display: grid;
-  grid-auto-flow: column;
+  display: flex;
   gap: 18px;
 
   overflow: hidden;
 
-  border-radius: 6px;
+  border-radius: 0px 6px 6px 0px;
 
-  width: fit-content;
+  width: 360px; height: 140px;
 
   background-color: $items;
 
   .indicator {
-    background-color: $gray;
+    background-color: $blue;
     width: 6px;
+    margin-right: 6px;
+
+    .flag {
+      background-color: $blue;
+      width: 8px; height: 8px;
+      margin-left: 100%;
+      clip-path: polygon(100% 0, 0 0, 0 100%);
+    }
   }
 
   #content {
-    display: grid;
-    grid-auto-flow: column;
-    gap: 160px;
+    display: flex;
+    justify-content: space-between;
+
+    width: 100%;
 
     padding: 12px 12px 18px 0px;
     
-    #infos {
-      display: grid;
-      grid-auto-flow: row;
-      gap: 22px;
+    #leading {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
   }
 }
