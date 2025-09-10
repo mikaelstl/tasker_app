@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { User } from '../../user/user.component';
-import { Badge } from '../../labels/badge/badge.component';
+import { Badge } from '../../badges/badge/badge.component';
 import { Team } from '../../team/team.component';
 
 @Component({

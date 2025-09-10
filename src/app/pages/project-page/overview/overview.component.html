@@ -1,51 +1,39 @@
 <div class="overview">
-  <project-menu />
   <div class="abstract">
-    <div id="resume">
-      <div>
-        <h6 id="title">Project name</h6>
-        <p>description</p>
+    <div class="abstract-item project-infos">
+      <div id="leading">
+        <tsk-title>Project name</tsk-title>
+        <tsk-text>description</tsk-text>
       </div>
-      <div id="owner">
-        <h6>Owner</h6>
-        <user/>
-      </div>
+      <badge content="Pending"/>
     </div>
-    <div id="infos">
-      <div id="date">
-        <h6>Due date</h6>
-        <tsk-date-badge/>
+    <div class="abstract-item">
+      <tsk-label>Owner</tsk-label>
+      <user/>
+    </div>
+    <div class="abstract-item">
+      <tsk-label>Due date</tsk-label>
+      <tsk-date-badge/>
+    </div>
+  </div>
+  <div class="content">
+    <project-menu />
+    <div class="important-tasks">
+      <tsk-title>Most important</tsk-title>
+      <scroller axis="horizontal">
+        @for (task of tasks; track task) {
+          <task-card/>
+        }
+      </scroller>
+    </div>
+    <div class="comments">
+      <tsk-title>Comments</tsk-title>
+      <div>
+        @for (task of tasks; track task) {
+          <comment-card/>
+        }
       </div>
-      <div id="tasks">
-        <circular-progress-bar/>
-        <div>
-          <h6>Tasks done</h6>
-          00 out of 00
-        </div>
-      </div>
-      <select name="stage" id="stage">
-        <option id="item" value="PENDING">PENDING</option>
-        <option id="item" value="DEVELOPMENT">DEVELOPMENT</option>
-        <option id="item" value="PAUSED">PAUSED</option>
-        <option id="item" value="DONE">DONE</option>
-      </select>
     </div>
   </div>
   <important-dates id="important-dates"/>
-  <div class="important-tasks">
-    <h6>Most important</h6>
-    <div id="scroller">
-      @for (task of tasks; track task) {
-        <task-card/>
-      }
-    </div>
-  </div>
-  <div class="recent-messages">
-    <h6>Recent messages</h6>
-    <div id="scroller">
-      @for (task of tasks; track task) {
-        <message-card/>
-      }
-    </div>
-  </div>
 </div>

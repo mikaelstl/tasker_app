@@ -1,11 +1,11 @@
 import { Component, Input } from '@angular/core';
-import { TskDateBadge } from '../../labels/date-badge/date-badge.component';
+import { TskDateBadge } from '../../badges/date-badge/date-badge.component';
 import { Team } from '../../team/team.component';
 import { Project } from '../../../service/project';
 import { Router } from '@angular/router';
 import { Subtitle } from "../../base/subtitle/subtitle.component";
 import { TskTitle } from "../../base/title/title.component";
-import { Badge } from "../../labels/badge/badge.component";
+import { Badge } from "../../badges/badge/badge.component";
 
 @Component({
   selector: 'project-card',

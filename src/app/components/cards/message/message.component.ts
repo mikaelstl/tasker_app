@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Avatar } from '../../misc/avatar/avatar.component';
-import { Badge } from '../../labels/badge/badge.component';
+import { Badge } from '../../badges/badge/badge.component';
 
 @Component({
   selector: 'message-card',

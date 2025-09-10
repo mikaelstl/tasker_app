@@ -9,7 +9,7 @@ import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroChevronDoubleLeftMini, heroChevronDoubleRightMini } from '@ng-icons/heroicons/mini';
 import { Router } from '@angular/router';
 import { User } from '../../components/user/user.component';
-import { Badge } from "../../components/labels/badge/badge.component";
+import { Badge } from "../../components/badges/badge/badge.component";
 import { ProjectItem } from '../../components/cards/project-item/project-item.component';
 
 @Component({

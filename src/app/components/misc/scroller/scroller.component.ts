@@ -11,7 +11,6 @@ import { Component, Input } from '@angular/core';
   styleUrl: './scroller.component.scss'
 })
 export class ScrollerComponent {
-  // @Input() items: Project[] = projects;
   @Input() axis: 'horizontal' | 'vertical' = 'horizontal';
 
   get Axis(): string {

@@ -3,19 +3,21 @@ import { TskDateBadge } from '../../badges/date-badge/date-badge.component';
 import { Avatar } from '../../misc/avatar/avatar.component';
 import { TskTitle } from '../../base/title/title.component';
 import { Subtitle } from '../../base/subtitle/subtitle.component';
+import { TskText } from '../../base/text/text.component';
+import { TskLabel } from '../../base/label/label.component';
 
 @Component({
-  selector: 'task-card',
+  selector: 'comment-card',
   standalone: true,
   imports: [
-    TskDateBadge,
     Avatar,
-    TskTitle,
+    TskText,
+    TskLabel,
     Subtitle
   ],
-  templateUrl: './task-card.component.html',
-  styleUrl: './task-card.component.scss'
+  templateUrl: './comment-card.component.html',
+  styleUrl: './comment-card.component.scss'
 })
-export class TaskCard {
+export class CommentCard {
 
 }

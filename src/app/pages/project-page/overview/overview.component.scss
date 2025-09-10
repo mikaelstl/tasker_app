@@ -1,103 +1,52 @@
 @import '../../../../assets/styles/palette.scss';
 
-.overview {
-  margin-left: 40px;
-  
+.overview {  
   height: 100%;
   overflow: hidden;
   
-  display: grid;
-  grid-template: "project-menu project-menu important-dates"
-                 "abstract abstract important-dates" .5fr
-                 "important-tasks recent-messages important-dates" 1fr / min-content 1fr .5fr;
-  gap: 40px;
+  display: flex;
 
   .abstract {
-    grid-area: abstract;
-    
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    gap: 40px;
     
-    height: 100%;
+    width: 25%; height: 100%;
 
-    #resume {
+    padding: 20px;
+
+    border-right: 1px solid $gray;
+
+    .abstract-item {
+      border-bottom: 1px solid $gray;
+      padding-bottom: 20px;
+    }
+
+    .project-infos {
       display: flex;
       justify-content: space-between;
-
-      #title {
-        font-size: 20px;
-        font-weight: 600;
-      }
-    }
-    #owner {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-
-      margin-right: 80px;
-    }
-    #infos {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-  
-      #tasks {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-      }
-  
-      #stage {
-        width: 210px; height: fit-content;
-        padding: 10px 20px;
-        border-radius: 6px;
-        background-color: $blue;
-        font-weight: 600;
-      }
     }
   }
 
-  .important-tasks {
-    grid-area: important-tasks;
-    
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    
-    overflow-y: hidden;
-    
-    width: fit-content; height: 100%;
-
-    #scroller {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      
-      overflow-y: scroll;
-    }
-  }
-
-  .recent-messages {
-    grid-area: recent-messages;
-
+  .content {
     display: flex;
     flex-direction: column;
     gap: 20px;
 
-    overflow-y: hidden;
+    margin-left: 20px;
 
-    width: 100%; height: 100%;
-
-    #scroller {
+    .important-tasks {
       display: flex;
       flex-direction: column;
-      
-      overflow-y: scroll;
+      gap: 20px;
     }
-  }
 
-  #important-dates {
-    grid-area: important-dates;
+    .comments {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      
+      width: 100%;
+    }
   }
 }

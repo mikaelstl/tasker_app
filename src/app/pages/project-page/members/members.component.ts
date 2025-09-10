@@ -3,7 +3,7 @@ import { ProjectMenu } from '../../../components/toolbars/project-menu/project-m
 import { CreateButton } from '../../../components/buttons/create-btn/create-btn.component';
 import { SearchComponent } from '../../../components/misc/search-field/search.component';
 import { User } from '../../../components/user/user.component';
-import { Badge } from '../../../components/labels/badge/badge.component';
+import { Badge } from '../../../components/badges/badge/badge.component';
 
 @Component({
   selector: 'app-members',
