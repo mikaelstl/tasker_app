@@ -1,0 +1,24 @@
+<div class="content">
+  <div class="chats">
+    <div class="chats-item">
+      <create-btn>New Chat</create-btn>
+    </div>
+    <div class="chats-item">
+      <search-field/>
+    </div>
+    <div class="chats-item" id="chats-list">
+      <scroller axis="vertical">
+        @for (card of chats; track $index) {
+          <chat-card/>
+        }
+      </scroller>
+    </div>
+  </div>
+  <div class="messages-area">
+    <div class="messages">
+      <message-card type="sent">bdkjbadhaiehdaeu</message-card>
+      <message-card type="recived">bdkjbadhaiehdaeu</message-card>
+    </div>
+    <text-field/>
+  </div>
+</div>

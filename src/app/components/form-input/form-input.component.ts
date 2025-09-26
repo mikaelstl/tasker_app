@@ -9,13 +9,12 @@ import { heroEyeSlashMini } from '@ng-icons/heroicons/mini'
   standalone: true,
   imports: [
     NgIconComponent,
-    TextFieldComponent
   ],
   providers: [provideIcons({ heroUserSolid, heroKeySolid, heroEyeSlashMini })],
-  templateUrl: './text-field.component.html',
-  styleUrl: './text-field.component.scss'
+  templateUrl: './form-input.component.html',
+  styleUrl: './form-input.component.scss'
 })
-export class TextFieldComponent {
+export class FormInput {
   @Input() placeholder: string = '';
   @Input() icon: string = '';
 }

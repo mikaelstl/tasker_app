@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
-import { TextFieldComponent } from '../text-field/text-field.component';
+import { FormInput } from '../form-input/form-input.component';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'login-form',
   standalone: true,
   imports: [
-    TextFieldComponent
+    FormInput
   ],
   templateUrl: './login-form.component.html',
   styleUrl: './login-form.component.scss'

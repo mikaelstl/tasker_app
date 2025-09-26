@@ -3,7 +3,7 @@ import { LoginPage } from '../screens/login-page/login-page.component';
 import { Home } from '../screens/home/home.component';
 import { Workspace } from '../pages/workspace/workspace.component';
 import { Projects } from '../pages/projects/projects.component';
-import { Inbox } from '../components/inbox/inbox.component';
+import { Inbox } from '../pages/inbox/inbox.component';
 import { Affiliations } from '../components/affiliations/affiliations.component';
 import { ProjectPage } from '../pages/project-page/project-page.component';
 import { OverviewComponent } from '../pages/project-page/overview/overview.component';
