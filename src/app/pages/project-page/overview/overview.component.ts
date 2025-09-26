@@ -19,9 +19,7 @@ import { TskLabel } from '../../../components/base/label/label.component';
   imports: [
     User,
     TskDateBadge,
-    CircularProgressBar,
     TaskCard,
-    MessageCard,
     ImportantDates,
     ProjectMenu,
     TskText,
