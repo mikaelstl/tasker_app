@@ -1,9 +1,9 @@
+import { LoginPage } from "./pages/LoginPage"
+
 function App() {
   return (
     <>
-      <div>
-        Tarker React Version
-      </div>
+      <LoginPage/>
     </>
   )
 }
