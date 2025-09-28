@@ -1,16 +1,16 @@
-import { Page } from "../../components/base/Page";
+import { Screen } from "../../components/base/Screen";
 import { Logo } from "../../components/images/Logo";
 import LogoImage from "../../assets/images/logo.svg";
 import { LoginForm } from "../../components/LoginForm";
 import { Content } from "./style";
 
-export function LoginPage() {
+export function Login() {
   return (
-    <Page>
+    <Screen>
       <Content>
         <Logo source={LogoImage}/>
         <LoginForm/>
       </Content>
-    </Page>
+    </Screen>
   )
 }
