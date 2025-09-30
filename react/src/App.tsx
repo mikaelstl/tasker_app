@@ -1,6 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
 import { Login } from "./pages/Login"
-import { Workspace } from "./pages/Workspace"
+import { Home } from "./pages/Home"
+import { Workspace } from "./screens/Workspace"
 
 function App() {
   return (
@@ -9,7 +10,11 @@ function App() {
         <Route path="*" element={<Navigate to="/login" replace/>}/>
         
         <Route path="/login" element={<Login/>}/>
-        <Route path="/workspace" element={<Workspace/>}/>
+        <Route path="/home" element={<Home/>}>
+          <Route index element={<Navigate to="workspace" replace/>}/>
+  
+          <Route path="workspace" element={<Workspace/>}/>
+        </Route>
       </Routes>
     </BrowserRouter>
   )

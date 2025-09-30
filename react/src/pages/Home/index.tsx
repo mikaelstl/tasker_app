@@ -4,7 +4,7 @@ import { AppBar } from "../../components/toolbars/AppBar";
 import { NavBar } from "../../components/toolbars/NavBar";
 import { Content, Page } from "./style";
 
-export function Workspace() {
+export function Home() {
   return (
     <Screen>
       <Page>

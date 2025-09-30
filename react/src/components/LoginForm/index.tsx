@@ -16,7 +16,7 @@ export function LoginForm() {
           <FormInput icon={<UserIcon style={{ width: 24, height: 24 }}/>} placeholder="User"/>
           <FormInput type="password" icon={<KeyIcon style={{ width: 24, height: 24 }}/>} placeholder="Password"/>
         </div>
-        <LoginButton onClick={() => navigate("/workspace")}>Login</LoginButton>
+        <LoginButton onClick={() => navigate("/home")}>Login</LoginButton>
       </Form>
       <CreateAccount/>
     </Container>
