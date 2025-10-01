@@ -3,7 +3,7 @@ import styled from "styled-components";
 const Scroller = styled.div`
   display: grid;
   gap: 12px;
-  
+
   padding: 12px;
   
   &.horizontal {

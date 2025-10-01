@@ -12,6 +12,8 @@ const Card = styled.div`
   border-radius: 6px;
 
   background-color: ${Palette.items};
+
+  cursor: pointer;
 `;
 
 const Leading = styled.div`

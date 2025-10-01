@@ -1,11 +1,10 @@
 import { Outlet } from "react-router-dom";
 import { Content } from "./style.ts";
-import { Text } from "../../components/base/Text/index.ts";
 
-export function Projects() {
+export function Project() {
   return (
     <Content className="projects-content">
-      <Text>Projects</Text>
+      <Outlet />
     </Content>
   )
 }

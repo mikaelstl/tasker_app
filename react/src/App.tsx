@@ -5,6 +5,8 @@ import { Workspace } from "./screens/Workspace"
 import { Projects } from "./screens/Projects"
 import { Inbox } from "./screens/Inbox"
 import { Social } from "./screens/Social"
+import { Overview } from "./screens/Project/Overview"
+import { Project } from "./screens/Project"
 
 function App() {
   return (
@@ -17,9 +19,15 @@ function App() {
           <Route index element={<Navigate to="workspace" replace/>}/>
   
           <Route path="workspace" element={<Workspace/>}/>
-          <Route path="projects" element={<Projects/>}/>
           <Route path="inbox" element={<Inbox/>}/>
           <Route path="social" element={<Social/>}/>
+          <Route path="projects" element={<Projects/>}/>
+
+          <Route path="project" element={<Project/>}>
+            <Route index element={<Navigate to="overview" replace/>}/>
+  
+            <Route path="overview" element={<Overview />}/>
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>

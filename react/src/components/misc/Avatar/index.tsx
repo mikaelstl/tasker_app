@@ -3,12 +3,12 @@ import { Container, Image, Indicator } from "./style.ts";
 interface AvatarProps {
   image: string;
   size: 'small' | 'medium' | 'large';
-  online: boolean;
+  online?: boolean;
 }
 
 export function Avatar(props: AvatarProps) {
   return (
-    <Indicator online={props.online}>
+    <Indicator online={props.online ?? false}>
       <Container className={`avatar ${props.size}`}>
         { props.image !== "" ? <Image src={props.image}/> : <></>}
       </Container>

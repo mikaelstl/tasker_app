@@ -3,6 +3,7 @@ import { Title } from "../../base/Title";
 import { Badge } from "../../badge/Badge";
 import { Card, Leading, Trealing } from "./style";
 import { DateBadge } from "../../badge/DateBadge";
+import { useNavigate } from "react-router-dom";
 
 interface ProjectCardProps {
   title: string;
@@ -10,8 +11,12 @@ interface ProjectCardProps {
 }
 
 export function ProjectCard(props: ProjectCardProps) {
+  const navigate = useNavigate();
+
+  const goToProjectPage = () => navigate('/home/project/overview')
+
   return (
-    <Card className="project-card">
+    <Card className="project-card" onClick={goToProjectPage}>
       <Leading className="card-leading">
         <div className="text">
           <Title>{props.title}</Title>

@@ -19,6 +19,7 @@ const Recent = styled.div`
 
   display: flex;
   flex-direction: column;
+  gap: 12px;
 
   padding: 20px;
 `;
@@ -28,7 +29,8 @@ const ToThisWeek = styled.div`
 
   display: grid;
   grid-auto-flow: row;
-    
+  gap: 12px;
+  
   padding: 0px 20px;
 
   width: fit-content;

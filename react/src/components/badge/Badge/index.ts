@@ -8,6 +8,7 @@ export const Badge = styled.div<{color?: string}>`
   border-radius: 50px;
 
   width: fit-content;
+  height: fit-content;
 
   background-color: ${props => props.color ?? Palette.lightRed};
 `;
