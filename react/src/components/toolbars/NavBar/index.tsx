@@ -24,7 +24,7 @@ export function NavBar() {
         </NavItem >
         <NavItem className="nav-item" type="button" onClick={() => navigate('social')}>
           <UsersIcon width="18"/>
-          Affiliations
+          Social
         </NavItem >
       </Nav>
         <Actions className="actions">

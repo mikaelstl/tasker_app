@@ -43,6 +43,9 @@ const NavItem = styled.button`
 `;
 
 const Actions = styled.div`
+  .log-out {
+    color: ${Palette.red}
+  }
 `;
 
 export {

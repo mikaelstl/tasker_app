@@ -10,12 +10,18 @@
   padding: 0px;
   margin: 0px;
   font-family: "Montserrat", sans-serif;
+  color: white;
 }
 
-input:focus {
-  outline: 0;
+input {
+  border: none;
+  &:focus {
+    outline: 0;
+  }
 }
 
 button {
   cursor: pointer;
+  border: none;
+  background: none;
 }

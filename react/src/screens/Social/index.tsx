@@ -11,7 +11,7 @@ export function Social() {
   const users = Array.from({ length: 30 }, (_, i) => i);
 
   return (
-    <Content className="workspace-content">
+    <Content className="social-content">
       <Text>Social</Text>
     </Content>
   )
