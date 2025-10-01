@@ -8,7 +8,7 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: space-between;
 
-  width: 210px; height: 100%;
+  width: 210px;
 
   background-color: ${Palette.tool_bars};
 `;

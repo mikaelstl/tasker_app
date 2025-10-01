@@ -1,7 +1,7 @@
 import { Title } from "../../components/base/Title";
 import { ProjectCard } from "../../components/cards/ProjectCard";
 import { TaskCard } from "../../components/cards/TaskCard/index.tsx";
-import { Scroller } from "../../components/misc/Scroller/style.ts";
+import { Scroller } from "../../components/misc/Scroller/index.ts";
 import { User } from "../../components/misc/User/index.tsx";
 import { Content, Friends, Recent, ToThisWeek } from "./style.ts";
 
@@ -24,7 +24,7 @@ export function Workspace() {
         <Title>Online</Title>
         <Scroller className="vertical">
           {
-            users.map(_ => <User />)
+            users.map(_ => <User online/>)
           }
         </Scroller>
       </Friends>

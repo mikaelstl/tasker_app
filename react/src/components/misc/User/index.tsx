@@ -2,10 +2,14 @@ import { Text } from "../../base/Text";
 import { Avatar } from "../Avatar";
 import { Container } from "./style";
 
-export function User() {
+interface UserProps {
+  online?: boolean
+}
+
+export function User(props: UserProps) {
   return (
     <Container className="user">
-      <Avatar online={true} size="small" image=""/>
+      <Avatar online={props.online ?? false} size="small" image=""/>
       <Text>username</Text>
     </Container>
   )
