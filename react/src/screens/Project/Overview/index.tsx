@@ -8,6 +8,7 @@ import { TaskCard } from "../../../components/cards/TaskCard";
 import { ImportantDates } from "../../../components/ImportantDates";
 import { Scroller } from "../../../components/misc/Scroller";
 import { User } from "../../../components/misc/User";
+import { ProjectMenu } from "../../../components/ProjectMenu";
 import { Abstract, AbstractItem, Comments, Container, Content, ImportantTasks, ProjectInfo } from "./style";
 
 export function Overview() {
@@ -33,7 +34,7 @@ export function Overview() {
         </AbstractItem>
       </Abstract>
       <Content className="content">
-        {/* <project-menu /> */}
+        <ProjectMenu />
         <ImportantTasks className="important-tasks">
           <Title>Most important</Title>
           <Scroller className="horizontal">

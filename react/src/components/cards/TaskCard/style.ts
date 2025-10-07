@@ -3,13 +3,15 @@ import Palette from "../../../assets/palette";
 
 const Card = styled.div`
   display: flex;
+  flex: 1;
   gap: 18px;
 
   overflow: hidden;
 
   border-radius: 0px 6px 6px 0px;
-
-  width: 360px; height: 140px;
+  
+  width: 360px;
+  height: 140px;
 
   background-color: ${Palette.items};
 `;

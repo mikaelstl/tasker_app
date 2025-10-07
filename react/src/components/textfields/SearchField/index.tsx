@@ -1,4 +1,4 @@
-import { ArrowUpIcon } from "@heroicons/react/16/solid";
+import { ChevronUpIcon } from "@heroicons/react/16/solid";
 import { AdjustmentsHorizontalIcon, MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { Text } from "../../base/Text";
 import { Button, Container, Search } from "./style";
@@ -24,7 +24,7 @@ export function SearchField(props: SearchFieldProps) {
       }
       { props.sort ?? false
           ? <Button type="button" id="sort">
-              <ArrowUpIcon width="20"/>
+              <ChevronUpIcon width="20"/>
               <Text>Sort</Text>
             </Button>
           : <></>
