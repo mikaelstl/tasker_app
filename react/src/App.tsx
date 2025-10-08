@@ -7,7 +7,7 @@ import { Inbox } from "./screens/Inbox"
 import { Social } from "./screens/Social"
 import { Overview } from "./screens/Project/Overview"
 import { Project } from "./screens/Project"
-import { Calendar } from "./screens/Project/Calendar"
+import { Events } from "./screens/Project/Events"
 import { Members } from "./screens/Project/Members"
 import { Tasks } from "./screens/Project/Tasks"
 
@@ -32,7 +32,7 @@ function App() {
             <Route path="overview" element={<Overview />}/>
             <Route path="tasks" element={<Tasks />}/>
             <Route path="members" element={<Members />}/>
-            <Route path="calendar" element={<Calendar />}/>
+            <Route path="calendar" element={<Events />}/>
           </Route>
         </Route>
       </Routes>
