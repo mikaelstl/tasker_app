@@ -6,6 +6,7 @@ import { Title } from "../../../components/base/Title";
 import { CommentCard } from "../../../components/cards/CommentCard";
 import { TaskCard } from "../../../components/cards/TaskCard";
 import { ImportantDates } from "../../../components/ImportantDates";
+import { Margin } from "../../../components/misc/Margin";
 import { Scroller } from "../../../components/misc/Scroller";
 import { User } from "../../../components/misc/User";
 import { ProjectMenu } from "../../../components/ProjectMenu";
@@ -39,7 +40,9 @@ export function Overview() {
           <Title>Most important</Title>
           <Scroller className="horizontal">
             {
-              tasks.map((_) => <TaskCard title="Task" description="Description"/>)
+              tasks.map((_) => <Margin right='12px'>
+                                 <TaskCard title="Task" description="Description"/>
+                               </Margin>)
             }
           </Scroller>
         </ImportantTasks>

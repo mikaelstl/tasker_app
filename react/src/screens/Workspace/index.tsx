@@ -1,6 +1,7 @@
 import { Title } from "../../components/base/Title";
 import { ProjectCard } from "../../components/cards/ProjectCard";
 import { TaskCard } from "../../components/cards/TaskCard/index.tsx";
+import { Margin } from "../../components/misc/Margin/index.ts";
 import { Scroller } from "../../components/misc/Scroller/index.ts";
 import { User } from "../../components/misc/User/index.tsx";
 import { Content, Friends, Recent, ToThisWeek } from "./style.ts";
@@ -15,7 +16,9 @@ export function Workspace() {
         <Title>Recent</Title>
         <Scroller className="horizontal">
           {
-            projects.map(_ => <ProjectCard title="Project" description="Description" />)
+            projects.map(_ => <Margin right='12px'>
+                                 <ProjectCard title="Project" description="Description" />
+                               </Margin>)
           }
         </Scroller>
       </Recent>
@@ -24,7 +27,9 @@ export function Workspace() {
         <Title>Online</Title>
         <Scroller className="vertical">
           {
-            users.map(_ => <User online/>)
+            users.map(_ => <Margin bottom='12px'>
+                              <User online/>
+                           </Margin>)
           }
         </Scroller>
       </Friends>
@@ -33,7 +38,9 @@ export function Workspace() {
         <Title>To this Week</Title>
         <Scroller className="vertical">
           {
-            projects.map(_ => <TaskCard title="Task" description="Task descriptions"/>)
+            projects.map(_ => <Margin bottom='12px'>
+                                <TaskCard title="Task" description="Description"/>
+                              </Margin>)
           }
         </Scroller>
       </ToThisWeek>
