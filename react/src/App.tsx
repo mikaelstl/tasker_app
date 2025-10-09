@@ -10,6 +10,7 @@ import { Project } from "./screens/Project"
 import { Events } from "./screens/Project/Events"
 import { Members } from "./screens/Project/Members"
 import { Tasks } from "./screens/Project/Tasks"
+import { Profile } from "./screens/Profile"
 
 function App() {
   return (
@@ -25,6 +26,8 @@ function App() {
           <Route path="inbox" element={<Inbox/>}/>
           <Route path="social" element={<Social/>}/>
           <Route path="projects" element={<Projects/>}/>
+
+          <Route path="profile" element={<Profile/>}/>
 
           <Route path="project" element={<Project/>}>
             <Route index element={<Navigate to="overview" replace/>}/>
