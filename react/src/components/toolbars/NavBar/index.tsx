@@ -18,22 +18,23 @@ export function NavBar() {
           <InboxStackIcon width="18"/>
           Projects
         </NavItem>
-        <NavItem className="nav-item" type="button" onClick={() => navigate('inbox')}>
+        {// ADICIONAR DEPOIS
+        /* <NavItem className="nav-item" type="button" onClick={() => navigate('inbox')}>
           <ChatBubbleOvalLeftIcon width="18"/>
           Inbox
         </NavItem >
         <NavItem className="nav-item" type="button" onClick={() => navigate('social')}>
           <UsersIcon width="18"/>
           Social
-        </NavItem >
+        </NavItem > */}
       </Nav>
         <Actions className="actions">
-          <NavItem className="nav-item">
+          {/* <NavItem className="nav-item">
             <Cog6ToothIcon width="18"/>
             Settings
-          </NavItem>
+          </NavItem> */}
           <NavItem className="nav-item log-out" onClick={() => navigate('/login')}>
-            <ArrowLeftStartOnRectangleIcon width="18" color={Palette.red}/>
+            <ArrowLeftStartOnRectangleIcon width="18" fill={Palette.red}/>
             Logout
           </NavItem>
         </Actions>

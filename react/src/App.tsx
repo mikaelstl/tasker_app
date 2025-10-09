@@ -11,6 +11,7 @@ import { Events } from "./screens/Project/Events"
 import { Members } from "./screens/Project/Members"
 import { Tasks } from "./screens/Project/Tasks"
 import { Profile } from "./screens/Profile"
+import { Register } from "./pages/Register"
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="*" element={<Navigate to="/login" replace/>}/>
         
         <Route path="/login" element={<Login/>}/>
+        <Route path="/register" element={<Register/>}/>
         <Route path="/home" element={<Home/>}>
           <Route index element={<Navigate to="workspace" replace/>}/>
   
