@@ -1,22 +1,37 @@
-import { Badge } from "../../../components/badge/Badge";
-import { DateBadge } from "../../../components/badge/DateBadge";
-import { Label } from "../../../components/base/Label";
-import { Text } from "../../../components/base/Text";
 import { Title } from "../../../components/base/Title";
-import { CommentCard } from "../../../components/cards/CommentCard";
-import { TaskCard } from "../../../components/cards/TaskCard";
-import { ImportantDates } from "../../../components/ImportantDates";
+import { CreateButton } from "../../../components/buttons/CreateButton";
 import { Scroller } from "../../../components/misc/Scroller";
-import { User } from "../../../components/misc/User";
 import { ProjectMenu } from "../../../components/ProjectMenu";
-import { Abstract, AbstractItem, Comments, Container, Content, ImportantTasks, ProjectInfo } from "./style";
+import { SearchField } from "../../../components/textfields/SearchField";
+import { MemberTile } from "../../../components/tiles/MemberTile";
+import { Container, Content, ContentHeader, Header, MembersArea } from "./style";
 
 export function Members() {
-  const tasks = Array.from({length: 10}, (_, i) => i);
+  const members = Array.from({ length: 10 }, (_, i) => i);
 
   return (
     <Container className="members">
-      <Text>Members</Text>
+      <Header id="header">
+        <ProjectMenu />
+        <CreateButton>Add member</CreateButton>
+      </Header>
+      <SearchField filter sort/>
+      <Content id="team">
+        <ContentHeader id="team-header">
+          <Title>User</Title>
+          <Title>Role</Title>
+          <Title>Tasks</Title>
+        </ContentHeader>
+        <MembersArea>
+          <Scroller className='vertical'>
+            <MemberTile type="owner" tasks={{done: '00', total: '000'}}/>
+
+            {
+              members.map((index) => <MemberTile key={index} type="member" tasks={{done: '00', total: '000'}}/>)
+            }
+          </Scroller>
+        </MembersArea>
+      </Content>
     </Container>
   )
 }
