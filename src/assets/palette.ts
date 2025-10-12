@@ -11,6 +11,7 @@ const Palette = {
   lightRed: '#FF5252',
   gray: '#56526b',
   green: '#27B72F',
+  yellow: '#f5a7007a'
 }
 
 export default Palette;

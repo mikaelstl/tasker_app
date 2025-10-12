@@ -5,6 +5,7 @@
     { "path": "./tsconfig.node.json" }
   ],
   "compilerOptions": {
+    "baseUrl": ".",
     "paths": {
       "@components/*":   [ "./src/app/components/*" ],
       "@base/*":         [ "./src/app/components/base/*" ],
@@ -12,7 +13,8 @@
       "@screens/*":      [ "./src/app/screens/*" ],
       "@routes/*":       [ "./src/app/routes/*" ],
       "@services/*":     [ "./src/app/service/*" ],
+      "@api/*":          [ "./src/app/service/api/*" ],
       "@assets/*":       [ "./src/assets/*" ],
-    }
+    },
   }
 }
