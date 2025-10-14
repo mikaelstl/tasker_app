@@ -1,14 +1,6 @@
-import { Container, Image, Label } from "./style"
+import { Image} from "./style";
+import image from "../../../assets/images/logo.svg";
 
-interface LogoProps {
-  source: string
-}
-
-export function Logo(props: LogoProps) {
-  return (
-    <Container>
-      <Image src={props.source}></Image>
-      <Label>PROJECT MANAGER</Label>
-    </Container>
-  )
+export function Logo() {
+  return ( <Image src={image}></Image>)
 }

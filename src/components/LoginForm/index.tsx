@@ -1,7 +1,7 @@
 import { KeyIcon, UserIcon } from "@heroicons/react/16/solid";
 import { Title } from "../base/Title";
-import { FormInput } from "./FormInput";
-import { Container, Form, LoginButton } from "./style";
+import { FormInput } from "../misc/Form/FormInput";
+import { Container, Form, SubmitButton, Inputs } from "../misc/Form/style";
 import { CreateAccount } from "./CreateAccount";
 import type { LoginDTO } from "../../service/types/auth/login.dto";
 import { useState } from "react";
@@ -29,7 +29,7 @@ export function LoginForm(props: LoginFormProps) {
     <Container className="login-form">
       <Title>LOGIN</Title>
       <Form action='' onSubmit={onSubmit}>
-        <div className="inputs">
+        <Inputs className="inputs">
           <FormInput
             icon={<UserIcon style={{ width: 24, height: 24 }}/>}
             placeholder="User"
@@ -43,8 +43,8 @@ export function LoginForm(props: LoginFormProps) {
             value={password}
             onChange={(value) => setPassword(value)}
           />
-        </div>
-        <LoginButton type="submit">Login</LoginButton>
+        </Inputs>
+        <SubmitButton type="submit">Login</SubmitButton>
       </Form>
       <CreateAccount/>
     </Container>

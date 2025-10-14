@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import Palette from "../../assets/palette";
+import Palette from "../../../assets/palette";
 
 const Container = styled.div`
   display: grid;
@@ -21,7 +21,7 @@ const Form = styled.form`
   gap: 50px;
 `;
 
-const LoginButton = styled.button`
+const SubmitButton = styled.button`
   width: 100%;
 
   padding: 17px 0px;
@@ -34,10 +34,17 @@ const LoginButton = styled.button`
   border: none;
   border-radius: 9999px;
   background-color: ${Palette.blue};
-`
+`;
+
+const Inputs = styled.div`
+  display: grid;
+  grid-auto-flow: row;
+  gap: 25px;
+`;
 
 export {
   Container,
   Form,
-  LoginButton
+  SubmitButton,
+  Inputs
 }

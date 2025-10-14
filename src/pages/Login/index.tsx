@@ -1,8 +1,7 @@
 import { Screen } from "../../components/base/Screen";
 import { Logo } from "../../components/images/Logo";
-import LogoImage from "../../assets/images/logo.svg";
 import { LoginForm } from "../../components/LoginForm";
-import { Content } from "./style";
+import { Container, Content, Label } from "./style";
 import { useApi } from "../../hooks/useApi";
 import type { LoginDTO } from "../../service/types/auth/login.dto";
 import { useNavigate } from "react-router-dom";
@@ -23,7 +22,7 @@ export function Login() {
     } catch (error: any) {
       const { errors } = error as ApiError;
       
-      errors.map(
+      errors?.map(
         err => {
           const notification = Toasts[err.level];
 
@@ -36,7 +35,10 @@ export function Login() {
   return (
     <Screen>
       <Content>
-        <Logo source={LogoImage}/>
+        <Container>
+          <Logo />
+          <Label>PROJECT MANAGER</Label>
+        </Container>
         <LoginForm login={login}/>
       </Content>
       <ToastContainer

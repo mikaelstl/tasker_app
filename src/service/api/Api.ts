@@ -24,7 +24,7 @@ export class Api {
   }
 
   private config() {
-    // APPLYNG TOKEN INTO REQUESTS
+    // APPLYNG TOKEN INTO REQUEST
     this.api.interceptors.request.use(
       (config: any) => {
         const token = localStorage.getItem('token');
@@ -34,14 +34,43 @@ export class Api {
         return config;
       },
       (err) => {
-        alert(err?.response.data);
-        return Promise.reject(err)
+        if (["ECONNREFUSED", "ENOTFOUND", "ETIMEDOUT", "ERR_NETWORK"].includes(err.code || "") && !err.response) {
+          console.warn("🚫 Falha de rede ou CORS bloqueado.");  
+          
+          return Promise.reject({
+            status: 500,
+            errors: [{
+              level: 'critical',
+              message: 'Server offline'
+            }],
+            timestamp: new Date().toISOString(),
+            path: '/'
+          });
+        }
+
+        const error: ApiError = err.response.data;
+        
+        return Promise.reject(error)
       }
     );
 
     this.api.interceptors.response.use(
       (response: any) => response.data,
       (err): Promise<ApiError> => {
+        if (["ECONNREFUSED", "ENOTFOUND", "ETIMEDOUT", "ERR_NETWORK"].includes(err.code || "") && !err.response) {
+          console.warn("🚫 Falha de rede ou CORS bloqueado.");  
+          
+          return Promise.reject({
+            status: 500,
+            errors: [{
+              level: 'critical',
+              message: 'Server offline'
+            }],
+            timestamp: new Date().toISOString(),
+            path: '/'
+          });
+        }
+
         const error: ApiError = err.response.data;
 
         return Promise.reject(error);
