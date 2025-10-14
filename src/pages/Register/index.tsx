@@ -9,21 +9,33 @@ import type { ApiError } from "../../service/types/response/error";
 import { Toasts } from "../../toasts";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import { useAuth } from "../../hooks/useAuth";
+import type { UserDTO } from "../../service/types/user/user.dto";
+import type { LoginDTO } from "../../service/types/auth/login.dto";
 
 export function Register() {
   const api = useApi();
 
   const navigate = useNavigate();
 
+  const { login } = useAuth();
+
   const createAccount = async (data: CreateUserDTO) => {
     try {
-      await api.post<CreateUserDTO>({ route: '/auth/register', data: data });
+      const response = await api.post<CreateUserDTO>({ route: '/auth/register', data: data });
 
-      navigate('/');
+      const { username, password } = response.data as UserDTO;
+
+      const loginData: LoginDTO = {
+        username,
+        password
+      }
+
+      await login(loginData);
+
+      navigate('/home/workspace');
     } catch (error) {
-      const { errors } = error as ApiError;
-      console.log(errors);
-      
+      const { errors } = error as ApiError;      
 
       errors?.map(
         err => {

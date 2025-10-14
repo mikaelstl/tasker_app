@@ -36,9 +36,17 @@ const Input = styled.input`
     font-family: 'Montserrat';
     color: ${Palette.white};
   }
-`
+`;
+
+const ShowPassword = styled.button`
+  align-items: center;
+  width: fit-content;
+  height: fit-content;
+  border: 1px solid red;
+`;
 
 export {
   Container,
-  Input
+  Input,
+  ShowPassword
 }

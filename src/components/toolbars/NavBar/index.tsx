@@ -3,9 +3,17 @@ import { ChatBubbleOvalLeftIcon, Cog6ToothIcon, InboxStackIcon, UsersIcon, Windo
 import Palette from "../../../assets/palette"
 import { Actions, Container, Nav, NavItem } from "./style"
 import { useNavigate } from "react-router-dom"
+import { useAuth } from "../../../hooks/useAuth"
 
 export function NavBar() {
   const navigate = useNavigate();
+
+  const { logout } = useAuth();
+
+  const onLogout = () => {
+    logout();
+    navigate('/');
+  }
 
   return (
     <Container className="nav-bar">
@@ -33,7 +41,7 @@ export function NavBar() {
             <Cog6ToothIcon width="18"/>
             Settings
           </NavItem> */}
-          <NavItem className="nav-item log-out" onClick={() => navigate('/login')}>
+          <NavItem className="nav-item log-out" onClick={onLogout}>
             <ArrowLeftStartOnRectangleIcon width="18" fill={Palette.red}/>
             Logout
           </NavItem>

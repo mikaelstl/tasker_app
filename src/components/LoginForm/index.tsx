@@ -5,12 +5,15 @@ import { Container, Form, SubmitButton, Inputs } from "../misc/Form/style";
 import { CreateAccount } from "./CreateAccount";
 import type { LoginDTO } from "../../service/types/auth/login.dto";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface LoginFormProps {
   login: (data: LoginDTO) => Promise<void>
 }
 
 export function LoginForm(props: LoginFormProps) {
+  const navigate = useNavigate();
+  
   const [ username, setUsername ] = useState<string>('');
   const [ password, setPassword ] = useState<string>('');
 
@@ -22,7 +25,9 @@ export function LoginForm(props: LoginFormProps) {
       password
     };
 
-    await props.login(data);
+    props.login(data).then(
+      (_) => navigate('/home/workspace')
+    );
   }
 
   return (
@@ -31,14 +36,14 @@ export function LoginForm(props: LoginFormProps) {
       <Form action='' onSubmit={onSubmit}>
         <Inputs className="inputs">
           <FormInput
-            icon={<UserIcon style={{ width: 24, height: 24 }}/>}
+            icon={<UserIcon width={24}/>}
             placeholder="User"
             value={username}
             onChange={(value) => setUsername(value)}
           />
           <FormInput
             type="password"
-            icon={<KeyIcon style={{ width: 24, height: 24 }}/>}
+            icon={<KeyIcon width={24}/>}
             placeholder="Password"
             value={password}
             onChange={(value) => setPassword(value)}

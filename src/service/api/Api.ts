@@ -1,5 +1,4 @@
 import axios, { type AxiosInstance } from "axios"
-import type { ApiResponse } from "../types/response/response";
 import type { ApiError } from "../types/response/error";
 
 export class Api {
@@ -18,9 +17,10 @@ export class Api {
     this.config();
   }
 
-  async post<T>(params: { route: string, data: T }): Promise<ApiResponse> {
-    const response = await this.api.post(params.route, params.data);
-    return response.data;
+  async post<T>(params: { route: string, data: T }) {
+    const response = this.api.post(params.route, params.data);
+    
+    return response;
   }
 
   private config() {
