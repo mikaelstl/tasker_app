@@ -8,7 +8,6 @@ import type { CreateUserDTO } from "../../service/types/user/create.dto";
 import type { ApiError } from "../../service/types/response/error";
 import { Toasts } from "../../toasts";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
 import { useAuth } from "../../hooks/useAuth";
 import type { UserDTO } from "../../service/types/user/user.dto";
 import type { LoginDTO } from "../../service/types/auth/login.dto";
@@ -54,12 +53,6 @@ export function Register() {
         <Title>CREATE YOUR ACCOUNT</Title>
         <CreateAccountForm createAccount={createAccount}/>
       </Content>
-      <ToastContainer
-        position="bottom-right"
-        hideProgressBar={true}
-        autoClose={4000}
-        closeOnClick
-      />
     </Screen>
   )
 }

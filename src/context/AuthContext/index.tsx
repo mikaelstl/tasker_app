@@ -36,27 +36,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = async (data: LoginDTO) => {
     try {
-      const response = await api.post<LoginDTO>({route: '/auth/login', data: data});
-      
+      const response = await api.post<LoginDTO>({ route: '/auth/login', data: data });
+
       const { user, username, access_token } = response.data as AuthDTO;
 
       const u: User = {
         id: user,
         username: username
       }
-      
-      await localStorage.setItem('user', JSON.stringify(u));
-      await localStorage.setItem('token', access_token);
+
+      localStorage.setItem('user', JSON.stringify(u));
+      localStorage.setItem('token', access_token);
       setUser(u);
       setToken(access_token);
     } catch (error: any) {
       const { errors } = error as ApiError;
-      
-      errors?.map(
-        err => {
-          const notification = Toasts[err.level];
 
-          return notification(err.message)
+      errors?.forEach(
+        err => {
+          console.warn(err);
+          
+          const notify = Toasts[err.level];
+          notify(err.message);
         }
       );
     }
@@ -71,7 +72,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <AuthContext.Provider value={{ user, token, login, logout }}>
-      { children }
+      {children}
     </AuthContext.Provider>
   )
 }

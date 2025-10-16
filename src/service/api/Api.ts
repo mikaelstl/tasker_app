@@ -1,7 +1,5 @@
 import axios, { type AxiosInstance } from "axios"
 import type { ApiError } from "../types/response/error";
-import { toast } from "react-toastify";
-import { Toasts } from "../../toasts";
 
 export class Api {
   private api: AxiosInstance;
@@ -59,6 +57,18 @@ export class Api {
           });
         }
 
+        if (err.status === 401) {
+          return Promise.reject({
+            status: 401,
+            errors: [{
+              level: 'error',
+              message: err.response.data.message
+            }],
+            timestamp: new Date().toISOString(),
+            path: '/'
+          });
+        }
+
         const error: ApiError = err.response.data;
         
         return Promise.reject(error)
@@ -67,7 +77,7 @@ export class Api {
 
     this.api.interceptors.response.use(
       (response: any) => response.data,
-      (err): Promise<ApiError> => {
+      (err) => {
         if (["ECONNREFUSED", "ENOTFOUND", "ETIMEDOUT", "ERR_NETWORK"].includes(err.code || "") && !err.response) {
           console.warn("🚫 Falha de rede ou CORS bloqueado.");  
           
