@@ -13,4 +13,6 @@ export const Button = styled.button`
   margin: 20px 20px 0px 0px;
 
   border-radius: 8px;
+
+  cursor: pointer;
 `;

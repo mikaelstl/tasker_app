@@ -8,12 +8,15 @@ const Content = styled.div`
     "week friends" / 1fr .25fr;
   
   height: 100%;
+  width: 100%;
 
   overflow: hidden;
 `;
 
 const Recent = styled.div`
   grid-area: recent;
+
+  flex: 1;
 
   overflow: hidden;
 
@@ -22,13 +25,15 @@ const Recent = styled.div`
   gap: 12px;
 
   padding: 20px;
+
+  width: 100%;
 `;
 
 const ToThisWeek = styled.div`
   grid-area: week;
 
-  display: grid;
-  grid-auto-flow: row;
+  display: flex;
+  flex-direction: column;
   gap: 12px;
   
   padding: 0px 20px;

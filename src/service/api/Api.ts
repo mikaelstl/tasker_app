@@ -1,5 +1,7 @@
 import axios, { type AxiosInstance } from "axios"
 import type { ApiError } from "../types/response/error";
+import { toast } from "react-toastify";
+import { Toasts } from "../../toasts";
 
 export class Api {
   private api: AxiosInstance;
@@ -19,6 +21,15 @@ export class Api {
 
   async post<T>(params: { route: string, data: T }) {
     const response = this.api.post(params.route, params.data);
+    
+    return response;
+  }
+
+  async get(p: { route: string, params?: any, headers?: any }) {
+    const response = this.api.get(p.route, {
+      headers: p.headers,
+      params: p.params
+    });
     
     return response;
   }

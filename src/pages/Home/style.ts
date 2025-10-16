@@ -10,6 +10,8 @@ const Content = styled.div`
   height: 100%;
 
   overflow: hidden;
+
+  position: relative;
 `;
 
 const Page = styled.main`

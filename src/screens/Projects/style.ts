@@ -4,13 +4,13 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: end;
-  flex: 1 1 auto;
 
   gap: 20px;
 
   overflow: hidden;
   
   height: 100%;
+  width: 100%;
 `;
 
 const Content = styled.div`
