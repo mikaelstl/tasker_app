@@ -3,6 +3,7 @@ import { Title } from "../../base/Title";
 import { DateBadge } from "../../badge/DateBadge";
 import { Avatar } from "../../misc/Avatar";
 import { Card, Content, Flag, Indicator, Leading } from "./style";
+import { DateTime } from "luxon";
 
 interface TaskCardProps {
   title: string;
@@ -21,7 +22,7 @@ export function TaskCard(props: TaskCardProps) {
             <Title>{props.title}</Title>
             <Subtitle>{props.description}</Subtitle>
           </div>
-          <DateBadge />
+          <DateBadge date={DateTime.now()}/>
         </Leading>
         <Avatar online={false} size="small" image="" />
       </Content>

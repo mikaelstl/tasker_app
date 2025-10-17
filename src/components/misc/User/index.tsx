@@ -3,14 +3,15 @@ import { Avatar } from "../Avatar";
 import { Container } from "./style";
 
 interface UserProps {
-  online?: boolean
+  online?: boolean;
+  username: string
 }
 
 export function User(props: UserProps) {
   return (
     <Container className="user">
       <Avatar online={props.online ?? false} size="small" image=""/>
-      <Text>username</Text>
+      <Text>{props.username}</Text>
     </Container>
   )
 }

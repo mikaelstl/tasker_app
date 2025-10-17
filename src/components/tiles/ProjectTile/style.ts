@@ -9,4 +9,6 @@ export const Card = styled.div`
   border-top: 1px solid ${Palette.items};
   
   padding: 20px;
+
+  cursor: pointer;
 `

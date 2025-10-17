@@ -4,18 +4,23 @@ import { useEffect, useState } from "react";
 import { useApi } from "../../hooks/useApi";
 import type { ApiError } from "../../service/types/response/error";
 import { Toasts } from "../../toasts";
+import { Text } from "../../components/base/Text";
 
 export function PrivateRoute() {
   const api = useApi();
 
-  const { user, token } = useAuth();
+  const { user, token, logout } = useAuth();
 
   const [isValid, setIsValid] = useState<boolean>(false);
 
   useEffect(() => {
     const validate = async () => {
       try {
-        await api.get({ route: "/auth/validate" });
+        const res: any = await api.get({ route: "/auth/validate" });
+        
+        const notify = Toasts['info'];
+        notify(res.message);
+
         setIsValid(true);
       } catch (error) {
         const err = error as ApiError;
@@ -26,6 +31,8 @@ export function PrivateRoute() {
           const notify = Toasts[e.level];
           notify(e.message);
         });
+
+        logout();
       }
     };
 
@@ -33,7 +40,7 @@ export function PrivateRoute() {
     else setIsValid(false);
   }, [user, token]);
 
-  if (isValid === false) return <></>; 
+  if (isValid === false) return <><Text>Carregando...</Text></>; 
 
   if (!user || !token || token === "" || !isValid) return <Navigate to="/login" replace />;
 

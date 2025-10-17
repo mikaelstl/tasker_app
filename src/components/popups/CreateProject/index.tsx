@@ -1,20 +1,15 @@
-import { PlusIcon, XMarkIcon } from "@heroicons/react/16/solid";
-import { AddMember, Card, Close, Header, Members, Overlay } from "./style";
+import { XMarkIcon } from "@heroicons/react/16/solid";
+import { Card, Close, Header, Overlay } from "./style";
 import { Title } from "../../base/Title";
 import { TextInput } from "../../base/TextInput";
 import { TextAreaInput } from "../../base/TextAreaInput";
 import { CalendarInput } from "../../base/CalendarInput";
 import { useState } from "react";
-import { Text } from "../../base/Text";
-import { Avatar } from "../../misc/Avatar";
-import Palette from "../../../assets/palette";
 import { CreateButton } from "../../buttons/CreateButton";
-import { SearchMember } from "../../textfields/SearchMember";
 import { useApi } from "../../../hooks/useApi";
-import { useForm } from "react-hook-form";
-import type { ProjectDTO } from "../../../service/types/project/project.dto";
 import type { CreateProjectDTO } from "../../../service/types/project/create.dto";
 import { useAuth } from "../../../hooks/useAuth";
+import { Form } from "../../misc/Form/style";
 
 interface PopupProps {
   showPopup: boolean,
@@ -26,25 +21,25 @@ export function CreateProjectPopup(props: PopupProps) {
 
   const { user } = useAuth();
 
-  const [ projectName, setProjectName ] = useState<string>('');
-  const [ description, setDescription ] = useState<string>('');
-  const [ dueDate, setDueDate ] = useState<string>('');
-  const [ members, setMembers ] = useState<string[]>([]);
+  const [projectName, setProjectName] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
+  const [dueDate, setDueDate] = useState<string>('');
 
-  const [ searching, setSearching ] = useState<boolean>(false);
-  const handleSearching = () => {
-    setSearching(!searching);
+  const handleClose = () => {
+    setDescription('');
+    setDueDate('');
+    setProjectName('');
+    props.closePopup();
   }
 
-  const [ frieds, setFriends ] = useState();
+  const onSubmit = (ev:React.FormEvent) => {
+    ev.preventDefault();
 
-  const onSubmit = () => {
     const project: CreateProjectDTO = {
       title: projectName,
       description,
       due_date: dueDate,
       ownerkey: user?.username,
-      members
     }
 
     console.log(project);
@@ -65,40 +60,26 @@ export function CreateProjectPopup(props: PopupProps) {
       <Card className="popup-create-project">
         <Header>
           <Title>Create new project</Title>
-          <Close onClick={props.closePopup}><XMarkIcon width={24} /></Close>
+          <Close onClick={handleClose}><XMarkIcon width={24} /></Close>
         </Header>
-        <TextInput
-          label="Project name"
-          value={projectName}
-          onChange={(value) => setProjectName(value)}
-        />
-        <TextAreaInput
-          label="Description"
-          value={description}
-          onChange={(value) => setDescription(value)}
-        />
-        <CalendarInput
-          label="Due date"
-          value={dueDate}
-          onChange={(value) => setDueDate(value)}
-        />
-        <>
-          <Text>Members</Text>
-          <Members>
-            {
-              members.map(
-                _ => <Avatar size="small" image="" />
-              )
-            }
-            { searching
-                ? <SearchMember onClose={handleSearching}/>
-                : <AddMember onClick={handleSearching}>
-                    <PlusIcon width={24} fill={Palette.gray} />
-                  </AddMember>
-            }
-          </Members>
-        </>
-        <CreateButton onClick={onSubmit}>Create project</CreateButton>
+        <Form onSubmit={onSubmit}>
+          <TextInput
+            label="Project name"
+            value={projectName}
+            onChange={(value) => setProjectName(value)}
+          />
+          <TextAreaInput
+            label="Description"
+            value={description}
+            onChange={(value) => setDescription(value)}
+          />
+          <CalendarInput
+            label="Due date"
+            value={dueDate}
+            onChange={(value) => setDueDate(value)}
+          />
+          <CreateButton type="submit">Create project</CreateButton>
+        </Form>
       </Card>
     </Overlay>
   )

@@ -42,7 +42,7 @@ export function Projects() {
   return (
     <Container className="projects-content">
       <CreateProjectPopup showPopup={isPopupOpen} closePopup={handleClosePopup}/>
-      <CreateButton onClick={handleOpenPopup}>Create new project</CreateButton>
+      <CreateButton type="button" onClick={handleOpenPopup}>Create new project</CreateButton>
       <SearchField filter sort/>
       <Content id="projects">
         <ContentHeader id="projects-header">
@@ -55,7 +55,13 @@ export function Projects() {
         <ProjectsArea>
           <Scroller className="vertical">
             {
-              projects.map((project) => <ProjectTile key={project.id} />)
+              projects.map((project) => <ProjectTile
+                                          key={project.id}
+                                          id={project.id}
+                                          title={project.title}
+                                          owner={project.ownerkey}
+                                          progress={project.progress}
+                                        />)
             }
           </Scroller>
         </ProjectsArea>

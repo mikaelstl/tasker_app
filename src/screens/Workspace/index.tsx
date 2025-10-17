@@ -10,7 +10,6 @@ import { Content, Friends, Recent, ToThisWeek } from "./style.ts";
 import { useAuth } from "../../hooks/useAuth.ts";
 import type { ProjectDTO } from "../../service/types/project/project.dto.ts";
 import { ItalicTitle } from "../../components/base/ItalicTitle/index.ts";
-import { DateTime } from "luxon";
 import type { TaskDTO } from "../../service/types/task/task.dto.ts";
 
 export function Workspace() {
@@ -55,7 +54,14 @@ export function Workspace() {
             ? <Scroller className="horizontal">
               {
                 projects.map(project => <Margin right='12px'>
-                  <ProjectCard key={project.id} title="Project" description="Description" />
+                  <ProjectCard
+                    key={project.id}
+                    id={project.id}
+                    title={project.title}
+                    description={project.description}
+                    progress={project.progress}
+                    due_date={project.due_date}
+                  />
                 </Margin>)
               }
             </Scroller>
@@ -68,7 +74,7 @@ export function Workspace() {
         <Scroller className="vertical">
           {
             users.map(_ => <Margin bottom='12px'>
-              <User online />
+              <User online username="username"/>
             </Margin>)
           }
         </Scroller>
