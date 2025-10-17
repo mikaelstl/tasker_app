@@ -1,7 +1,7 @@
 import { Subtitle } from "../../base/Subtitle";
 import { Title } from "../../base/Title";
 import { Badge } from "../../badge/Badge";
-import { Card, Leading, Trealing } from "./style";
+import { Card, Leading, Trailing } from "./style";
 import { DateBadge } from "../../badge/DateBadge";
 import { useNavigate } from "react-router-dom";
 import { DateTime } from "luxon";
@@ -31,10 +31,10 @@ export function ProjectCard(props: ProjectCardProps) {
           date={DateTime.fromISO(props.due_date)}
         />
       </Leading>
-      <Trealing className="card-trealing">
+      <Trailing className="card-Trailing">
         <Badge>{props.progress}</Badge>
         {/* <team /> */}
-      </Trealing>
+      </Trailing>
     </Card >
   )
 }

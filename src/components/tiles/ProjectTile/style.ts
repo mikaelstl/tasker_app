@@ -1,14 +1,40 @@
 import styled from "styled-components";
 import Palette from "../../../assets/palette";
 
-export const Card = styled.div`
-  display: grid;
-  grid-template-columns: .75fr .25fr .25fr .25fr .25fr;
+const Card = styled.div`
+  display: flex;
   align-items: center;
+  justify-content: space-between;
   
-  border-top: 1px solid ${Palette.items};
+  border-bottom: 1px solid ${Palette.items};
   
   padding: 20px;
 
   cursor: pointer;
-`
+`;
+
+
+
+const Leading = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+`;
+
+const Trailing = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  justify-content: space-between;
+
+  height: 100%;
+`;
+
+const Details = styled.div``;
+
+export {
+  Card,
+  Leading,
+  Trailing,
+  Details
+}

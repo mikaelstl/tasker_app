@@ -22,7 +22,7 @@ const Leading = styled.div`
   justify-content: space-between;
 `;
 
-const Trealing = styled.div`
+const Trailing = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -32,5 +32,5 @@ const Trealing = styled.div`
 export {
   Card,
   Leading,
-  Trealing
+  Trailing
 }

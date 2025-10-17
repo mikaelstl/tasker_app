@@ -1,9 +1,8 @@
-import { Container, Content, ContentHeader, ProjectsArea } from "./style.ts";
+import { Container, Content } from "./style.ts";
 import { CreateButton } from "../../components/buttons/CreateButton/index.tsx";
 import { SearchField } from "../../components/textfields/SearchField/index.tsx";
 import { Scroller } from "../../components/misc/Scroller/index.ts";
 import { ProjectTile } from "../../components/tiles/ProjectTile/index.tsx";
-import { Title } from "../../components/base/Title/index.ts";
 import { useEffect, useState } from "react";
 import type { ProjectDTO } from "../../service/types/project/project.dto.ts";
 import { useApi } from "../../hooks/useApi.ts";
@@ -38,33 +37,26 @@ export function Projects() {
       }
     );
   }, [isPopupOpen]);
-  
+
   return (
     <Container className="projects-content">
-      <CreateProjectPopup showPopup={isPopupOpen} closePopup={handleClosePopup}/>
+      <CreateProjectPopup showPopup={isPopupOpen} closePopup={handleClosePopup} />
       <CreateButton type="button" onClick={handleOpenPopup}>Create new project</CreateButton>
-      <SearchField filter sort/>
+      <SearchField filter sort />
       <Content id="projects">
-        <ContentHeader id="projects-header">
-          <Title className="head-cell">Project</Title>
-          <Title className="head-cell">Owner</Title>
-          <Title className="head-cell">Stage</Title>
-          <Title className="head-cell">Doned Tasks</Title>
-          <Title className="head-cell">Members</Title>
-        </ContentHeader>
-        <ProjectsArea>
-          <Scroller className="vertical">
-            {
-              projects.map((project) => <ProjectTile
-                                          key={project.id}
-                                          id={project.id}
-                                          title={project.title}
-                                          owner={project.ownerkey}
-                                          progress={project.progress}
-                                        />)
-            }
-          </Scroller>
-        </ProjectsArea>
+        <Scroller className="vertical">
+          {
+            projects.map((project) => <ProjectTile
+              key={project.id}
+              id={project.id}
+              title={project.title}
+              description={project.description}
+              owner={project.ownerkey}
+              progress={project.progress}
+              due_date={project.due_date}
+            />)
+          }
+        </Scroller>
       </Content>
     </Container>
   )
