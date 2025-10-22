@@ -23,10 +23,10 @@ export class Api {
     return response;
   }
 
-  async get(p: { route: string, params?: any, headers?: any }) {
-    const response = this.api.get(p.route, {
-      headers: p.headers,
-      params: p.params
+  async get<Q>({ route, params, headers}: { route: string, params?: Q, headers?: any }) {
+    const response = this.api.get(route, {
+      headers: headers,
+      params: params
     });
     
     return response;

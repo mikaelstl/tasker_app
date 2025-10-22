@@ -1,15 +1,17 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { useApi } from "../../hooks/useApi";
 import type { ApiError } from "../../service/types/response/error";
-import { Toasts } from "../../toasts";
+import { Toasts } from "../../maps/toasts";
 import { Text } from "../../components/base/Text";
 
 export function PrivateRoute() {
   const api = useApi();
 
-  const { user, token, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const { user, token } = useAuth();
 
   const [isValid, setIsValid] = useState<boolean>(false);
 
@@ -32,7 +34,7 @@ export function PrivateRoute() {
           notify(e.message);
         });
 
-        logout();
+        navigate('/login');
       }
     };
 
@@ -40,7 +42,7 @@ export function PrivateRoute() {
     else setIsValid(false);
   }, [user, token]);
 
-  if (isValid === false) return <><Text>Carregando...</Text></>; 
+  if (isValid === false) return <><Text>Carregando...</Text></>;
 
   if (!user || !token || token === "" || !isValid) return <Navigate to="/login" replace />;
 

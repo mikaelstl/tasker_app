@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Badge } from "../../../components/badge/Badge";
 import { DateBadge } from "../../../components/badge/DateBadge";
 import { Label } from "../../../components/base/Label";
 import { Text } from "../../../components/base/Text";
@@ -15,9 +14,13 @@ import { useApi } from "../../../hooks/useApi";
 import { Abstract, AbstractItem, Comments, Container, Content, ImportantTasks, ProjectInfo } from "./style";
 import type { ProjectDTO } from "../../../service/types/project/project.dto";
 import type { ApiError } from "../../../service/types/response/error";
-import { Toasts } from "../../../toasts";
+import { Toasts } from "../../../maps/toasts";
 import { useNavigate, useParams } from "react-router-dom";
 import { DateTime } from "luxon";
+import type { TaskDTO } from "../../../service/types/task/task.dto";
+import { ItalicTitle } from "../../../components/base/ItalicTitle";
+import { ProgressBadge } from "../../../maps/progress";
+import type { TaskQueryDTO } from "../../../service/types/task/query.dto";
 
 export function Overview() {
   const navigate = useNavigate();
@@ -29,14 +32,14 @@ export function Overview() {
   const [project, setProject] = useState<ProjectDTO | null>(null);
   const getProject = async () => {
     try {
-      const response = await api.get({ route: `/project/${id}`});
+      const response = await api.get({ route: `/project/${id}` });
 
       const data: ProjectDTO = response.data;
-      
+
       setProject(data);
     } catch (error) {
       const { errors } = error as ApiError;
-    
+
       errors?.forEach(
         err => {
           const notify = Toasts[err.level];
@@ -48,13 +51,38 @@ export function Overview() {
     }
   }
 
-  const tasks = Array.from({length: 10}, (_, i) => i);
+  const [tasks, setTasks] = useState<TaskDTO[]>([]);
+  const getTasks = async () => {
+    try {
+      const response = await api.get<TaskQueryDTO>({
+        route: `/tasks?projectkey=${id}`
+      });
+
+      console.log(response);
+
+      const data: TaskDTO[] = response.data;
+
+      setTasks(data);
+    } catch (error) {
+      const { errors } = error as ApiError;
+
+      errors?.forEach(
+        err => {
+          const notify = Toasts[err.level];
+          notify(err.message);
+        }
+      )
+
+      navigate('../../')
+    }
+  }
 
   useEffect(() => {
     getProject();
-  },[])
+    getTasks();
+  }, [])
 
-  if (project === null) return <><Text>Carregando...</Text></>; 
+  if (project === null) return <><Text>Carregando...</Text></>;
 
   return (
     <Container className="overview">
@@ -64,11 +92,11 @@ export function Overview() {
             <Title>{project?.title}</Title>
             <Text>{project?.description}</Text>
           </div>
-          <Badge>{project?.progress}</Badge>
+          {ProgressBadge[project.progress]}
         </ProjectInfo>
         <AbstractItem className="abstract-item">
           <Label>Owner</Label>
-          <User username={project?.ownerkey ?? ''}/>
+          <User username={project?.ownerkey ?? ''} />
         </AbstractItem>
         <AbstractItem className="abstract-item">
           <Label>Due date</Label>
@@ -81,24 +109,39 @@ export function Overview() {
         <ProjectMenu />
         <ImportantTasks className="important-tasks">
           <Title>Most important</Title>
-          <Scroller className="horizontal">
-            {
-              tasks.map((_) => <Margin right='12px'>
-                                 <TaskCard title="Task" description="Description"/>
-                               </Margin>)
-            }
-          </Scroller>
+          {
+            tasks.length !== 0
+              ? <Scroller className="horizontal">
+                {
+                  tasks.map(task => <Margin right='12px'>
+                    <TaskCard
+                      key={task.id}
+                      title={task.name}
+                      description={task.description}
+                      date={task.due_date}
+                    />
+                  </Margin>)
+                }
+              </Scroller>
+              : <ItalicTitle>Without tasks</ItalicTitle>
+          }
         </ImportantTasks>
         <Comments className="overview-comments">
           <Title>Comments</Title>
-          <div id="cards">
-            {
-              tasks.map((_) => <CommentCard/>)
-            }
-          </div>
+          {
+            tasks.length !== 0
+              ? <Scroller className="horizontal">
+                {
+                  tasks.map((_) => <Margin right='12px'>
+                    <CommentCard />
+                  </Margin>)
+                }
+              </Scroller>
+              : <ItalicTitle>Without comments</ItalicTitle>
+          }
         </Comments>
       </Content>
-      <ImportantDates/>
+      <ImportantDates />
     </Container>
   )
 }

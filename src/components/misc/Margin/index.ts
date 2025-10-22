@@ -12,4 +12,7 @@ export const Margin = styled.div<MarginProps>`
   margin-bottom: ${props => props.bottom ?? 0};
   margin-left: ${props => props.left ?? 0};
   margin-right: ${props => props.right ?? 0};
-`
+
+  width: 100%;
+  height: fit-content;
+`;

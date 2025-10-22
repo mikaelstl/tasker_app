@@ -18,7 +18,9 @@ const Container = styled.div`
 const Form = styled.form`
   display: grid;
   grid-auto-flow: row;
-  gap: 50px;
+  gap: 25px;
+
+  overflow: auto;
 `;
 
 const SubmitButton = styled.button`

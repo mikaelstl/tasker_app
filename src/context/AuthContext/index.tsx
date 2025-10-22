@@ -3,7 +3,7 @@ import { useApi } from "../../hooks/useApi";
 import type { LoginDTO } from "../../service/types/auth/login.dto";
 import type { ApiError } from "../../service/types/response/error";
 import type { AuthDTO } from "../../service/types/auth/auth.dto";
-import { Toasts } from "../../toasts";
+import { Toasts } from "../../maps/toasts";
 
 type User = {
   readonly id: string;

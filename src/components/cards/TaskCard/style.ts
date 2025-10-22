@@ -10,7 +10,7 @@ const Card = styled.div`
 
   border-radius: 0px 6px 6px 0px;
   
-  width: 360px;
+  max-width: 360px;
   height: 140px;
 
   background-color: ${Palette.items};

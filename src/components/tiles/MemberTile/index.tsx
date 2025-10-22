@@ -16,7 +16,7 @@ export function MemberTile(props: MemberTile) {
   return (
     <Container id="member-tile">
       <User />
-      <Badge color={props.type === 'member' ? Palette.light_blue : Palette.lightRed}>{props.type}</Badge>
+      <Badge color={props.type === 'member' ? Palette.lightBlue : Palette.lightRed}>{props.type}</Badge>
       <Text id="total-tasks">{props.tasks.done} out of {props.tasks.total}</Text>
     </Container>
   )

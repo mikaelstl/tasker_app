@@ -10,11 +10,7 @@ import { useApi } from "../../../hooks/useApi";
 import type { CreateProjectDTO } from "../../../service/types/project/create.dto";
 import { useAuth } from "../../../hooks/useAuth";
 import { Form } from "../../misc/Form/style";
-
-interface PopupProps {
-  showPopup: boolean,
-  closePopup: () => void,
-}
+import type { PopupProps } from "../popup.props";
 
 export function CreateProjectPopup(props: PopupProps) {
   const api = useApi();
@@ -38,7 +34,7 @@ export function CreateProjectPopup(props: PopupProps) {
     const project: CreateProjectDTO = {
       title: projectName,
       description,
-      due_date: dueDate,
+      due_date: new Date(dueDate),
       ownerkey: user?.username,
     }
 

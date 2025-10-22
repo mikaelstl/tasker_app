@@ -11,11 +11,13 @@ const Container = styled.div`
 const Content = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 40px;
 
   overflow: hidden;
 
   margin: 20px 20px 0px 20px;
+
+  width: 100%;
 `;
 
 const Abstract = styled.div`

@@ -8,6 +8,7 @@ import { DateTime } from "luxon";
 interface TaskCardProps {
   title: string;
   description: string;
+  date: string;
 }
 
 export function TaskCard(props: TaskCardProps) {
@@ -22,7 +23,7 @@ export function TaskCard(props: TaskCardProps) {
             <Title>{props.title}</Title>
             <Subtitle>{props.description}</Subtitle>
           </div>
-          <DateBadge date={DateTime.now()}/>
+          <DateBadge date={DateTime.fromISO(props.date)}/>
         </Leading>
         <Avatar online={false} size="small" image="" />
       </Content>

@@ -6,7 +6,7 @@ import { Title } from "../../components/base/Title";
 import { useApi } from "../../hooks/useApi";
 import type { CreateUserDTO } from "../../service/types/user/create.dto";
 import type { ApiError } from "../../service/types/response/error";
-import { Toasts } from "../../toasts";
+import { Toasts } from "../../maps/toasts";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import type { UserDTO } from "../../service/types/user/user.dto";

@@ -16,7 +16,7 @@ const Tag = styled.div`
   }
 
   &.event {
-    background-color: ${Palette.light_blue};
+    background-color: ${Palette.lightBlue};
   }
 `;
 

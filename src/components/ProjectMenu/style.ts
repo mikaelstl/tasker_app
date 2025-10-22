@@ -4,6 +4,7 @@ import Palette from "../../assets/palette";
 const Container = styled.div`
   margin-top: 20px;
   display: flex;
+  flex-wrap: wrap;
 `;
 
 const Button = styled.button`

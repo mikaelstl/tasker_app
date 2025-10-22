@@ -6,9 +6,10 @@ const Container = styled.div`
   flex-direction: column;
   gap: 22px;
 
-  padding: 20px 0px 0px 20px;
+  padding: 20px 20px 0px 20px;
 
-  min-width: 320px; height: 100%;
+  min-width: 320px;
+  height: 100%;
   background-color: ${Palette.tool_bars};
 
   overflow: hidden;

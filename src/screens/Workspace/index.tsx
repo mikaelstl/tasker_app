@@ -34,10 +34,7 @@ export function Workspace() {
     );
 
     /* api.get({
-      route: `/tasks`,
-      params: {
-        owner: { user: user?.username }
-      }
+      route: `/tasks?ownerkey: user?.username`
     }).then(
       (result) => {
         setTasks(result.data);
@@ -86,9 +83,9 @@ export function Workspace() {
           {
             tasks.length !== 0
               ? tasks.map(task => <Margin bottom='12px'>
-                <TaskCard key={task.id} title="Task" description="Description" />
+                <TaskCard key={task.id} title={task.name} description={task.description} date={task.due_date} />
               </Margin>)
-              : <ItalicTitle>Sem tarefas para esta semana</ItalicTitle>
+              : <ItalicTitle>Without tasks to this week</ItalicTitle>
           }
         </Scroller>
       </ToThisWeek>

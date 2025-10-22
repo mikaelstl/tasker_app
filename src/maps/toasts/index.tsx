@@ -1,11 +1,11 @@
-import { ExclamationCircleIcon, ExclamationTriangleIcon } from "@heroicons/react/16/solid";
+import { CheckIcon, ExclamationCircleIcon, ExclamationTriangleIcon } from "@heroicons/react/16/solid";
 import { toast } from "react-toastify";
-import Palette from "../assets/palette";
+import Palette from "../../assets/palette";
 
 export const Toasts = {
   'info': (content: string) => toast.info(content, {
     style: { backgroundColor: Palette.green, color: Palette.white },
-    icon: <ExclamationTriangleIcon fill={Palette.white} width={16}/>
+    icon: <CheckIcon fill={Palette.white} width={16}/>
   }),
   'warning': (content: string) => toast.warn(content, {
     style: { backgroundColor: Palette.yellow, color: Palette.white },
