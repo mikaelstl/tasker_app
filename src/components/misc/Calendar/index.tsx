@@ -5,6 +5,7 @@ import { ChevronLeftIcon, ChevronRightIcon, ClipboardIcon, FlagIcon } from "@her
 import { Active, Container, Day, Today, Weekday, Header, Weeks, Weekdays, Events } from "./style";
 import Palette from "../../../assets/palette";
 import { EventAccordion } from "./EventAccordion";
+import type { EventDTO } from "../../../service/types/events/event.dto";
 
 type Month = {
   name: string;
@@ -15,11 +16,15 @@ interface DayCardProps {
   isToday: boolean;
   isActive: boolean;
   content: number;
-  haveTasks: Function;
-  haveEvents: Function;
+  // haveTasks: Function;
+  events: EventDTO[];
 }
 
 function DayCard(props: DayCardProps) {
+  const haveEvents = () => {
+    return props.events.length > 0;
+  }
+
   return (
     <Day>
       { props.isToday
@@ -28,32 +33,33 @@ function DayCard(props: DayCardProps) {
       }
       {<div id="indicators">
         {
-          props.haveTasks() ? <ClipboardIcon width={16} /> : <></>
+          /* props.haveTasks() ? <ClipboardIcon width={16} /> : <></> */
         }
         {
-          props.haveEvents() ? <FlagIcon width={16} /> : <></>
+          haveEvents() ? <FlagIcon width={16} /> : <></>
         }
       </div>}
     </Day>
   )
 }
 
-export function Calendar() {
-  const [today, setToday] = useState<DateTime>(DateTime.local());
-  const [month, setMonth] = useState<Month>();
-  const [days, setDays] = useState<DateTime[]>();
-  const [weekdays, setWeekdays] = useState<string[]>();
+interface CalendarProps {
+  events: EventDTO[]
+}
+
+export function Calendar({
+  events
+}: CalendarProps) {
+  const today = DateTime.now();
+  const [month, setMonth] = useState<Month>({
+    short: today.monthShort!,
+    name: today.monthLong
+  });
+  const [days, setDays] = useState<DateTime[]>([]);
+  const [weekdays, setWeekdays] = useState<string[]>([]);
   const [firstDay, setFirstDay] = useState<DateTime>(today.startOf('month'));
 
   const containerRef = useRef<HTMLDivElement>(null);
-
-  const haveTasks = () => {
-    return false;
-  }
-
-  const haveEvents = () => {
-    return false;
-  }
 
   const isToday = () => {
     return today.hasSame(today, 'day');
@@ -141,8 +147,7 @@ export function Calendar() {
                       isToday={day.day === today?.day && day.month === today?.month}
                       isActive={day.month === firstDay?.month}
                       content={day.day}
-                      haveEvents={haveEvents}
-                      haveTasks={haveTasks}
+                      events={events.filter(evt => DateTime.fromISO(evt.date, { zone: 'utc' }).hasSame(day, 'day'))}
                     /> : <></>
                 )}
               </Weekday>
@@ -155,12 +160,14 @@ export function Calendar() {
         ref={containerRef}
       >
         {
-          days?.map((date) => <EventAccordion key={date.toMillis()}
-                                today={isToday()}
-                                day={date.day.toString()}
-                                month={date.monthShort ?? month?.short}
-                                year={firstDay.year.toString()}
-                              />)
+          days?.map((date) => <EventAccordion
+                            day={date.day.toString()}
+                            month={date.monthShort!}
+                            year={date.year.toString()}
+                            today={isToday()}
+                            events={events.filter(evt => DateTime.fromISO(evt.date, { zone: 'utc' }).hasSame(date, 'day'))}
+                         />
+                  )
         }
       </Events>
     </Container >

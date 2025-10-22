@@ -1,9 +1,9 @@
 import { FlagIcon } from "@heroicons/react/16/solid";
 import { ClipboardIcon } from "@heroicons/react/24/solid";
 import { Tag } from "./style";
-import { Text } from "../../../base/Text";
 
 interface CalendarTagProps {
+  title: string,
   type?: 'task' | 'event';
 }
 
@@ -17,8 +17,7 @@ export function CalendarTag(props: CalendarTagProps) {
     <Tag className={`calendar-tag ${props.type ?? "task"}`}>
       {flags[props.type ?? 'task']}
       <div id="infos">
-        <h4>title</h4>
-        <Text>description</Text>
+        <h4>{props.title}</h4>
       </div>
     </Tag>
   )

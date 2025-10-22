@@ -4,12 +4,14 @@ import { DateTime } from "luxon";
 import { useEffect, useState } from "react";
 import { Accordion, Activated, Content, Tag } from "./style";
 import { CalendarTag } from "../CalendarTag";
+import type { EventDTO } from "../../../../service/types/events/event.dto";
 
 interface EventAccordionProps {
   day: string,
   month: string | undefined,
   year: string,
-  today: boolean
+  today: boolean,
+  events: EventDTO[]
 }
 
 export function EventAccordion(props: EventAccordionProps) {
@@ -24,6 +26,8 @@ export function EventAccordion(props: EventAccordionProps) {
     return props.day === today.day.toString()
             &&
            sameMonth()
+            &&
+           props.events.length !== 0
              ? true
              : false
   }
@@ -50,8 +54,9 @@ export function EventAccordion(props: EventAccordionProps) {
       {
         contentOn
           ? <Content id="accordion-content">
-            <CalendarTag />
-            <CalendarTag type="event" />
+            {
+              props.events.map((evt) => <CalendarTag key={evt.id} title={evt.title} type="event"/>)
+            }
           </Content>
           : <></>
       }

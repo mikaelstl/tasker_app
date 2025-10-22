@@ -62,7 +62,7 @@ export function Tasks() {
 
   useEffect(() => {
     getTasks();
-  }, []);
+  }, [isPopupOpen]);
 
   return (
     <Container className="tasks">

@@ -17,13 +17,13 @@ export class Api {
     this.config();
   }
 
-  async post<T>(params: { route: string, data: T }) {
+  async post<T>(params: { route: string, data: T }): Promise<any> {
     const response = this.api.post(params.route, params.data);
     
     return response;
   }
 
-  async get<Q>({ route, params, headers}: { route: string, params?: Q, headers?: any }) {
+  async get<Q>({ route, params, headers}: { route: string, params?: Q, headers?: any }): Promise<any> {
     const response = this.api.get(route, {
       headers: headers,
       params: params
