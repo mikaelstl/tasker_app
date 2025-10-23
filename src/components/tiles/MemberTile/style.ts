@@ -6,9 +6,11 @@ const Container = styled.div`
   grid-template-columns: 1fr .25fr .25fr;
   align-items: center;
 
-  border-top: 1px solid ${Palette.items};
+  border-bottom: 1px solid ${Palette.items};
 
   padding: 20px;
+
+  height: fit-content;
 `;
 
 export {

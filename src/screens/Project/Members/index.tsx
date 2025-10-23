@@ -1,33 +1,68 @@
-import { Title } from "../../../components/base/Title";
-import { CreateButton } from "../../../components/buttons/CreateButton";
+import { useNavigate, useParams } from "react-router-dom";
 import { Scroller } from "../../../components/misc/Scroller";
 import { ProjectMenu } from "../../../components/ProjectMenu";
 import { SearchField } from "../../../components/textfields/SearchField";
 import { MemberTile } from "../../../components/tiles/MemberTile";
-import { Container, Content, ContentHeader, Header, MembersArea } from "./style";
+import { Container, Content, Header, MembersArea } from "./style";
+import { useApi } from "../../../hooks/useApi";
+import { useEffect, useState } from "react";
+import type { ProjectMember } from "../../../service/types/member/member.dto";
+import type { ApiError } from "../../../service/types/response/error";
+import { Toasts } from "../../../maps/toasts";
+import { MemberRole } from "../../../service/types/member/role.dto";
+import { TaskStage } from "../../../service/types/task/stage.dto";
 
 export function Members() {
-  const members = Array.from({ length: 10 }, (_, i) => i);
+  const navigate = useNavigate();
+
+  const api = useApi();
+
+  const { id } = useParams()
+
+  const [ owner, setOwner ] = useState<ProjectMember | undefined>(undefined);
+  const [members, setMembers] = useState<ProjectMember[]>([]);
+  const getMembers = async () => {
+    try {
+      const response = await api.get({ route: `/project/${id}/members` });
+
+      const data: ProjectMember[] = response.data;
+      console.log(data);
+      const ownr = data.find(member => member.role === MemberRole.OWNER);
+
+      setOwner(ownr);
+      setMembers(data);
+    } catch (error) {
+      const { errors } = error as ApiError;
+
+      errors?.forEach(
+        err => {
+          const notify = Toasts[err.level];
+          notify(err.message);
+        }
+      )
+
+      navigate('..')
+    }
+  }
+
+  useEffect(() => {
+    getMembers();
+  },[]);
 
   return (
     <Container className="members">
       <Header id="header">
         <ProjectMenu />
-        <CreateButton>Add member</CreateButton>
       </Header>
-      <SearchField filter sort/>
+      <SearchField filter sort />
       <Content id="team">
-        <ContentHeader id="team-header">
-          <Title>User</Title>
-          <Title>Role</Title>
-          <Title>Tasks</Title>
-        </ContentHeader>
         <MembersArea>
           <Scroller className='vertical'>
-            <MemberTile type="owner" tasks={{done: '00', total: '000'}}/>
-
+            { owner ? <MemberTile type="owner" username={owner.userkey} tasks={{ done: owner.tasks.filter(tsk => tsk.stage === TaskStage.DONE).length, total: owner.tasks.length }} /> : <></> }
             {
-              members.map((index) => <MemberTile key={index} type="member" tasks={{done: '00', total: '000'}}/>)
+              members
+                .filter(member => member.role !== MemberRole.OWNER)
+                .map((member) => <MemberTile key={member.id} username={member.userkey} type="member" tasks={{ done: member.tasks.filter(tsk => tsk.stage === TaskStage.DONE).length, total: member.tasks.length }} />)
             }
           </Scroller>
         </MembersArea>

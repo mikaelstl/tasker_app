@@ -11,7 +11,7 @@ const Container = styled.div`
 const Content = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 20px;
 
   overflow: hidden;
 
@@ -23,7 +23,7 @@ const Content = styled.div`
 const Abstract = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 20px;
   
   min-width: 20%; height: 100%;
   
@@ -35,13 +35,14 @@ const Abstract = styled.div`
 const ImportantTasks = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
 `;
 
 const Comments = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  justify-content: space-between;
+  gap: 10px;
   
   overflow: hidden;
   

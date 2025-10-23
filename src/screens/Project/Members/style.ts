@@ -24,16 +24,6 @@ const Content = styled.div`
   width: 100%; height: 100%;
   
   overflow: hidden;
-  
-  padding: 0px 20px;
-`;
-
-const ContentHeader = styled.div`
-  display: grid;
-  grid-template-columns: 1fr .25fr .25fr;
-  align-items: center;
-
-  padding: 15px;
 `;
 
 const MembersArea = styled.div`
@@ -45,6 +35,5 @@ export {
   Container,
   Header,
   Content,
-  ContentHeader,
   MembersArea
 }

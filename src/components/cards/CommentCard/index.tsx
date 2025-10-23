@@ -1,11 +1,23 @@
+import { DateTime } from "luxon";
 import { Label } from "../../base/Label";
 import { Subtitle } from "../../base/Subtitle";
 import { Text } from "../../base/Text";
 import { Avatar } from "../../misc/Avatar";
 import { Flag, Indicator } from "../TaskCard/style";
 import { Card, Container, Texts } from "./style";
+import { formatNumber } from "../../../utils/formatNumber";
 
-export function CommentCard() {
+interface CommentCardDTO {
+  readonly content:     string;
+  readonly date:        DateTime;
+  readonly owner:    string;
+}
+
+export function CommentCard({
+  content,
+  date,
+  owner,
+}: CommentCardDTO) {
   return (
     <Card className="comment-card">
       <Indicator className="indicator">
@@ -16,10 +28,10 @@ export function CommentCard() {
         <Avatar size="medium" image=""/>
         <div id="text">
           <Texts id="message-label">
-            <Label>Username</Label>
-            <Subtitle>, in mm 00, aaaa</Subtitle>
+            <Label>{owner}</Label>
+            <Subtitle>, in {date.monthShort} {formatNumber(date.day)}, {date.year}</Subtitle>
           </Texts>
-          <Text>Message</Text>
+          <Text>{content}</Text>
         </div>
       </Container>
     </Card>

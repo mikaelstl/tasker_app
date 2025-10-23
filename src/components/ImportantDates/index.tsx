@@ -1,26 +1,35 @@
+import { DateTime } from "luxon"
+import type { EventDTO } from "../../service/types/events/event.dto"
 import { Subtitle } from "../base/Subtitle"
 import { Text } from "../base/Text"
 import { Title } from "../base/Title"
 import { Margin } from "../misc/Margin"
 import { Scroller } from "../misc/Scroller"
 import { Container, Day, Event, Month, Name } from "./style"
+import { formatNumber } from "../../utils/formatNumber"
+import { useEffect, useState } from "react"
 
-export function ImportantDates() {
-  const events = Array.from({ length: 4 }, (_, i) => i);
-  const months: { events: number[] }[] = [
-    {
-      events: events
-    },
-    {
-      events: events
-    },
-    {
-      events: events
-    },
-    {
-      events: events
-    }
-  ]
+interface ImportantDatesProps {
+  events: EventDTO[]
+}
+
+type DateType = {
+  date: DateTime,
+  events: EventDTO[]
+}
+
+export function ImportantDates({
+  events
+}: ImportantDatesProps) {
+  const [ dates, setDates ] = useState<DateType[]>([]);
+  
+  useEffect(() => {
+    events.map(
+      (evt) => {
+        const date = DateTime.fromISO(evt.date);
+      }
+    )
+  }, [])
 
   return (
     <Container className="important-dates">
@@ -28,23 +37,29 @@ export function ImportantDates() {
 
       <Scroller className="vertical">
         {
-          months.map((day) =>
-            <Margin bottom="20px">
+          events.map((event) =>{
+            const eventDate = DateTime.fromISO(event.date, { zone: 'utc' });
+
+            const sameDateEvents = events.filter(evt => DateTime.fromISO(evt.date, { zone: 'utc' }).hasSame(eventDate, 'day'));
+
+            return <Margin bottom="20px">
               <Month id="month">
-                <Subtitle>Month, YYYY</Subtitle>
+                <Subtitle>{eventDate.monthShort} {eventDate.day}, {eventDate.year}</Subtitle>
                 {
-                  day.events.map(
-                    (_) => <Event id="event">
+                  sameDateEvents
+                  .map(
+                    (evt) => {
+                    const date = DateTime.fromISO(evt.date, { zone: 'utc' });
+                    return <Event id="event">
                       <Day id="day">
-                        <Text>Day</Text>
-                        <Text>00</Text>
+                        <Text>{formatNumber(date.hour)}:{formatNumber(date.minute)}</Text>
                       </Day>
-                      <Name>Title</Name>
-                    </Event>
+                      <Name>{evt.title}</Name>
+                    </Event>}
                   )
                 }
               </Month>
-            </Margin>
+            </Margin>}
           )
         }
       </Scroller>

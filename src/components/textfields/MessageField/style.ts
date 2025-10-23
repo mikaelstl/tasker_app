@@ -12,7 +12,7 @@ const Container = styled.div`
   border-bottom: 2px solid ${Palette.items};
 `
   
-const Search = styled.div`
+const Field = styled.div`
   display: flex;
   gap: 10px;
   
@@ -49,6 +49,6 @@ const Button = styled.button`
 
 export {
   Container,
-  Search,
+  Field,
   Button
 }

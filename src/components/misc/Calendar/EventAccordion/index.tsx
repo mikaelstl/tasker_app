@@ -1,4 +1,4 @@
-import { ChevronDownIcon } from "@heroicons/react/16/solid";
+import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/16/solid";
 import { CalendarIcon } from "@heroicons/react/24/solid";
 import { DateTime } from "luxon";
 import { useEffect, useState } from "react";
@@ -23,11 +23,11 @@ export function EventAccordion(props: EventAccordionProps) {
   }
 
   const isToday = (): boolean => {
-    return props.day === today.day.toString()
+    return (props.day === today.day.toString()
             &&
-           sameMonth()
-            &&
-           props.events.length !== 0
+           sameMonth())
+            ||
+           (props.events.length !== 0)
              ? true
              : false
   }
@@ -49,7 +49,7 @@ export function EventAccordion(props: EventAccordionProps) {
           <CalendarIcon width='20'/>
           {props.day} {props.month} {props.year}
         </Activated>
-        <ChevronDownIcon width="22" color="blue" />
+        {contentOn ? <ChevronUpIcon width="22" color="blue" /> : <ChevronDownIcon width="22" color="blue" />}
       </Accordion>
       {
         contentOn

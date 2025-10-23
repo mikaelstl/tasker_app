@@ -10,7 +10,7 @@ export function CalendarInput(props: CalendarInputProps) {
   return (
     <Container>
       <label htmlFor="text-input">{props.label}</label>
-      <Input type="date" name="calendar-input"
+      <Input type="datetime-local" name="calendar-input"
         value={props.value}
         onChange={(evt) => {
             evt.preventDefault()

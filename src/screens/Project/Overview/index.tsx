@@ -21,13 +21,21 @@ import type { TaskDTO } from "../../../service/types/task/task.dto";
 import { ItalicTitle } from "../../../components/base/ItalicTitle";
 import { ProgressBadge } from "../../../maps/progress";
 import type { TaskQueryDTO } from "../../../service/types/task/query.dto";
+import type { EventDTO } from "../../../service/types/events/event.dto";
+import { MessageField } from "../../../components/textfields/MessageField";
+import type { CreateCommentDTO } from "../../../service/types/comment/comment.create.dto";
+import { useAuth } from "../../../hooks/useAuth";
+import type { CommentDTO } from "../../../service/types/comment/comment.dto";
+import type { ApiResponse } from "../../../service/types/response/response";
 
 export function Overview() {
   const navigate = useNavigate();
 
   const api = useApi();
 
-  const { id } = useParams()
+  const { user } = useAuth();
+
+  const { id } = useParams();
 
   const [project, setProject] = useState<ProjectDTO | null>(null);
   const getProject = async () => {
@@ -77,9 +85,89 @@ export function Overview() {
     }
   }
 
+  const [events, setEvents] = useState<EventDTO[]>([]);
+  const getEvents = async () => {
+    try {
+      const response = await api.get({
+        route: `/events?projectkey=${id}`
+      });
+
+      console.log(response);
+
+      const data: EventDTO[] = response.data;
+
+      setEvents(data);
+    } catch (error) {
+      const { errors } = error as ApiError;
+
+      errors?.forEach(
+        err => {
+          const notify = Toasts[err.level];
+          notify(err.message);
+        }
+      )
+
+      navigate('../../')
+    }
+  }
+
+  const [comments, setComments] = useState<CommentDTO[]>([]);
+  const getComments = async () => {
+    try {
+      const response = await api.get({
+        route: `/project/${id}/comments`
+      });
+
+      const data: CommentDTO[] = response.data;
+
+      setComments(data);
+    } catch (error) {
+      const { errors } = error as ApiError;
+
+      errors?.forEach(
+        err => {
+          const notify = Toasts[err.level];
+          notify(err.message);
+        }
+      )
+
+      navigate('../../')
+    }
+  }
+  const sendComment = async (message: string) => {
+    try {
+      const response: ApiResponse = await api.post<CreateCommentDTO>({
+        route: `/project/${id}/comments`,
+        data: {
+          content: message,
+          projectkey: id!,
+          ownerkey: user!.username,
+          date: new Date()
+        }
+      });
+
+      Toasts['info'](response.message as string);
+
+      getComments();
+    } catch (error) {
+      const { errors } = error as ApiError;
+
+      errors?.forEach(
+        err => {
+          const notify = Toasts[err.level];
+          notify(err.message);
+        }
+      )
+
+      navigate('../../')
+    }
+  }
+
   useEffect(() => {
     getProject();
     getTasks();
+    getEvents();
+    getComments();
   }, [])
 
   if (project === null) return <><Text>Carregando...</Text></>;
@@ -129,19 +217,22 @@ export function Overview() {
         <Comments className="overview-comments">
           <Title>Comments</Title>
           {
-            tasks.length !== 0
-              ? <Scroller className="horizontal">
+            comments.length !== 0
+              ? <Scroller className="vertical">
                 {
-                  tasks.map((_) => <Margin right='12px'>
-                    <CommentCard />
-                  </Margin>)
+                  comments.map((comment) => <CommentCard
+                                              content={comment.content}
+                                              date={DateTime.fromISO(comment.date, { zone: 'utc' })}
+                                              owner={comment.ownerkey}
+                                            />)
                 }
               </Scroller>
               : <ItalicTitle>Without comments</ItalicTitle>
           }
+          <MessageField send={sendComment}/>
         </Comments>
       </Content>
-      <ImportantDates />
+      <ImportantDates events={events}/>
     </Container>
   )
 }
