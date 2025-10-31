@@ -26,7 +26,7 @@ export function ImportantDates({
   useEffect(() => {
     events.map(
       (evt) => {
-        const date = DateTime.fromISO(evt.date);
+        const date = DateTime.fromISO(evt.date, { zone: 'utc' });
       }
     )
   }, [])

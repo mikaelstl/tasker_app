@@ -8,6 +8,7 @@ import type { ProjectDTO } from "../../service/types/project/project.dto.ts";
 import { useApi } from "../../hooks/useApi.ts";
 import { useAuth } from "../../hooks/useAuth.ts";
 import { CreateProjectPopup } from "../../components/popups/CreateProject/index.tsx";
+import type { ProjectQueryDTO } from "../../service/types/project/project.query.dto.ts";
 
 export function Projects() {
   const api = useApi();
@@ -17,19 +18,21 @@ export function Projects() {
   const [projects, setProjects] = useState<ProjectDTO[]>([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
-  const handleOpenPopup = () => {
-    setIsPopupOpen(true);
+  const handlePopup = () => {
+    setIsPopupOpen((prev) => !prev);
+    console.log(isPopupOpen);
   };
 
   const handleClosePopup = () => {
     setIsPopupOpen(false);
+    console.log(isPopupOpen);
   };
 
   useEffect(() => {
-    api.get({
+    api.get<ProjectQueryDTO>({
       route: '/project/list',
-      headers: {
-        'user': user?.username
+      params: {
+        ownerkey: user?.username
       }
     }).then(
       (result) => {
@@ -40,8 +43,8 @@ export function Projects() {
 
   return (
     <Container className="projects-content">
-      <CreateProjectPopup showPopup={isPopupOpen} closePopup={handleClosePopup} />
-      <CreateButton type="button" onClick={handleOpenPopup}>Create new project</CreateButton>
+      <CreateProjectPopup showPopup={isPopupOpen} closePopup={handlePopup} />
+      <CreateButton type="button" onClick={handlePopup}>Create new project</CreateButton>
       <SearchField filter sort />
       <Content id="projects">
         <Scroller className="vertical">

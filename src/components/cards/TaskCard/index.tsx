@@ -23,7 +23,7 @@ export function TaskCard(props: TaskCardProps) {
             <Title>{props.title}</Title>
             <Subtitle>{props.description}</Subtitle>
           </div>
-          <DateBadge date={DateTime.fromISO(props.date)}/>
+          <DateBadge date={DateTime.fromISO(props.date, { zone: 'utc' })}/>
         </Leading>
         <Avatar online={false} size="small" image="" />
       </Content>

@@ -23,24 +23,24 @@ export function Register() {
     try {
       const response = await api.post<CreateUserDTO>({ route: '/auth/register', data: data });
 
-      const { username, password } = response.data as UserDTO;
+      const { username } = response.data as UserDTO;
 
       const loginData: LoginDTO = {
         username,
-        password
+        password: data.password
       }
 
       await login(loginData);
 
       navigate('/home/workspace');
     } catch (error) {
-      const { errors } = error as ApiError;      
+      const { errors } = error as ApiError;
 
-      errors?.map(
+      errors.forEach(
         err => {
           const notification = Toasts[err.level];
 
-          return notification(err.message);
+          notification(err.message);
         }
       )
     }

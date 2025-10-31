@@ -15,7 +15,7 @@ export function CreateAccountForm(props: CreateAccountFormProps) {
   const [ name, setName ] = useState<string>('');
   const [ email, setEmail ] = useState<string>('');
 
-  const onSubmit = async (ev: React.FormEvent) => {
+  const onSubmit = (ev: React.FormEvent) => {
     ev.preventDefault();
 
     const data: CreateUserDTO = {
@@ -25,12 +25,12 @@ export function CreateAccountForm(props: CreateAccountFormProps) {
       password
     }
 
-    await props.createAccount(data);
+    props.createAccount(data);
   }
 
   return (
     <Container className="create-account-form">
-      <Form action='' onSubmit={onSubmit}>
+      <Form onSubmit={onSubmit}>
         <Inputs className="create-account-inputs">
           <FormInput
             icon={<UserIcon style={{ width: 24, height: 24 }}/>}

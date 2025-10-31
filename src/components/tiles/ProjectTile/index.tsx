@@ -33,7 +33,7 @@ export function ProjectTile(props: ProjectTileProps) {
       </Leading>
       <Trailing>
         <Badge>{props.progress}</Badge>
-        <DateBadge date={DateTime.fromISO(props.due_date)}/>
+        <DateBadge date={DateTime.fromISO(props.due_date, { zone: 'utc' })}/>
       </Trailing>
     </Card >
   )

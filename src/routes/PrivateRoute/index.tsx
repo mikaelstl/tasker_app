@@ -20,8 +20,14 @@ export function PrivateRoute() {
       try {
         const res: any = await api.get({ route: "/auth/validate" });
         
+        if (!res) {
+          const notify = Toasts['warning'];
+          notify('Unknown error');
+          return;
+        }
+
         const notify = Toasts['info'];
-        notify(res.message);
+        notify('Login successful');
 
         setIsValid(true);
       } catch (error) {

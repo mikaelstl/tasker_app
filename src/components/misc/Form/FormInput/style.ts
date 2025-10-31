@@ -39,10 +39,12 @@ const Input = styled.input`
 `;
 
 const ShowPassword = styled.button`
+  display: flex;
+  justify-content: center;
   align-items: center;
+
   width: fit-content;
   height: fit-content;
-  border: 1px solid red;
 `;
 
 export {

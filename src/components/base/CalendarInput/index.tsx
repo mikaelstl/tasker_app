@@ -1,3 +1,4 @@
+import { DateTime } from "luxon";
 import { Container, Input } from "./style";
 
 interface CalendarInputProps {
@@ -7,10 +8,14 @@ interface CalendarInputProps {
 }
 
 export function CalendarInput(props: CalendarInputProps) {
+  const now = DateTime.local();
+  
   return (
     <Container>
       <label htmlFor="text-input">{props.label}</label>
-      <Input type="datetime-local" name="calendar-input"
+      <Input name="calendar-input"
+        type="datetime-local"
+        min={now.toFormat("yyyy-LL-dd'T'HH:mm")}
         value={props.value}
         onChange={(evt) => {
             evt.preventDefault()

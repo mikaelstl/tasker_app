@@ -28,7 +28,7 @@ export function ProjectCard(props: ProjectCardProps) {
           <Subtitle>{props.description}</Subtitle>
         </div>
         <DateBadge
-          date={DateTime.fromISO(props.due_date)}
+          date={DateTime.fromISO(props.due_date, { zone: 'utc'})}
         />
       </Leading>
       <Trailing className="card-Trailing">

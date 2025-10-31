@@ -189,7 +189,7 @@ export function Overview() {
         <AbstractItem className="abstract-item">
           <Label>Due date</Label>
           <DateBadge
-            date={DateTime.fromISO(project?.due_date)}
+            date={DateTime.fromISO(project?.due_date, { zone: 'utc' })}
           />
         </AbstractItem>
       </Abstract>
