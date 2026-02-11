@@ -115,7 +115,7 @@ export function Overview() {
   const getComments = async () => {
     try {
       const response = await api.get({
-        route: `/project/${id}/comments`
+        route: `/comments?projectkey=${id}`
       });
 
       const data: CommentDTO[] = response.data;
@@ -137,7 +137,7 @@ export function Overview() {
   const sendComment = async (message: string) => {
     try {
       const response: ApiResponse = await api.post<CreateCommentDTO>({
-        route: `/project/${id}/comments`,
+        route: `/comments`,
         data: {
           content: message,
           projectkey: id!,

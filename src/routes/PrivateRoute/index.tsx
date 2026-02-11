@@ -46,6 +46,8 @@ export function PrivateRoute() {
 
     if (token) validate()
     else setIsValid(false);
+
+    if (isValid === false) navigate('/login')
   }, [user, token]);
 
   if (isValid === false) return <><Text>Carregando...</Text></>;
