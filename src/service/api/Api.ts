@@ -92,6 +92,18 @@ export class Api {
           });
         }
 
+        if (err.status === 401) {
+          return Promise.reject({
+            status: 401,
+            errors: [{
+              level: 'error',
+              message: err.response.data.message
+            }],
+            timestamp: new Date().toISOString(),
+            path: '/'
+          });
+        }
+
         const error: ApiError = err.response.data;
 
         return Promise.reject(error);

@@ -15,6 +15,7 @@ interface AuthContextInterface {
   token: string | null;
   login: (data: LoginDTO) => Promise<void>;
   logout: () => void;
+  validate: () => Promise<boolean>;
 }
 
 export const AuthContext = createContext<AuthContextInterface | undefined>(undefined);
@@ -55,7 +56,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       errors?.forEach(
         err => {
           console.warn(err);
-          
+
           const notify = Toasts[err.level];
           notify(err.message);
         }
@@ -70,8 +71,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem('token');
   }
 
+  const validate = async (): Promise<boolean> => {
+    try {
+      const res: any = await api.get({ route: "/auth/validate" });
+
+      console.log("RESPONSE FROM '/auth/validate' >>>>>>");
+      console.log(res);
+
+      if (!res) {
+        const notify = Toasts['warning'];
+        notify('Unknown error');
+        return false;
+      }
+
+      return res.data;
+    } catch (error) {
+      const err = error as ApiError;
+
+      err?.errors?.forEach(e => {
+        const notify = Toasts[e.level];
+        notify(e.message);
+      });
+
+      return false;
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, token, login, logout }}>
+    <AuthContext.Provider value={{ user, token, login, logout, validate }}>
       {children}
     </AuthContext.Provider>
   )
