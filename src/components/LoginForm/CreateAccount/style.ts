@@ -23,10 +23,9 @@ const CreateAccountBtn = styled.button`
   font-family: 'Montserrat';
   font-weight: bold;
   
-  border: 2px solid ${Palette.white};
   border-radius: 9999px;
   
-  background: none;
+  background-color: ${Palette.items};
 `;
 
 export {

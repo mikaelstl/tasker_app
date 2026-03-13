@@ -23,7 +23,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        <Route element={<PrivateRoute/>}>
+        {/* <Route element={<PrivateRoute/>}> */}
           <Route path="/home" element={<Home />}>
             <Route index element={<Navigate to="workspace" replace />} />
 
@@ -43,7 +43,7 @@ function App() {
               <Route path="calendar" element={<Events />} />
             </Route>
           </Route>
-        </Route>
+        {/* </Route> */}
       </Routes>
     </BrowserRouter>
   )

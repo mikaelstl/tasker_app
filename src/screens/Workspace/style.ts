@@ -2,10 +2,10 @@ import styled from "styled-components";
 import Palette from "../../assets/palette";
 
 const Content = styled.div`
-  display: grid;
-  grid-template:
-    "recent friends"
-    "week friends" / 1fr .25fr;
+  display: flex;
+  flex-direction: column;
+
+  gap: 20px;
   
   height: 100%;
   width: 100%;
@@ -13,51 +13,24 @@ const Content = styled.div`
   overflow: hidden;
 `;
 
-const Recent = styled.div`
-  grid-area: recent;
-
-  flex: 1;
-
-  overflow: hidden;
-
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-
-  padding: 20px;
-
+const Accordion = styled.div`
   width: 100%;
 `;
 
-const ToThisWeek = styled.div`
-  grid-area: week;
-
+const Header = styled.div`
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-  
-  padding: 0px 20px;
-
-  width: fit-content;
-  overflow: hidden;
+  gap: 16px;
+  height: fit-content;
+  border: 1px solid red;
 `;
 
-const Friends = styled.div`
-  grid-area: friends;
-
-  display: flex;
-  flex-direction: column;
-
-  background-color: ${Palette.tool_bars};
-  
-  padding: 16px;
-
-  overflow: hidden;
+const Tasks = styled.div`
+  width: 100%;
 `;
 
 export {
   Content,
-  Recent,
-  Friends,
-  ToThisWeek
+  Header,
+  Accordion,
+  Tasks
 }

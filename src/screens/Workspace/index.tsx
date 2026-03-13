@@ -1,40 +1,77 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Title } from "../../components/base/Title/index.ts";
-import { ProjectCard } from "../../components/cards/ProjectCard/index.tsx";
 import { TaskCard } from "../../components/cards/TaskCard/index.tsx";
 import { Margin } from "../../components/misc/Margin/index.ts";
 import { Scroller } from "../../components/misc/Scroller/index.ts";
-import { User } from "../../components/misc/User/index.tsx";
 import { useApi } from "../../hooks/useApi.ts";
-import { Content, Friends, Recent, ToThisWeek } from "./style.ts";
+import { Accordion, Content, Header, Tasks } from "./style.ts";
 import { useAuth } from "../../hooks/useAuth.ts";
-import type { ProjectDTO } from "../../service/types/project/project.dto.ts";
 import { ItalicTitle } from "../../components/base/ItalicTitle/index.ts";
 import type { TaskDTO } from "../../service/types/task/task.dto.ts";
+import { TaskStage } from "../../service/types/task/stage.dto.ts";
+import { TaskPriority } from "../../service/types/task/priority.dto.tsx";
+import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/16/solid";
 
 export function Workspace() {
   const api = useApi();
 
   const { user } = useAuth();
 
-  const [projects, setProjects] = useState<ProjectDTO[]>([]);
-  const [tasks, setTasks] = useState<TaskDTO[]>([]);
-  const users = Array.from({ length: 30 }, (_, i) => i);
+  const [tasks, setTasks] = useState<TaskDTO[]>([{
+    id: '73187165-f888-4a26-9df6-d7c8d39a6e81',
+    code: 'TSK-001',
+    name: 'Tarefa 01',
+    description: 'Primeira tarefa de teste',
+    project: 'c45d24bf-8933-4421-9685-863b3b285a94',
+    owner: '',
+    stage: TaskStage.PENDING,
+    priority: TaskPriority.MEDIUM,
+    due_date: new Date().toISOString(),
+  },{
+    id: '73187165-f888-4a26-9df6-d7c8d39a6e81',
+    code: 'TSK-001',
+    name: 'Tarefa 01',
+    description: 'Primeira tarefa de teste',
+    project: 'c45d24bf-8933-4421-9685-863b3b285a94',
+    owner: '',
+    stage: TaskStage.PENDING,
+    priority: TaskPriority.MEDIUM,
+    due_date: new Date().toISOString(),
+  },{
+    id: '73187165-f888-4a26-9df6-d7c8d39a6e81',
+    code: 'TSK-001',
+    name: 'Tarefa 01',
+    description: 'Primeira tarefa de teste',
+    project: 'c45d24bf-8933-4421-9685-863b3b285a94',
+    owner: '',
+    stage: TaskStage.PENDING,
+    priority: TaskPriority.MEDIUM,
+    due_date: new Date().toISOString(),
+  },{
+    id: '73187165-f888-4a26-9df6-d7c8d39a6e81',
+    code: 'TSK-001',
+    name: 'Tarefa 01',
+    description: 'Primeira tarefa de teste',
+    project: 'c45d24bf-8933-4421-9685-863b3b285a94',
+    owner: '',
+    stage: TaskStage.PENDING,
+    priority: TaskPriority.MEDIUM,
+    due_date: new Date().toISOString(),
+  },{
+    id: '73187165-f888-4a26-9df6-d7c8d39a6e81',
+    code: 'TSK-001',
+    name: 'Tarefa 01',
+    description: 'Primeira tarefa de teste',
+    project: 'c45d24bf-8933-4421-9685-863b3b285a94',
+    owner: '',
+    stage: TaskStage.PENDING,
+    priority: TaskPriority.MEDIUM,
+    due_date: new Date().toISOString(),
+  }]);
 
   useEffect(() => {
-    api.get({
-      route: '/project/list',
-      headers: {
-        'user': user?.username
-      }
-    }).then(
-      (result) => {
-        setProjects(result.data);
-      }
-    );
-
     /* api.get({
-      route: `/tasks?ownerkey: user?.username`
+      route: `/tasks`
     }).then(
       (result) => {
         setTasks(result.data);
@@ -42,53 +79,72 @@ export function Workspace() {
     ); */
   }, []);
 
+  const TaskCategoryAccordion = (props: { visible?: boolean, title: string, tasks: TaskDTO[]}) => {
+    const [visible, setVisible] = useState(props.visible ?? false);
+
+    const [icon, setIcon] = useState(<ChevronDownIcon width={24}/>)
+
+    const handleVisible = () => {
+      setVisible(!visible)
+    }
+
+    useEffect(() => {
+      if (visible) {
+        setIcon(<ChevronUpIcon width={24}/>)
+      } else {
+        setIcon(<ChevronDownIcon width={24}/>)
+      }
+    }, [visible])
+
+    return <Accordion>
+      <Header>
+        <button onClick={handleVisible}>{icon}</button>
+        <Title>{props.title}</Title>
+      </Header>
+      {
+        visible ?
+          <Tasks>
+            {
+              props.tasks.length !== 0
+              ? <Scroller className="horizontal">
+                {
+                  props.tasks.map(task => <Margin right='12px'>
+                    <TaskCard
+                      key={task.id}
+                      title={task.name}
+                      priority={task.priority}
+                      due_date={task.due_date}
+                    />
+                  </Margin>)
+                }
+              </Scroller>
+              : <ItalicTitle>Sem projetos acessados recentemente</ItalicTitle>  
+            }
+          </Tasks>
+        : <></>
+      }
+    </Accordion>
+  }
+
   return (
     <Content className="workspace-content">
-      <Recent className="recent">
-        <Title>Recent</Title>
-        {
-          projects.length !== 0
-            ? <Scroller className="horizontal">
-              {
-                projects.map(project => <Margin right='12px'>
-                  <ProjectCard
-                    key={project.id}
-                    id={project.id}
-                    title={project.title}
-                    description={project.description}
-                    progress={project.progress}
-                    due_date={project.due_date}
-                  />
-                </Margin>)
-              }
-            </Scroller>
-            : <ItalicTitle>Sem projetos acessados recentemente</ItalicTitle>
-        }
-      </Recent>
-
-      <Friends className="friends">
-        <Title>Online</Title>
-        <Scroller className="vertical">
-          {
-            users.map(_ => <Margin bottom='12px'>
-              <User online username="username"/>
-            </Margin>)
-          }
-        </Scroller>
-      </Friends>
-
-      <ToThisWeek className="this-week">
-        <Title>To this Week</Title>
-        <Scroller className="vertical">
-          {
-            tasks.length !== 0
-              ? tasks.map(task => <Margin bottom='12px'>
-                <TaskCard key={task.id} title={task.name} description={task.description} date={task.due_date} />
-              </Margin>)
-              : <ItalicTitle>Without tasks to this week</ItalicTitle>
-          }
-        </Scroller>
-      </ToThisWeek>
+      <TaskCategoryAccordion
+        visible
+        title="Today"
+        tasks={tasks}
+      />
+      <TaskCategoryAccordion
+        title="To this Week"
+        tasks={tasks}
+      />
+      <TaskCategoryAccordion
+        title="Pending"
+        tasks={tasks}
+      />
+      <TaskCategoryAccordion
+        title="Overdue"
+        tasks={tasks}
+      />
     </Content>
   )
 }

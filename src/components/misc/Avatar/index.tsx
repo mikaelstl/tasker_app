@@ -1,4 +1,6 @@
+import { UserIcon } from "@heroicons/react/16/solid";
 import { Container, Image, Indicator } from "./style.ts";
+import Palette from "../../../assets/palette.ts";
 
 interface AvatarProps {
   image: string;
@@ -8,9 +10,9 @@ interface AvatarProps {
 
 export function Avatar(props: AvatarProps) {
   return (
-    <Indicator online={props.online ?? false}>
+    <Indicator className="task-avatar" online={props.online ?? false}>
       <Container className={`avatar ${props.size}`}>
-        { props.image !== "" ? <Image src={props.image}/> : <></>}
+        { props.image !== "" ? <Image src={props.image}/> : <UserIcon fill={Palette.items}/>}
       </Container>
     </Indicator>
   )

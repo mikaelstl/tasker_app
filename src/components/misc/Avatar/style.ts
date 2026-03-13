@@ -2,7 +2,10 @@ import styled from "styled-components";
 import Palette from "../../../assets/palette";
 
 const Container = styled.div`
-  background-color: ${Palette.gray};
+  grid-area: tskr-avatar;
+
+  background-color: ${Palette.details};
+  padding: 4px;
   
   &.small {
     border-radius: 99999px;
@@ -12,6 +15,7 @@ const Container = styled.div`
   &.medium {
     border-radius: 99999px;
     height: 52px; width: 52px;
+    padding: 6px;
   }
   
   &.large {
@@ -24,6 +28,9 @@ const Indicator = styled.div<{ online: boolean }>`
   padding: 2px;
   outline: ${props => props.online ? `2px solid ${Palette.blue}` : `none` };
   border-radius: 9999px;
+
+  width: fit-content;
+  height: fit-content;
 `;
 
 const Image = styled.img`
