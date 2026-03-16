@@ -8,6 +8,7 @@ import { Scroller } from "../misc/Scroller"
 import { Container, Day, Event, Month, Name } from "./style"
 import { formatNumber } from "../../utils/formatNumber"
 import { useEffect, useState } from "react"
+import { SectionTitle } from "../base/SectionTitle"
 
 interface ImportantDatesProps {
   events: EventDTO[]
@@ -33,7 +34,7 @@ export function ImportantDates({
 
   return (
     <Container className="important-dates">
-      <Title>Important dates</Title>
+      <SectionTitle>Important dates</SectionTitle>
 
       <Scroller className="vertical">
         {

@@ -2,10 +2,17 @@ import styled from "styled-components";
 import Palette from "../../../assets/palette";
 
 const Card = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  
+  display: grid;
+  grid-template-areas: 
+    "tskr-badge tskr-title tskr-healthy-i"
+    ".          tskr-team tskr-date"
+  ;
+
+  grid-template-columns: min-content 2fr auto;
+  grid-template-rows: fit-content auto;
+
+  gap: 12px;
+
   border-bottom: 1px solid ${Palette.items};
   
   padding: 20px;
@@ -13,28 +20,14 @@ const Card = styled.div`
   cursor: pointer;
 `;
 
+const HealthyIndicator = styled.div`
+  grid-area: tskr-healthy-i;
 
-
-const Leading = styled.div`
   display: flex;
-  flex-direction: column;
-  gap: 16px;
+  justify-content: flex-end;
 `;
-
-const Trailing = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: end;
-  justify-content: space-between;
-
-  height: 100%;
-`;
-
-const Details = styled.div``;
 
 export {
   Card,
-  Leading,
-  Trailing,
-  Details
+  HealthyIndicator
 }

@@ -16,7 +16,7 @@ const Card = styled.div`
   column-gap: 12px;
 
   width: 100%;
-  height: 100px;
+  height: 85px;
 
   position: relative;
 
@@ -43,7 +43,7 @@ const Line = styled.div`
 
   border-left: 3px solid ${Palette.items};
 
-  left: 50%;
+  left: 48%;
 
   position: absolute;
 `;

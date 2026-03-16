@@ -2,8 +2,6 @@ import styled from "styled-components";
 
 const Scroller = styled.div`
   display: flex;
-
-  padding: 12px;
   
   &.horizontal {
     width: 100%;

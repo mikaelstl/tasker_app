@@ -1,19 +1,43 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/src/assets/icons/favicon.svg" />
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tasker</title>
-    <style>
-      body {
-        font-family: "Montserrat", sans-serif;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/src/assets/icons/favicon.svg" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+    rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tasker</title>
+  <style>
+    ::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    /* parte que desliza */
+    ::-webkit-scrollbar-thumb {
+      background-color: #ffffff00;
+      border-radius: 50px;
+
+      width: 6px;
+      transition: background-color 2s;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: #1D1B27;
+      border-radius: 50px;
+
+      width: 6px;
+    }
+
+    body {
+      font-family: "Montserrat", sans-serif;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
 </html>

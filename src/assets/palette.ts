@@ -1,27 +1,25 @@
 const Palette = {
   tool_bars: '#0B0A0F',
   content: '#0F0E14',
-  details: '#322E43',
   items: '#1D1B27',
+  details: '#322E43',
   
   white: '#FFFFFF',
   black: '#000000',
   transparent: '#FF000000',
   
-  blue: '#295bb8ff',
-  red: '#BA0000',
+  blue: '#29449D',
+  red: '#BC3B4C',
   gray: '#56526b',
-  green: '#27B72F',
-  yellow: '#FFA600',
+  green: '#26998D',
+  yellow: '#FCAF62',
 
-  lightRedT: '#ff525280',
-  lightBlueT: '#508cee80',
-  lightYellowT: '#f5b64080',
-  grayT: '#56526b80',
-
-  lightRed: '#ff5252ff',
-  lightBlue: '#508ceeff',
-  lightYellow: '#f5b640ff',
+  red_50: 'rgba(188, 59, 76, 0.5)',
+  blue_50: 'rgba(41, 68, 157, 0.5)',
+  yellow_50: 'rgba(252, 175, 98, 0.5)',
+  green_50: 'rgba(38, 153, 141, 0.5)',
+  lightBlue_50: 'rgba(80, 140, 238, 0.5)',
+  gray_50: 'rgba(106, 101, 134, 0.5)',
 }
 
 export default Palette;

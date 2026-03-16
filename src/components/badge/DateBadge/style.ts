@@ -1,10 +1,8 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-  display: grid;
-  grid-auto-flow: column;
-  gap: 6px;
+  grid-area: tskr-date;
 
-  width: fit-content;
-  height: fit-content;
+  display: inline-flex;
+  gap: 6px;
 `

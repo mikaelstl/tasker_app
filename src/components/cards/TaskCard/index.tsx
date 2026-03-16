@@ -3,12 +3,13 @@ import { DateBadge } from "../../badge/DateBadge";
 import { Avatar } from "../../misc/Avatar";
 import { Card, Leading } from "./style";
 import { DateTime } from "luxon";
-import { Badge } from "../../badge/Badge";
+import { PriorityBadge } from "../../../maps/priority";
+import type { TaskPriority } from "../../../service/types/task/priority.dto";
 
 interface TaskCardProps {
   title: string;
   due_date: string;
-  priority: string;
+  priority: TaskPriority;
 }
 
 export function TaskCard(props: TaskCardProps) {
@@ -17,7 +18,7 @@ export function TaskCard(props: TaskCardProps) {
       <Leading/>
       <Title>{props.title}</Title>
       <div className="tskr-priority">
-        <Badge>LOW</Badge>
+        {PriorityBadge[props.priority]}
       </div>
       <Avatar online={false} size="small" image="" />
       <div className="tskr-date">

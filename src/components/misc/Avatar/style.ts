@@ -14,13 +14,13 @@ const Container = styled.div`
   
   &.medium {
     border-radius: 99999px;
-    height: 52px; width: 52px;
+    height: 42px; width: 42px;
     padding: 6px;
   }
   
   &.large {
     border-radius: 99999px;
-    height: 124px; width: 124px;
+    height: 52px; width: 52px;
   }
 `;
 

@@ -9,10 +9,10 @@ export const Badge = styled.div<BadgeProps>`
   font-weight: 600;
   font-size: 14px;
   padding: 5px 10px;
-  border-radius: 50px;
+  border-radius: 4px;
 
   width: fit-content;
   height: fit-content;
 
-  background-color: ${props => props.color ?? Palette.lightRed};
+  background-color: ${props => props.color ?? Palette.red_50};
 `;

@@ -12,7 +12,7 @@ import { User } from "../../../components/misc/User";
 import { ProjectMenu } from "../../../components/ProjectMenu";
 import { useApi } from "../../../hooks/useApi";
 import { Abstract, AbstractItem, Comments, Container, Content, ImportantTasks, ProjectInfo } from "./style";
-import type { ProjectDTO } from "../../../service/types/project/project.dto";
+import { ProjectProgress, type ProjectDTO } from "../../../service/types/project/project.dto";
 import type { ApiError } from "../../../service/types/response/error";
 import { Toasts } from "../../../maps/toasts";
 import { useNavigate, useParams } from "react-router-dom";
@@ -37,7 +37,14 @@ export function Overview() {
 
   const { id } = useParams();
 
-  const [project, setProject] = useState<ProjectDTO | null>(null);
+  const [project, setProject] = useState<ProjectDTO | null>({
+    id: 'bd568178-c2f4-4851-a336-810eddf0bb86',
+    title: 'Projeto de teste',
+    description: 'Projeto padrão para testes',
+    ownerkey: '',
+    due_date: new Date().toISOString(),
+    progress: ProjectProgress.PENDING,
+  });
   const getProject = async () => {
     try {
       const response = await api.get({ route: `/project/${id}` });
@@ -164,10 +171,10 @@ export function Overview() {
   }
 
   useEffect(() => {
-    getProject();
-    getTasks();
-    getEvents();
-    getComments();
+    // getProject();
+    // getTasks();
+    // getEvents();
+    // getComments();
   }, [])
 
   if (project === null) return <><Text>Carregando...</Text></>;
@@ -205,8 +212,8 @@ export function Overview() {
                     <TaskCard
                       key={task.id}
                       title={task.name}
-                      description={task.description}
-                      date={task.due_date}
+                      due_date={task.due_date}
+                      priority={task.priority}
                     />
                   </Margin>)
                 }
@@ -221,18 +228,18 @@ export function Overview() {
               ? <Scroller className="vertical">
                 {
                   comments.map((comment) => <CommentCard
-                                              content={comment.content}
-                                              date={DateTime.fromISO(comment.date, { zone: 'utc' })}
-                                              owner={comment.ownerkey}
-                                            />)
+                    content={comment.content}
+                    date={DateTime.fromISO(comment.date, { zone: 'utc' })}
+                    owner={comment.ownerkey}
+                  />)
                 }
               </Scroller>
               : <ItalicTitle>Without comments</ItalicTitle>
           }
-          <MessageField send={sendComment}/>
+          <MessageField send={sendComment} />
         </Comments>
       </Content>
-      <ImportantDates events={events}/>
+      <ImportantDates events={events} />
     </Container>
   )
 }

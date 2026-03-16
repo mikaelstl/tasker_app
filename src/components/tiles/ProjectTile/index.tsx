@@ -1,19 +1,17 @@
 import { useNavigate } from "react-router-dom";
-import type { ProjectProgress } from "../../../service/types/project/project.dto";
-import { Badge } from "../../badge/Badge";
+import { ProjectProgress } from "../../../service/types/project/project.dto";
 import { Title } from "../../base/Title";
-import { User } from "../../misc/User";
-import { Card, Details, Leading, Trailing } from "./style";
-import { Subtitle } from "../../base/Subtitle";
+import { Card, HealthyIndicator } from "./style";
 import { DateBadge } from "../../badge/DateBadge";
 import { DateTime } from "luxon";
+import { ProgressBadge } from "../../../maps/progress";
+import { ProjectHealthyIcon } from "../../../maps/project_healthy";
+import { Team } from "../../misc/Team";
 
 interface ProjectTileProps {
   id: string;
   title: string;
-  description: string;
   progress: ProjectProgress;
-  owner: string;
   due_date: string;
 }
 
@@ -23,18 +21,14 @@ export function ProjectTile(props: ProjectTileProps) {
   const goToProjectPage = () => navigate(`/home/project/${props.id}/overview`)
 
   return (
-    <Card id="project-tile" onClick={goToProjectPage}>
-      <Leading>
-        <Details>
-          <Title>{props.title}</Title>
-          <Subtitle>{props.description}</Subtitle>
-        </Details>
-        <User username={props.owner}/>
-      </Leading>
-      <Trailing>
-        <Badge>{props.progress}</Badge>
-        <DateBadge date={DateTime.fromISO(props.due_date, { zone: 'utc' })}/>
-      </Trailing>
+    <Card className="tskr-project-tile" onClick={goToProjectPage}>
+      <Title>{props.title}</Title>
+      <Team/>
+      <HealthyIndicator>
+        {ProjectHealthyIcon['SAFE']}
+      </HealthyIndicator>
+      {ProgressBadge[props.progress]}
+      <DateBadge date={DateTime.fromISO(props.due_date, { zone: 'utc' })}/>
     </Card >
   )
 }

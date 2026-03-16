@@ -1,8 +1,9 @@
 export enum ProjectProgress {
+  OVERDUE = 'OVERDUE',
+  STARTED = 'STARTED',
+  REVIEW = 'REVIEW',
   PENDING = 'PENDING',
-  IN_PROGRESS = 'IN_PROGRESS',
-  PAUSED='PAUSED',
-  COMPLETED = 'COMPLETED',
+  DONE = 'DONE',
 }
 
 export interface ProjectDTO {

@@ -6,7 +6,7 @@ const Card = styled.div`
 
   grid-template-areas: "task-leading tskr-title tskr-priority"
                        "task-leading tskr-avatar tskr-date";
-  grid-template-columns: min-content 1fr 1fr;
+  grid-template-columns: min-content 1fr 1.3fr;
   grid-template-rows: auto min-content min-content;
   
   gap: 10px;
@@ -14,11 +14,12 @@ const Card = styled.div`
   overflow: hidden;
 
   border-radius: 0px 6px 6px 0px;
-  padding: 10px 10px 10px 0px;
+  padding: 10px 10px 0px 0px;
 
   background-color: ${Palette.items};
 
-  width: fit-content;
+  width: 270px;
+  height: 100px;
 
   .tskr-priority {
     grid-area: tskr-priority;
@@ -31,6 +32,7 @@ const Card = styled.div`
     display: flex;
     align-items: end;
     height: 100%;
+    width: 100%;
   }
 `;
 

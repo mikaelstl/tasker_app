@@ -5,17 +5,17 @@ import { Avatar } from "../../misc/Avatar";
 import { Card, Line, Texts } from "./style";
 import { Title } from "../../base/Title";
 
-interface CommentCardDTO {
+interface UpdateCardDTO {
   readonly content:     string;
   readonly date:        DateTime;
   readonly owner:    string;
 }
 
-export function CommentCard({
+export function UpdateCard({
   content,
   date,
   owner,
-}: CommentCardDTO) {
+}: UpdateCardDTO) {
   return (
     <Card className="comment-card">
       <Avatar size="medium" image=""/>
