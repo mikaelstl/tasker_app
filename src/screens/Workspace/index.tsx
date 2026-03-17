@@ -3,7 +3,7 @@ import { TaskCard } from "../../components/cards/TaskCard/index.tsx";
 import { Margin } from "../../components/misc/Margin/index.ts";
 import { Scroller } from "../../components/misc/Scroller/index.ts";
 import { useApi } from "../../hooks/useApi.ts";
-import { Accordion, Categories, Content, Greating, Header, Main, Projects, Tasks } from "./style.ts";
+import { Accordion, Categories, Content, Greating, Header, Infos, Main, Projects, Tasks } from "./style.ts";
 import { useAuth } from "../../hooks/useAuth.ts";
 import { ItalicTitle } from "../../components/base/ItalicTitle/index.ts";
 import type { TaskDTO } from "../../service/types/task/task.dto.ts";
@@ -16,6 +16,10 @@ import { ProjectProgress, type ProjectDTO } from "../../service/types/project/pr
 import { ProjectTile } from "../../components/tiles/ProjectTile/index.tsx";
 import { Updates } from "../../components/Updates/index.tsx";
 import { Title } from "../../components/base/Title/index.ts";
+import { ActiveProjectsCard } from "../../components/cards/ActiveProjectsCard/index.tsx";
+import { DeadlineAlertsCard } from "../../components/cards/DeadlineAlertsCard/index.tsx";
+import { ShortcutsCard } from "../../components/cards/ShortcutsCard/index.tsx";
+import { Divider } from "../../components/misc/Divider/index.ts";
 
 const MemberContent = () => {
   const [tasks, setTasks] = useState<TaskDTO[]>([{
@@ -158,6 +162,12 @@ const OrganizerContent = () => {
     <>
       <Main>
         <Greating><SectionTitle>Hello! ORGANIZER</SectionTitle></Greating>
+        <Infos>
+          <ActiveProjectsCard />
+          <DeadlineAlertsCard />
+          <Divider/>
+          <ShortcutsCard />
+        </Infos>
         <Projects>
           <Title>Projects</Title>
           {

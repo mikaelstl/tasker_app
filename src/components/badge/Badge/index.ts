@@ -6,6 +6,10 @@ interface BadgeProps {
 }
 
 export const Badge = styled.div<BadgeProps>`
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
   font-weight: 600;
   font-size: 14px;
   padding: 5px 10px;

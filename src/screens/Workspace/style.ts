@@ -51,8 +51,21 @@ const Projects = styled.div`
 `;
 
 const Main = styled.main`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
   width: 100%;
-`
+`;
+
+const Infos= styled.div`
+  display: inline-flex;
+  gap: 40px;
+
+  width: 100%;
+
+  padding: 0px 20px;
+`;
 
 export {
   Content,
@@ -62,5 +75,6 @@ export {
   Accordion,
   Tasks,
   Projects,
-  Main
+  Main,
+  Infos
 }

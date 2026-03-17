@@ -4,6 +4,7 @@ import { Text } from "../../base/Text";
 import { Avatar } from "../../misc/Avatar";
 import { Card, Line, Texts } from "./style";
 import { Title } from "../../base/Title";
+import { formatNumber } from "../../../utils/formatNumber";
 
 interface UpdateCardDTO {
   readonly content:     string;
@@ -24,7 +25,7 @@ export function UpdateCard({
         <Text>{content}</Text>
       </Texts>
       <Line/>
-      <Subtitle className="tskr-subtitle">{date.day}, {date.monthShort} {date.hour}:{date.minute}</Subtitle>
+      <Subtitle className="tskr-subtitle">{formatNumber(date.day)} {date.monthShort} {formatNumber(date.hour)}:{formatNumber(date.minute)}</Subtitle>
     </Card>
   )
 }

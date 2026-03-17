@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 interface MarginProps {
+  margin?: string;
   top?: string;
   bottom?: string;
   left?: string;
@@ -8,6 +9,8 @@ interface MarginProps {
 }
 
 export const Margin = styled.div<MarginProps>`
+  padding: ${props => props.margin ?? 0};
+
   margin-top: ${props => props.top ?? 0};
   margin-bottom: ${props => props.bottom ?? 0};
   margin-left: ${props => props.left ?? 0};

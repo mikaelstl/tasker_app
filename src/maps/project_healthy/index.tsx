@@ -2,7 +2,7 @@ import { ExclamationTriangleIcon, ShieldCheckIcon, ShieldExclamationIcon } from 
 import Palette from "../../assets/palette";
 
 export const ProjectHealthyIcon = {
-  'SAFE': <ShieldCheckIcon fill={Palette.green_50} width={22}/>,
-  'WARNING': <ShieldExclamationIcon fill={Palette.yellow_50} width={22}/>,
-  'CRITICAL':<ExclamationTriangleIcon fill={Palette.red_50} width={22}/>,
+  'SAFE': <ShieldCheckIcon fill={Palette.green} width={22}/>,
+  'WARNING': <ShieldExclamationIcon fill={Palette.yellow} width={22}/>,
+  'CRITICAL': <ExclamationTriangleIcon fill={Palette.red} width={22}/>,
 }
