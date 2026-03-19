@@ -3,7 +3,7 @@ import { TaskCard } from "../../components/cards/TaskCard/index.tsx";
 import { Margin } from "../../components/misc/Margin/index.ts";
 import { Scroller } from "../../components/misc/Scroller/index.ts";
 import { useApi } from "../../hooks/useApi.ts";
-import { Accordion, Categories, Content, Greating, Header, Infos, Main, Projects, Tasks } from "./style.ts";
+import { Accordion, Categories, Content, Greating, Header, Infos, Items, Main, Tasks } from "./style.ts";
 import { useAuth } from "../../hooks/useAuth.ts";
 import { ItalicTitle } from "../../components/base/ItalicTitle/index.ts";
 import type { TaskDTO } from "../../service/types/task/task.dto.ts";
@@ -20,6 +20,10 @@ import { ActiveProjectsCard } from "../../components/cards/ActiveProjectsCard/in
 import { DeadlineAlertsCard } from "../../components/cards/DeadlineAlertsCard/index.tsx";
 import { ShortcutsCard } from "../../components/cards/ShortcutsCard/index.tsx";
 import { Divider } from "../../components/misc/Divider/index.ts";
+import { MemberTile } from "../../components/tiles/MemberTile/index.tsx";
+import { MemberStatTile } from "../../components/tiles/MemberStatTile/index.tsx";
+import { NextDeadlineCard } from "../../components/cards/NextDeadlineCard/index.tsx";
+import { TasksProgressCard } from "../../components/cards/TasksProgressCard/index.tsx";
 
 const MemberContent = () => {
   const [tasks, setTasks] = useState<TaskDTO[]>([{
@@ -168,7 +172,7 @@ const OrganizerContent = () => {
           <Divider/>
           <ShortcutsCard />
         </Infos>
-        <Projects>
+        <Items>
           <Title>Projects</Title>
           {
             projects.length !== 0
@@ -187,7 +191,7 @@ const OrganizerContent = () => {
               </>
               : <ItalicTitle>Sem projetos acessados recentemente</ItalicTitle>
           }
-        </Projects>
+        </Items>
       </Main>
       <Updates updates={[
         {
@@ -204,6 +208,37 @@ const OrganizerContent = () => {
           projectkey: ''
         }
       ]}/>
+    </>
+  )
+}
+
+const ManagerContent = () => {
+  const [projects, setProjects] = useState<ProjectDTO[]>([{
+    id: '73187165-f888-4a26-9df6-d7c8d39a6e81',
+    title: 'Projeto padrão',
+    description: 'Projeto padrão para testes de interface',
+    ownerkey: '',
+    progress: ProjectProgress.STARTED,
+    due_date: new Date().toISOString(),
+  }]);
+
+  return (
+    <>
+      <Main>
+        <Greating><SectionTitle>Hello! MANAGER</SectionTitle></Greating>
+        <Infos>
+          <TasksProgressCard />
+          <NextDeadlineCard />
+        </Infos>
+        <Items>
+          <Title>Members Stats</Title>
+          <MemberStatTile
+            username="mikaelst"
+            project="TCC"
+          />
+        </Items>
+      </Main>
+      <ImportantDates events={[]} />
     </>
   )
 }
@@ -226,7 +261,8 @@ export function Workspace() {
   return (
     <Content className="workspace-content">
       {/* <MemberContent /> */}
-      <OrganizerContent />
+      {/* <OrganizerContent /> */}
+      <ManagerContent />
     </Content>
   )
 }

@@ -44,7 +44,7 @@ const Tasks = styled.div`
   overflow: hidden;
 `;
 
-const Projects = styled.div`
+const Items = styled.div`
   width: 100%;
 
   padding: 20px 20px;
@@ -74,7 +74,7 @@ export {
   Header,
   Accordion,
   Tasks,
-  Projects,
+  Items,
   Main,
   Infos
 }

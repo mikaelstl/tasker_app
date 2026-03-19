@@ -9,7 +9,7 @@ interface UserProps {
 
 export function User(props: UserProps) {
   return (
-    <Container className="user">
+    <Container className="tskr-user">
       <Avatar online={props.online ?? false} size="small" image=""/>
       <Text>{props.username}</Text>
     </Container>
