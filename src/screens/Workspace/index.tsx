@@ -3,13 +3,12 @@ import { TaskCard } from "../../components/cards/TaskCard/index.tsx";
 import { Margin } from "../../components/misc/Margin/index.ts";
 import { Scroller } from "../../components/misc/Scroller/index.ts";
 import { useApi } from "../../hooks/useApi.ts";
-import { Accordion, Categories, Content, Greating, Header, Infos, Items, Main, Tasks } from "./style.ts";
+import { Categories, Content, Greating, Infos, Items, Main } from "./style.ts";
 import { useAuth } from "../../hooks/useAuth.ts";
 import { ItalicTitle } from "../../components/base/ItalicTitle/index.ts";
 import type { TaskDTO } from "../../service/types/task/task.dto.ts";
 import { TaskStage } from "../../service/types/task/stage.dto.ts";
 import { TaskPriority } from "../../service/types/task/priority.dto.tsx";
-import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/16/solid";
 import { ImportantDates } from "../../components/ImportantDates/index.tsx";
 import { SectionTitle } from "../../components/base/SectionTitle/index.ts";
 import { ProjectProgress, type ProjectDTO } from "../../service/types/project/project.dto.ts";
@@ -24,6 +23,7 @@ import { MemberTile } from "../../components/tiles/MemberTile/index.tsx";
 import { MemberStatTile } from "../../components/tiles/MemberStatTile/index.tsx";
 import { NextDeadlineCard } from "../../components/cards/NextDeadlineCard/index.tsx";
 import { TasksProgressCard } from "../../components/cards/TasksProgressCard/index.tsx";
+import { TaskCategoryAccordion } from "../../components/TaskCategoryAccordion/index.tsx";
 
 const MemberContent = () => {
   const [tasks, setTasks] = useState<TaskDTO[]>([{
@@ -77,53 +77,6 @@ const MemberContent = () => {
     priority: TaskPriority.MEDIUM,
     due_date: new Date().toISOString(),
   }]);
-
-  const TaskCategoryAccordion = (props: { visible?: boolean, title: string, tasks: TaskDTO[] }) => {
-    const [visible, setVisible] = useState(props.visible ?? false);
-
-    const [icon, setIcon] = useState(<ChevronDownIcon width={24} />)
-
-    const handleVisible = () => {
-      setVisible(!visible)
-    }
-
-    useEffect(() => {
-      if (visible) {
-        setIcon(<ChevronUpIcon width={24} />)
-      } else {
-        setIcon(<ChevronDownIcon width={24} />)
-      }
-    }, [visible])
-
-    return <Accordion>
-      <Header onClick={handleVisible}>
-        {icon}
-        <SectionTitle>{props.title}</SectionTitle>
-      </Header>
-      {
-        visible ?
-          <Tasks>
-            {
-              props.tasks.length !== 0
-                ? <Scroller className="horizontal">
-                  {
-                    props.tasks.map(task => <Margin right='12px'>
-                      <TaskCard
-                        key={task.id}
-                        title={task.name}
-                        priority={task.priority}
-                        due_date={task.due_date}
-                      />
-                    </Margin>)
-                  }
-                </Scroller>
-                : <ItalicTitle>Sem projetos acessados recentemente</ItalicTitle>
-            }
-          </Tasks>
-          : <></>
-      }
-    </Accordion>
-  }
 
   return (
     <>

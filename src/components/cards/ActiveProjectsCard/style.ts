@@ -6,7 +6,7 @@ const Container = styled.div`
 `;
 
 const Header = styled.div`
-  border-left: 4px solid ${Palette.blue};
+  border-left: 2px solid ${Palette.blue};
   padding: 8px 0px 8px 14px;
 `;
 

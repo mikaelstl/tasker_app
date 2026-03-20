@@ -26,24 +26,6 @@ const Greating = styled.div`
   padding-left: 20px;
 `;
 
-const Accordion = styled.div`
-  width: 100%;
-  overflow: hidden;
-`;
-
-const Header = styled.div`
-  display: flex;
-  gap: 16px;
-  height: fit-content;
-
-  cursor: pointer;
-`;
-
-const Tasks = styled.div`
-  width: 100%;
-  overflow: hidden;
-`;
-
 const Items = styled.div`
   width: 100%;
 
@@ -71,9 +53,6 @@ export {
   Content,
   Categories,
   Greating,
-  Header,
-  Accordion,
-  Tasks,
   Items,
   Main,
   Infos

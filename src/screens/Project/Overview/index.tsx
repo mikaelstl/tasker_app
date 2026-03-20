@@ -11,7 +11,7 @@ import { Scroller } from "../../../components/misc/Scroller";
 import { User } from "../../../components/misc/User";
 import { ProjectMenu } from "../../../components/ProjectMenu";
 import { useApi } from "../../../hooks/useApi";
-import { Abstract, AbstractItem, Comments, Container, Content, ImportantTasks, ProjectInfo } from "./style";
+import { Comments, Container, Content, Description, ProjectInfo } from "./style";
 import { ProjectProgress, type ProjectDTO } from "../../../service/types/project/project.dto";
 import type { ApiError } from "../../../service/types/response/error";
 import { Toasts } from "../../../maps/toasts";
@@ -27,6 +27,12 @@ import type { CreateCommentDTO } from "../../../service/types/comment/comment.cr
 import { useAuth } from "../../../hooks/useAuth";
 import type { CommentDTO } from "../../../service/types/comment/comment.dto";
 import type { ApiResponse } from "../../../service/types/response/response";
+import { SectionTitle } from "../../../components/base/SectionTitle";
+import { Subtitle } from "../../../components/base/Subtitle";
+import { TaskCategoryAccordion } from "../../../components/TaskCategoryAccordion";
+import { TaskStage } from "../../../service/types/task/stage.dto";
+import { TaskPriority } from "../../../service/types/task/priority.dto";
+import { EditButton } from "../../../components/buttons/EditBtn";
 
 export function Overview() {
   const navigate = useNavigate();
@@ -66,7 +72,17 @@ export function Overview() {
     }
   }
 
-  const [tasks, setTasks] = useState<TaskDTO[]>([]);
+  const [tasks, setTasks] = useState<TaskDTO[]>([{
+      id: '73187165-f888-4a26-9df6-d7c8d39a6e81',
+      code: 'TSK-001',
+      name: 'Tarefa 01',
+      description: 'Primeira tarefa de teste',
+      project: 'c45d24bf-8933-4421-9685-863b3b285a94',
+      owner: '',
+      stage: TaskStage.PENDING,
+      priority: TaskPriority.MEDIUM,
+      due_date: new Date().toISOString(),
+    }]);
   const getTasks = async () => {
     try {
       const response = await api.get<TaskQueryDTO>({
@@ -180,49 +196,25 @@ export function Overview() {
   if (project === null) return <><Text>Carregando...</Text></>;
 
   return (
-    <Container className="overview">
-      <Abstract className="abstract">
+    <Container className="tskr-proj-overview">
+      <Content className="tskr-proj-content">
         <ProjectInfo>
-          <div id="leading">
-            <Title>{project?.title}</Title>
-            <Text>{project?.description}</Text>
-          </div>
+          <SectionTitle>{project?.title}</SectionTitle>
+          <Subtitle>Stated at: --:-- Due date: mm 00, yyyy</Subtitle>
           {ProgressBadge[project.progress]}
+          <EditButton type="button" onClick={() => console.log('Open edit funtion')}/>
+          <Description>
+            <Subtitle>Description</Subtitle>
+            <Text>{project.description}</Text>
+          </Description>
         </ProjectInfo>
-        <AbstractItem className="abstract-item">
-          <Label>Owner</Label>
-          <User username={project?.ownerkey ?? ''} />
-        </AbstractItem>
-        <AbstractItem className="abstract-item">
-          <Label>Due date</Label>
-          <DateBadge
-            date={DateTime.fromISO(project?.due_date, { zone: 'utc' })}
-          />
-        </AbstractItem>
-      </Abstract>
-      <Content className="content">
-        <ProjectMenu />
-        <ImportantTasks className="important-tasks">
-          <Title>Most important</Title>
-          {
-            tasks.length !== 0
-              ? <Scroller className="horizontal">
-                {
-                  tasks.map(task => <Margin right='12px'>
-                    <TaskCard
-                      key={task.id}
-                      title={task.name}
-                      due_date={task.due_date}
-                      priority={task.priority}
-                    />
-                  </Margin>)
-                }
-              </Scroller>
-              : <ItalicTitle>Without tasks</ItalicTitle>
-          }
-        </ImportantTasks>
-        <Comments className="overview-comments">
-          <Title>Comments</Title>
+        <TaskCategoryAccordion
+          visible
+          title="Most Important"
+          tasks={tasks}
+        />
+        <Comments className="tskr-overview-comments">
+          <Title>Activity</Title>
           {
             comments.length !== 0
               ? <Scroller className="vertical">

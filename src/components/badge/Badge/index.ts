@@ -6,6 +6,8 @@ interface BadgeProps {
 }
 
 export const Badge = styled.div<BadgeProps>`
+  grid-area: tskr-badge;
+
   display: inline-flex;
   align-items: center;
   gap: 8px;

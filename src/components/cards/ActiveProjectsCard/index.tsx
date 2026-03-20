@@ -1,9 +1,7 @@
-import { ShieldCheckIcon } from "@heroicons/react/24/solid";
 import { Title } from "../../base/Title";
 import { Card, Cards, Container, Header } from "./style";
 import Palette from "../../../assets/palette";
 import { ProjectHealthyBadge } from "../../../maps/project_healthy_badge";
-import { Margin } from "../../misc/Margin";
 
 export function ActiveProjectsCard() {
   return (

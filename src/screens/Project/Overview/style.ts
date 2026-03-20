@@ -15,31 +15,12 @@ const Content = styled.div`
 
   overflow: hidden;
 
-  margin: 20px 20px 0px 20px;
-
   width: 100%;
-`;
-
-const Abstract = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  
-  min-width: 20%; height: 100%;
-  
-  padding: 20px;
-  
-  border-right: 1px solid ${Palette.items};
-`;
-
-const ImportantTasks = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
 `;
 
 const Comments = styled.div`
   display: flex;
+  flex: 1;
   flex-direction: column;
   justify-content: space-between;
   gap: 10px;
@@ -47,8 +28,9 @@ const Comments = styled.div`
   overflow: hidden;
   
   width: 100%;
-  height: 100%;
   
+  padding: 0px 20px;
+
   #cards {
     overflow: scroll;
   }
@@ -64,22 +46,30 @@ const AbstractItem = styled.div`
 `;
 
 const ProjectInfo = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  display: grid;
+  grid-template-areas:
+    "tskr-section-title tskr-badge tskr-button"
+    "tskr-subtitle tskr-subtitle tskr-button"
+    "tskr-description tskr-description tskr-description"
+  ;
+  grid-template-columns: min-content 1fr min-content;
+  grid-template-rows: min-content min-content min-content;
   gap: 12px;
 
-  border-bottom: 2px solid ${Palette.items};
+  border-bottom: 1px solid ${Palette.items};
+  padding: 30px 30px 20px 30px;
+`;
 
-  padding-bottom: 120px;
+const Description = styled.div`
+  grid-area: tskr-description;
+  width: 100%;
 `;
 
 export {
   Container,
-  Abstract,
   Content,
   Comments,
-  ImportantTasks,
   AbstractItem,
-  ProjectInfo
+  ProjectInfo,
+  Description
 }

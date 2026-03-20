@@ -8,7 +8,7 @@ const Container = styled.div`
 const Header = styled.div`
   display: inline-flex;
   gap: 8px;
-  border-left: 4px solid ${Palette.red};
+  border-left: 2px solid ${Palette.red};
   padding: 8px 0px 8px 14px;
 `;
 

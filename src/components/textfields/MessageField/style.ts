@@ -6,21 +6,18 @@ const Container = styled.div`
   gap: 10px;
   
   width: 100%;
-  
-  padding: 10px 20px;
-  border-top: 2px solid ${Palette.items};
-  border-bottom: 2px solid ${Palette.items};
+
+  background-color: ${Palette.items};
+  padding: 10px 15px;
+  border-radius: 50px;
 `
   
 const Field = styled.div`
   display: flex;
+  align-items: center;
   gap: 10px;
   
   width: 100%;
-  
-  align-items: center;
-  
-  border-right: 2px solid ${Palette.items};
   
   input, input:focus {
     background: none;
@@ -32,13 +29,14 @@ const Field = styled.div`
     opacity: 100%;
     color: white;
     font-weight: 500;
+    color: ${Palette.gray};
   }
 `;
 
 const Button = styled.button`
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
 
   width: min-content;
 

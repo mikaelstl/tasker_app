@@ -1,4 +1,4 @@
-import { PaperAirplaneIcon } from "@heroicons/react/16/solid";
+import { PaperAirplaneIcon } from "../../icons/PaperAirplaneIcon";
 import { ChatBubbleOvalLeftIcon } from "@heroicons/react/24/solid";
 import { Text } from "../../base/Text";
 import { Button, Container, Field } from "./style";
@@ -17,7 +17,7 @@ export function MessageField({ send }: MessageFieldProps) {
   }
   
   return (
-    <Container className="search-field">
+    <Container className="tskr-search-field">
       <Field id="search">
         <ChatBubbleOvalLeftIcon width="24"/>
         <input
@@ -28,7 +28,7 @@ export function MessageField({ send }: MessageFieldProps) {
         />
       </Field>
       <Button type="button" id="send" onClick={handleSend}>
-        <PaperAirplaneIcon width="20"/>
+        <PaperAirplaneIcon size={15}/>
         <Text>Send</Text>
       </Button>
     </Container>
