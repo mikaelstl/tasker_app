@@ -7,14 +7,6 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
-
-  padding: 10px 14px;
-  
-  border-radius: 4px;
-  
-  background-color: ${Palette.content};
-
-  font-weight: 500;
 `;
 
 const Input = styled.input`
@@ -25,7 +17,14 @@ const Input = styled.input`
   font-size: 16px;
   font-weight: 500;
 
-  padding: 4px;
+  padding: 10px;
+  border-radius: 6px;
+
+  background-color: ${Palette.items};
+
+  &::placeholder {
+    color: ${Palette.white};
+  }
 `;
 
 export {

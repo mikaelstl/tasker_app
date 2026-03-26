@@ -1,3 +1,4 @@
+import { Label } from "../Label";
 import { Container, Input } from "./style";
 
 interface TextInput {
@@ -8,10 +9,11 @@ interface TextInput {
 
 export function TextInput(props: TextInput) {
   return (
-    <Container>
-      <label htmlFor="text-input">{props.label}</label>
+    <Container className="tskr-input">
+      <Label htmlFor="text-input">{props.label}</Label>
       <Input type="text" name="text-input"
         value={props.value}
+        placeholder="Write here..."
         onChange={(evt) => {
             evt.preventDefault()
             props.onChange!(evt.target.value)

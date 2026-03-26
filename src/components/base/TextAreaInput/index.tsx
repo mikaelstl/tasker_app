@@ -1,3 +1,4 @@
+import { Label } from "../Label";
 import { Container, TextArea } from "./style";
 
 interface TextAreaInput {
@@ -9,9 +10,10 @@ interface TextAreaInput {
 export function TextAreaInput(props: TextAreaInput) {
   return (
     <Container>
-      <label htmlFor="text-input">{props.label}</label>
+      <Label htmlFor="textarea-input">{props.label}</Label>
       <TextArea name="textarea-input"
-        cols={5}
+        cols={6}
+        placeholder="Write here..."
         value={props.value}
         onChange={(evt) => {
             evt.preventDefault()

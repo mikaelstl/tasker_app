@@ -2,24 +2,26 @@ import styled from "styled-components";
 import Palette from "../../../assets/palette";
 
 const Container = styled.div`
+  grid-area: tskr-search-member;
+
   display: flex;
   flex-direction: column;
   gap: 8px;
+
+  width: 280px;
 `;
 
 const Wrapper = styled.div`
   position: relative;
+`;
 
-  display: flex;
-  align-items: center;
-  gap: 8px;
+const Selected = styled.div`
+  border: 4px solid ${Palette.blue};
+  border-radius: 4px;
+  padding: 6px 14px;
+  background-color: ${Palette.items};
 
-  border-radius: 50px;
-  border: 3px solid ${Palette.gray};
-  
-  padding: 0px 10px;
-
-  width: fit-content;
+  cursor: pointer;
 `;
 
 const Field = styled.input`
@@ -28,6 +30,13 @@ const Field = styled.input`
   background: none;
 
   font-size: 16px;
+
+  height: 32px;
+
+  &::placeholder {
+    color: ${Palette.gray};
+    font-weight: 500;
+  }
 `;
 
 const Close = styled.button`
@@ -35,22 +44,6 @@ const Close = styled.button`
   align-items: center;
 
   border: 1px solid red;
-`;
-
-const Members = styled.div`
-  display: flex;
-  gap: 8px;
-`
-
-const AddMember = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  height: 32px; width: 32px;
-  
-  border-radius: 50%;
-  border: 3px solid ${Palette.gray};
 `;
 
 const Options = styled.div`
@@ -71,15 +64,10 @@ const Option = styled.div`
   gap: 10px;
   padding: 8px 12px;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: border 0.15s;
 
   &:hover {
-    background: ${Palette.grayT};
-  }
-
-  span {
-    font-size: 0.95rem;
-    color: #333;
+    border-left: 3px solid ${Palette.blue};
   }
 `;
 
@@ -88,8 +76,7 @@ export {
   Wrapper,
   Field,
   Close,
-  AddMember,
-  Members,
   Options,
-  Option
+  Option,
+  Selected
 }

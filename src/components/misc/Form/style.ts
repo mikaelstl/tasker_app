@@ -16,6 +16,8 @@ const Container = styled.div`
 `;
 
 const Form = styled.form`
+  grid-area: tskr-form;
+
   display: grid;
   grid-auto-flow: row;
   gap: 25px;

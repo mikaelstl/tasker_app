@@ -4,7 +4,7 @@ import Palette from "../../../assets/palette";
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
 
   height: 100%;
 `;
@@ -27,18 +27,20 @@ const Content = styled.div`
   overflow: hidden;
 `;
 
-const Step = styled.div`
+interface StepProps {
+  color?: string;
+}
+
+const Step = styled.div<StepProps>`
   display: flex;
   flex-direction: column;
   gap: 10px;
-  
-  background-color: ${Palette.tool_bars};
   
   overflow: hidden;
   
   padding: 10px;
   
-  border-radius: 12px;
+  border-top: 3px solid ${props => props.color ?? Palette.gray};
   
   height: 100%; width: 100%;
 `;

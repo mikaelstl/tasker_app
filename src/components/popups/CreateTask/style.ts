@@ -9,7 +9,7 @@ const Overlay = styled.div`
   align-items: center;
   justify-content: center;
 
-  background-color: #00000080;
+  background-color: #00000095;
 
   height: 100%;
   width: 100%;
@@ -20,17 +20,21 @@ const Overlay = styled.div`
 const Card = styled.div`
   position: relative;
 
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-areas:
+    "tskr-content-header tskr-content-header"
+    "tskr-form           tskr-search-member"
+  ;
+  grid-template-rows: min-content auto;
+  grid-template-columns: 2fr 1fr;
   gap: 16px;
   
-  background-color: ${Palette.tool_bars};
-
-  padding: 20px;
+  background-color: ${Palette.content};
 
   width: 60%;
   min-height: min-content; max-height: 90%;
 
+  padding: 0px 20px 20px 20px;
   border-radius: 6px;
 
   z-index: 99999;
@@ -38,39 +42,17 @@ const Card = styled.div`
   overflow: hidden;
 `;
 
-const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-
-  border-bottom: 1px solid ${Palette.blue};
-
-  padding-bottom: 8px;
-`;
-
 const Close = styled.button`
-`;
-
-const Members = styled.div`
-  display: flex;
-  gap: 8px;
-`;
-
-const AddMember = styled.button`
   display: flex;
   align-items: center;
-  justify-content: center;
 
-  height: 32px; width: 32px;
-
-  border-radius: 50%;
-  border: 3px solid ${Palette.gray};
+  * {
+    border: 1px solid;
+  }
 `;
 
 export {
   Overlay,
   Card,
   Close,
-  Header,
-  Members,
-  AddMember,
 }

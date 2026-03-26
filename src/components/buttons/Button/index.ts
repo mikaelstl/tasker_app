@@ -8,6 +8,9 @@ interface ButtonProps {
 export const Button = styled.button<ButtonProps>`
   grid-area: tskr-button;
 
+  display: flex;
+  gap: 10px;
+
   background-color: ${props => props.color ?? Palette.blue};
 
   padding: 10px 16px;
