@@ -2,7 +2,7 @@ import styled from "styled-components";
 import Palette from "../../../assets/palette";
 
 const Container = styled.div`
-  grid-area: tskr-search-member;
+  grid-area: tskr-select-member;
 
   display: flex;
   flex-direction: column;

@@ -27,8 +27,12 @@ const Card = styled.div`
   padding: 20px;
 
   width: 60%;
+  height: fit-content;
+  max-height: 90%;
 
   border-radius: 6px;
+
+  overflow: hidden;
 `;
 
 const Header = styled.div`
@@ -40,30 +44,43 @@ const Header = styled.div`
   padding-bottom: 8px;
 `;
 
-const Close = styled.button`
+const Content = styled.div`
+  display: grid;
+  grid-template-areas:
+    "tskr-proj-infos tskr-select-member"
+    "tskr-proj-links ."
+  ;
+  grid-template-columns: 1fr auto;
+  row-gap: 30px;
+  column-gap: 20px;
+
+  width: 100%;
+
+  overflow: auto;
 `;
 
-const Members = styled.div`
-  display: flex;
+const Infos = styled.div`
+  grid-area: tskr-proj-infos;
+
+  display: grid;
   gap: 8px;
+
+  width: 100%;
 `;
 
-const AddMember = styled.button`
+const Links = styled.div`
+  grid-area: tskr-proj-links;
+
   display: flex;
-  align-items: center;
-  justify-content: center;
-
-  height: 32px; width: 32px;
-
-  border-radius: 50%;
-  border: 3px solid ${Palette.gray};
+  flex-direction: column;
+  gap: 8px;
 `;
 
 export {
   Overlay,
+  Content,
   Card,
-  Close,
   Header,
-  Members,
-  AddMember,
+  Infos,
+  Links
 }

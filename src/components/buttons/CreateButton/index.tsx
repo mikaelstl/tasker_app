@@ -1,9 +1,10 @@
+import type React from "react";
 import { Button } from "../Button";
 
 interface CreateButtonProps {
   type: "button" | "submit" | "reset" | undefined;
   children: React.ReactNode | string;
-  onClick?: () => void
+  onClick?: (evt: React.MouseEvent) => void
 }
 
 export function CreateButton(props: CreateButtonProps) {

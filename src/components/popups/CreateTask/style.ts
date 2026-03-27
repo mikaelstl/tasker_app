@@ -23,7 +23,7 @@ const Card = styled.div`
   display: grid;
   grid-template-areas:
     "tskr-content-header tskr-content-header"
-    "tskr-form           tskr-search-member"
+    "tskr-form           tskr-select-member"
   ;
   grid-template-rows: min-content auto;
   grid-template-columns: 2fr 1fr;

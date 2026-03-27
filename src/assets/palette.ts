@@ -13,6 +13,7 @@ const Palette = {
   gray: '#56526b',
   green: '#26998D',
   yellow: '#FCAF62',
+  lightBlue: '#508CEE',
 
   red_50: 'rgba(188, 59, 76, 0.5)',
   blue_50: 'rgba(41, 68, 157, 0.5)',

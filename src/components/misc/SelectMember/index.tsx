@@ -46,7 +46,7 @@ export function SelectMember({
 
   const Card = () => {
     return (
-      <Wrapper>
+      <Wrapper className="tskr-select-member">
         <Selected onClick={handleShowContent}>
           { showContent 
             ? <Field
@@ -73,7 +73,7 @@ export function SelectMember({
   }
 
   return (
-    <Container className="tskr-search-member">
+    <Container className="tskr-select-member">
       <Label htmlFor="search-member">{label}</Label>
       <Card />
     </Container>

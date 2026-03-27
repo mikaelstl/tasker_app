@@ -4,18 +4,27 @@ import { SearchField } from "../../components/textfields/SearchField/index.tsx";
 import { Scroller } from "../../components/misc/Scroller/index.ts";
 import { ProjectTile } from "../../components/tiles/ProjectTile/index.tsx";
 import { useEffect, useState } from "react";
-import type { ProjectDTO } from "../../service/types/project/project.dto.ts";
+import { ProjectProgress, type ProjectDTO } from "../../service/types/project/project.dto.ts";
 import { useApi } from "../../hooks/useApi.ts";
 import { useAuth } from "../../hooks/useAuth.ts";
 import { CreateProjectPopup } from "../../components/popups/CreateProject/index.tsx";
 import type { ProjectQueryDTO } from "../../service/types/project/project.query.dto.ts";
+import { ContentHeader } from "../../components/base/ContentHeader/index.tsx";
+import { Text } from "../../components/base/Text/index.ts";
 
 export function Projects() {
   const api = useApi();
 
   const { user } = useAuth();
 
-  const [projects, setProjects] = useState<ProjectDTO[]>([]);
+  const [projects, setProjects] = useState<ProjectDTO[]>([{
+    id: 'b7d621f9',
+    title: 'TCC',
+    description: 'TCC',
+    ownerkey: '653c6be4',
+    due_date: new Date().toISOString(),
+    progress: ProjectProgress.STARTED
+  }]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const handlePopup = () => {
@@ -44,17 +53,23 @@ export function Projects() {
   return (
     <Container className="projects-content">
       <CreateProjectPopup showPopup={isPopupOpen} closePopup={handlePopup} />
-      <CreateButton type="button" onClick={handlePopup}>Create new project</CreateButton>
-      <SearchField filter sort />
+      <ContentHeader
+        title=""
+      >
+        <CreateButton type="button" onClick={handlePopup}>
+          <Text>
+            Create new project
+          </Text>
+        </CreateButton>
+      </ContentHeader>
       <Content id="projects">
+        <SearchField filter sort />
         <Scroller className="vertical">
           {
             projects.map((project) => <ProjectTile
               key={project.id}
               id={project.id}
               title={project.title}
-              description={project.description}
-              owner={project.ownerkey}
               progress={project.progress}
               due_date={project.due_date}
             />)
