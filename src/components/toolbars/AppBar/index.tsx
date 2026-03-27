@@ -14,12 +14,12 @@ export function AppBar() {
   }
 
   return (
-    <Container className="app-bar">
-      <Logo className="appbar-logo">
+    <Container className="tskr-app-bar">
+      <Logo className="tskr-appbar-logo">
         <LogoIcon source={Icon}/>
         <Title>Tasker</Title>
       </Logo>
-      <UserInfos className="user-infos">
+      <UserInfos className="tskr-user-infos">
         <BellIcon width={28}/>
         <button type="button" onClick={goToProfile}>
           <Avatar online={false} image="" size="medium"/>

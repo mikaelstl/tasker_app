@@ -1,5 +1,4 @@
-import { XMarkIcon } from "@heroicons/react/16/solid";
-import { Card, Close, Overlay } from "./style";
+import { Card, Overlay } from "./style";
 import { TextInput } from "../../base/TextInput";
 import { TextAreaInput } from "../../base/TextAreaInput";
 import { CalendarInput } from "../../base/CalendarInput";
@@ -12,8 +11,6 @@ import type { CreateTaskDTO } from "../../../service/types/task/create.dto";
 import { useNavigate, useParams } from "react-router-dom";
 import { TaskPriority } from "../../../service/types/task/priority.dto";
 import { SelectMember } from "../../misc/SelectMember";
-import type { ProjectMember } from "../../../service/types/member/member.dto";
-import type { ApiError } from "../../../service/types/response/error";
 import { Toasts } from "../../../maps/toasts";
 import { ContentHeader } from "../../base/ContentHeader";
 import { Text } from "../../base/Text";
@@ -117,11 +114,10 @@ export function CreateTaskPopup(props: PopupProps) {
         <ContentHeader
           title="Create new Task"
         >
-          <DeleteBtn/>
+          <DeleteBtn onClick={handleClose}/>
           <CreateButton type="submit">
             <Text>Create task</Text>
           </CreateButton>
-          <Close onClick={handleClose}><XMarkIcon width={24} /></Close>
         </ContentHeader>
         <Form
           className="tskr-create-task-form"

@@ -3,8 +3,10 @@ import { CalendarIcon } from "@heroicons/react/24/solid";
 import { DateTime } from "luxon";
 import { useEffect, useState } from "react";
 import { Accordion, Activated, Content, Tag } from "./style";
-import { CalendarTag } from "../CalendarTag";
 import type { EventDTO } from "../../../../service/types/events/event.dto";
+import { CalendarFlagCard } from "../../../cards/CalendarFlagCard";
+import { Text } from "../../../base/Text";
+import { Subtitle } from "../../../base/Subtitle";
 
 interface EventAccordionProps {
   day: string,
@@ -53,9 +55,14 @@ export function EventAccordion(props: EventAccordionProps) {
       </Accordion>
       {
         contentOn
-          ? <Content id="accordion-content">
+          ? <Content id="tskr-accordion-content">
             {
-              props.events.map((evt) => <CalendarTag key={evt.id} title={evt.title} type="event"/>)
+              props.events.map((evt) => <CalendarFlagCard type="event">
+                                          <div>
+                                            <Text>{evt.title}</Text>
+                                            <Subtitle>Description</Subtitle>
+                                          </div>
+                                        </CalendarFlagCard>)
             }
           </Content>
           : <></>

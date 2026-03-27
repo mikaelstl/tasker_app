@@ -1,6 +1,4 @@
-import { XMarkIcon } from "@heroicons/react/16/solid";
-import { Card, Close, Header, Overlay } from "./style";
-import { Title } from "../../base/Title";
+import { Card, Overlay } from "./style";
 import { TextInput } from "../../base/TextInput";
 import { CalendarInput } from "../../base/CalendarInput";
 import { useState } from "react";
@@ -12,6 +10,9 @@ import type { CreateEventDTO } from "../../../service/types/events/event.create.
 import { useParams } from "react-router-dom";
 import { Toasts } from "../../../maps/toasts";
 import type { ApiResponse } from "../../../service/types/response/response";
+import { ContentHeader } from "../../base/ContentHeader";
+import { DeleteBtn } from "../../buttons/DeleteBtn";
+import { Text } from "../../base/Text";
 
 export function CreateEventPopup(props: PopupProps) {
   const api = useApi();
@@ -51,12 +52,16 @@ export function CreateEventPopup(props: PopupProps) {
   if (!props.showPopup) return null;
 
   return (
-    <Overlay className="popup-overlay">
-      <Card className="popup-create-project">
-        <Header>
-          <Title>Add event</Title>
-          <Close onClick={handleClose}><XMarkIcon width={24} /></Close>
-        </Header>
+    <Overlay className="tskr-popup-overlay">
+      <Card className="tskr-popup-create-project">
+        <ContentHeader
+          title="Add Event"
+        >
+          <CreateButton type="submit">
+            <Text>Add event</Text>
+          </CreateButton>
+          <DeleteBtn onClick={handleClose}/>
+        </ContentHeader>
         <Form onSubmit={onSubmit}>
           <TextInput
             label="Event name"
@@ -68,7 +73,6 @@ export function CreateEventPopup(props: PopupProps) {
             value={date}
             onChange={(value) => setDate(value)}
           />
-          <CreateButton type="submit">Add event</CreateButton>
         </Form>
       </Card>
     </Overlay>

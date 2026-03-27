@@ -1,6 +1,5 @@
 import { CreateButton } from "../../../components/buttons/CreateButton";
-import { ProjectMenu } from "../../../components/ProjectMenu";
-import { CalendarArea, Container, Header } from "./style";
+import { CalendarArea, Container } from "./style";
 import { Calendar } from "../../../components/misc/Calendar";
 import { useEffect, useState } from "react";
 import { CreateEventPopup } from "../../../components/popups/CreateEvent";
@@ -11,6 +10,8 @@ import type { ApiError } from "../../../service/types/response/error";
 import { useNavigate, useParams } from "react-router-dom";
 import type { EventQueryDTO } from "../../../service/types/events/event.query.dto";
 import type { ApiResponse } from "../../../service/types/response/response";
+import { ContentHeader } from "../../../components/base/ContentHeader";
+import { Text } from "../../../components/base/Text";
 
 export function Events() {
   const api = useApi();
@@ -27,7 +28,12 @@ export function Events() {
     setIsPopupOpen(false);
   };
 
-  const [ events, setEvents ] = useState<EventDTO[]>([]);
+  const [ events, setEvents ] = useState<EventDTO[]>([{
+    id: '2d715ef9',
+    title: 'Entrega',
+    projectkey: 'b7d621f9',
+    date: new Date().toISOString()
+  }]);
   const getEvents = async () => {
     try {
       const response: ApiResponse = await api.get<EventQueryDTO>({
@@ -53,16 +59,19 @@ export function Events() {
   }
 
   useEffect(() => {
-    getEvents()
+    // getEvents()
   }, [isPopupOpen])
 
   return (
     <Container className="calendar-page">
       <CreateEventPopup showPopup={isPopupOpen} closePopup={handleClosePopup} />
-      <Header id="calendar-header">
-        <ProjectMenu />
-        <CreateButton type="button" onClick={handleOpenPopup}>New Event</CreateButton>
-      </Header>
+      <ContentHeader
+        title=""
+      >
+        <CreateButton type="button" onClick={handleOpenPopup}>
+          <Text>New Event</Text>
+        </CreateButton>
+      </ContentHeader>
       <CalendarArea id="calendar-area">
         <Calendar events={events}/>
       </CalendarArea>

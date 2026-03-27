@@ -8,7 +8,7 @@ const Container = styled.div`
   align-items: center;
   justify-content: space-between;
   
-  padding: 21px 20px;
+  padding: 12px 20px;
   
   background-color: ${Palette.tool_bars};
   

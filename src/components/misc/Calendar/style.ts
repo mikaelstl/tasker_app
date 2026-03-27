@@ -7,8 +7,13 @@ interface ActiveProps {
 
 const Container = styled.div`
   display: grid;
-  grid-template: "month month" min-content
-                 "weeks events" 1fr / .75fr .25fr;
+  grid-template:
+    "month month" 
+    "weeks events"
+  ;
+  grid-template-columns: 3fr 1fr;
+  grid-template-rows: min-content 1fr;
+
   flex: 1 1 auto;
   gap: 20px;
 
@@ -26,7 +31,7 @@ const Header = styled.div`
   align-items: center;
   justify-content: space-between;
   
-  padding: 12px;
+  padding: 6px 12px;
   
   border-radius: 10px;
   
@@ -64,14 +69,24 @@ const Weekday = styled.ul`
 const Day = styled.li`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: space-evenly;
+  align-items: flex-end;
+  justify-content: flex-end;
   
   width: 100%; height: 100%;
   
   border-bottom: 1px solid ${Palette.items};
 
+  padding: 4px;
+
   cursor: pointer;
+`;
+
+const Indicators = styled.div`
+  display: grid;
+  gap: 6px;
+
+  height: 100%;
+  width: 100%;
 `;
 
 const Active = styled.p<ActiveProps>`
@@ -94,7 +109,7 @@ const Events = styled.div`
   padding-left: 10px;
   
   border-left: 2px solid ${Palette.items};
-`
+`;
 
 export {
   Day,
@@ -105,5 +120,6 @@ export {
   Weekday,
   Container,
   Header,
-  Events
+  Events,
+  Indicators
 }

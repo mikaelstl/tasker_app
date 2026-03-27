@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { DateTime, Info, Interval } from 'luxon';
 import { Title } from "../../base/Title";
-import { ChevronLeftIcon, ChevronRightIcon, ClipboardIcon, FlagIcon } from "@heroicons/react/16/solid";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/16/solid";
 import { Active, Container, Day, Today, Weekday, Header, Weeks, Weekdays, Events } from "./style";
 import Palette from "../../../assets/palette";
 import { EventAccordion } from "./EventAccordion";
@@ -21,24 +21,12 @@ interface DayCardProps {
 }
 
 function DayCard(props: DayCardProps) {
-  const haveEvents = () => {
-    return props.events.length > 0;
-  }
-
   return (
     <Day>
       { props.isToday
         ? <Today>{props.content}</Today>
         : <Active isActive={props.isActive}>{props.content}</Active>
       }
-      {<div id="indicators">
-        {
-          /* props.haveTasks() ? <ClipboardIcon width={16} /> : <></> */
-        }
-        {
-          haveEvents() ? <FlagIcon width={16} /> : <></>
-        }
-      </div>}
     </Day>
   )
 }
@@ -122,8 +110,8 @@ export function Calendar({
   }, [])
 
   return (
-    <Container className="calendar">
-      <Header id="calendar-header">
+    <Container className="tskr-calendar">
+      <Header className="tskr-calendar-header">
         <Title>{month?.name}, {firstDay?.year}</Title>
         <div id="actions">
           <button type="button" onClick={prevMonth}>
