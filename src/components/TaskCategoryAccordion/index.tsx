@@ -5,7 +5,6 @@ import { SectionTitle } from "../base/SectionTitle";
 import { Scroller } from "../misc/Scroller";
 import { ItalicTitle } from "../base/ItalicTitle";
 import { TaskCard } from "../cards/TaskCard";
-import { Margin } from "../misc/Margin";
 import type { TaskDTO } from "../../service/types/task/task.dto";
 
 export function TaskCategoryAccordion(props: { visible?: boolean, title: string, tasks: TaskDTO[] }) {
@@ -38,14 +37,12 @@ export function TaskCategoryAccordion(props: { visible?: boolean, title: string,
               props.tasks.length !== 0
                 ? <Scroller className="horizontal">
                   {
-                    props.tasks.map(task => <Margin right='12px'>
-                      <TaskCard
-                        key={task.id}
-                        title={task.name}
-                        priority={task.priority}
-                        due_date={task.due_date}
-                      />
-                    </Margin>)
+                    props.tasks.map(task => <TaskCard
+                                              key={task.id}
+                                              title={task.name}
+                                              priority={task.priority}
+                                              due_date={task.due_date}
+                                            />)
                   }
                 </Scroller>
                 : <ItalicTitle>Sem projetos acessados recentemente</ItalicTitle>

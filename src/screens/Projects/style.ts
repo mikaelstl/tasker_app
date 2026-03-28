@@ -18,7 +18,7 @@ const Content = styled.div`
   flex-direction: column;
   flex: 1 1 auto;
   
-  padding: 0px 8px;
+  padding: 0px 20px;
   
   width: 100%; height: 100%;
   

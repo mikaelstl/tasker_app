@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import Palette from "../../../assets/palette";
+import { Project } from "../../../screens/Project";
 
 const Container = styled.div`
   grid-area: navbar;
@@ -23,7 +24,11 @@ const Nav = styled.nav`
   padding: 10px 0px;
 `;
 
-const NavItem = styled.button`
+interface NavItemProps {
+  activated?: boolean;
+}
+
+const NavItem = styled.button<NavItemProps>`
   display: flex;
   align-items: start;
   gap: 10px;
@@ -34,12 +39,34 @@ const NavItem = styled.button`
   
   background: none;
   border: none;
-  color: white;
-  
+  color: ${props => props.activated ? Palette.white : Palette.gray};
+
   font-size: 16px;
   font-weight: 600;
   
   cursor: pointer;
+
+  svg {
+    fill: ${props => props.activated ? Palette.white : Palette.gray};
+  }
+`;
+
+const ProjectNav = styled.div`
+  width: 100%;
+  height: 100%;
+`;
+
+const Accordion = styled.button`
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  
+  width: 100%;
+  
+  padding: 10px 20px;
+
+  font-size: 16px;
+  font-weight: 600;
 `;
 
 const Actions = styled.div`
@@ -48,9 +75,18 @@ const Actions = styled.div`
   }
 `;
 
+const Leading = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
 export {
   Container,
   Nav,
   NavItem,
-  Actions
+  Actions,
+  ProjectNav,
+  Accordion,
+  Leading
 }
