@@ -4,7 +4,7 @@ import Palette from "../../../assets/palette";
 export const Title = styled.h2`
   grid-area: tskr-title;
 
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 600;
   color: ${Palette.white};
 

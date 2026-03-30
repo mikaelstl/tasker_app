@@ -5,7 +5,11 @@ import { Subtitle } from "../../../components/base/Subtitle";
 import { EditButton } from "../../../components/buttons/EditBtn";
 import { CreateButton } from "../../../components/buttons/CreateButton";
 import { useNavigate } from "react-router-dom";
-import { Actions, Container, ProgressBar, ProgressCard, ProgressContainer, ProjectInfo, Content } from "./style";
+import { Actions, Container, ProgressBar, ProgressCard, ProgressContainer, ProjectInfo, Content, WidgetsContainer } from "./style";
+import { TasksInfosWidget } from "../../../widgets/cards/TasksInfosWidget";
+import { DeadlineWidget } from "../../../widgets/cards/DeadlineWidget";
+import { Title } from "../../../components/base/Title";
+import { ProjectHealthWidget } from "../../../widgets/cards/ProjectHealthWidget";
 
 export function Stats() {
   const navigate = useNavigate();
@@ -19,7 +23,7 @@ export function Stats() {
   return (
     <Container className="tskr-proj-stats">
       <ProjectInfo>
-        <SectionTitle>Project title</SectionTitle>
+        <Title>Project title</Title>
         <Subtitle>Stated at: --:-- Due date: mm 00, yyyy</Subtitle>
         {ProgressBadge['STARTED']}
         <Actions>
@@ -31,6 +35,11 @@ export function Stats() {
         <ProjectProgress />
       </ProjectInfo>
       <Content className="tskr-proj-stats-content">
+        <WidgetsContainer>
+          <TasksInfosWidget />
+          <DeadlineWidget />
+          <ProjectHealthWidget />
+        </WidgetsContainer>
       </Content>
     </Container>
   )
@@ -42,7 +51,7 @@ const ProjectProgress = () => {
       <ProgressContainer>
         <ProgressBar progress={50} />
       </ProgressContainer>
-      <SectionTitle>00%</SectionTitle>
+      <Title>00%</Title>
     </ProgressCard>
   )
 }

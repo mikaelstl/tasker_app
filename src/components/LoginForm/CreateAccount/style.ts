@@ -20,7 +20,7 @@ const CreateAccountBtn = styled.button`
   color: white;
   
   font-size: 16px;
-  font-family: 'Montserrat';
+  font-family: 'Poppins';
   font-weight: bold;
   
   border-radius: 9999px;

@@ -33,7 +33,7 @@ const Input = styled.input`
 
   &::placeholder {
     font-size: 16px;
-    font-family: 'Montserrat';
+    font-family: 'Poppins';
     color: ${Palette.white};
   }
 `;

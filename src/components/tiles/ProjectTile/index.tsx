@@ -5,7 +5,7 @@ import { Card, HealthyIndicator } from "./style";
 import { DateBadge } from "../../badge/DateBadge";
 import { DateTime } from "luxon";
 import { ProgressBadge } from "../../../maps/progress";
-import { ProjectHealthyIcon } from "../../../maps/project_healthy";
+import { ProjectHealthIcon } from "../../../maps/project_healthy";
 import { Team } from "../../misc/Team";
 
 interface ProjectTileProps {
@@ -25,7 +25,7 @@ export function ProjectTile(props: ProjectTileProps) {
       <Title>{props.title}</Title>
       <Team/>
       <HealthyIndicator>
-        {ProjectHealthyIcon['SAFE']}
+        {ProjectHealthIcon['SAFE']}
       </HealthyIndicator>
       {ProgressBadge[props.progress]}
       <DateBadge date={DateTime.fromISO(props.due_date, { zone: 'utc' })}/>

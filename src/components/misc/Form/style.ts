@@ -33,7 +33,7 @@ const SubmitButton = styled.button`
   color: ${Palette.white};
   font-size: 16px;
   font-weight: bold;
-  font-family: 'Montserrat';
+  font-family: 'Poppins';
 
   border: none;
   border-radius: 9999px;

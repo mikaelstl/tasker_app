@@ -13,6 +13,7 @@ const Content = styled.div`
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 20px;
 
   overflow: auto;
@@ -26,7 +27,7 @@ const Content = styled.div`
 const ProjectInfo = styled.div`
   display: grid;
   grid-template-areas:
-    "tskr-section-title tskr-badge tskr-stats-actions"
+    "tskr-title tskr-badge tskr-stats-actions"
     "tskr-subtitle tskr-subtitle tskr-stats-actions"
     "tskr-progress tskr-progress ."
   ;
@@ -78,6 +79,15 @@ const ProgressBar = styled.div<ProgressBarProps>`
   border-radius: 50px;
 `;
 
+const WidgetsContainer = styled.div`
+  display: flex;
+  gap: 20px;
+
+  width: 70%;
+
+  border: 1px solid;
+`;
+
 export {
   Container,
   Content,
@@ -85,5 +95,6 @@ export {
   Actions,
   ProgressCard,
   ProgressContainer,
-  ProgressBar
+  ProgressBar,
+  WidgetsContainer
 }
