@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom"
 import { useAuth } from "../../../hooks/useAuth"
 import { FolderOpenIcon } from "@heroicons/react/20/solid"
 import { useEffect, useState } from "react"
-import { CalendarIcon, ChartBarIcon, ClipboardIcon, UserIcon } from "@heroicons/react/24/solid"
+import { CalendarIcon, ChartBarIcon, ClipboardIcon, Cog6ToothIcon, UserIcon } from "@heroicons/react/24/solid"
 
 interface ProjectNavAccordionProps {
   isOpen: boolean
@@ -143,10 +143,10 @@ export function NavBar({
       </Nav>
       { onProject ? <ProjectNavAccordion isOpen/> : <></> }
       <Actions className="tskr-nav-actions">
-        {/* <NavItem className="nav-item">
+        <NavItem className="tskr-nav-item" activated>
           <Cog6ToothIcon width="18"/>
           Settings
-        </NavItem> */}
+        </NavItem>
         <NavItem className="tskr-nav-item log-out" onClick={onLogout}>
           <ArrowLeftStartOnRectangleIcon width="18" fill={Palette.red} />
           Logout

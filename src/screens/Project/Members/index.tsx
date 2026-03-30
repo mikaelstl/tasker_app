@@ -1,6 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { Scroller } from "../../../components/misc/Scroller";
-import { ProjectMenu } from "../../../components/ProjectMenu";
 import { SearchField } from "../../../components/textfields/SearchField";
 import { MemberTile } from "../../../components/tiles/MemberTile";
 import { Container, Content, Header, MembersArea } from "./style";
@@ -11,6 +10,9 @@ import type { ApiError } from "../../../service/types/response/error";
 import { Toasts } from "../../../maps/toasts";
 import { MemberRole } from "../../../service/types/member/role.dto";
 import { TaskStage } from "../../../service/types/task/stage.dto";
+import { ContentHeader } from "../../../components/base/ContentHeader";
+import { CreateButton } from "../../../components/buttons/CreateButton";
+import { Text } from "../../../components/base/Text";
 
 export function Members() {
   const navigate = useNavigate();
@@ -27,9 +29,9 @@ export function Members() {
 
       const data: ProjectMember[] = response.data;
       console.log(data);
-      const ownr = data.find(member => member.role === MemberRole.OWNER);
+      // const ownr = data.find(member => member.role === MemberRole.OWNER);
 
-      setOwner(ownr);
+      // setOwner(ownr);
       setMembers(data);
     } catch (error) {
       const { errors } = error as ApiError;
@@ -46,16 +48,22 @@ export function Members() {
   }
 
   useEffect(() => {
-    getMembers();
+    // getMembers();
   },[]);
 
   return (
     <Container className="members">
-      <Header id="header">
-        <ProjectMenu />
-      </Header>
-      <SearchField filter sort />
+      <ContentHeader
+        title=""
+      >
+        <CreateButton
+          type="button"
+        >
+          <Text>Add member</Text>
+        </CreateButton>
+      </ContentHeader>
       <Content id="team">
+        <SearchField filter sort />
         <MembersArea>
           <Scroller className='vertical'>
             { owner ? <MemberTile type="owner" username={owner.userkey} tasks={{ done: owner.tasks.filter(tsk => tsk.stage === TaskStage.DONE).length, total: owner.tasks.length }} /> : <></> }

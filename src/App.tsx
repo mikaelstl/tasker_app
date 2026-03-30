@@ -13,6 +13,7 @@ import { Profile } from "./screens/Profile"
 import { Register } from "./pages/Register"
 import { PrivateRoute } from "./routes/PrivateRoute"
 import { Home } from "./pages/Home"
+import { Stats } from "./screens/Project/Stats"
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
               <Route path="tasks" element={<Tasks />} />
               <Route path="members" element={<Members />} />
               <Route path="calendar" element={<Events />} />
+              <Route path="stats" element={<Stats />} />
             </Route>
           </Route>
         {/* </Route> */}

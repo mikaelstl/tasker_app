@@ -73,6 +73,10 @@ const Actions = styled.div`
   .log-out {
     color: ${Palette.red}
   }
+  
+  svg {
+    fill: ${Palette.red};
+  }
 `;
 
 const Leading = styled.div`

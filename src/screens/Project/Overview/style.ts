@@ -30,6 +30,7 @@ const Comments = styled.div`
   width: 100%;
   
   padding: 0px 20px;
+  padding-bottom: 20px;
 
   #cards {
     overflow: scroll;

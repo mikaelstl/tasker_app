@@ -18,7 +18,7 @@ export function Home() {
     <Screen>
       <Page>
         <AppBar/>
-        <NavBar onProject={ path.includes('project') ? true : false }/>
+        <NavBar onProject={ path.includes('project') && !path.includes('projects') ? true : false }/>
         <Content className="content">
           <Outlet/>
         </Content>
