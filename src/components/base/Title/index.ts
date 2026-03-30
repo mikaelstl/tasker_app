@@ -4,13 +4,13 @@ import Palette from "../../../assets/palette";
 export const Title = styled.h2`
   grid-area: tskr-title;
 
+  display: inline-block;
+
   font-size: 18px;
   font-weight: 600;
   color: ${Palette.white};
 
-  max-width: 150px;
-
-  white-space: nowrap;
+  white-space: nowrap; /*
   overflow: hidden;
-  text-overflow: ellipsis;
+  text-overflow: ellipsis; */
 `

@@ -1,6 +1,5 @@
 import { Text } from "../../../components/base/Text";
 import { ProgressBadge } from "../../../maps/progress";
-import { SectionTitle } from "../../../components/base/SectionTitle";
 import { Subtitle } from "../../../components/base/Subtitle";
 import { EditButton } from "../../../components/buttons/EditBtn";
 import { CreateButton } from "../../../components/buttons/CreateButton";
@@ -10,6 +9,8 @@ import { TasksInfosWidget } from "../../../widgets/cards/TasksInfosWidget";
 import { DeadlineWidget } from "../../../widgets/cards/DeadlineWidget";
 import { Title } from "../../../components/base/Title";
 import { ProjectHealthWidget } from "../../../widgets/cards/ProjectHealthWidget";
+import { PerformanceChart } from "../../../widgets/charts/PerformanceChart";
+import { ProdutivityChart } from "../../../widgets/charts/ProdutivityChart";
 
 export function Stats() {
   const navigate = useNavigate();
@@ -35,10 +36,14 @@ export function Stats() {
         <ProjectProgress />
       </ProjectInfo>
       <Content className="tskr-proj-stats-content">
-        <WidgetsContainer>
+        <WidgetsContainer className="tskr-project-infos-widget">
           <TasksInfosWidget />
           <DeadlineWidget />
           <ProjectHealthWidget />
+        </WidgetsContainer>
+        <WidgetsContainer className="tskr-charts">
+          <PerformanceChart />
+          <ProdutivityChart />
         </WidgetsContainer>
       </Content>
     </Container>

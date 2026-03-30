@@ -1,8 +1,9 @@
 import { Title } from "../../../components/base/Title";
-import { Container, DaysTile, Header, Date } from "./style";
+import { DaysTile, Date } from "./style";
 import { SectionTitle } from "../../../components/base/SectionTitle";
 import { Subtitle } from "../../../components/base/Subtitle";
 import { Bold } from "../../../components/base/Bold";
+import { Container, Header } from "../../base/style";
 
 export function DeadlineWidget() {
   return (

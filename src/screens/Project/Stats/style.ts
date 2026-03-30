@@ -21,7 +21,7 @@ const Content = styled.div`
   width: 100%;
   height: 100%;
 
-  border: 1px solid white;
+  padding-top: 20px;
 `;
 
 const ProjectInfo = styled.div`
@@ -83,9 +83,8 @@ const WidgetsContainer = styled.div`
   display: flex;
   gap: 20px;
 
-  width: 70%;
-
-  border: 1px solid;
+  width: 90%;
+  height: min-content;
 `;
 
 export {

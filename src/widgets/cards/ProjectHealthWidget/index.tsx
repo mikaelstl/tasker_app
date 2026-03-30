@@ -2,7 +2,8 @@ import Palette from "../../../assets/palette";
 import { SectionTitle } from "../../../components/base/SectionTitle";
 import { Title } from "../../../components/base/Title";
 import { ProjectHealthIcon } from "../../../maps/project_healthy";
-import { Container, Header, Content, HealthTile } from "./style";
+import { Container, Content, Header } from "../../base/style";
+import { HealthTile } from "./style";
 
 const HealthTiles = {
   'SAFE': <HealthTile className="tskr-safe-health-tile" background={Palette.green_50}>{ProjectHealthIcon.SAFE}<SectionTitle>SAFE</SectionTitle></HealthTile>,
