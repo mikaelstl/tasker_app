@@ -1,11 +1,11 @@
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/16/solid";
 import { useEffect, useState } from "react";
 import { Accordion, Header, Tasks } from "./style";
-import { SectionTitle } from "../base/SectionTitle";
-import { Scroller } from "../misc/Scroller";
-import { ItalicTitle } from "../base/ItalicTitle";
-import { TaskCard } from "../cards/TaskCard";
-import type { TaskDTO } from "../../service/types/task/task.dto";
+import { SectionTitle } from "../../base/SectionTitle";
+import { Scroller } from "../../misc/Scroller";
+import { ItalicTitle } from "../../base/ItalicTitle";
+import { TaskCard } from "../../cards/TaskCard";
+import type { TaskDTO } from "../../../service/types/task/task.dto";
 
 export function TaskCategoryAccordion(props: { visible?: boolean, title: string, tasks: TaskDTO[] }) {
   const [visible, setVisible] = useState(props.visible ?? false);

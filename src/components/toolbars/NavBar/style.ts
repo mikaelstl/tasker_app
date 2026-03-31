@@ -17,7 +17,6 @@ const Container = styled.div`
 const Nav = styled.nav`
   display: grid;
   grid-auto-flow: row;
-  gap: 10px;
   
   border-bottom: 1px solid ${Palette.items};
   

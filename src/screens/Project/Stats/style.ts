@@ -87,6 +87,11 @@ const WidgetsContainer = styled.div`
   height: min-content;
 `;
 
+const Members = styled.div`
+  padding: 0px 20px;
+  width: 100%;
+`;
+
 export {
   Container,
   Content,
@@ -95,5 +100,6 @@ export {
   ProgressCard,
   ProgressContainer,
   ProgressBar,
-  WidgetsContainer
+  WidgetsContainer,
+  Members
 }

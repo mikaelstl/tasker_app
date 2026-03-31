@@ -54,7 +54,7 @@ const ProjectNavAccordion = ({
             <NavItem 
               className="tskr-nav-item"
               type="button"
-              onClick={() => navigate('../overview')}
+              onClick={() => navigate('./project/overview')}
               activated={ path.includes('project/overview') ? true : false }
             >
               <WindowIcon width="18" />
@@ -63,7 +63,7 @@ const ProjectNavAccordion = ({
             <NavItem 
               className="tskr-nav-item"
               type="button"
-              onClick={() => navigate('../tasks')}
+              onClick={() => navigate('./project/tasks')}
               activated={ path.includes('project/tasks') ? true : false }
             >
               <ClipboardIcon width="18" />
@@ -72,7 +72,7 @@ const ProjectNavAccordion = ({
             <NavItem 
               className="tskr-nav-item"
               type="button"
-              onClick={() => navigate('../calendar')}
+              onClick={() => navigate('./project/calendar')}
               activated={ path.includes('project/calendar') ? true : false }
             >
               <CalendarIcon width="18" />
@@ -81,7 +81,7 @@ const ProjectNavAccordion = ({
             <NavItem 
               className="tskr-nav-item"
               type="button"
-              onClick={() => navigate('../members')}
+              onClick={() => navigate('./project/members')}
               activated={ path.includes('project/members') ? true : false }
             >
               <UserIcon width="18" />
@@ -90,7 +90,7 @@ const ProjectNavAccordion = ({
             <NavItem 
               className="tskr-nav-item"
               type="button"
-              onClick={() => navigate('../stats')}
+              onClick={() => navigate('./project/stats')}
               activated={ path.includes('project/stats') ? true : false }
             >
               <ChartBarIcon width="18" />
@@ -143,10 +143,10 @@ export function NavBar({
       </Nav>
       { onProject ? <ProjectNavAccordion isOpen/> : <></> }
       <Actions className="tskr-nav-actions">
-        <NavItem className="tskr-nav-item" activated>
+        {/* <NavItem className="tskr-nav-item" activated>
           <Cog6ToothIcon width="18"/>
           Settings
-        </NavItem>
+        </NavItem> */}
         <NavItem className="tskr-nav-item log-out" onClick={onLogout}>
           <ArrowLeftStartOnRectangleIcon width="18" fill={Palette.red} />
           Logout

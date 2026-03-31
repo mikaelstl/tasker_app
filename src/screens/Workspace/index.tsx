@@ -23,7 +23,7 @@ import { MemberTile } from "../../components/tiles/MemberTile/index.tsx";
 import { MemberStatTile } from "../../components/tiles/MemberStatTile/index.tsx";
 import { NextDeadlineCard } from "../../components/cards/NextDeadlineCard/index.tsx";
 import { TasksProgressCard } from "../../components/cards/TasksProgressCard/index.tsx";
-import { TaskCategoryAccordion } from "../../components/TaskCategoryAccordion/index.tsx";
+import { TaskCategoryAccordion } from "../../components/accordions/TaskCategoryAccordion/index.tsx";
 
 const MemberContent = () => {
   const [tasks, setTasks] = useState<TaskDTO[]>([{

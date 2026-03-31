@@ -4,13 +4,14 @@ import { Subtitle } from "../../../components/base/Subtitle";
 import { EditButton } from "../../../components/buttons/EditBtn";
 import { CreateButton } from "../../../components/buttons/CreateButton";
 import { useNavigate } from "react-router-dom";
-import { Actions, Container, ProgressBar, ProgressCard, ProgressContainer, ProjectInfo, Content, WidgetsContainer } from "./style";
+import { Actions, Container, ProgressBar, ProgressCard, ProgressContainer, ProjectInfo, Content, WidgetsContainer, Members } from "./style";
 import { TasksInfosWidget } from "../../../widgets/cards/TasksInfosWidget";
 import { DeadlineWidget } from "../../../widgets/cards/DeadlineWidget";
 import { Title } from "../../../components/base/Title";
 import { ProjectHealthWidget } from "../../../widgets/cards/ProjectHealthWidget";
 import { PerformanceChart } from "../../../widgets/charts/PerformanceChart";
 import { ProdutivityChart } from "../../../widgets/charts/ProdutivityChart";
+import { MemberStatsAccordion } from "../../../components/accordions/MemberStatsAccordion";
 
 export function Stats() {
   const navigate = useNavigate();
@@ -45,6 +46,17 @@ export function Stats() {
           <PerformanceChart />
           <ProdutivityChart />
         </WidgetsContainer>
+        <Members>
+          <Title>Members</Title>
+          <div>
+            <MemberStatsAccordion
+              username="mikaelstl"
+            />
+            <MemberStatsAccordion
+              username="siegfried"
+            />
+          </div>
+        </Members>
       </Content>
     </Container>
   )
