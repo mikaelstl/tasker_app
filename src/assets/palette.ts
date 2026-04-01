@@ -5,6 +5,8 @@ const Palette = {
   details: '#322E43',
   
   white: '#FFFFFF',
+  white_50: '#ffffff80',
+
   black: '#000000',
   transparent: '#FF000000',
   
