@@ -41,8 +41,9 @@ const TaskInfo = styled.div`
   display: grid;
   align-items: center;
   grid-template-areas:
-    "tskr-section-title tskr-date tskr-badge tskr-button"
-    "tskr-task-tags tskr-task-tags tskr-task-tags tskr-task-tags"
+    "tskr-task-links    tskr-task-links              .              ."
+    "tskr-section-title tskr-date      tskr-badge     tskr-button"
+    "tskr-task-tags     tskr-task-tags tskr-task-tags tskr-task-tags"
   ;
   grid-template-columns: min-content 1fr min-content min-content;
   gap: 12px;
@@ -57,6 +58,13 @@ const TaskInfo = styled.div`
 const Description = styled.div`
   grid-area: tskr-task-description;
   padding: 20px;
+`;
+
+const Links = styled.div`
+  grid-area: tskr-task-links;
+
+  display: flex;
+  gap: 40px;
 `;
 
 const Tags = styled.div`
@@ -77,5 +85,6 @@ export {
   TaskInfo,
   Description,
   Tags,
-  Tag
+  Tag,
+  Links
 }

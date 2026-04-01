@@ -5,7 +5,7 @@ import { Title } from "../../../components/base/Title";
 import { CommentCard } from "../../../components/cards/CommentCard";
 import { Scroller } from "../../../components/misc/Scroller";
 import { useApi } from "../../../hooks/useApi";
-import { Comments, Container, Description, Tag, Tags, TaskInfo } from "./style";
+import { Comments, Container, Description, Links, Tag, Tags, TaskInfo } from "./style";
 import type { ApiError } from "../../../service/types/response/error";
 import { Toasts } from "../../../maps/toasts";
 import { useNavigate, useParams } from "react-router-dom";
@@ -22,6 +22,7 @@ import { Subtitle } from "../../../components/base/Subtitle";
 import { EditButton } from "../../../components/buttons/EditBtn";
 import { PriorityBadge } from "../../../maps/priority";
 import { User } from "../../../components/misc/User";
+import { Link } from "../../../components/cards/LinkCard/style";
 
 export function TaskOverview() {
   const navigate = useNavigate();
@@ -89,6 +90,11 @@ export function TaskOverview() {
   return (
     <Container className="tskr-task-overview">
       <TaskInfo>
+        <Links>
+          <Link href="./project">Project_id</Link>
+          <Text>/</Text>
+          <Subtitle>TSK-000</Subtitle>
+        </Links>
         <SectionTitle>Task Title</SectionTitle>
         <DateBadge date={DateTime.local()} />
         {ProgressBadge['STARTED']}
