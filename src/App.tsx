@@ -15,6 +15,7 @@ import { PrivateRoute } from "./routes/PrivateRoute"
 import { Home } from "./pages/Home"
 import { Stats } from "./screens/Project/Stats"
 import { EditProject } from "./screens/Project/Edit"
+import { TaskOverview } from "./screens/Project/TaskOverview"
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
               <Route path="calendar" element={<Events />} />
               <Route path="stats" element={<Stats />} />
               <Route path="edit" element={<EditProject />} />
+              <Route path="task" element={<TaskOverview />} />
             </Route>
           </Route>
         {/* </Route> */}

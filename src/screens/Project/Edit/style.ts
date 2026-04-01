@@ -4,7 +4,6 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
 
   height: 100%;
 
@@ -32,6 +31,8 @@ const Content = styled.div`
   width: 70%;
 
   overflow: auto;
+  
+  padding: 20px 0px;
 `;
 
 const MembersArea = styled.div`
