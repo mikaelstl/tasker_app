@@ -7,13 +7,13 @@ export function CreateAccount() {
   const navigate = useNavigate();
   
   return (
-    <Container className="create-account">
-      <Separator className="saparator">
+    <Container className="tskr-create-account">
+      <Separator className="tskr-saparator">
         <Divider/>
         <Text>OR</Text>
         <Divider/>
       </Separator>
-      <CreateAccountBtn className="create-account-btn"
+      <CreateAccountBtn className="tskr-create-account-btn"
         onClick={() => navigate("/register")}
       >Create account</CreateAccountBtn>
     </Container>

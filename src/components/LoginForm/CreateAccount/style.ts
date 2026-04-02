@@ -5,6 +5,8 @@ const Container = styled.div`
   display: grid;
   grid-auto-flow: row;
   gap: 15px;
+
+  width: 100%;
 `;
 
 const Separator = styled.div`
@@ -15,13 +17,12 @@ const Separator = styled.div`
 
 const CreateAccountBtn = styled.button`
   width: 100%;
-  padding: 17px 0px;
+  padding: 10px;
   
   color: white;
   
   font-size: 16px;
-  font-family: 'Poppins';
-  font-weight: bold;
+  font-weight: 500;
   
   border-radius: 9999px;
   

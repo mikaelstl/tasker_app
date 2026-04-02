@@ -2,17 +2,11 @@ import styled from "styled-components";
 import Palette from "../../../assets/palette";
 
 const Container = styled.div`
-  display: grid;
-  grid-auto-flow: row;
+  display: flex;
+  flex-direction: column;
   gap: 20px;
 
   width: fit-content;
-
-  .inputs {
-    display: grid;
-    grid-auto-flow: row;
-    gap: 25px;
-  }
 `;
 
 const Form = styled.form`
@@ -28,12 +22,11 @@ const Form = styled.form`
 const SubmitButton = styled.button`
   width: 100%;
 
-  padding: 17px 0px;
+  padding: 10px;
   
   color: ${Palette.white};
   font-size: 16px;
-  font-weight: bold;
-  font-family: 'Poppins';
+  font-weight: 500;
 
   border: none;
   border-radius: 9999px;
