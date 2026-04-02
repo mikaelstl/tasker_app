@@ -1,73 +1,30 @@
-# React + TypeScript + Vite
+<div align="center">
+  <img src="https://raw.githubusercontent.com/mikaelstl/tasker_app/develop/public/app_logo.svg"/>
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+  # Tasker
+</div>
 
-Currently, two official plugins are available:
+Tasker é uma ferramenta de gestão de projetos e equipes, voltado para ambientes organizacionais e escolares. Desenvolvido com Node.JS, ReactJS e NestJS.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Recursos
 
-## React Compiler
+- Gestão de projetos e equipes
+- Criação de eventos em calendário
+- Criação de perfis de usuário (Organizador, Membro e Gestor)
+- Gestão de organizações
+- Rastreamento de tempo em tarefas
+- Geração de relatórios de desempenho
+- Análise de saúde de projetos
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Tecnologias utilizadas
 
-## Expanding the ESLint configuration
+- Node.js 20 [Site Oficial](https://nodejs.org/en/download) / [NVM](https://github.com/nvm-sh/nvm)
+- ReactJS 19
+- Typescript
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Principais bibliotecas
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- [styled-components](https://styled-components.com/) - biblioteca de estilização.
+- [@nivo](https://github.com/plouc/nivo) - utilizado para gerar e mostrar gráficos/charts elegantes.
+- [react-toastfy](https://fkhadra.github.io/react-toastify/introduction/) - biblioteca de alertas simples e estilizados.
+- [luxon](https://moment.github.io/luxon/#/) - biblioteca que facilita a utilização e a manipulação de datas.
