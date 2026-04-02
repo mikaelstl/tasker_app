@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/mikaelstl/tasker_app/develop/public/app_logo.svg"/>
+  <img src="https://raw.githubusercontent.com/mikaelstl/tasker_app/develop/public/app_logo.png" width="124"/>
 
   # Tasker
 </div>
