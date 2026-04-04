@@ -50,7 +50,7 @@ export function Chart({
         padding={0.2}
         groupMode='grouped'
         layout='vertical'
-        colors={({ id }) => colorMap[id]}
+        colors={({ id }) => colorMap[id as keyof typeof colorMap]}
         colorBy='id'
         borderColor={{
           from: 'color',

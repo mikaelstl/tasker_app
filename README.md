@@ -4,7 +4,7 @@
   # Tasker
 </div>
 
-Tasker é uma ferramenta de gestão de projetos e equipes, voltado para ambientes organizacionais e escolares. Desenvolvido com Node.JS, ReactJS e NestJS.
+Tasker é uma ferramenta de gestão de projetos e equipes, voltado para ambientes organizacionais e escolares, onde análise de desempenho é um fator altamente presente. Desenvolvido com Node.JS, ReactJS e NestJS.
 
 ## Recursos
 

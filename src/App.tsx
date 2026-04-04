@@ -2,14 +2,11 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
 import { Login } from "./pages/Login"
 import { Workspace } from "./screens/Workspace"
 import { Projects } from "./screens/Projects"
-import { Inbox } from "./screens/Inbox"
-import { Social } from "./screens/Social"
 import { Overview } from "./screens/Project/Overview"
 import { Project } from "./screens/Project"
 import { Events } from "./screens/Project/Events"
 import { Members } from "./screens/Project/Members"
 import { Tasks } from "./screens/Project/Tasks"
-import { Profile } from "./screens/Profile"
 import { Register } from "./pages/Register"
 import { PrivateRoute } from "./routes/PrivateRoute"
 import { Home } from "./pages/Home"
@@ -31,11 +28,7 @@ function App() {
             <Route index element={<Navigate to="workspace" replace />} />
 
             <Route path="workspace" element={<Workspace />} />
-            <Route path="inbox" element={<Inbox />} />
-            <Route path="social" element={<Social />} />
             <Route path="projects" element={<Projects />} />
-
-            <Route path="profile" element={<Profile />} />
 
             <Route path="project" element={<Project />}>
               <Route index element={<Navigate to="overview" replace />} />

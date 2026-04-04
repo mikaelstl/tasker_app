@@ -32,11 +32,6 @@ export function Projects() {
     console.log(isPopupOpen);
   };
 
-  const handleClosePopup = () => {
-    setIsPopupOpen(false);
-    console.log(isPopupOpen);
-  };
-
   useEffect(() => {
     api.get<ProjectQueryDTO>({
       route: '/project/list',

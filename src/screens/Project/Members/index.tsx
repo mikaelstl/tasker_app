@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Scroller } from "../../../components/misc/Scroller";
 import { SearchField } from "../../../components/textfields/SearchField";
 import { MemberTile } from "../../../components/tiles/MemberTile";
-import { Container, Content, Header, MembersArea } from "./style";
+import { Container, Content, MembersArea } from "./style";
 import { useApi } from "../../../hooks/useApi";
 import { useEffect, useState } from "react";
 import type { ProjectMember } from "../../../service/types/member/member.dto";

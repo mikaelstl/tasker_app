@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-import { TaskCard } from "../../components/cards/TaskCard/index.tsx";
 import { Margin } from "../../components/misc/Margin/index.ts";
-import { Scroller } from "../../components/misc/Scroller/index.ts";
 import { useApi } from "../../hooks/useApi.ts";
 import { Categories, Content, Greating, Infos, Items, Main } from "./style.ts";
 import { useAuth } from "../../hooks/useAuth.ts";
@@ -19,7 +17,6 @@ import { ActiveProjectsCard } from "../../components/cards/ActiveProjectsCard/in
 import { DeadlineAlertsCard } from "../../components/cards/DeadlineAlertsCard/index.tsx";
 import { ShortcutsCard } from "../../components/cards/ShortcutsCard/index.tsx";
 import { Divider } from "../../components/misc/Divider/index.ts";
-import { MemberTile } from "../../components/tiles/MemberTile/index.tsx";
 import { MemberStatTile } from "../../components/tiles/MemberStatTile/index.tsx";
 import { NextDeadlineCard } from "../../components/cards/NextDeadlineCard/index.tsx";
 import { TasksProgressCard } from "../../components/cards/TasksProgressCard/index.tsx";
@@ -166,15 +163,6 @@ const OrganizerContent = () => {
 }
 
 const ManagerContent = () => {
-  const [projects, setProjects] = useState<ProjectDTO[]>([{
-    id: '73187165-f888-4a26-9df6-d7c8d39a6e81',
-    title: 'Projeto padrão',
-    description: 'Projeto padrão para testes de interface',
-    ownerkey: '',
-    progress: ProjectProgress.STARTED,
-    due_date: new Date().toISOString(),
-  }]);
-
   return (
     <>
       <Main>
@@ -197,9 +185,9 @@ const ManagerContent = () => {
 }
 
 export function Workspace() {
-  const api = useApi();
+  // const api = useApi();
 
-  const { user } = useAuth();
+  // const { user } = useAuth();
 
   useEffect(() => {
     /* api.get({

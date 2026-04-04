@@ -15,7 +15,6 @@ import { Toasts } from "../../../maps/toasts";
 import { LinkCard } from "../../../components/cards/LinkCard";
 import { User } from "../../../components/misc/User";
 import { DeleteWidget } from "../../../widgets/cards/DeleteWidget";
-import { ToggleSwitch } from "../../../components/base/ToggleSwitch";
 import { Title } from "../../../components/base/Title";
 import { EnableTimeTrackWidget } from "../../../widgets/cards/EnableTimeTrackWidget";
 

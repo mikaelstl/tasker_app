@@ -1,9 +1,6 @@
-import { useState } from "react";
-import Palette from "../../../assets/palette";
 import { Title } from "../../../components/base/Title";
 import { Container, Content, Header } from "../../base/style";
 import { Chart } from "./chart";
-import { Option, Select, SelectUser } from "./style";
 
 export type WeekProdutivity = {
   week: string;

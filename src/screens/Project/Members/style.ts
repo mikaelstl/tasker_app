@@ -10,12 +10,6 @@ const Container = styled.div`
   overflow: hidden;
 `;
 
-const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-left: 20px;
-`;
-
 const Content = styled.div`
   display: flex;
   flex-direction: column;
@@ -35,7 +29,6 @@ const MembersArea = styled.div`
 
 export {
   Container,
-  Header,
   Content,
   MembersArea
 }

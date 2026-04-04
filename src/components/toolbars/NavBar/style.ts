@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import Palette from "../../../assets/palette";
-import { Project } from "../../../screens/Project";
 
 const Container = styled.div`
   grid-area: navbar;

@@ -1,9 +1,6 @@
 import Palette from "../../../assets/palette";
-import { formatNumber } from "../../../utils/formatNumber";
 import { Badge } from "../../badge/Badge";
 import { Subtitle } from "../../base/Subtitle";
-import { Text } from "../../base/Text";
-import { Title } from "../../base/Title";
 import { User } from "../../misc/User";
 import { Container, Indicator, Leading } from "./style";
 
