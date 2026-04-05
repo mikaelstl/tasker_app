@@ -19,7 +19,7 @@ export function Updates({
 
       <Scroller className="vertical">
         {
-          updates.map((update) =>{
+          updates.map((_) =>{
             return <Margin bottom="2px">
               <UpdateCard
                 content="Atualização"

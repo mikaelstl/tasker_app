@@ -18,7 +18,7 @@ interface ProjectTileProps {
 export function ProjectTile(props: ProjectTileProps) {
   const navigate = useNavigate();
 
-  const goToProjectPage = () => navigate(`/home/project/${props.id}/overview`)
+  const goToProjectPage = () => navigate(`/home/project/overview`)
 
   return (
     <Card className="tskr-project-tile" onClick={goToProjectPage}>

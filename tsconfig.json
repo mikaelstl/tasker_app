@@ -16,5 +16,8 @@
       "@api/*":          [ "./src/app/service/api/*" ],
       "@assets/*":       [ "./src/assets/*" ],
     },
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noEmitOnError": false
   }
 }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Title } from "../../../components/base/Title";
 import { CreateButton } from "../../../components/buttons/CreateButton";
 import { TaskCard } from "../../../components/cards/TaskCard";
@@ -7,24 +7,25 @@ import { Scroller } from "../../../components/misc/Scroller";
 import { SearchField } from "../../../components/textfields/SearchField";
 import { Container, Content, Step } from "./style";
 import { CreateTaskPopup } from "../../../components/popups/CreateTask";
-import { useApi } from "../../../hooks/useApi";
+// import { useApi } from "../../../hooks/useApi";
 import type { TaskDTO } from "../../../service/types/task/task.dto";
-import { useNavigate, useParams } from "react-router-dom";
-import type { ApiError } from "../../../service/types/response/error";
-import { Toasts } from "../../../maps/toasts";
-import type { TaskQueryDTO } from "../../../service/types/task/query.dto";
+// import { useNavigate, useParams } from "react-router-dom";
+// import type { ApiError } from "../../../service/types/response/error";
+// import { Toasts } from "../../../maps/toasts";
+// import type { TaskQueryDTO } from "../../../service/types/task/query.dto";
 import { TaskStage } from "../../../service/types/task/stage.dto";
 import Palette from "../../../assets/palette";
 import { ContentHeader } from "../../../components/base/ContentHeader";
 import { PlusIcon } from "@heroicons/react/16/solid";
 import { Text } from "../../../components/base/Text";
+import { TaskPriority } from "../../../service/types/task/priority.dto";
 
 export function Tasks() {
-  const api = useApi();
+  // const api = useApi();
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  const { id } = useParams()
+  // const { id } = useParams()
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const handleOpenPopup = () => {
@@ -35,7 +36,7 @@ export function Tasks() {
   };
 
   const [tasks, setTasks] = useState<TaskDTO[]>([]);
-  const getTasks = async () => {
+  /* const getTasks = async () => {
     try {
       const response = await api.get({
         route: `/tasks`,
@@ -61,11 +62,61 @@ export function Tasks() {
 
       navigate('../../')
     }
-  }
+  } */
 
-  // useEffect(() => {
-  //    getTasks();
-  // }, [isPopupOpen]);
+  useEffect(() => {
+    setTasks([{
+      id: '73187165-f888-4a26-9df6-d7c8d39a6e81',
+      code: 'TSK-001',
+      name: 'Tarefa 01',
+      description: 'Primeira tarefa de teste',
+      project: 'c45d24bf-8933-4421-9685-863b3b285a94',
+      owner: '',
+      stage: TaskStage.PENDING,
+      priority: TaskPriority.MEDIUM,
+      due_date: new Date().toISOString(),
+    }, {
+      id: '73187165-f888-4a26-9df6-d7c8d39a6e81',
+      code: 'TSK-001',
+      name: 'Tarefa 01',
+      description: 'Primeira tarefa de teste',
+      project: 'c45d24bf-8933-4421-9685-863b3b285a94',
+      owner: '',
+      stage: TaskStage.PENDING,
+      priority: TaskPriority.EXTREME,
+      due_date: new Date().toISOString(),
+    }, {
+      id: '73187165-f888-4a26-9df6-d7c8d39a6e81',
+      code: 'TSK-001',
+      name: 'Tarefa 01',
+      description: 'Primeira tarefa de teste',
+      project: 'c45d24bf-8933-4421-9685-863b3b285a94',
+      owner: '',
+      stage: TaskStage.PENDING,
+      priority: TaskPriority.HIGH,
+      due_date: new Date().toISOString(),
+    }, {
+      id: '73187165-f888-4a26-9df6-d7c8d39a6e81',
+      code: 'TSK-001',
+      name: 'Tarefa 01',
+      description: 'Primeira tarefa de teste',
+      project: 'c45d24bf-8933-4421-9685-863b3b285a94',
+      owner: '',
+      stage: TaskStage.PENDING,
+      priority: TaskPriority.MEDIUM,
+      due_date: new Date().toISOString(),
+    }, {
+      id: '73187165-f888-4a26-9df6-d7c8d39a6e81',
+      code: 'TSK-001',
+      name: 'Tarefa 01',
+      description: 'Primeira tarefa de teste',
+      project: 'c45d24bf-8933-4421-9685-863b3b285a94',
+      owner: '',
+      stage: TaskStage.PENDING,
+      priority: TaskPriority.MEDIUM,
+      due_date: new Date().toISOString(),
+    }]);
+  }, [isPopupOpen]);
 
   return (
     <Container className="tasks">
@@ -75,7 +126,7 @@ export function Tasks() {
           type="button"
           onClick={handleOpenPopup}
         >
-          <PlusIcon width={20}/>
+          <PlusIcon width={20} />
           <Text>New Task</Text>
         </CreateButton>
       </ContentHeader>

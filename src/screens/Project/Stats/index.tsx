@@ -29,7 +29,7 @@ export function Stats() {
         <Subtitle>Stated at: --:-- Due date: mm 00, yyyy</Subtitle>
         {ProgressBadge['STARTED']}
         <Actions>
-          <EditButton type="button" onClick={() => console.log('Open edit funtion')} />
+          <EditButton type="button" onClick={() => navigate('../edit')} />
           <CreateButton type="button">
             <Text>Generate Report</Text>
           </CreateButton>

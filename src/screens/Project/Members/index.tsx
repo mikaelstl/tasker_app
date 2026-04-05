@@ -1,13 +1,13 @@
-import { useNavigate, useParams } from "react-router-dom";
+// import { useNavigate, useParams } from "react-router-dom";
 import { Scroller } from "../../../components/misc/Scroller";
 import { SearchField } from "../../../components/textfields/SearchField";
 import { MemberTile } from "../../../components/tiles/MemberTile";
 import { Container, Content, MembersArea } from "./style";
-import { useApi } from "../../../hooks/useApi";
+// import { useApi } from "../../../hooks/useApi";
 import { useEffect, useState } from "react";
 import type { ProjectMember } from "../../../service/types/member/member.dto";
-import type { ApiError } from "../../../service/types/response/error";
-import { Toasts } from "../../../maps/toasts";
+// import type { ApiError } from "../../../service/types/response/error";
+// import { Toasts } from "../../../maps/toasts";
 import { MemberRole } from "../../../service/types/member/role.dto";
 import { TaskStage } from "../../../service/types/task/stage.dto";
 import { ContentHeader } from "../../../components/base/ContentHeader";
@@ -15,15 +15,15 @@ import { CreateButton } from "../../../components/buttons/CreateButton";
 import { Text } from "../../../components/base/Text";
 
 export function Members() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  const api = useApi();
+  // const api = useApi();
 
-  const { id } = useParams()
+  // const { id } = useParams()
 
   const [ owner, setOwner ] = useState<ProjectMember | undefined>(undefined);
   const [members, setMembers] = useState<ProjectMember[]>([]);
-  const getMembers = async () => {
+  /* const getMembers = async () => {
     try {
       const response = await api.get({ route: `/project/${id}/members` });
 
@@ -45,14 +45,21 @@ export function Members() {
 
       navigate('..')
     }
-  }
+  } */
 
   useEffect(() => {
-    // getMembers();
+    setOwner({
+      id: '322317d7',
+      projectkey: '46a6ed2d',
+      userkey: 'mikaelst',
+      role: MemberRole.OWNER,
+      tasks: []
+    })
+    setMembers([]);
   },[]);
 
   return (
-    <Container className="members">
+    <Container className="tskr-proj-members">
       <ContentHeader
         title=""
       >

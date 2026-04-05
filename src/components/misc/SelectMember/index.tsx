@@ -1,7 +1,6 @@
 import { Container, Wrapper, Selected, Options, Option, Field } from "./style";
 import { useEffect, useState } from "react";
 import { User } from "../User";
-import type { ProjectMember } from "../../../service/types/member/member.dto";
 import type { UserDTO } from "../../../service/types/user/user.dto";
 import { Label } from "../../base/Label";
 
@@ -14,7 +13,7 @@ interface SelectMemberProps {
 export function SelectMember({
   label,
   data,
-  onChange
+  // onChange
 }: SelectMemberProps) {
   // const owner = data.find((user) => user.role === MemberRole.OWNER);
 
@@ -26,7 +25,7 @@ export function SelectMember({
   
   const [query, setQuery] = useState<string>('');
 
-  const [hasOnlyOwner, setHasOnlyOwner] = useState<boolean>(false);
+  // const [hasOnlyOwner, setHasOnlyOwner] = useState<boolean>(false);
 
   const [showContent, setShowContent] = useState<boolean>(false);
   const handleShowContent = () => {

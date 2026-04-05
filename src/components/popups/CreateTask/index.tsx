@@ -8,7 +8,7 @@ import { useApi } from "../../../hooks/useApi";
 import { Form } from "../../misc/Form/style";
 import type { PopupProps } from "../popup.props";
 import type { CreateTaskDTO } from "../../../service/types/task/create.dto";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { TaskPriority } from "../../../service/types/task/priority.dto";
 import { SelectMember } from "../../misc/SelectMember";
 import { Toasts } from "../../../maps/toasts";
@@ -20,23 +20,11 @@ import type { UserDTO } from "../../../service/types/user/user.dto";
 export function CreateTaskPopup(props: PopupProps) {
   const api = useApi();
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const { id } = useParams();
 
-  const [members, setMembers] = useState<UserDTO[]>([{
-    id: '648c864f',
-    name: 'mikael',
-    username: 'mikaelst',
-  },{
-    id: '38b45656',
-    name: 'jubiscleiton',
-    username: 'jubscltn',
-  },{
-    id: '2d715ef9',
-    name: 'aristovaldo',
-    username: 'valdo.ari',
-  }]);
+  const [members, setMembers] = useState<UserDTO[]>([]);
   /* const getMembers = async () => {
     try {
       const response = await api.get({
@@ -103,7 +91,20 @@ export function CreateTaskPopup(props: PopupProps) {
   }
 
   useEffect(() => {
-    // getMembers();
+    setOwner('mikaelst')
+    setMembers([{
+      id: '648c864f',
+      name: 'mikael',
+      username: 'mikaelst',
+    }, {
+      id: '38b45656',
+      name: 'jubiscleiton',
+      username: 'jubscltn',
+    }, {
+      id: '2d715ef9',
+      name: 'aristovaldo',
+      username: 'valdo.ari',
+    }]);
   }, []);
 
   if (!props.showPopup) return null;
@@ -114,7 +115,7 @@ export function CreateTaskPopup(props: PopupProps) {
         <ContentHeader
           title="Create new Task"
         >
-          <DeleteBtn onClick={handleClose}/>
+          <DeleteBtn onClick={handleClose} />
           <CreateButton type="submit">
             <Text>Create task</Text>
           </CreateButton>

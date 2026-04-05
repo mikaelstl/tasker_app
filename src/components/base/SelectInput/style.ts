@@ -15,21 +15,14 @@ const Container = styled.div`
   font-weight: 500;
 `;
 
-interface SelectProps {
-  background: string;
-  details: string;
-}
-
-const Select = styled.select<SelectProps>`
+const Select = styled.select`
   width: fit-content;
 
   text-align: center;
 
-  background-color: ${props => props.background};
-
   font-size: 16px;
   font-weight: 700;
-  color: ${props => props.details};
+  color: white;
 
   padding: 8px;
 

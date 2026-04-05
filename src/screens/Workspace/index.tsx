@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Margin } from "../../components/misc/Margin/index.ts";
-import { useApi } from "../../hooks/useApi.ts";
+// import { useApi } from "../../hooks/useApi.ts";
 import { Categories, Content, Greating, Infos, Items, Main } from "./style.ts";
-import { useAuth } from "../../hooks/useAuth.ts";
+// import { useAuth } from "../../hooks/useAuth.ts";
 import { ItalicTitle } from "../../components/base/ItalicTitle/index.ts";
 import type { TaskDTO } from "../../service/types/task/task.dto.ts";
 import { TaskStage } from "../../service/types/task/stage.dto.ts";
@@ -23,57 +23,61 @@ import { TasksProgressCard } from "../../components/cards/TasksProgressCard/inde
 import { TaskCategoryAccordion } from "../../components/accordions/TaskCategoryAccordion/index.tsx";
 
 const MemberContent = () => {
-  const [tasks, setTasks] = useState<TaskDTO[]>([{
-    id: '73187165-f888-4a26-9df6-d7c8d39a6e81',
-    code: 'TSK-001',
-    name: 'Tarefa 01',
-    description: 'Primeira tarefa de teste',
-    project: 'c45d24bf-8933-4421-9685-863b3b285a94',
-    owner: '',
-    stage: TaskStage.PENDING,
-    priority: TaskPriority.MEDIUM,
-    due_date: new Date().toISOString(),
-  }, {
-    id: '73187165-f888-4a26-9df6-d7c8d39a6e81',
-    code: 'TSK-001',
-    name: 'Tarefa 01',
-    description: 'Primeira tarefa de teste',
-    project: 'c45d24bf-8933-4421-9685-863b3b285a94',
-    owner: '',
-    stage: TaskStage.PENDING,
-    priority: TaskPriority.EXTREME,
-    due_date: new Date().toISOString(),
-  }, {
-    id: '73187165-f888-4a26-9df6-d7c8d39a6e81',
-    code: 'TSK-001',
-    name: 'Tarefa 01',
-    description: 'Primeira tarefa de teste',
-    project: 'c45d24bf-8933-4421-9685-863b3b285a94',
-    owner: '',
-    stage: TaskStage.PENDING,
-    priority: TaskPriority.HIGH,
-    due_date: new Date().toISOString(),
-  }, {
-    id: '73187165-f888-4a26-9df6-d7c8d39a6e81',
-    code: 'TSK-001',
-    name: 'Tarefa 01',
-    description: 'Primeira tarefa de teste',
-    project: 'c45d24bf-8933-4421-9685-863b3b285a94',
-    owner: '',
-    stage: TaskStage.PENDING,
-    priority: TaskPriority.MEDIUM,
-    due_date: new Date().toISOString(),
-  }, {
-    id: '73187165-f888-4a26-9df6-d7c8d39a6e81',
-    code: 'TSK-001',
-    name: 'Tarefa 01',
-    description: 'Primeira tarefa de teste',
-    project: 'c45d24bf-8933-4421-9685-863b3b285a94',
-    owner: '',
-    stage: TaskStage.PENDING,
-    priority: TaskPriority.MEDIUM,
-    due_date: new Date().toISOString(),
-  }]);
+  const [tasks, setTasks] = useState<TaskDTO[]>([]);
+
+  useEffect(() => {
+    setTasks([{
+      id: '73187165-f888-4a26-9df6-d7c8d39a6e81',
+      code: 'TSK-001',
+      name: 'Tarefa 01',
+      description: 'Primeira tarefa de teste',
+      project: 'c45d24bf-8933-4421-9685-863b3b285a94',
+      owner: '',
+      stage: TaskStage.PENDING,
+      priority: TaskPriority.MEDIUM,
+      due_date: new Date().toISOString(),
+    }, {
+      id: '73187165-f888-4a26-9df6-d7c8d39a6e81',
+      code: 'TSK-001',
+      name: 'Tarefa 01',
+      description: 'Primeira tarefa de teste',
+      project: 'c45d24bf-8933-4421-9685-863b3b285a94',
+      owner: '',
+      stage: TaskStage.PENDING,
+      priority: TaskPriority.EXTREME,
+      due_date: new Date().toISOString(),
+    }, {
+      id: '73187165-f888-4a26-9df6-d7c8d39a6e81',
+      code: 'TSK-001',
+      name: 'Tarefa 01',
+      description: 'Primeira tarefa de teste',
+      project: 'c45d24bf-8933-4421-9685-863b3b285a94',
+      owner: '',
+      stage: TaskStage.PENDING,
+      priority: TaskPriority.HIGH,
+      due_date: new Date().toISOString(),
+    }, {
+      id: '73187165-f888-4a26-9df6-d7c8d39a6e81',
+      code: 'TSK-001',
+      name: 'Tarefa 01',
+      description: 'Primeira tarefa de teste',
+      project: 'c45d24bf-8933-4421-9685-863b3b285a94',
+      owner: '',
+      stage: TaskStage.PENDING,
+      priority: TaskPriority.MEDIUM,
+      due_date: new Date().toISOString(),
+    }, {
+      id: '73187165-f888-4a26-9df6-d7c8d39a6e81',
+      code: 'TSK-001',
+      name: 'Tarefa 01',
+      description: 'Primeira tarefa de teste',
+      project: 'c45d24bf-8933-4421-9685-863b3b285a94',
+      owner: '',
+      stage: TaskStage.PENDING,
+      priority: TaskPriority.MEDIUM,
+      due_date: new Date().toISOString(),
+    }]);
+  }, [])
 
   return (
     <>
@@ -103,14 +107,18 @@ const MemberContent = () => {
 }
 
 const OrganizerContent = () => {
-  const [projects, setProjects] = useState<ProjectDTO[]>([{
+  const [projects, setProjects] = useState<ProjectDTO[]>([]);
+
+  useEffect(() => {
+    setProjects([{
     id: '73187165-f888-4a26-9df6-d7c8d39a6e81',
     title: 'Projeto padrão',
     description: 'Projeto padrão para testes de interface',
     ownerkey: '',
     progress: ProjectProgress.STARTED,
     due_date: new Date().toISOString(),
-  }]);
+  }])
+  }, [])
 
   return (
     <>
@@ -119,7 +127,7 @@ const OrganizerContent = () => {
         <Infos>
           <ActiveProjectsCard />
           <DeadlineAlertsCard />
-          <Divider/>
+          <Divider />
           <ShortcutsCard />
         </Infos>
         <Items>
@@ -150,14 +158,14 @@ const OrganizerContent = () => {
           date: new Date().toISOString(),
           ownerkey: '',
           projectkey: ''
-        },{
+        }, {
           id: '8c7330f3',
           content: 'Mensagem de teste',
           date: new Date().toISOString(),
           ownerkey: '',
           projectkey: ''
         }
-      ]}/>
+      ]} />
     </>
   )
 }
@@ -184,6 +192,12 @@ const ManagerContent = () => {
   )
 }
 
+const UserProfileContent = {
+  'MEMBER': <MemberContent />,
+  'ORGANIZER': <OrganizerContent />,
+  'MANAGER': <ManagerContent />
+}
+
 export function Workspace() {
   // const api = useApi();
 
@@ -201,9 +215,7 @@ export function Workspace() {
 
   return (
     <Content className="workspace-content">
-      {/* <MemberContent /> */}
-      {/* <OrganizerContent /> */}
-      <ManagerContent />
+      {UserProfileContent['MANAGER']}
     </Content>
   )
 }

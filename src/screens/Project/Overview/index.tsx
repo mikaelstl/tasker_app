@@ -1,14 +1,9 @@
 import { useEffect, useState } from "react";
-import { DateBadge } from "../../../components/badge/DateBadge";
-import { Label } from "../../../components/base/Label";
 import { Text } from "../../../components/base/Text";
 import { Title } from "../../../components/base/Title";
 import { CommentCard } from "../../../components/cards/CommentCard";
-import { TaskCard } from "../../../components/cards/TaskCard";
 import { ImportantDates } from "../../../components/ImportantDates";
-import { Margin } from "../../../components/misc/Margin";
 import { Scroller } from "../../../components/misc/Scroller";
-import { User } from "../../../components/misc/User";
 import { useApi } from "../../../hooks/useApi";
 import { Comments, Container, Content, Description, ProjectInfo } from "./style";
 import { ProjectProgress, type ProjectDTO } from "../../../service/types/project/project.dto";
@@ -19,7 +14,7 @@ import { DateTime } from "luxon";
 import type { TaskDTO } from "../../../service/types/task/task.dto";
 import { ItalicTitle } from "../../../components/base/ItalicTitle";
 import { ProgressBadge } from "../../../maps/progress";
-import type { TaskQueryDTO } from "../../../service/types/task/query.dto";
+// import type { TaskQueryDTO } from "../../../service/types/task/query.dto";
 import type { EventDTO } from "../../../service/types/events/event.dto";
 import { MessageField } from "../../../components/textfields/MessageField";
 import type { CreateCommentDTO } from "../../../service/types/comment/comment.create.dto";
@@ -42,47 +37,30 @@ export function Overview() {
 
   const { id } = useParams();
 
-  const [project, setProject] = useState<ProjectDTO | null>({
-    id: 'bd568178-c2f4-4851-a336-810eddf0bb86',
-    title: 'Projeto de teste',
-    description: 'Projeto padrão para testes',
-    ownerkey: '',
-    due_date: new Date().toISOString(),
-    progress: ProjectProgress.PENDING,
-  });
-  const getProject = async () => {
-    try {
-      const response = await api.get({ route: `/project/${id}` });
+  const [project, setProject] = useState<ProjectDTO | null>(null);
+  // const getProject = async () => {
+  //   try {
+  //     const response = await api.get({ route: `/project/${id}` });
 
-      const data: ProjectDTO = response.data;
+  //     const data: ProjectDTO = response.data;
 
-      setProject(data);
-    } catch (error) {
-      const { errors } = error as ApiError;
+  //     setProject(data);
+  //   } catch (error) {
+  //     const { errors } = error as ApiError;
 
-      errors?.forEach(
-        err => {
-          const notify = Toasts[err.level];
-          notify(err.message);
-        }
-      )
+  //     errors?.forEach(
+  //       err => {
+  //         const notify = Toasts[err.level];
+  //         notify(err.message);
+  //       }
+  //     )
 
-      navigate('..')
-    }
-  }
+  //     navigate('..')
+  //   }
+  // }
 
-  const [tasks, setTasks] = useState<TaskDTO[]>([{
-      id: '73187165-f888-4a26-9df6-d7c8d39a6e81',
-      code: 'TSK-001',
-      name: 'Tarefa 01',
-      description: 'Primeira tarefa de teste',
-      project: 'c45d24bf-8933-4421-9685-863b3b285a94',
-      owner: '',
-      stage: TaskStage.PENDING,
-      priority: TaskPriority.MEDIUM,
-      due_date: new Date().toISOString(),
-    }]);
-  const getTasks = async () => {
+  const [tasks, setTasks] = useState<TaskDTO[]>([]);
+  /* const getTasks = async () => {
     try {
       const response = await api.get<TaskQueryDTO>({
         route: `/tasks?projectkey=${id}`
@@ -105,33 +83,33 @@ export function Overview() {
 
       navigate('../../')
     }
-  }
+  } */
 
   const [events, setEvents] = useState<EventDTO[]>([]);
-  const getEvents = async () => {
-    try {
-      const response = await api.get({
-        route: `/events?projectkey=${id}`
-      });
+  // const getEvents = async () => {
+  //   try {
+  //     const response = await api.get({
+  //       route: `/events?projectkey=${id}`
+  //     });
 
-      console.log(response);
+  //     console.log(response);
 
-      const data: EventDTO[] = response.data;
+  //     const data: EventDTO[] = response.data;
 
-      setEvents(data);
-    } catch (error) {
-      const { errors } = error as ApiError;
+  //     setEvents(data);
+  //   } catch (error) {
+  //     const { errors } = error as ApiError;
 
-      errors?.forEach(
-        err => {
-          const notify = Toasts[err.level];
-          notify(err.message);
-        }
-      )
+  //     errors?.forEach(
+  //       err => {
+  //         const notify = Toasts[err.level];
+  //         notify(err.message);
+  //       }
+  //     )
 
-      navigate('../../')
-    }
-  }
+  //     navigate('../../')
+  //   }
+  // }
 
   const [comments, setComments] = useState<CommentDTO[]>([]);
   const getComments = async () => {
@@ -186,10 +164,27 @@ export function Overview() {
   }
 
   useEffect(() => {
-    // getProject();
-    // getTasks();
-    // getEvents();
-    // getComments();
+    setProject({
+      id: 'bd568178-c2f4-4851-a336-810eddf0bb86',
+      title: 'Projeto de teste',
+      description: 'Projeto padrão para testes',
+      ownerkey: '',
+      due_date: new Date().toISOString(),
+      progress: ProjectProgress.PENDING,
+    });
+    setTasks([{
+      id: '73187165-f888-4a26-9df6-d7c8d39a6e81',
+      code: 'TSK-001',
+      name: 'Tarefa 01',
+      description: 'Primeira tarefa de teste',
+      project: 'c45d24bf-8933-4421-9685-863b3b285a94',
+      owner: '',
+      stage: TaskStage.PENDING,
+      priority: TaskPriority.MEDIUM,
+      due_date: new Date().toISOString(),
+    }]);
+    setEvents([]);
+    setComments([]);
   }, [])
 
   if (project === null) return <><Text>Carregando...</Text></>;
@@ -201,7 +196,7 @@ export function Overview() {
           <SectionTitle>{project?.title}</SectionTitle>
           <Subtitle>Stated at: --:-- Due date: mm 00, yyyy</Subtitle>
           {ProgressBadge[project.progress]}
-          <EditButton type="button" onClick={() => console.log('Open edit funtion')}/>
+          <EditButton type="button" onClick={() => console.log('Open edit funtion')} />
           <Description>
             <Subtitle>Description</Subtitle>
             <Text>{project.description}</Text>

@@ -1,7 +1,4 @@
-import { useState } from "react";
-import { TaskPriorityOption, type TaskPriorityOptionDesign } from "../../../service/types/task/priority.dto";
 import { Container, Option, Select } from "./style";
-import Palette from "../../../assets/palette";
 
 interface SelectInputProps<T> {
   label: string;
@@ -15,22 +12,14 @@ export function SelectInput<T extends Record<string, string>>(props: SelectInput
                     .map(([key, value]) => { return {
                                               key,
                                               value,
-                                              design: TaskPriorityOption[value]
                                             }
                                           }
                                         );
-
-  const [ design, setDesign ] = useState<TaskPriorityOptionDesign>({
-    backgroud: Palette.items,
-    details: Palette.gray
-  });
 
   const handleChange = (ev: React.ChangeEvent<HTMLSelectElement>) => {
     const selected = ev.target.value;
 
     props.onChange!(selected.toUpperCase() as T[keyof T]);
-
-    setDesign(options.find((opt) => opt.value === selected )?.design!);
   }
 
   return (
@@ -39,8 +28,6 @@ export function SelectInput<T extends Record<string, string>>(props: SelectInput
       <Select name="select-input"
         value={props.value}
         onChange={handleChange}
-        background={design.backgroud}
-        details={design.details}
       >
         {
           options.map(

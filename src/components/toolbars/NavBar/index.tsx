@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom"
 import { useAuth } from "../../../hooks/useAuth"
 import { FolderOpenIcon } from "@heroicons/react/20/solid"
 import { useEffect, useState } from "react"
-import { CalendarIcon, ChartBarIcon, ClipboardIcon, Cog6ToothIcon, UserIcon } from "@heroicons/react/24/solid"
+import { CalendarIcon, ChartBarIcon, ClipboardIcon, UserIcon } from "@heroicons/react/24/solid"
 
 interface ProjectNavAccordionProps {
   isOpen: boolean
@@ -116,7 +116,7 @@ export function NavBar({
 
   const onLogout = () => {
     logout();
-    navigate('/');
+    navigate('/login');
   }
 
   return (

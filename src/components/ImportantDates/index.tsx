@@ -6,30 +6,30 @@ import { Margin } from "../misc/Margin"
 import { Scroller } from "../misc/Scroller"
 import { Container, Day, Event, Month, Name } from "./style"
 import { formatNumber } from "../../utils/formatNumber"
-import { useEffect, useState } from "react"
+// import { useEffect, useState } from "react"
 import { SectionTitle } from "../base/SectionTitle"
 
 interface ImportantDatesProps {
   events: EventDTO[]
 }
 
-type DateType = {
-  date: DateTime,
-  events: EventDTO[]
-}
+// type DateType = {
+//   date: DateTime,
+//   events: EventDTO[]
+// }
 
 export function ImportantDates({
   events
 }: ImportantDatesProps) {
-  const [ dates, setDates ] = useState<DateType[]>([]);
+  // const [ dates, setDates ] = useState<DateType[]>([]);
   
-  useEffect(() => {
-    events.map(
-      (evt) => {
-        const date = DateTime.fromISO(evt.date, { zone: 'utc' });
-      }
-    )
-  }, [])
+  // useEffect(() => {
+  //   events.map(
+  //     (evt) => {
+  //       const date = DateTime.fromISO(evt.date, { zone: 'utc' });
+  //     }
+  //   )
+  // }, [])
 
   return (
     <Container className="important-dates">

@@ -18,11 +18,11 @@ interface ProjectCardProps {
 export function ProjectCard(props: ProjectCardProps) {
   const navigate = useNavigate();
 
-  const goToProjectPage = () => navigate(`/home/project/${props.id}/overview`)
+  const goToProjectPage = () => navigate(`/home/project/overview`)
 
   return (
-    <Card className="project-card" onClick={goToProjectPage}>
-      <Leading className="card-leading">
+    <Card className="tskr-project-card" onClick={goToProjectPage}>
+      <Leading className="tskr-card-leading">
         <div className="text">
           <Title>{props.title}</Title>
           <Subtitle>{props.description}</Subtitle>
@@ -31,7 +31,7 @@ export function ProjectCard(props: ProjectCardProps) {
           date={DateTime.fromISO(props.due_date, { zone: 'utc'})}
         />
       </Leading>
-      <Trailing className="card-Trailing">
+      <Trailing className="tskr-card-Trailing">
         <Badge>{props.progress}</Badge>
         {/* <team /> */}
       </Trailing>

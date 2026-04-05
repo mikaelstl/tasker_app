@@ -26,10 +26,10 @@ const Slider = styled.span`
   background-color: ${Palette.white};
 `;
 
-const Input = styled.input`
-  display: none;
-  width: 100%;
-`
+// const Input = styled.input`
+//   display: none;
+//   width: 100%;
+// `
 
 export function ToggleSwitch() {
   const [ enable, setEnable ] = useState(false);
