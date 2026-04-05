@@ -17,8 +17,11 @@ import { User } from "../../../components/misc/User";
 import { DeleteWidget } from "../../../widgets/cards/DeleteWidget";
 import { Title } from "../../../components/base/Title";
 import { EnableTimeTrackWidget } from "../../../widgets/cards/EnableTimeTrackWidget";
+import { useNavigate } from "react-router-dom";
 
 export function EditProject() {
+  const navigate = useNavigate();
+
   const [links, setLinks] = useState<string[]>([]);
   
     const addLink = (newLink: string) => {
@@ -48,7 +51,7 @@ export function EditProject() {
       <ContentHeader
         title="Edit Project"
       >
-        <DeleteBtn />
+        <DeleteBtn onClick={() => navigate('../')}/>
         <CreateButton type="button">
           <Text>Add member</Text>
         </CreateButton>

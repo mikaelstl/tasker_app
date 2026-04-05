@@ -92,13 +92,13 @@ export function TaskOverview() {
       <TaskInfo>
         <Links>
           <Link href="./project">Project_id</Link>
-          <Text>/</Text>
+          <Subtitle>/</Subtitle>
           <Subtitle>TSK-000</Subtitle>
         </Links>
         <SectionTitle>Task Title</SectionTitle>
         <DateBadge date={DateTime.local()} />
         {ProgressBadge['STARTED']}
-        <EditButton type="button" onClick={() => console.log('Open edit funtion')} />
+        <EditButton type="button" onClick={() => console.log('Open edit task modal')} />
         <TaskTags />
       </TaskInfo>
       <Description className="tskr-task-description">

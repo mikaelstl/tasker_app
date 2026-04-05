@@ -7,7 +7,7 @@ const Container = styled.div`
     "tskr-task-infos       tskr-task-activity"
     "tskr-task-description tskr-task-activity"
   ;
-  grid-template-columns: 1fr 336px;
+  grid-template-columns: 1fr auto;
   grid-template-rows: min-content 1fr;
   
   width: 100%;
@@ -64,7 +64,6 @@ const Links = styled.div`
   grid-area: tskr-task-links;
 
   display: flex;
-  gap: 40px;
 `;
 
 const Tags = styled.div`
