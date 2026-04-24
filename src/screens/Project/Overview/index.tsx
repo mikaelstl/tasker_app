@@ -196,7 +196,7 @@ export function Overview() {
           <SectionTitle>{project?.title}</SectionTitle>
           <Subtitle>Stated at: --:-- Due date: mm 00, yyyy</Subtitle>
           {ProgressBadge[project.progress]}
-          <EditButton type="button" onClick={() => console.log('Open edit funtion')} />
+          <EditButton type="button" onClick={() => navigate('../edit')} />
           <Description>
             <Subtitle>Description</Subtitle>
             <Text>{project.description}</Text>
