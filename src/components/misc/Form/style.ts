@@ -25,7 +25,7 @@ const SubmitButton = styled.button`
   padding: 10px;
   
   color: ${Palette.white};
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
 
   border: none;

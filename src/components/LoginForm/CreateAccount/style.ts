@@ -21,7 +21,7 @@ const CreateAccountBtn = styled.button`
   
   color: white;
   
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
   
   border-radius: 9999px;

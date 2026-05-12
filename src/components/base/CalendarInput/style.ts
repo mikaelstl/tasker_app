@@ -12,7 +12,7 @@ const Container = styled.div`
 const Input = styled.input`
   width: 100%;
   
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
   
   background-color: ${Palette.items};

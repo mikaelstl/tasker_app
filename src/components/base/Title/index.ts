@@ -6,7 +6,7 @@ export const Title = styled.h2`
 
   display: inline-block;
 
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 600;
   color: ${Palette.white};
 

@@ -14,7 +14,7 @@ const Input = styled.input`
 
   background: none;
 
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
 
   padding: 10px;

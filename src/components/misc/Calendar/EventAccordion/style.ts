@@ -11,7 +11,7 @@ const Activated = styled.span<ActivatedProps>`
   gap: 6px;
   
   font-weight: 600;
-  font-size: 14px;
+  font-size: 12px;
   color: ${props => props.activated ? Palette.white : Palette.gray};
 `;
 

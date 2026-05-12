@@ -95,7 +95,7 @@ const Active = styled.p<ActiveProps>`
 
 const Today = styled.p`
   font-weight: 700;
-  font-size: 20px;
+  font-size: 18px;
   color: ${Palette.blue};
 `;
 

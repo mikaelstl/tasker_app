@@ -20,7 +20,7 @@ const Select = styled.select`
 
   text-align: center;
 
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 700;
   color: white;
 

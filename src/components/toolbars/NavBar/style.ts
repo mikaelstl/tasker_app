@@ -39,7 +39,7 @@ const NavItem = styled.button<NavItemProps>`
   border: none;
   color: ${props => props.activated ? Palette.white : Palette.gray};
 
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   
   cursor: pointer;
@@ -63,7 +63,7 @@ const Accordion = styled.button`
   
   padding: 10px 20px;
 
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
 `;
 

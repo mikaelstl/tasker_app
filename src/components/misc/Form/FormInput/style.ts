@@ -23,7 +23,7 @@ const Input = styled.input`
   background: none;
   caret-color: ${Palette.white};
   padding: 10px 0px;
-  font-size: 16px;
+  font-size: 14px;
 
   &:focus {
     outline: none;
@@ -32,7 +32,7 @@ const Input = styled.input`
   }
 
   &::placeholder {
-    font-size: 16px;
+    font-size: 14px;
     font-family: 'Poppins';
     color: ${Palette.white};
   }

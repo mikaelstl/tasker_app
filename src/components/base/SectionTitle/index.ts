@@ -7,7 +7,7 @@ export const SectionTitle = styled.h2`
   width: max-content;
   height: min-content;
 
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 600;
   color: ${Palette.white};
 `
