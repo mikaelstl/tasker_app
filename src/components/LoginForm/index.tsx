@@ -1,5 +1,5 @@
 import { KeyIcon, UserIcon } from "@heroicons/react/16/solid";
-import { FormInput } from "../misc/Form/FormInput";
+import { TextInput } from "../misc/Form/TextInput";
 import { Container, Form, SubmitButton, Inputs } from "../misc/Form/style";
 import { CreateAccount } from "./CreateAccount";
 import type { LoginDTO } from "../../service/types/auth/login.dto";
@@ -14,14 +14,14 @@ interface LoginFormProps {
 export function LoginForm(props: LoginFormProps) {
   const navigate = useNavigate();
   
-  const [ username, setUsername ] = useState<string>('');
+  const [ email, setUsername ] = useState<string>('');
   const [ password, setPassword ] = useState<string>('');
 
   const onSubmit = async (ev: React.FormEvent) => {
     ev.preventDefault()
 
     const data: LoginDTO = {
-      username,
+      email,
       password
     };
 
@@ -35,13 +35,13 @@ export function LoginForm(props: LoginFormProps) {
       <SectionTitle>LOGIN</SectionTitle>
       <Form action='' onSubmit={onSubmit}>
         <Inputs className="tskr-form-inputs">
-          <FormInput
+          <TextInput
             icon={<UserIcon width={24}/>}
             placeholder="User"
-            value={username}
+            value={email}
             onChange={(value) => setUsername(value)}
           />
-          <FormInput
+          <TextInput
             type="password"
             icon={<KeyIcon width={24}/>}
             placeholder="Password"

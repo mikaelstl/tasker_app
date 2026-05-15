@@ -34,7 +34,7 @@ const Input = styled.input`
   &::placeholder {
     font-size: 14px;
     font-family: 'Poppins';
-    color: ${Palette.white};
+    color: ${Palette.gray};
   }
 `;
 

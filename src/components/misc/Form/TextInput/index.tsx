@@ -2,7 +2,7 @@ import { EyeIcon, EyeSlashIcon } from "@heroicons/react/16/solid";
 import { Container, Input, ShowPassword } from "./style";
 import { useState } from "react";
 
-type InputType = "text" | "password";
+type InputType = "text" | "password" | "email";
 
 interface LoginFormProps {
   placeholder: string;
@@ -12,7 +12,7 @@ interface LoginFormProps {
   onChange?: (value: string) => void;
 }
 
-export function FormInput(props: LoginFormProps) {
+export function TextInput(props: LoginFormProps) {
   const [ type, setType ] = useState<InputType>(props.type ?? 'text');
 
   const handleToggle = () => {

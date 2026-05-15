@@ -11,7 +11,7 @@ export function Login() {
     <Screen>
       <Content>
         <Container>
-          <Logo />
+          <Logo width={182}/>
           <Label>PROJECT MANAGER</Label>
         </Container>
         <LoginForm login={login}/>

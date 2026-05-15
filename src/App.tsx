@@ -13,6 +13,7 @@ import { Home } from "./pages/Home"
 import { Stats } from "./screens/Project/Stats"
 import { EditProject } from "./screens/Project/Edit"
 import { TaskOverview } from "./screens/Project/TaskOverview"
+import { PrivateRoute } from "./routes/PrivateRoute"
 
 function App() {
   return (
@@ -23,7 +24,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* <Route element={<PrivateRoute/>}> */}
+        <Route element={<PrivateRoute/>}>
           <Route path="/home" element={<Home />}>
             <Route index element={<Navigate to="workspace" replace />} />
 
@@ -42,7 +43,7 @@ function App() {
               <Route path="task" element={<TaskOverview />} />
             </Route>
           </Route>
-        {/* </Route> */}
+        </Route>
       </Routes>
     </BrowserRouter>
   )
