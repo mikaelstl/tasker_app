@@ -18,6 +18,15 @@ import { SetAccountStage } from "./stages/SetAccountStage";
 import { CreateOrgStage } from "./stages/CreateOrgStage";
 import { UseSystemStage } from "./stages/UseSystemStage";
 import validator from 'validator';
+import { ChoseWorkspaceStage } from "./stages/ChoseWorkspaceStage";
+
+const TitleStageEnum = {
+  EMAIL: "CREATE YOUR ACCOUNT",
+  SET_ACCOUNT: "CREATE YOUR ACCOUNT",
+  USE_SYSTEM: "CREATE YOUR ACCOUNT",
+  CREATE_ORG: "CREATE YOUR ACCOUNT",
+  CHOSE_WORKSPACE: "CHOSE WORKSPACE"
+}
 
 export function Register() {
   const api = useApi();
@@ -91,6 +100,7 @@ export function Register() {
     SET_ACCOUNT: SetAccountStage,
     USE_SYSTEM: UseSystemStage,
     CREATE_ORG: CreateOrgStage,
+    CHOSE_WORKSPACE: ChoseWorkspaceStage
   };
 
   const CurrentStage = CreateAccountStageMap[stage];
@@ -104,7 +114,7 @@ export function Register() {
       <Content>
         <HeaderContainer className="tskr-stage-header-container">
           <Logo width={182} />
-          <SectionTitle>CREATE YOUR ACCOUNT</SectionTitle>
+          <SectionTitle>{TitleStageEnum[stage]}</SectionTitle>
         </HeaderContainer>
 
         <StageContainer className="tskr-stage-container">

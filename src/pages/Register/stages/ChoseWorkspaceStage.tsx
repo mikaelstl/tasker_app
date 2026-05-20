@@ -6,24 +6,22 @@ import { Button } from "../../../components/buttons/Button";
 import { CreateAccountStageEnum } from "../../../utils/enums/CreateAccountStage";
 import { Actions } from "../style";
 
-interface UseSystemStageProps {
-  createOrg: () => void;
+interface ChoseWorkspaceStageProps {
+  // choseWorkspace: () => void;
   handleStage: (value: CreateAccountStageEnum) => void;
 }
 
-export function UseSystemStage({
-  createOrg,
+export function ChoseWorkspaceStage({
   handleStage
-}: UseSystemStageProps) {
+}: ChoseWorkspaceStageProps) {
   return (
     <>
-      <Title>What you want to do now?</Title>
       <Actions>
         <div className="tskr-use-system-stage-btns">
-          <Button onClick={createOrg}><Text>Create Organization</Text></Button>
-          <Button onClick={() => handleStage(CreateAccountStageEnum.CHOSE_WORKSPACE)} color={Palette.details}><Text>Use system</Text></Button>
+          <Button><Text>Create Organization</Text></Button>
+          <Button onClick={() => console.log("TO SELECT WORKSPACE SCREEN")} color={Palette.details}><Text>Use system</Text></Button>
         </div>
-        <BackStageBtn handleStage={() => handleStage(CreateAccountStageEnum.SET_ACCOUNT)} />
+        <BackStageBtn handleStage={() => handleStage(CreateAccountStageEnum.USE_SYSTEM)} />
       </Actions>
     </>
   )
