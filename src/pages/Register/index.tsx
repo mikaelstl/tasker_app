@@ -59,33 +59,31 @@ export function Register() {
   }
 
   const createAccount = async (data: CreateAccountDTO) => {
-    console.log(data);
+    try {
+      const response = await api.post<CreateAccountDTO>({ route: '/accounts/register', data: data });
 
-    // try {
-    //   const response = await api.post<CreateAccountDTO>({ route: '/auth/register', data: data });
+      const { id } = response.data as AccountDTO;
 
-    //   const { id } = response.data as AccountDTO;
+      createUser({
+        name,
+        username,
+        accountkey: id
+      });
 
-    //   createUser({
-    //     name,
-    //     username,
-    //     accountkey: id
-    //   });
+      handleStage(CreateAccountStageEnum.USE_SYSTEM);
+    } catch (error) {
+      const { errors } = error as ApiError;
 
-    //   handleStage(CreateAccountStageEnum.USE_SYSTEM);
-    // } catch (error) {
-    //   const { errors } = error as ApiError;
+      errors.forEach(
+        err => {
+          const notification = Toasts[err.level];
 
-    //   errors.forEach(
-    //     err => {
-    //       const notification = Toasts[err.level];
+          notification(err.message);
+        }
+      );
 
-    //       notification(err.message);
-    //     }
-    //   );
-
-    //   handleStage(CreateAccountStageEnum.EMAIL);
-    // }
+      handleStage(CreateAccountStageEnum.EMAIL);
+    }
   }
 
   const CreateAccountStageMap = {
@@ -124,7 +122,21 @@ export function Register() {
             setPassword={setPassword}
 
             createOrg={() => console.log("Create Org")}
-            createAccount={() => console.log("Create Account")}
+            createAccount={() => {
+              if (
+                  validator.isEmpty(name)||
+                  validator.isEmpty(username)||
+                  validator.isEmpty(password)
+                ) {
+                Toasts['warning']("Please fill in all fields.")
+                return;
+              }
+              
+              createAccount({
+                email,
+                password
+              });
+            }}
 
             handleStage={handleStage}
           />

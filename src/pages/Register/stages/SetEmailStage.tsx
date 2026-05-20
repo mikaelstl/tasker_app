@@ -30,7 +30,7 @@ export function SetEmailStage({
         <Text>Please enter an e-mail</Text>
       </div>
       <StageButton onClick={() => {
-        if (validator.isEmpty('') && !validator.isEmail(email)) {
+        if (validator.isEmpty(email) || !validator.isEmail(email)) {
           Toasts['warning']("Please enter a valid e-mail.")
           return;
         }
