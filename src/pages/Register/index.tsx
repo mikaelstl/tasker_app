@@ -17,7 +17,7 @@ import { SetEmailStage } from "./stages/SetEmailStage";
 import { SetAccountStage } from "./stages/SetAccountStage";
 import { CreateOrgStage } from "./stages/CreateOrgStage";
 import { UseSystemStage } from "./stages/UseSystemStage";
-import validator from 'validator';
+import validator from "validator";
 import { ChoseWorkspaceStage } from "./stages/ChoseWorkspaceStage";
 
 const TitleStageEnum = {
@@ -25,8 +25,8 @@ const TitleStageEnum = {
   SET_ACCOUNT: "CREATE YOUR ACCOUNT",
   USE_SYSTEM: "CREATE YOUR ACCOUNT",
   CREATE_ORG: "CREATE YOUR ACCOUNT",
-  CHOSE_WORKSPACE: "CHOSE WORKSPACE"
-}
+  CHOSE_WORKSPACE: "CHOSE WORKSPACE",
+};
 
 export function Register() {
   const api = useApi();
@@ -35,72 +35,78 @@ export function Register() {
 
   const { login } = useAuth();
 
-  const [email, setEmail] = useState<string>('');
+  const [email, setEmail] = useState<string>("");
 
-  const [username, setUsername] = useState<string>('');
-  const [name, setName] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+  const [username, setUsername] = useState<string>("");
+  const [name, setName] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
   const [user, setUser] = useState<UserDTO | null>(null);
   const [account, setAccount] = useState<AccountDTO | null>(null);
 
-  const [stage, setStage] = useState<CreateAccountStageEnum>(CreateAccountStageEnum.EMAIL);
+  const [stage, setStage] = useState<CreateAccountStageEnum>(
+    CreateAccountStageEnum.EMAIL,
+  );
   const handleStage = (stg: CreateAccountStageEnum) => {
     setStage(stg);
-  }
+  };
 
   const createUser = async (data: CreateUserDTO) => {
     try {
-      const response = await api.post<CreateUserDTO>({ route: '/users', data: data });
+      const response = await api.post<CreateUserDTO>({
+        route: "/users",
+        data: data,
+      });
 
       setUser(response.data as UserDTO);
     } catch (error) {
       const { errors } = error as ApiError;
 
-      errors.forEach(
-        err => {
-          const notification = Toasts[err.level];
+      errors.forEach((err) => {
+        const notification = Toasts[err.level];
 
-          notification(err.message);
-        }
-      );
+        notification(err.message);
+      });
     }
-  }
+  };
 
   const createAccount = async (data: CreateAccountDTO) => {
     try {
-      const response = await api.post<CreateAccountDTO>({ route: '/accounts/register', data: data });
+      const response = await api.post<CreateAccountDTO>({
+        route: "/accounts/register",
+        data: data,
+      });
 
       const { id } = response.data as AccountDTO;
 
       createUser({
         name,
         username,
-        accountkey: id
+        accountkey: id,
       });
 
+      Toasts["info"](response.message);
+
       handleStage(CreateAccountStageEnum.USE_SYSTEM);
-    } catch (error) {
+    } catch (error: any) {
       const { errors } = error as ApiError;
 
-      errors.forEach(
-        err => {
-          const notification = Toasts[err.level];
+      errors.forEach((err) => {
+        const notification = Toasts[err.level];
 
-          notification(err.message);
-        }
-      );
+        notification(err.message);
+      });
 
       handleStage(CreateAccountStageEnum.EMAIL);
     }
-  }
+  };
 
   const CreateAccountStageMap = {
     EMAIL: SetEmailStage,
     SET_ACCOUNT: SetAccountStage,
     USE_SYSTEM: UseSystemStage,
     CREATE_ORG: CreateOrgStage,
-    CHOSE_WORKSPACE: ChoseWorkspaceStage
+    CHOSE_WORKSPACE: ChoseWorkspaceStage,
   };
 
   const CurrentStage = CreateAccountStageMap[stage];
@@ -121,33 +127,28 @@ export function Register() {
           <CurrentStage
             email={email}
             setEmail={setEmail}
-
             name={name}
             setName={setName}
-
             username={username}
             setUsername={setUsername}
-
             password={password}
             setPassword={setPassword}
-
             createOrg={() => console.log("Create Org")}
             createAccount={() => {
               if (
-                  validator.isEmpty(name)||
-                  validator.isEmpty(username)||
-                  validator.isEmpty(password)
-                ) {
-                Toasts['warning']("Please fill in all fields.")
+                validator.isEmpty(name) ||
+                validator.isEmpty(username) ||
+                validator.isEmpty(password)
+              ) {
+                Toasts["warning"]("Please fill in all fields.");
                 return;
               }
-              
+
               createAccount({
                 email,
-                password
+                password,
               });
             }}
-
             handleStage={handleStage}
           />
         </StageContainer>
