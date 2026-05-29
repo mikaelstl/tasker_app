@@ -37,8 +37,10 @@ export class Api {
     this.api.interceptors.request.use(
       (config: any) => {
         const token = localStorage.getItem('token');
+        const xOrgKey = localStorage.getItem('orgkey');
       
         if (token) config.headers['Authorization'] = `Bearer ${token}`;
+        if (xOrgKey) config.headers['X-Org-Key'] = `Bearer ${token}`;
 
         return config;
       },

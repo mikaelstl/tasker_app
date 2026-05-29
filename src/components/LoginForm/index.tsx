@@ -26,7 +26,7 @@ export function LoginForm(props: LoginFormProps) {
     };
 
     props.login(data).then(
-      (_) => navigate('/home/workspace')
+      (_) => navigate('/workspaces')
     );
   }
 

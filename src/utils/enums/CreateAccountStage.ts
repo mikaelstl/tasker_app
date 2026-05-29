@@ -3,5 +3,4 @@ export enum CreateAccountStageEnum {
   SET_ACCOUNT = "SET_ACCOUNT",
   USE_SYSTEM = "USE_SYSTEM",
   CREATE_ORG = "CREATE_ORG",
-  CHOSE_WORKSPACE="CHOSE_WORKSPACE"
 }

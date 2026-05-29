@@ -14,6 +14,7 @@ import { Stats } from "./screens/Project/Stats"
 import { EditProject } from "./screens/Project/Edit"
 import { TaskOverview } from "./screens/Project/TaskOverview"
 import { PrivateRoute } from "./routes/PrivateRoute"
+import { ChoseWorkspace } from "./screens/ChoseWorkspace/ChoseWorkspace"
 
 function App() {
   return (
@@ -25,6 +26,8 @@ function App() {
         <Route path="/register" element={<Register />} />
 
         <Route element={<PrivateRoute/>}>
+          <Route path="workspaces" element={<ChoseWorkspace />} />
+
           <Route path="/home" element={<Home />}>
             <Route index element={<Navigate to="workspace" replace />} />
 
