@@ -1,4 +1,3 @@
-import { Screen } from "../../components/base/Screen";
 import { Logo } from "../../components/images/Logo";
 import { LoginForm } from "../../components/LoginForm";
 import { Container, Content, Label } from "./style";
@@ -8,14 +7,12 @@ export function Login() {
   const { login } = useAuth();
 
   return (
-    <Screen>
-      <Content>
-        <Container>
-          <Logo width={182}/>
-          <Label>PROJECT MANAGER</Label>
-        </Container>
-        <LoginForm login={login}/>
-      </Content>
-    </Screen>
+    <Content>
+      <Container>
+        <Logo width={182} />
+        <Label>PROJECT MANAGER</Label>
+      </Container>
+      <LoginForm login={login} />
+    </Content>
   )
 }

@@ -9,7 +9,7 @@ const Container = styled.div`
   width: fit-content;
 `;
 
-const Form = styled.form`
+const Form = styled.div`
   grid-area: tskr-form;
 
   display: grid;

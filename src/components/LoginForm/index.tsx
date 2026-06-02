@@ -11,13 +11,13 @@ interface LoginFormProps {
   login: (data: LoginDTO) => Promise<void>
 }
 
-export function LoginForm(props: LoginFormProps) {
+export function LoginForm({ login }: LoginFormProps) {
   const navigate = useNavigate();
-  
-  const [ email, setUsername ] = useState<string>('');
-  const [ password, setPassword ] = useState<string>('');
 
-  const onSubmit = async (ev: React.FormEvent) => {
+  const [email, setUsername] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+
+  const onSubmit = async (ev: React.MouseEvent) => {
     ev.preventDefault()
 
     const data: LoginDTO = {
@@ -25,33 +25,41 @@ export function LoginForm(props: LoginFormProps) {
       password
     };
 
-    props.login(data).then(
-      (_) => navigate('/workspaces')
-    );
+    console.log("submit");
+
+    try {
+      await login(data);
+
+      console.log("login success");
+
+      navigate('/workspaces');
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   return (
     <Container className="tskr-login-form">
       <SectionTitle>LOGIN</SectionTitle>
-      <Form action='' onSubmit={onSubmit}>
+      <Form>
         <Inputs className="tskr-form-inputs">
           <TextInput
-            icon={<UserIcon width={24}/>}
+            icon={<UserIcon width={24} />}
             placeholder="User"
             value={email}
             onChange={(value) => setUsername(value)}
           />
           <TextInput
             type="password"
-            icon={<KeyIcon width={24}/>}
+            icon={<KeyIcon width={24} />}
             placeholder="Password"
             value={password}
             onChange={(value) => setPassword(value)}
           />
         </Inputs>
-        <SubmitButton type="submit">Login</SubmitButton>
+        <SubmitButton onClick={onSubmit}>Login</SubmitButton>
       </Form>
-      <CreateAccount/>
+      <CreateAccount />
     </Container>
   )
 }

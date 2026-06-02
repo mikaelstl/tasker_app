@@ -108,50 +108,48 @@ export function Register() {
   }, []);
 
   return (
-    <Screen>
-      <Content>
-        <HeaderContainer className="tskr-stage-header-container">
-          <Logo width={182} />
-          <SectionTitle>CREATE YOUR ACCOUNT</SectionTitle>
-        </HeaderContainer>
+    <Content>
+      <HeaderContainer className="tskr-stage-header-container">
+        <Logo width={182} />
+        <SectionTitle>CREATE YOUR ACCOUNT</SectionTitle>
+      </HeaderContainer>
 
-        <StageContainer className="tskr-stage-container">
-          <CurrentStage
-            email={email}
-            setEmail={setEmail}
+      <StageContainer className="tskr-stage-container">
+        <CurrentStage
+          email={email}
+          setEmail={setEmail}
 
-            name={name}
-            setName={setName}
+          name={name}
+          setName={setName}
 
-            username={username}
-            setUsername={setUsername}
+          username={username}
+          setUsername={setUsername}
 
-            password={password}
-            setPassword={setPassword}
+          password={password}
+          setPassword={setPassword}
 
-            createOrg={() => console.log("Create Org")}
-            createAccount={() => {
-              if (
-                validator.isEmpty(name) ||
-                validator.isEmpty(username) ||
-                validator.isEmpty(password)
-              ) {
-                Toasts["warning"]("Please fill in all fields.");
-                return;
-              }
+          createOrg={() => console.log("Create Org")}
+          createAccount={() => {
+            if (
+              validator.isEmpty(name) ||
+              validator.isEmpty(username) ||
+              validator.isEmpty(password)
+            ) {
+              Toasts["warning"]("Please fill in all fields.");
+              return;
+            }
 
-              createAccount({
-                email,
-                password,
-              });
-            }}
+            createAccount({
+              email,
+              password,
+            });
+          }}
 
-            login={() => login({ email: account?.email ?? "", password: account?.password ?? "" }).then((_) => navigate('/workspaces'))}
+          login={() => login({ email: account?.email ?? "", password: account?.password ?? "" }).then((_) => navigate('/workspaces'))}
 
-            handleStage={handleStage}
-          />
-        </StageContainer>
-      </Content>
-    </Screen>
+          handleStage={handleStage}
+        />
+      </StageContainer>
+    </Content>
   );
 }

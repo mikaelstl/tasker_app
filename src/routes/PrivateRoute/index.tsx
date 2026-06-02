@@ -1,21 +1,13 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
-import { useEffect, useState } from "react";
+import { Text } from "../../components/base/Text";
 
 export function PrivateRoute() {
-  const { user, token, validate } = useAuth();
+  const { authenticating, authenticated } = useAuth();
 
-  const [isValid, setIsValid] = useState<boolean>(false);
+  if (authenticating) {
+    return <Text>Carregando...</Text>;
+  }
 
-  useEffect(() => {
-    if (!!token) {
-      validate().then(
-        value => setIsValid(value)
-      );
-    } else {
-      setIsValid(false);
-    }
-  }, [user, token]);
-
-  return (user || token || isValid) ? <Outlet /> : <Navigate to="/login" replace />;
+  return authenticated ? <Outlet /> : <Navigate to="/login" replace />;
 }

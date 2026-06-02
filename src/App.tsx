@@ -15,18 +15,20 @@ import { EditProject } from "./screens/Project/Edit"
 import { TaskOverview } from "./screens/Project/TaskOverview"
 import { PrivateRoute } from "./routes/PrivateRoute"
 import { ChoseWorkspace } from "./screens/ChoseWorkspace/ChoseWorkspace"
+import { Screen } from "./components/base/Screen"
 
 function App() {
   return (
-    <BrowserRouter>
+    <Screen>
+      <BrowserRouter>
       <Routes>
-        <Route path="*" element={<Navigate to="/home" replace />} />
+        <Route path="*" element={<Navigate to="/workspaces" replace />} />
 
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
         <Route element={<PrivateRoute/>}>
-          <Route path="workspaces" element={<ChoseWorkspace />} />
+          <Route path="/workspaces" element={<ChoseWorkspace />} />
 
           <Route path="/home" element={<Home />}>
             <Route index element={<Navigate to="workspace" replace />} />
@@ -49,6 +51,7 @@ function App() {
         </Route>
       </Routes>
     </BrowserRouter>
+    </Screen>
   )
 }
 

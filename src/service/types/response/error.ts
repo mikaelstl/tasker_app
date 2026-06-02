@@ -1,9 +1,12 @@
 type ErrorLevel =  'info' | 'warning' | 'error' | 'critical' | 'validation';
 
 export interface Error {
-  level: ErrorLevel;
-  message: string
+  readonly level: ErrorLevel;
+  readonly message: string;
+  readonly details?: string;
+  readonly error?: string;
 }
+
 
 export interface ApiError {
   readonly status: number,

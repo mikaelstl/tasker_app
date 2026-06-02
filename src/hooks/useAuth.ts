@@ -6,7 +6,23 @@ export function useAuth() {
 
   if (!ctx) throw new Error("useAuth must be used only inside AuthProvider");
   
-  const { user, token, login, logout, validate } = ctx;
+  const {
+    user,
+    token,
+    authenticated,
+    authenticating,
+    login,
+    logout,
+    validate
+  } = ctx;
 
-  return { user, token, login, logout, validate };
+  return {
+    user,
+    token,
+    authenticated,
+    authenticating,
+    login,
+    logout,
+    validate
+  };
 }

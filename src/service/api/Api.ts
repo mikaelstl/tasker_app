@@ -93,8 +93,13 @@ export class Api {
             path: '/'
           });
         }
-
+        
         if (err.status === 401) {
+          console.log("ERRO 401");
+          
+          localStorage.removeItem("token");
+          window.location.href = "/login";
+
           return Promise.reject({
             status: 401,
             errors: [{
