@@ -3,12 +3,13 @@ import { Content, HeaderContainer } from "./style";
 import { Logo } from "../../components/images/Logo";
 import { SectionTitle } from "../../components/base/SectionTitle";
 import { useEffect, useState } from "react";
-import type { OrganizationDTO } from "../../service/types/organization/organization.dto";
 import { useApi } from "../../hooks/useApi";
 import { Toasts } from "../../maps/toasts";
 import type { ApiError } from "../../service/types/response/error";
 import { Scroller } from "../../components/misc/Scroller";
 import { useNavigate } from "react-router-dom";
+import { OrganizationCard } from "../../components/cards/OrganizationCard";
+import type { AffiliationDTO } from "../../service/types/affiliation/affiliation.dto";
 
 // VIRAR TELA PROPRIA
 
@@ -17,14 +18,15 @@ export function ChoseWorkspace() {
 
   const api = useApi();
   
-  const [selected, setSelected] = useState<string>('');
-
-  const [orgs, setOrgs] = useState<OrganizationDTO[]>([]);
+  const [affiliations, setOrgs] = useState<AffiliationDTO[]>([]);
   const loadOrgs = async () => {
     try {
       const response = await api.get({ route: `/affiliations` });
 
-      const data: OrganizationDTO[] = response.data;
+      const data: AffiliationDTO[] = response.data;
+
+      console.log(data);
+      
 
       if (data.length === 0) {
         Toasts['warning']("You don't participates or have organizations. Please create a organization.");
@@ -46,7 +48,7 @@ export function ChoseWorkspace() {
   }
 
   useEffect(() => {
-    loadOrgs()
+    loadOrgs();
   }, [])
 
   return (
@@ -56,7 +58,12 @@ export function ChoseWorkspace() {
         <SectionTitle>CHOSE WORKSPACE</SectionTitle>
       </HeaderContainer>
       <Scroller className="tskr-workspaces vertical">
-        {/* TO-DO ITERAR EM orgs E ADICIONAR UM CARD PARA ORGANIZAÇÕES */}
+        {/* TO-DO ITERAR EM affiliations E ADICIONAR UM CARD PARA ORGANIZAÇÕES */}
+        {
+          affiliations.map(
+            aff => <OrganizationCard name={aff.org?.name ?? ''} members={aff.org?.members?.length ?? 0} projects={aff.org?.projects?.length ?? 0}/>
+          )
+        }
       </Scroller>
       <Button onClick={() => console.log("Chosed")}>Chose</Button>
     </Content>
