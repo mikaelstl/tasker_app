@@ -12,7 +12,7 @@ const Container = styled.div`
   border-radius: 50px;
 `;
   
-const Search = styled.div`
+const SearchContainer = styled.div`
   display: flex;
   gap: 10px;
   
@@ -49,6 +49,6 @@ const Button = styled.button`
 
 export {
   Container,
-  Search,
+  SearchContainer,
   Button
 }

@@ -1,9 +1,7 @@
-import { CheckIcon, } from "@heroicons/react/20/solid";
 import { Text } from "../../../components/base/Text";
 import { Title } from "../../../components/base/Title";
 import { Content } from "./style";
 import Palette from "../../../assets/palette";
-import { ArrowTrendingUpIcon, ExclamationTriangleIcon } from "@heroicons/react/16/solid";
 import { Container, Header, Tile } from "../../base/style";
 
 export function TasksInfosWidget() {

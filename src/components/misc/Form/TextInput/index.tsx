@@ -1,4 +1,4 @@
-import { EyeIcon, EyeSlashIcon } from "@heroicons/react/16/solid";
+import { Eye, EyeOff } from "@/components/icons";
 import { Container, Input, ShowPassword } from "./style";
 import { useState } from "react";
 
@@ -34,7 +34,7 @@ export function TextInput(props: LoginFormProps) {
       {
         props.type === 'password'
           ? <ShowPassword type="button" onClick={handleToggle}>
-              {type === 'text' ? <EyeIcon width={24}/> : <EyeSlashIcon width={24}/>}
+              {type === 'text' ? <Eye/> : <EyeOff size={24}/>}
             </ShowPassword>
           : <></>
       }

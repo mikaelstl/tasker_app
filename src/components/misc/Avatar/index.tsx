@@ -1,6 +1,6 @@
-import { UserIcon } from "@heroicons/react/16/solid";
 import { Container, Image } from "./style.ts";
-import Palette from "../../../assets/palette.ts";
+import Palette from "@/assets/palette.ts";
+import { User } from "@/components/icons";
 
 interface AvatarProps {
   image: string;
@@ -11,7 +11,7 @@ interface AvatarProps {
 export function Avatar(props: AvatarProps) {
   return (
     <Container className={`tskr-avatar ${props.size}`}>
-      { props.image !== "" ? <Image src={props.image}/> : <UserIcon fill={Palette.items}/>}
+      { props.image !== "" ? <Image src={props.image}/> : <User color={Palette.items}/>}
     </Container>
   )
 }

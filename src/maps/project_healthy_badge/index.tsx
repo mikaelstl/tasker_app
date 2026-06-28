@@ -1,4 +1,3 @@
-import { ExclamationTriangleIcon, ShieldCheckIcon, ShieldExclamationIcon } from "@heroicons/react/24/solid";
 import Palette from "../../assets/palette";
 import { Badge } from "../../components/badge/Badge";
 import { Title } from "../../components/base/Title";

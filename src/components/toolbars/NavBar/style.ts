@@ -45,7 +45,7 @@ const NavItem = styled.button<NavItemProps>`
   cursor: pointer;
 
   svg {
-    fill: ${props => props.activated ? Palette.white : Palette.gray};
+    stroke: currentColor;
   }
 `;
 
@@ -70,10 +70,6 @@ const Accordion = styled.button`
 const Actions = styled.div`
   .log-out {
     color: ${Palette.red}
-  }
-  
-  svg {
-    fill: ${Palette.red};
   }
 `;
 

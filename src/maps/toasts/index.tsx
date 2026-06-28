@@ -1,4 +1,3 @@
-import { CheckIcon, ExclamationCircleIcon, ExclamationTriangleIcon } from "@heroicons/react/16/solid";
 import { toast } from "react-toastify";
 import Palette from "../../assets/palette";
 

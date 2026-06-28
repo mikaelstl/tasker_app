@@ -2,13 +2,13 @@ import { Title } from "../../base/Title";
 import { Card, Cards, Container, Header } from "./style";
 import { Text } from "../../base/Text";
 import Palette from "../../../assets/palette";
-import { ExclamationTriangleIcon } from "@heroicons/react/24/solid";
+import { TriangleAlert } from "@/components/icons";
 
 export function DeadlineAlertsCard() {
   return (
     <Container className="tskr-deadline-alerts-card">
       <Header>
-        <ExclamationTriangleIcon fill={Palette.red} width={22}/>
+        <TriangleAlert color={Palette.red}/>
         <Title>Deadline Alerts</Title>
       </Header>
       <Cards>

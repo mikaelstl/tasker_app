@@ -1,4 +1,3 @@
-import { KeyIcon, UserIcon } from "@heroicons/react/16/solid";
 import { TextInput } from "../misc/Form/TextInput";
 import { Container, Form, SubmitButton, Inputs } from "../misc/Form/style";
 import { CreateAccount } from "./CreateAccount";
@@ -6,6 +5,7 @@ import type { LoginDTO } from "../../service/types/auth/login.dto";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { SectionTitle } from "../base/SectionTitle";
+import { User, KeyRound } from "@/components/icons";
 
 interface LoginFormProps {
   login: (data: LoginDTO) => Promise<void>
@@ -44,14 +44,14 @@ export function LoginForm({ login }: LoginFormProps) {
       <Form>
         <Inputs className="tskr-form-inputs">
           <TextInput
-            icon={<UserIcon width={24} />}
+            icon={<User />}
             placeholder="User"
             value={email}
             onChange={(value) => setUsername(value)}
           />
           <TextInput
             type="password"
-            icon={<KeyIcon width={24} />}
+            icon={<KeyRound />}
             placeholder="Password"
             value={password}
             onChange={(value) => setPassword(value)}

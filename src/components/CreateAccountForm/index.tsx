@@ -1,12 +1,19 @@
-import { KeyIcon, TagIcon, UserIcon } from "@heroicons/react/16/solid";
-import { TextInput } from "../misc/Form/TextInput";
-import { Container, Form, Inputs, SubmitButton } from "../misc/Form/style";
-import { EnvelopeIcon } from "@heroicons/react/16/solid";
-import type { CreateUserDTO } from "../../service/types/user/create.dto";
+import { TextInput } from "@/components/misc/Form/TextInput";
+import { Container, Form, Inputs, SubmitButton } from "@/components/misc/Form/style";
 import { useState } from "react";
+import { User, Tag, KeyRound, Mail,  } from "@/components/icons";
+
+export type UserData = {
+  email: string;
+  password: string;
+  name: string;
+  username: string;
+}
 
 interface CreateAccountFormProps {
-  createAccount: (data: CreateUserDTO) => Promise<void>
+  createAccount: (
+    user: UserData
+  ) => Promise<void>
 }
 
 export function CreateAccountForm(props: CreateAccountFormProps) {
@@ -18,11 +25,11 @@ export function CreateAccountForm(props: CreateAccountFormProps) {
   const onSubmit = (ev: React.FormEvent) => {
     ev.preventDefault();
 
-    const data: CreateUserDTO = {
-      name,
-      username,
+    const data: UserData = {
       email,
-      password
+      password,
+      name,
+      username
     }
 
     props.createAccount(data);
@@ -33,25 +40,25 @@ export function CreateAccountForm(props: CreateAccountFormProps) {
       <Form onSubmit={onSubmit}>
         <Inputs className="create-account-inputs">
           <TextInput
-            icon={<UserIcon style={{ width: 24, height: 24 }}/>}
+            icon={<User />}
             placeholder="Name"
             value={name}
             onChange={(value) => setName(value)}
           />
           <TextInput 
-            icon={<EnvelopeIcon style={{ width: 24, height: 24 }}/>} 
+            icon={<Mail />} 
             placeholder="E-mail"
             value={email}
             onChange={(value) => setEmail(value)}
           />
           <TextInput 
-            icon={<TagIcon style={{ width: 24, height: 24 }}/>} 
+            icon={<Tag />} 
             placeholder="Username"
             value={username}
             onChange={(value) => setUsername(value)}
           />
           <TextInput type="password" 
-            icon={<KeyIcon style={{ width: 24, height: 24 }}/>} 
+            icon={<KeyRound />} 
             placeholder="Password"
             value={password}
             onChange={(value) => setPassword(value)}

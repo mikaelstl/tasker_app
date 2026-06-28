@@ -1,4 +1,3 @@
-import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/16/solid";
 import { useEffect, useState } from "react";
 import { Accordion, Header, Tasks } from "./style";
 import { Scroller } from "../../misc/Scroller";
@@ -6,11 +5,12 @@ import { ItalicTitle } from "../../base/ItalicTitle";
 import { TaskCard } from "../../cards/TaskCard";
 import type { TaskDTO } from "../../../service/types/task/task.dto";
 import { Title } from "../../base/Title";
+import { ChevronDown, ChevronUp } from "@/components/icons";
 
 export function TaskCategoryAccordion(props: { visible?: boolean, title: string, tasks: TaskDTO[] }) {
   const [visible, setVisible] = useState(props.visible ?? false);
 
-  const [icon, setIcon] = useState(<ChevronDownIcon width={24} />)
+  const [icon, setIcon] = useState(<ChevronDown />)
 
   const handleVisible = () => {
     setVisible(!visible)
@@ -18,9 +18,9 @@ export function TaskCategoryAccordion(props: { visible?: boolean, title: string,
 
   useEffect(() => {
     if (visible) {
-      setIcon(<ChevronUpIcon width={24} />)
+      setIcon(<ChevronUp />)
     } else {
-      setIcon(<ChevronDownIcon width={24} />)
+      setIcon(<ChevronDown />)
     }
   }, [visible])
 

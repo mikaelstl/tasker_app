@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import Palette from "../../../assets/palette";
-import { Badge } from "../../badge/Badge";
-import { Subtitle } from "../../base/Subtitle";
-import { Title } from "../../base/Title";
-import { User } from "../../misc/User";
+import Palette from "@/assets/palette";
+import { Badge } from "@/components/badge/Badge";
+import { Subtitle } from "@/components/base/Subtitle";
+import { Title } from "@/components/base/Title";
+import { User } from "@/components/misc/User";
 import { Button, Container, Content, Header, Indicator, Indicators, Leading, SpentTimeTile, Task } from "./style";
-import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
+import { ChevronDown, ChevronUp } from "@/components/icons";
 
 interface MemberStatsAccordionProps {
   username: string;
@@ -18,7 +18,7 @@ interface MemberStatsAccordionProps {
 export function MemberStatsAccordion(props: MemberStatsAccordionProps) {
   const [visible, setVisible] = useState(false);
 
-  const [icon, setIcon] = useState(<ChevronDownIcon width={24} />)
+  const [icon, setIcon] = useState(<ChevronDown />)
 
   const handleVisible = () => {
     setVisible(!visible)
@@ -26,9 +26,9 @@ export function MemberStatsAccordion(props: MemberStatsAccordionProps) {
 
   useEffect(() => {
     if (visible) {
-      setIcon(<ChevronUpIcon width={24} />)
+      setIcon(<ChevronUp />)
     } else {
-      setIcon(<ChevronDownIcon width={24} />)
+      setIcon(<ChevronDown />)
     }
   }, [visible])
 

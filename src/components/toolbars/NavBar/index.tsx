@@ -1,12 +1,19 @@
-import { ArrowLeftStartOnRectangleIcon, ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/16/solid"
-import { InboxStackIcon, WindowIcon } from "@heroicons/react/20/solid"
-import Palette from "../../../assets/palette"
 import { Accordion, Actions, Container, Leading, Nav, NavItem, ProjectNav } from "./style"
 import { useLocation, useNavigate } from "react-router-dom"
 import { useAuth } from "../../../hooks/useAuth"
-import { FolderOpenIcon } from "@heroicons/react/20/solid"
 import { useEffect, useState } from "react"
-import { CalendarIcon, ChartBarIcon, ClipboardIcon, UserIcon } from "@heroicons/react/24/solid"
+import {
+  AppWindow,
+  Calendar,
+  ChartBar,
+  ChevronDown,
+  ChevronUp,
+  Clipboard,
+  FolderOpen,
+  Inbox,
+  LogOut,
+  User,
+} from "@/components/icons"
 
 interface ProjectNavAccordionProps {
   isOpen: boolean
@@ -20,7 +27,7 @@ const ProjectNavAccordion = ({
   const location = useLocation();
 
   const [path, setPath] = useState('');
-  const [icon, setIcon] = useState(<ChevronDownIcon width={20} />)
+  const [icon, setIcon] = useState(<ChevronDown size={20} />)
 
   const [open, setOpen] = useState(isOpen);
   const handleOpen = () => {
@@ -29,9 +36,9 @@ const ProjectNavAccordion = ({
 
   useEffect(() => {
     if (open) {
-      setIcon(<ChevronUpIcon width={20} />)
+      setIcon(<ChevronUp size={20} />)
     } else {
-      setIcon(<ChevronDownIcon width={20} />)
+      setIcon(<ChevronDown size={20} />)
     }
   }, [open]);
 
@@ -43,7 +50,7 @@ const ProjectNavAccordion = ({
     <ProjectNav>
       <Accordion type="button" onClick={handleOpen}>
         <Leading>
-          <FolderOpenIcon width={20} />
+          <FolderOpen size={20} />
           Project
         </Leading>
         {icon}
@@ -57,7 +64,7 @@ const ProjectNavAccordion = ({
               onClick={() => navigate('./project/overview')}
               activated={ path.includes('project/overview') ? true : false }
             >
-              <WindowIcon width="18" />
+              <AppWindow size={18} />
               Overview
             </NavItem>
             <NavItem 
@@ -66,7 +73,7 @@ const ProjectNavAccordion = ({
               onClick={() => navigate('./project/tasks')}
               activated={ path.includes('project/tasks') ? true : false }
             >
-              <ClipboardIcon width="18" />
+              <Clipboard size={18} />
               Tasks
             </NavItem>
             <NavItem 
@@ -75,7 +82,7 @@ const ProjectNavAccordion = ({
               onClick={() => navigate('./project/calendar')}
               activated={ path.includes('project/calendar') ? true : false }
             >
-              <CalendarIcon width="18" />
+              <Calendar size={18} />
               Calendar
             </NavItem>
             <NavItem 
@@ -84,7 +91,7 @@ const ProjectNavAccordion = ({
               onClick={() => navigate('./project/members')}
               activated={ path.includes('project/members') ? true : false }
             >
-              <UserIcon width="18" />
+              <User size={18} />
               Members
             </NavItem>
             <NavItem 
@@ -93,7 +100,7 @@ const ProjectNavAccordion = ({
               onClick={() => navigate('./project/stats')}
               activated={ path.includes('project/stats') ? true : false }
             >
-              <ChartBarIcon width="18" />
+              <ChartBar size={18} />
               Stats
             </NavItem>
           </Nav>
@@ -128,7 +135,7 @@ export function NavBar({
           onClick={() => navigate('workspace')}
           activated={true}
         >
-          <WindowIcon width="18" />
+          <AppWindow size={18} />
           Workspace
         </NavItem>
         <NavItem
@@ -137,18 +144,18 @@ export function NavBar({
           onClick={() => navigate('projects')}
           activated={true}
         >
-          <InboxStackIcon width="18" />
+          <Inbox size={18} />
           Projects
         </NavItem>
       </Nav>
       { onProject ? <ProjectNavAccordion isOpen/> : <></> }
       <Actions className="tskr-nav-actions">
         {/* <NavItem className="tskr-nav-item" activated>
-          <Cog6ToothIcon width="18"/>
+          <Settings2 size={18}/>
           Settings
         </NavItem> */}
         <NavItem className="tskr-nav-item log-out" onClick={onLogout}>
-          <ArrowLeftStartOnRectangleIcon width="18" fill={Palette.red} />
+          <LogOut size={18} />
           Logout
         </NavItem>
       </Actions>

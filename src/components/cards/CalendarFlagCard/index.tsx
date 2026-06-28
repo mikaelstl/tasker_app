@@ -1,11 +1,11 @@
-import { BellIcon, ClipboardIcon } from "@heroicons/react/20/solid";
+import { Bell, Clipboard } from "@/components/icons";
 import { Container } from "./style";
 
 type CalendarFlagType = 'event' | 'tasks';
 
 const CalendarFlagIcon = {
-  'event': <BellIcon width={16}/>,
-  'tasks': <ClipboardIcon width={16}/>
+  'event': <Bell/>,
+  'tasks': <Clipboard/>
 }
 
 export function CalendarFlagCard(props: {

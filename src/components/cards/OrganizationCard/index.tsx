@@ -1,8 +1,8 @@
-import { FolderOpenIcon, UserGroupIcon } from "@heroicons/react/20/solid"
-import { formatOrgAvatar } from "../../../utils/formatOrgAvatar"
-import { SectionTitle } from "../../base/SectionTitle"
-import { Avatar, Container } from "./style"
-import { Subtitle } from "../../base/Subtitle"
+import { formatOrgAvatar } from "../../../utils/formatOrgAvatar";
+import { SectionTitle } from "../../base/SectionTitle";
+import { Avatar, Container } from "./style";
+import { Subtitle } from "../../base/Subtitle";
+import { FolderOpen, Users } from "@/components/icons";
 
 interface OrganizatioCardProps {
   name: string,
@@ -26,8 +26,8 @@ const OrgCardLabel = ({
   type
 }: OrgCardLabelProps) => {
   const IconTypeMap: IconTypeMap = {
-    'members': <UserGroupIcon width={16}/>,
-    'projects': <FolderOpenIcon width={16}/>,
+    'members': <Users />,
+    'projects': <FolderOpen />,
   }
 
   return (

@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { DateTime, Info, Interval } from 'luxon';
 import { Title } from "../../base/Title";
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/16/solid";
 import { Active, Container, Day, Today, Weekday, Header, Weeks, Weekdays, Events } from "./style";
-import Palette from "../../../assets/palette";
+import Palette from "@/assets/palette";
 import { EventAccordion } from "./EventAccordion";
-import type { EventDTO } from "../../../service/types/events/event.dto";
+import type { EventDTO } from "@/service/types/events/event.dto";
+import { ChevronLeft, ChevronRight } from "@/components/icons";
 
 type Month = {
   name: string;
@@ -115,10 +115,10 @@ export function Calendar({
         <Title>{month?.name}, {firstDay?.year}</Title>
         <div id="actions">
           <button type="button" onClick={prevMonth}>
-            <ChevronLeftIcon width="32" fill={Palette.gray}/>
+            <ChevronLeft color={Palette.gray}/>
           </button>
           <button type="button" onClick={nextMonth}>
-            <ChevronRightIcon width="32" fill={Palette.gray}/>
+            <ChevronRight color={Palette.gray}/>
           </button>
         </div>
       </Header >

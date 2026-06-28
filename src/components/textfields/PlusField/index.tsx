@@ -1,6 +1,6 @@
+import { Plus } from "@/components/icons";
 import { Button, Container, Field } from "./style";
 import { useState } from "react";
-import { PlusIcon } from "@heroicons/react/16/solid";
 
 interface PlusFieldProps {
   add: (value: string) => void
@@ -25,7 +25,7 @@ export function PlusField({ add }: PlusFieldProps) {
         />
       </Field>
       <Button type="button" id="send" onClick={handleAdd}>
-        <PlusIcon width={20}/>
+        <Plus />
       </Button>
     </Container>
   )

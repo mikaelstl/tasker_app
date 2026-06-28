@@ -1,8 +1,8 @@
 import { PaperAirplaneIcon } from "../../icons/PaperAirplaneIcon";
-import { ChatBubbleOvalLeftIcon } from "@heroicons/react/24/solid";
 import { Text } from "../../base/Text";
 import { Button, Container, Field } from "./style";
 import { useState } from "react";
+import { MessageCircle } from "@/components/icons";
 
 interface MessageFieldProps {
   send: (value: string) => void
@@ -19,7 +19,7 @@ export function MessageField({ send }: MessageFieldProps) {
   return (
     <Container className="tskr-search-field">
       <Field id="search">
-        <ChatBubbleOvalLeftIcon width="24"/>
+        <MessageCircle />
         <input
           type="text"
           placeholder="Write something..."

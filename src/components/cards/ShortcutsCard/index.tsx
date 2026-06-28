@@ -1,5 +1,5 @@
-import { ArrowTrendingUpIcon, Cog6ToothIcon, PlusIcon } from "@heroicons/react/16/solid";
-import { Title } from "../../base/Title";
+import { Plus, Settings, TrendingUp } from "@/components/icons";
+import { Title } from "@/components/base/Title";
 import { Action, Actions, Container, Header } from "./style";
 
 export function ShortcutsCard() {
@@ -10,15 +10,15 @@ export function ShortcutsCard() {
       </Header>
       <Actions>
         <Action>
-          <PlusIcon width={20}/>
+          <Plus/>
           <Title>New Project</Title>
         </Action>
         <Action>
-          <ArrowTrendingUpIcon width={20} />
+          <TrendingUp />
           <Title>Generate Report</Title>
         </Action>
         <Action>
-          <Cog6ToothIcon width={20} />
+          <Settings />
           <Title>Org Settings</Title>
         </Action>
       </Actions>

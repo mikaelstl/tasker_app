@@ -1,46 +1,24 @@
-import { Screen } from "../../components/base/Screen";
-import { Content, HeaderContainer, StageContainer } from "./style";
+import { Content } from "./style";
 import { Logo } from "../../components/images/Logo";
 import { useApi } from "../../hooks/useApi";
 import type { CreateUserDTO } from "../../service/types/user/create.dto";
 import type { ApiError } from "../../service/types/response/error";
 import { Toasts } from "../../maps/toasts";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import type { UserDTO } from "../../service/types/user/user.dto";
-import { useEffect, useState } from "react";
-import { SectionTitle } from "../../components/base/SectionTitle";
+import { useState } from "react";
 import type { CreateAccountDTO } from "../../service/types/account/create.dto";
 import type { AccountDTO } from "../../service/types/account/account.dto";
-import { CreateAccountStageEnum } from "../../utils/enums/CreateAccountStage";
-import { SetEmailStage } from "./stages/SetEmailStage";
-import { SetAccountStage } from "./stages/SetAccountStage";
-import { CreateOrgStage } from "./stages/CreateOrgStage";
-import { UseSystemStage } from "./stages/UseSystemStage";
-import validator from "validator";
+import { Title } from "../../components/base/Title";
+import { CreateAccountForm, type UserData } from "../../components/CreateAccountForm";
 
 export function Register() {
   const api = useApi();
 
-  const navigate = useNavigate();
-
   const { login } = useAuth();
-
-  const [email, setEmail] = useState<string>("");
-
-  const [username, setUsername] = useState<string>("");
-  const [name, setName] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
 
   const [user, setUser] = useState<UserDTO | null>(null);
   const [account, setAccount] = useState<AccountDTO | null>(null);
-
-  const [stage, setStage] = useState<CreateAccountStageEnum>(
-    CreateAccountStageEnum.EMAIL,
-  );
-  const handleStage = (stg: CreateAccountStageEnum) => {
-    setStage(stg);
-  };
 
   const createUser = async (data: CreateUserDTO) => {
     try {
@@ -61,11 +39,14 @@ export function Register() {
     }
   };
 
-  const createAccount = async (data: CreateAccountDTO) => {
+  const createAccount = async (data: UserData) => {
     try {
       const response = await api.post<CreateAccountDTO>({
         route: "/accounts/register",
-        data: data,
+        data: {
+          email: data.email,
+          password: data.password
+        },
       });
 
       const { id } = response.data as AccountDTO;
@@ -73,14 +54,16 @@ export function Register() {
       setAccount(response.data);
 
       createUser({
-        name,
-        username,
+        name: data.name,
+        username: data.username,
         accountkey: id,
       });
 
       Toasts["info"](response.message);
 
-      handleStage(CreateAccountStageEnum.USE_SYSTEM);
+      login({
+        email: data.email, password: data.password
+      });
     } catch (error: any) {
       const { errors } = error as ApiError;
 
@@ -89,67 +72,15 @@ export function Register() {
 
         notification(err.message);
       });
-
-      handleStage(CreateAccountStageEnum.EMAIL);
     }
   };
 
-  const CreateAccountStageMap = {
-    EMAIL: SetEmailStage,
-    SET_ACCOUNT: SetAccountStage,
-    USE_SYSTEM: UseSystemStage,
-    CREATE_ORG: CreateOrgStage,
-  };
-
-  const CurrentStage = CreateAccountStageMap[stage];
-
-  useEffect(() => {
-    handleStage(CreateAccountStageEnum.EMAIL);
-  }, []);
-
   return (
     <Content>
-      <HeaderContainer className="tskr-stage-header-container">
-        <Logo width={182} />
-        <SectionTitle>CREATE YOUR ACCOUNT</SectionTitle>
-      </HeaderContainer>
-
-      <StageContainer className="tskr-stage-container">
-        <CurrentStage
-          email={email}
-          setEmail={setEmail}
-
-          name={name}
-          setName={setName}
-
-          username={username}
-          setUsername={setUsername}
-
-          password={password}
-          setPassword={setPassword}
-
-          createOrg={() => console.log("Create Org")}
-          createAccount={() => {
-            if (
-              validator.isEmpty(name) ||
-              validator.isEmpty(username) ||
-              validator.isEmpty(password)
-            ) {
-              Toasts["warning"]("Please fill in all fields.");
-              return;
-            }
-
-            createAccount({
-              email,
-              password,
-            });
-          }}
-
-          login={() => login({ email: account?.email ?? "", password: account?.password ?? "" }).then((_) => navigate('/workspaces'))}
-
-          handleStage={handleStage}
-        />
-      </StageContainer>
+      <Logo width={182}/>
+      <Title>CREATE YOUR ACCOUNT</Title>
+      <CreateAccountForm
+        createAccount={createAccount}/>
     </Content>
   );
 }

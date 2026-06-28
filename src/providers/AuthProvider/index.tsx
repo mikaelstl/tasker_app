@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useApi } from "../../hooks/useApi";
 import type { LoginDTO } from "../../service/types/auth/login.dto";
 import type { ApiError } from "../../service/types/response/error";
@@ -16,8 +16,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [authenticating, setAuthenticating] = useState<boolean>(true);
 
   useEffect(() => {
-    const existingUser = localStorage.getItem('user');
-    const existingToken = localStorage.getItem('token');
+    const existingUser = localStorage.getItem('tasker.api.user');
+    const existingToken = localStorage.getItem('tasker.api.token');
     if (existingUser && existingToken) {
       setUser(JSON.parse(existingUser));
       setToken(existingToken);
@@ -38,8 +38,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       console.log(acc);
 
-      localStorage.setItem('user', JSON.stringify(acc));
-      localStorage.setItem('token', auth.access_token);
+      localStorage.setItem('tasker.api.user', JSON.stringify(acc));
+      localStorage.setItem('tasker.api.token', auth.access_token);
       setUser(acc);
       setToken(auth.access_token);
     } catch (err: any) {
@@ -61,12 +61,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = () => {
     setUser(null);
     setToken(null)
-    localStorage.removeItem('user');
-    localStorage.removeItem('token');
+    localStorage.removeItem('tasker.api.user');
+    localStorage.removeItem('tasker.api.token');
+    localStorage.removeItem('tasker.api.orgkey');
   }
 
   const validate = async (): Promise<boolean> => {
-    const tk = localStorage.getItem('token');
+    const tk = localStorage.getItem('tasker.api.token');
 
     if (tk) {
       try {

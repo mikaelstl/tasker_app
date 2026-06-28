@@ -1,12 +1,12 @@
-import { Title } from "../../base/Title";
+import { Title } from "@/components/base/Title";
 import { Card, Cards, Container, Header, Select, SelectProjId, Option } from "./style";
-import Palette from "../../../assets/palette";
-import { ClipboardIcon } from "@heroicons/react/16/solid";
+import Palette from "@/assets/palette";
+import { Clipboard } from "@/components/icons";
 
 const SelectProjIdInput = () => {
   return (
     <SelectProjId>
-      <ClipboardIcon width={20}/>
+      <Clipboard />
       <Select name="tskr-proj-id" id="tskr-proj-id">
         <Option value='c45d24bf'>c45d24bf</Option>
         <Option value='f6f18c75'>f6f18c75</Option>

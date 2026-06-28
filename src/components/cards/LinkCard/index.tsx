@@ -1,5 +1,6 @@
-import { LinkIcon, XMarkIcon } from "@heroicons/react/16/solid"
-import { Close, Container, Leading, Link } from "./style"
+import { Link2, X } from "@/components/icons"
+import { Close, Container, Leading, Link } from "./style";
+
 
 interface LinkCardProps {
   link: string,
@@ -13,10 +14,10 @@ export function LinkCard({
   return (
     <Container className="tskr-link-card">
       <Leading>
-        <LinkIcon width={20}/>
+        <Link2 />
         <Link href={link}>{link}</Link>
       </Leading>
-      <Close onClick={remove}><XMarkIcon width={20}/></Close>
+      <Close onClick={remove}><X/></Close>
     </Container>
   )
 }

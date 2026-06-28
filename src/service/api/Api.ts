@@ -36,11 +36,11 @@ export class Api {
     // APPLYNG TOKEN INTO REQUEST
     this.api.interceptors.request.use(
       (config: any) => {
-        const token = localStorage.getItem('token');
-        const xOrgKey = localStorage.getItem('orgkey');
+        const token = localStorage.getItem('tasker.api.token');
+        const xOrgKey = localStorage.getItem('tasker.api.orgkey');
       
         if (token) config.headers['Authorization'] = `Bearer ${token}`;
-        if (xOrgKey) config.headers['X-Org-Key'] = `Bearer ${token}`;
+        if (xOrgKey) config.headers['X-Org-Key'] = xOrgKey;
 
         return config;
       },

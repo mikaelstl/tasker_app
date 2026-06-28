@@ -1,7 +1,6 @@
-import { ChevronUpIcon } from "@heroicons/react/16/solid";
-import { AdjustmentsHorizontalIcon, MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { Text } from "../../base/Text";
-import { Button, Container, Search } from "./style";
+import { Button, Container, SearchContainer } from "./style";
+import { ChevronUp, Search, Settings2 } from "@/components/icons";
 
 interface SearchFieldProps {
   filter?: boolean;
@@ -11,20 +10,20 @@ interface SearchFieldProps {
 export function SearchField(props: SearchFieldProps) {
   return (
     <Container className="search-field">
-      <Search id="search">
-        <MagnifyingGlassIcon width="24"/>
+      <SearchContainer id="search">
+        <Search />
         <input type="text" placeholder="Search"/>
-      </Search>
+      </SearchContainer>
       { props.filter ?? false
           ? <Button type="button" id="filter">
-              <AdjustmentsHorizontalIcon width="20"/>
+              <Settings2 size={20}/>
               <Text>Filter</Text>
             </Button>
           : <></>
       }
       { props.sort ?? false
           ? <Button type="button" id="sort">
-              <ChevronUpIcon width="20"/>
+              <ChevronUp />
               <Text>Sort</Text>
             </Button>
           : <></>

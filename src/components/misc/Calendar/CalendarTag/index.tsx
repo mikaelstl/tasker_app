@@ -1,5 +1,4 @@
-import { FlagIcon } from "@heroicons/react/16/solid";
-import { ClipboardIcon } from "@heroicons/react/24/solid";
+import { Clipboard, Flag } from "@/components/icons";
 import { Tag } from "./style";
 
 interface CalendarTagProps {
@@ -9,8 +8,8 @@ interface CalendarTagProps {
 
 export function CalendarTag(props: CalendarTagProps) {
   const flags = {
-    'task': <FlagIcon width={18}/>,
-    'event': <ClipboardIcon width={18}/>
+    'task': <Flag/>,
+    'event': <Clipboard/>
   }
 
   return (

@@ -30,7 +30,7 @@ export function ChoseWorkspace() {
 
       if (data.length === 0) {
         Toasts['warning']("You don't participates or have organizations. Please create a organization.");
-        navigate('/register');
+        navigate('/org/register');
         return;
       }
 

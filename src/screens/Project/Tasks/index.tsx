@@ -16,7 +16,6 @@ import type { TaskDTO } from "../../../service/types/task/task.dto";
 import { TaskStage } from "../../../service/types/task/stage.dto";
 import Palette from "../../../assets/palette";
 import { ContentHeader } from "../../../components/base/ContentHeader";
-import { PlusIcon } from "@heroicons/react/16/solid";
 import { Text } from "../../../components/base/Text";
 import { TaskPriority } from "../../../service/types/task/priority.dto";
 
