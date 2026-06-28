@@ -10,8 +10,8 @@ import { OrganizationProvider } from './providers/OrganizationProvider/index.tsx
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ApiProvider>
-      <AuthProvider>
-        <OrganizationProvider>
+      <OrganizationProvider>
+        <AuthProvider>
           <App />
           <ToastContainer
             position="bottom-right"
@@ -19,8 +19,8 @@ createRoot(document.getElementById('root')!).render(
             autoClose={4000}
             closeOnClick
           />
-        </OrganizationProvider>
-      </AuthProvider>
+        </AuthProvider>
+      </OrganizationProvider>
     </ApiProvider>
   </StrictMode>,
 )

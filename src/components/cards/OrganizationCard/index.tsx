@@ -1,10 +1,12 @@
 import { formatOrgAvatar } from "../../../utils/formatOrgAvatar";
 import { SectionTitle } from "../../base/SectionTitle";
-import { Avatar, Container } from "./style";
+import { Avatar, Container, SummaryLabel } from "./style";
 import { Subtitle } from "../../base/Subtitle";
 import { FolderOpen, Users } from "@/components/icons";
 import type { OrgRole } from "@/utils/enums/OrgRole";
 import { RoleBadges } from "@/components/badge/RoleBadge";
+import { formatNumber } from "@/utils/formatNumber";
+import Palette from "@/assets/palette";
 
 interface OrganizatioCardProps {
   orgkey: string,
@@ -31,15 +33,15 @@ const OrgCardLabel = ({
   type
 }: OrgCardLabelProps) => {
   const IconTypeMap: IconTypeMap = {
-    'members': <Users />,
-    'projects': <FolderOpen />,
+    'members': <Users color={Palette.gray} />,
+    'projects': <FolderOpen color={Palette.gray} />,
   }
 
   return (
-    <div>
+    <SummaryLabel className="tskr-org-summary-label">
       {IconTypeMap[type]}
-      <Subtitle>{value} {`${type.charAt(0).toLocaleUpperCase()}`}</Subtitle>
-    </div>
+      <Subtitle>{formatNumber(value)} {type}</Subtitle>
+    </SummaryLabel>
   )
 }
 
@@ -52,13 +54,13 @@ export function OrganizationCard({
   onSelect
 }: OrganizatioCardProps) {
   return (
-    <Container onClick={() => onSelect?.(orgkey, role)}>
-      <Avatar>
+    <Container className="tskr-org-card" onClick={() => onSelect?.(orgkey, role)}>
+      <Avatar className="tskr-org-avatar">
         <SectionTitle>{formatOrgAvatar(name)}</SectionTitle>
       </Avatar>
       <SectionTitle>{name}</SectionTitle>
       {RoleBadges[role]}
-      <div>
+      <div className="tskr-org-summary-labels">
         <OrgCardLabel type="members" value={members}/>
         <OrgCardLabel type="projects" value={projects}/>
       </div>

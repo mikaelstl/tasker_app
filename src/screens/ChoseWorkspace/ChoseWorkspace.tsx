@@ -18,7 +18,7 @@ export function ChoseWorkspace() {
   const navigate = useNavigate();
 
   const api = useApi();
-  const { setOrg } = useOrganization();
+  const { defineOrg } = useOrganization();
 
   const [affiliations, setOrgs] = useState<UserOrganizationSummaryDTO[]>([]);
   const loadOrgs = async () => {
@@ -52,7 +52,7 @@ export function ChoseWorkspace() {
   }
 
   const handleChoseWorkspace = (orgkey: string, role: OrgRole) => {
-    setOrg(orgkey, role);
+    defineOrg(orgkey, role);
     navigate('/home');
   }
 

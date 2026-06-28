@@ -5,11 +5,11 @@ import { useOrganization } from "@/hooks/useOrganization";
 
 export function ProtectedRoute() {
   const { authenticating, authenticated } = useAuth();
-  const { orgkey } = useOrganization();
+  const { org } = useOrganization();
 
   if (authenticating) {
     return <Text>Carregando...</Text>;
   }
 
-  return authenticated && orgkey ? <Outlet /> : <Navigate to="/workspaces" replace />;
+  return authenticated && org && org.orgkey && org.role ? <Outlet /> : <Navigate to="/workspaces" replace />;
 }

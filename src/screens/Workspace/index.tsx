@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { Margin } from "../../components/misc/Margin/index.ts";
-// import { useApi } from "../../hooks/useApi.ts";
 import { Categories, Content, Greating, Infos, Items, Main } from "./style.ts";
-// import { useAuth } from "../../hooks/useAuth.ts";
+import { useAuth } from "../../hooks/useAuth.ts";
 import { ItalicTitle } from "../../components/base/ItalicTitle/index.ts";
 import type { TaskDTO } from "../../service/types/task/task.dto.ts";
 import { TaskStage } from "../../service/types/task/stage.dto.ts";
@@ -21,6 +20,8 @@ import { MemberStatTile } from "../../components/tiles/MemberStatTile/index.tsx"
 import { NextDeadlineCard } from "../../components/cards/NextDeadlineCard/index.tsx";
 import { TasksProgressCard } from "../../components/cards/TasksProgressCard/index.tsx";
 import { TaskCategoryAccordion } from "../../components/accordions/TaskCategoryAccordion/index.tsx";
+import { useOrganization } from "@/hooks/useOrganization.ts";
+import { OrgRole } from "@/utils/enums/OrgRole.ts";
 
 const MemberContent = () => {
   const [tasks, setTasks] = useState<TaskDTO[]>([]);
@@ -192,30 +193,27 @@ const ManagerContent = () => {
   )
 }
 
-const UserProfileContent = {
+type UserProfileContentType = {
+  [k in OrgRole]: React.ReactNode
+}
+
+const UserProfileContent: UserProfileContentType = {
   'MEMBER': <MemberContent />,
-  'ORGANIZER': <OrganizerContent />,
+  'OWNER': <OrganizerContent />,
   'MANAGER': <ManagerContent />
 }
 
 export function Workspace() {
-  // const api = useApi();
-
-  // const { user } = useAuth();
+  const { user } = useAuth();
+  const { org } = useOrganization();
 
   useEffect(() => {
-    /* api.get({
-      route: `/tasks`
-    }).then(
-      (result) => {
-        setTasks(result.data);
-      }
-    ); */
-  }, []);
+    console.log(org);
+  }, [user, org]);
 
   return (
     <Content className="workspace-content">
-      {UserProfileContent['MANAGER']}
+      {UserProfileContent[org?.role ?? OrgRole.MEMBER]}
     </Content>
   )
 }

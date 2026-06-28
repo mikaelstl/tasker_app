@@ -6,9 +6,11 @@ import type { AuthDTO } from "../../service/types/auth/auth.dto";
 import { Toasts } from "../../maps/toasts";
 import type { CurrentAccountDTO } from "../../service/types/account/current-account.dto";
 import { AuthContext } from "../../context/AuthContext";
+import { useOrganization } from "@/hooks/useOrganization";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const api = useApi();
+  const { clearOrg } = useOrganization();
 
   const [user, setUser] = useState<CurrentAccountDTO | null>(null);
   const [token, setToken] = useState<string | null>(null);
@@ -63,7 +65,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setToken(null)
     localStorage.removeItem('tasker.api.user');
     localStorage.removeItem('tasker.api.token');
-    localStorage.removeItem('tasker.api.org');
+    clearOrg();
   }
 
   const validate = async (): Promise<boolean> => {

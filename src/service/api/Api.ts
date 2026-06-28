@@ -37,7 +37,7 @@ export class Api {
     this.api.interceptors.request.use(
       (config: any) => {
         const token = localStorage.getItem('tasker.api.token');
-        const xOrgKey = localStorage.getItem('tasker.api.orgkey');
+        const xOrgKey = localStorage.getItem('tasker.api.org');
         config.headers ??= {};
       
         if (token) config.headers['Authorization'] = `Bearer ${token}`;
