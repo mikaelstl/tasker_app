@@ -3,6 +3,8 @@ import Palette from "../../../assets/palette";
 
 const Container = styled.div`
   display: flex;
+  align-items: center;
+  gap: 16px;
 
   padding: 16px;
 
@@ -12,6 +14,13 @@ const Container = styled.div`
   border-radius: 8px;
 
   background-color: ${Palette.items};
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    border-color: ${Palette.blue};
+  }
 `;
 
 const Avatar = styled.div`

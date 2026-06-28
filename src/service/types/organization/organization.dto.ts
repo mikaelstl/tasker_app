@@ -1,6 +1,7 @@
-import { AffiliationDTO } from "@modules/affiliations/dto/affiliation.dto";
-import { ProjectDTO } from "@modules/projects/dto/project.dto";
-import { UserDTO } from "@modules/users/dto/user.dto";
+import type { AffiliationDTO } from "../affiliation/affiliation.dto";
+import type { ProjectDTO } from "../project/project.dto";
+import type { UserDTO } from "../user/user.dto";
+
 
 export interface OrganizationDTO {
   readonly id:                 string;

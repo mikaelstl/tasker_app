@@ -1,5 +1,4 @@
-import { Button } from "../../components/buttons/Button";
-import { Content, HeaderContainer } from "./style";
+import { Container, Content, HeaderContainer } from "./style";
 import { Logo } from "../../components/images/Logo";
 import { SectionTitle } from "../../components/base/SectionTitle";
 import { useEffect, useState } from "react";
@@ -9,7 +8,9 @@ import type { ApiError } from "../../service/types/response/error";
 import { Scroller } from "../../components/misc/Scroller";
 import { useNavigate } from "react-router-dom";
 import { OrganizationCard } from "../../components/cards/OrganizationCard";
-import type { AffiliationDTO } from "../../service/types/affiliation/affiliation.dto";
+import type { UserOrganizationSummaryDTO } from "@/service/types/affiliation/summary.dto";
+import { useOrganization } from "@/hooks/useOrganization";
+import { OrgRole } from "@/utils/enums/OrgRole";
 
 // VIRAR TELA PROPRIA
 
@@ -17,16 +18,17 @@ export function ChoseWorkspace() {
   const navigate = useNavigate();
 
   const api = useApi();
-  
-  const [affiliations, setOrgs] = useState<AffiliationDTO[]>([]);
+  const { setOrg } = useOrganization();
+
+  const [affiliations, setOrgs] = useState<UserOrganizationSummaryDTO[]>([]);
   const loadOrgs = async () => {
     try {
       const response = await api.get({ route: `/affiliations` });
 
-      const data: AffiliationDTO[] = response.data;
+      const data: UserOrganizationSummaryDTO[] = response.data;
 
-      console.log(data);
-      
+      console.log("DATA: " + data.length);
+
 
       if (data.length === 0) {
         Toasts['warning']("You don't participates or have organizations. Please create a organization.");
@@ -43,8 +45,15 @@ export function ChoseWorkspace() {
           const notify = Toasts[err.level];
           notify(err.message);
         }
-      )
+      );
+
+      navigate('/org/register');
     }
+  }
+
+  const handleChoseWorkspace = (orgkey: string, role: OrgRole) => {
+    setOrg(orgkey, role);
+    navigate('/home');
   }
 
   useEffect(() => {
@@ -52,20 +61,30 @@ export function ChoseWorkspace() {
   }, [])
 
   return (
-    <Content>
-      <HeaderContainer className="tskr-stage-header-container">
-        <Logo width={182} />
-        <SectionTitle>CHOSE WORKSPACE</SectionTitle>
-      </HeaderContainer>
-      <Scroller className="tskr-workspaces vertical">
-        {/* TO-DO ITERAR EM affiliations E ADICIONAR UM CARD PARA ORGANIZAÇÕES */}
-        {
-          affiliations.map(
-            aff => <OrganizationCard name={aff.org?.name ?? ''} members={aff.org?.members?.length ?? 0} projects={aff.org?.projects?.length ?? 0}/>
-          )
-        }
-      </Scroller>
-      <Button onClick={() => console.log("Chosed")}>Chose</Button>
-    </Content>
+    <Container>
+      <Content>
+        <HeaderContainer className="tskr-stage-header-container">
+          <Logo width={182} />
+          <SectionTitle>CHOSE WORKSPACE</SectionTitle>
+        </HeaderContainer>
+        <Scroller className="tskr-workspaces vertical">
+          {
+            affiliations.map(
+              org => (
+                <OrganizationCard
+                  key={org.orgkey}
+                  orgkey={org.orgkey}
+                  role={org.role}
+                  name={org.name ?? ''}
+                  members={org.members ?? 0}
+                  projects={org.projects ?? 0}
+                  onSelect={handleChoseWorkspace}
+                />
+              )
+            )
+          }
+        </Scroller>
+      </Content>
+    </Container>
   )
 }

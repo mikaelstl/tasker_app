@@ -1,57 +1,54 @@
 import { OrganizationContext } from "@/context/OrganizationContext";
 import type { OrgRole } from "@/utils/enums/OrgRole";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+const ORG_KEY_STORAGE = "tasker.api.orgkey";
 
 export function OrganizationProvider({ children }: { children: React.ReactNode }) {
-  const [ orgkey, setOrgkey ] = useState<string>('');
-  const [ role, setRole ] = useState<OrgRole | null>(null);
+  const [role, setRole] = useState<OrgRole | null>(null);
+  const [orgkey, setOrgkey] = useState<string | null>(() => {
+    return localStorage.getItem(ORG_KEY_STORAGE);
+  });
 
-  const loadOrg = async (orgkey: string) => {
-      try {
-        const response = await api.post<LoginDTO>({ route: '/auth/login', data: data });
-  
-        const auth = response.data as AuthDTO;
-  
-        const acc: CurrentAccountDTO = {
-          id: auth.account,
-          email: auth.email,
-          username: auth.username,
-        }
-  
-        console.log(acc);
-  
-        localStorage.setItem('tasker.api.user', JSON.stringify(acc));
-        localStorage.setItem('tasker.api.token', auth.access_token);
-        setUser(acc);
-        setToken(auth.access_token);
-      } catch (err: any) {
-        const { errors } = err as ApiError;
-  
-        console.log(err);
-  
-        errors?.forEach(
-          err => {
-            console.warn(err);
-  
-            const notify = Toasts[err.level];
-            notify(err.message);
-          }
-        );
-      }
+  const setOrg = (nextOrgkey: string, role: OrgRole) => {
+    setRole(role);
+    setOrgkey(nextOrgkey);
+    localStorage.setItem(ORG_KEY_STORAGE, nextOrgkey);
+  };
+
+  const clearOrg = () => {
+    setOrgkey(null);
+    localStorage.removeItem(ORG_KEY_STORAGE);
+  };
+
+  const hasOrg = () => {
+    setOrgkey(null);
+    localStorage.removeItem(ORG_KEY_STORAGE);
+
+    if (orgkey && localStorage.getItem(ORG_KEY_STORAGE)) return true;
+
+    return false;
+  };
+
+  useEffect(() => {
+    const storedOrgKey = localStorage.getItem(ORG_KEY_STORAGE);
+
+    if (storedOrgKey && storedOrgKey !== orgkey) {
+      setOrgkey(storedOrgKey);
     }
-
-  const setOrg = async (orgkey: string) => {
-    localStorage.setItem('tasker.api.orgkey', orgkey);
-  }
+  }, [orgkey]);
 
   return (
-    <OrganizationContext.Provider value={{ 
-        orgkey,
+    <OrganizationContext.Provider
+      value={{
         role,
-        loadOrg,
-        setOrg
-      }}>
+        orgkey,
+        setOrg,
+        clearOrg,
+        hasOrg
+      }}
+    >
       {children}
     </OrganizationContext.Provider>
-  )
+  );
 }

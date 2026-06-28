@@ -1,15 +1,24 @@
 import styled from "styled-components";
 import Palette from "../../assets/palette";
 
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  height: 100%;
+
+  background-color: ${Palette.tool_bars};
+`;
+
 const Content = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  
-  height: 100%;
 
-  background-color: ${Palette.tool_bars};
+  gap: 20px;
 `;
 
 const HeaderContainer = styled.div`
@@ -22,4 +31,5 @@ const HeaderContainer = styled.div`
 export {
   Content,
   HeaderContainer,
+  Container
 }

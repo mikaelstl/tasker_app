@@ -1,11 +1,12 @@
-import { createContext } from "react";
 import type { OrgRole } from "@/utils/enums/OrgRole";
+import { createContext } from "react";
 
 interface OrganizationContextInterface {
-  orgkey: string;
-  role: OrgRole;
-  loadOrg: () => Promise<void>;
-  setOrg: (orgkey: string) => Promise<void>;
+  role: OrgRole | null;
+  orgkey: string | null;
+  setOrg: (orgkey: string, role: OrgRole) => void;
+  clearOrg: () => void;
+  hasOrg: () => boolean;
 }
 
 export const OrganizationContext = createContext<OrganizationContextInterface | undefined>(undefined);

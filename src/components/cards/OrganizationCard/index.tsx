@@ -3,11 +3,16 @@ import { SectionTitle } from "../../base/SectionTitle";
 import { Avatar, Container } from "./style";
 import { Subtitle } from "../../base/Subtitle";
 import { FolderOpen, Users } from "@/components/icons";
+import type { OrgRole } from "@/utils/enums/OrgRole";
+import { RoleBadges } from "@/components/badge/RoleBadge";
 
 interface OrganizatioCardProps {
+  orgkey: string,
+  role: OrgRole,
   name: string,
   members: number,
-  projects: number
+  projects: number,
+  onSelect?: (orgkey: string, role: OrgRole) => void
 }
 
 interface OrgCardLabelProps {
@@ -39,16 +44,20 @@ const OrgCardLabel = ({
 }
 
 export function OrganizationCard({
+  orgkey,
+  role,
   name,
   members,
-  projects
+  projects,
+  onSelect
 }: OrganizatioCardProps) {
   return (
-    <Container>
+    <Container onClick={() => onSelect?.(orgkey, role)}>
       <Avatar>
         <SectionTitle>{formatOrgAvatar(name)}</SectionTitle>
       </Avatar>
       <SectionTitle>{name}</SectionTitle>
+      {RoleBadges[role]}
       <div>
         <OrgCardLabel type="members" value={members}/>
         <OrgCardLabel type="projects" value={projects}/>

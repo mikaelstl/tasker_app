@@ -15,7 +15,7 @@ export const Badge = styled.div<BadgeProps>`
   font-weight: 600;
   font-size: 12px;
   padding: 5px 10px;
-  border-radius: 4px;
+  border-radius: 9999px;
 
   width: fit-content;
   height: fit-content;

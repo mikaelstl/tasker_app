@@ -38,6 +38,7 @@ export class Api {
       (config: any) => {
         const token = localStorage.getItem('tasker.api.token');
         const xOrgKey = localStorage.getItem('tasker.api.orgkey');
+        config.headers ??= {};
       
         if (token) config.headers['Authorization'] = `Bearer ${token}`;
         if (xOrgKey) config.headers['X-Org-Key'] = xOrgKey;
@@ -59,7 +60,7 @@ export class Api {
           });
         }
 
-        if (err.status === 401) {
+        if ((err.response?.status ?? err.status) === 401) {
           return Promise.reject({
             status: 401,
             errors: [{
@@ -94,10 +95,10 @@ export class Api {
           });
         }
         
-        if (err.status === 401) {
+        if ((err.response?.status ?? err.status) === 401) {
           console.log("ERRO 401");
           
-          localStorage.removeItem("token");
+          localStorage.removeItem("tasker.api.token");
           window.location.href = "/login";
 
           return Promise.reject({

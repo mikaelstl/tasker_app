@@ -10,17 +10,24 @@ import type { ApiError } from "@/service/types/response/error";
 import { useApi } from "@/hooks/useApi";
 import type { OrganizationCreateDTO } from "@/service/types/organization/create.dto";
 import type { OrganizationDTO } from "@/service/types/organization/organization.dto";
+import { Building2 } from "@/components/icons";
+import { useOrganization } from "@/hooks/useOrganization";
+import { OrgRole } from "@/utils/enums/OrgRole";
+import { useNavigate } from "react-router-dom";
 
 interface CreateOrgStageProps {
 }
 
 export function CreateOrg({
 }: CreateOrgStageProps): React.ReactNode {
+  const navigate = useNavigate();
+
   const api = useApi();
+  const { setOrg } = useOrganization();
 
   const [ name, setName ] = useState<string>('');
 
-  const createOrg = async () => {
+  const hendleCreateOrg = async () => {
     try {
       const response = await api.post<OrganizationCreateDTO>({ 
         route: `/org`,
@@ -31,7 +38,9 @@ export function CreateOrg({
       
       const data: OrganizationDTO = response.data;
 
-      
+      setOrg(data.id, OrgRole.OWNER);
+
+      navigate('/home');
     } catch (error) {
       const { errors } = error as ApiError;
       
@@ -53,12 +62,12 @@ export function CreateOrg({
         <TextInput
           type="text"
           placeholder="Name"
-          icon={<BuildingOfficeIcon width={24} />}
+          icon={<Building2 />}
           onChange={(value) => setName(value)}
         />
       </div>
       <Actions>
-        <Button onClick={() => console.log("DO LOGIN")}>
+        <Button onClick={hendleCreateOrg}>
           <Text>Create organization</Text>
         </Button>
       </Actions>

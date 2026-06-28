@@ -63,7 +63,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setToken(null)
     localStorage.removeItem('tasker.api.user');
     localStorage.removeItem('tasker.api.token');
-    localStorage.removeItem('tasker.api.orgkey');
+    localStorage.removeItem('tasker.api.org');
   }
 
   const validate = async (): Promise<boolean> => {

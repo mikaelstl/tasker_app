@@ -1,7 +1,7 @@
 import { Title } from "../../base/Title";
 import { Card, Cards, Container, Header } from "./style";
 import Palette from "../../../assets/palette";
-import { ProjectHealthyBadge } from "../../../maps/project_healthy_badge";
+import { ProjectHealthBadge } from "../../../maps/project_healthy_badge";
 
 export function ActiveProjectsCard() {
   return (
@@ -15,15 +15,15 @@ export function ActiveProjectsCard() {
           <Title className="tskr-title">00</Title>
         </Card>
         <Card color={Palette.green_50}>
-          {ProjectHealthyBadge['SAFE']}
+          {ProjectHealthBadge['SAFE']}
           <Title className="tskr-title">00</Title>
         </Card>
         <Card color={Palette.yellow_50}>
-          {ProjectHealthyBadge['WARNING']}
+          {ProjectHealthBadge['WARNING']}
           <Title className="tskr-title">00</Title>
         </Card>
         <Card color={Palette.red_50}>
-          {ProjectHealthyBadge['CRITICAL']}
+          {ProjectHealthBadge['CRITICAL']}
           <Title className="tskr-title">00</Title>
         </Card>
       </Cards>
