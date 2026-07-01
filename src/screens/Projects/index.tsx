@@ -4,46 +4,32 @@ import { SearchField } from "../../components/textfields/SearchField/index.tsx";
 import { Scroller } from "../../components/misc/Scroller/index.ts";
 import { ProjectTile } from "../../components/tiles/ProjectTile/index.tsx";
 import { useEffect, useState } from "react";
-import { ProjectProgress, type ProjectDTO } from "../../service/types/project/project.dto.ts";
-import { useApi } from "../../hooks/useApi.ts";
+import type { ProjectDTO } from "../../service/types/project/project.dto.ts";
 import { useAuth } from "../../hooks/useAuth.ts";
 import { CreateProjectPopup } from "../../components/popups/CreateProject/index.tsx";
-import type { ProjectQueryDTO } from "../../service/types/project/project.query.dto.ts";
 import { ContentHeader } from "../../components/base/ContentHeader/index.tsx";
 import { Text } from "../../components/base/Text/index.ts";
+import ProjectService from "../../service/modules/project/project.service.ts";
 
 export function Projects() {
-  const api = useApi();
-
   const { user } = useAuth();
 
-  const [projects, setProjects] = useState<ProjectDTO[]>([{
-    id: 'b7d621f9',
-    title: 'TCC',
-    description: 'TCC',
-    ownerkey: '653c6be4',
-    due_date: new Date().toISOString(),
-    progress: ProjectProgress.STARTED
-  }]);
+  const [projects, setProjects] = useState<ProjectDTO[]>([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const handlePopup = () => {
     setIsPopupOpen((prev) => !prev);
-    console.log(isPopupOpen);
   };
 
   useEffect(() => {
-    api.get<ProjectQueryDTO>({
-      route: '/project/list',
-      params: {
-        ownerkey: user?.username
-      }
-    }).then(
-      (result) => {
-        setProjects(result.data);
-      }
-    );
-  }, [isPopupOpen]);
+    if (!user?.username) return;
+
+    ProjectService.list({
+      ownerkey: user.username,
+    }).then((result) => {
+      setProjects(result);
+    });
+  }, [isPopupOpen, user?.username]);
 
   return (
     <Container className="projects-content">

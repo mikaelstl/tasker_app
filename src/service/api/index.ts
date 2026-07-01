@@ -1,7 +1,8 @@
-import axios, { type AxiosInstance } from "axios"
+import axios, { type AxiosInstance, type AxiosResponse } from "axios"
 import type { ApiError } from "../types/response/error";
+import type { ApiResponse } from "../types/response/response";
 
-export class Api {
+export class ApiClient {
   private api: AxiosInstance;
 
   private get path(): string { return "http://localhost:3000"}
@@ -17,19 +18,37 @@ export class Api {
     this.config();
   }
 
-  async post<T>(params: { route: string, data: T }): Promise<any> {
-    const response = this.api.post(params.route, params.data);
-    
-    return response;
+  async register<P, R>(params: { route: string, data?: P }): Promise<ApiResponse<R>> {
+    const response: AxiosResponse<ApiResponse<R>> = await this.api.post(params.route, params.data);
+
+    return response.data;
   }
 
-  async get<Q>({ route, params, headers}: { route: string, params?: Q, headers?: any }): Promise<any> {
-    const response = this.api.get(route, {
+  async load<R, Q>({ route, params, headers}: { route: string, params?: Q, headers?: any }): Promise<ApiResponse<R>> {
+    const response: AxiosResponse<ApiResponse<R>> = await this.api.get(route, {
       headers: headers,
       params: params
     });
-    
-    return response;
+
+    return response.data;
+  }
+
+  async remove<R>(params: { route: string }): Promise<ApiResponse<R>> {
+    const response: AxiosResponse<ApiResponse<R>> = await this.api.delete(params.route);
+
+    return response.data;
+  }
+
+  async change<P, R>(params: { route: string, data?: P }): Promise<ApiResponse<R>> {
+    const response: AxiosResponse<ApiResponse<R>> = await this.api.patch(params.route, params.data);
+
+    return response.data;
+  }
+
+  async update<P, R>(params: { route: string, data?: P }): Promise<ApiResponse<R>> {
+    const response: AxiosResponse<ApiResponse<R>> = await this.api.put(params.route, params.data);
+
+    return response.data;
   }
 
   private config() {

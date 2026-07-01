@@ -22,90 +22,7 @@ import { TasksProgressCard } from "../../components/cards/TasksProgressCard/inde
 import { TaskCategoryAccordion } from "../../components/accordions/TaskCategoryAccordion/index.tsx";
 import { useOrganization } from "@/hooks/useOrganization.ts";
 import { OrgRole } from "@/utils/enums/OrgRole.ts";
-
-const MemberContent = () => {
-  const [tasks, setTasks] = useState<TaskDTO[]>([]);
-
-  useEffect(() => {
-    setTasks([{
-      id: '73187165-f888-4a26-9df6-d7c8d39a6e81',
-      code: 'TSK-001',
-      name: 'Tarefa 01',
-      description: 'Primeira tarefa de teste',
-      project: 'c45d24bf-8933-4421-9685-863b3b285a94',
-      owner: '',
-      stage: TaskStage.PENDING,
-      priority: TaskPriority.MEDIUM,
-      due_date: new Date().toISOString(),
-    }, {
-      id: '73187165-f888-4a26-9df6-d7c8d39a6e81',
-      code: 'TSK-001',
-      name: 'Tarefa 01',
-      description: 'Primeira tarefa de teste',
-      project: 'c45d24bf-8933-4421-9685-863b3b285a94',
-      owner: '',
-      stage: TaskStage.PENDING,
-      priority: TaskPriority.EXTREME,
-      due_date: new Date().toISOString(),
-    }, {
-      id: '73187165-f888-4a26-9df6-d7c8d39a6e81',
-      code: 'TSK-001',
-      name: 'Tarefa 01',
-      description: 'Primeira tarefa de teste',
-      project: 'c45d24bf-8933-4421-9685-863b3b285a94',
-      owner: '',
-      stage: TaskStage.PENDING,
-      priority: TaskPriority.HIGH,
-      due_date: new Date().toISOString(),
-    }, {
-      id: '73187165-f888-4a26-9df6-d7c8d39a6e81',
-      code: 'TSK-001',
-      name: 'Tarefa 01',
-      description: 'Primeira tarefa de teste',
-      project: 'c45d24bf-8933-4421-9685-863b3b285a94',
-      owner: '',
-      stage: TaskStage.PENDING,
-      priority: TaskPriority.MEDIUM,
-      due_date: new Date().toISOString(),
-    }, {
-      id: '73187165-f888-4a26-9df6-d7c8d39a6e81',
-      code: 'TSK-001',
-      name: 'Tarefa 01',
-      description: 'Primeira tarefa de teste',
-      project: 'c45d24bf-8933-4421-9685-863b3b285a94',
-      owner: '',
-      stage: TaskStage.PENDING,
-      priority: TaskPriority.MEDIUM,
-      due_date: new Date().toISOString(),
-    }]);
-  }, [])
-
-  return (
-    <>
-      <Categories>
-        <Greating><SectionTitle>Hello! MEMBER</SectionTitle></Greating>
-        <TaskCategoryAccordion
-          visible
-          title="Today"
-          tasks={tasks}
-        />
-        <TaskCategoryAccordion
-          title="To this Week"
-          tasks={tasks}
-        />
-        <TaskCategoryAccordion
-          title="Pending"
-          tasks={tasks}
-        />
-        <TaskCategoryAccordion
-          title="Overdue"
-          tasks={tasks}
-        />
-      </Categories>
-      <ImportantDates events={[]} />
-    </>
-  )
-}
+import { MemberContent } from "./content/ManagerContent/index.tsx";
 
 const OrganizerContent = () => {
   const [projects, setProjects] = useState<ProjectDTO[]>([]);
@@ -194,18 +111,20 @@ const ManagerContent = () => {
 }
 
 type UserProfileContentType = {
-  [k in OrgRole]: React.ReactNode
-}
-
-const UserProfileContent: UserProfileContentType = {
-  'MEMBER': <MemberContent />,
-  'OWNER': <OrganizerContent />,
-  'MANAGER': <ManagerContent />
+  [k in OrgRole]: () => React.ReactNode
 }
 
 export function Workspace() {
   const { user } = useAuth();
   const { org } = useOrganization();
+
+  const UserProfileContent: UserProfileContentType = {
+    MEMBER: MemberContent,
+    OWNER: OrganizerContent,
+    MANAGER: ManagerContent
+  }
+
+  const WorkspaceContent = UserProfileContent[org?.role ?? OrgRole.MEMBER];
 
   useEffect(() => {
     console.log(org);
@@ -213,7 +132,7 @@ export function Workspace() {
 
   return (
     <Content className="workspace-content">
-      {UserProfileContent[org?.role ?? OrgRole.MEMBER]}
+      <WorkspaceContent />
     </Content>
   )
 }

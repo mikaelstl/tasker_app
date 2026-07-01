@@ -1,15 +1,13 @@
 import { useEffect, useState } from "react";
-import { useApi } from "../../hooks/useApi";
 import type { LoginDTO } from "../../service/types/auth/login.dto";
 import type { ApiError } from "../../service/types/response/error";
-import type { AuthDTO } from "../../service/types/auth/auth.dto";
 import { Toasts } from "../../maps/toasts";
 import type { CurrentAccountDTO } from "../../service/types/account/current-account.dto";
 import { AuthContext } from "../../context/AuthContext";
 import { useOrganization } from "@/hooks/useOrganization";
+import AccountService from "@/service/modules/account/account.service";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const api = useApi();
   const { clearOrg } = useOrganization();
 
   const [user, setUser] = useState<CurrentAccountDTO | null>(null);
@@ -28,17 +26,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = async (data: LoginDTO) => {
     try {
-      const response = await api.post<LoginDTO>({ route: '/auth/login', data: data });
-
-      const auth = response.data as AuthDTO;
-
-      const acc: CurrentAccountDTO = {
-        id: auth.account,
-        email: auth.email,
-        username: auth.username,
-      }
-
-      console.log(acc);
+      const auth = await AccountService.login(data);
+      const acc: CurrentAccountDTO = AccountService.buildCurrentAccount(auth);
 
       localStorage.setItem('tasker.api.user', JSON.stringify(acc));
       localStorage.setItem('tasker.api.token', auth.access_token);
@@ -73,10 +62,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     if (tk) {
       try {
-        const res: any = await api.get({ route: "/auth/validate" });
-
-        console.log("RESPONSE FROM '/auth/validate' >>>>>>");
-        console.log(res);
+        const res = await AccountService.validate();
 
         if (!res) {
           const notify = Toasts['warning'];
@@ -85,7 +71,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
 
         setAuthenticating(false);
-        return res.data;
+        return res;
       } catch (error) {
         const err = error as ApiError;
 

@@ -1,0 +1,85 @@
+:root {
+  --lex-black: #051a1f;
+  --lex-dark: #1a3540;
+  --lex-gray: #dcdcdc;
+  --lex-yellow: #ffe800;
+  --lex-green-900: #04262f;
+  --lex-green-800: #063946;
+  --lex-green-700: #0a4c5d;
+  --lex-green-600: #166377;
+  --lex-green-500: #2b7f95;
+  --lex-green-100: #dcecef;
+  --lex-green-50: #edf5f7;
+
+  --black-50: #e8eced;
+  --black-100: #c0cbce;
+  --black-200: #8fa0a5;
+  --black-300: #5e757c;
+  --black-400: #3d5560;
+  --black-500: #1a3540;
+  --black-600: #122830;
+  --black-700: #0a1e25;
+  --black-800: #051a1f;
+  --black-900: #020e11;
+
+  --gray-50: #fafafa;
+  --gray-100: #f5f5f5;
+  --gray-200: #ebebeb;
+  --gray-300: #dcdcdc;
+  --gray-400: #c4c4c4;
+  --gray-500: #ababab;
+  --gray-600: #888888;
+  --gray-700: #606060;
+  --gray-800: #3d3d3d;
+  --gray-900: #1a1a1a;
+
+  --yellow-50: #fffde0;
+  --yellow-100: #fff9b0;
+  --yellow-200: #fff480;
+  --yellow-300: #ffee50;
+  --yellow-400: #ffe800;
+  --yellow-500: #e6d100;
+  --yellow-600: #ccb900;
+  --yellow-700: #a89800;
+  --yellow-800: #6b6100;
+  --yellow-900: #3d3700;
+
+  --grad-sidebar: linear-gradient(180deg, #051a1f 0%, #0a1e25 50%, #1a3540 100%);
+  --grad-yellow: linear-gradient(135deg, #ffe800 0%, #e6d100 60%, #ccb900 100%);
+  --grad-yellow-h: linear-gradient(135deg, #fff066 0%, #ffe800 50%, #e6d100 100%);
+  --grad-dark: linear-gradient(135deg, #1a3540 0%, #051a1f 100%);
+  --grad-card-dark: linear-gradient(135deg, #0a1e25 0%, #1a3540 100%);
+  --grad-yellow-line: linear-gradient(90deg, #ffe800 0%, #fff480 100%);
+  --grad-page-bg: linear-gradient(160deg, #ebebeb 0%, #dcdcdc 100%);
+
+  --glass-dark-bg: rgba(255, 255, 255, 0.07);
+  --glass-dark-border: rgba(255, 255, 255, 0.12);
+  --glass-light-bg: rgba(5, 26, 31, 0.06);
+  --glass-light-border: rgba(5, 26, 31, 0.12);
+  --glass-yellow-bg: rgba(255, 232, 0, 0.12);
+  --glass-yellow-border: rgba(255, 232, 0, 0.35);
+  --glass-blur: blur(16px) saturate(180%);
+
+  --color-success: #063946;
+  --color-success-bg: #edf5f7;
+  --color-success-border: rgba(6, 57, 70, 0.3);
+  --color-warning: #a89800;
+  --color-warning-bg: #fffde0;
+  --color-warning-border: rgba(255, 232, 0, 0.5);
+  --color-danger: #b91c1c;
+  --color-danger-bg: #fef2f2;
+  --color-danger-border: rgba(185, 28, 28, 0.25);
+  --color-info: #3d5560;
+  --color-info-bg: #e8eced;
+  --color-info-border: rgba(61, 85, 96, 0.3);
+
+  --text-primary: #051a1f;
+  --text-secondary: #3d5560;
+  --text-muted: #888888;
+  --text-on-dark: #dcdcdc;
+  --text-on-yellow: #3d3700;
+
+  --border-light: rgba(5, 26, 31, 0.08);
+  --border-medium: rgba(5, 26, 31, 0.15);
+  --border-strong: rgba(5, 26, 31, 0.25);
+}

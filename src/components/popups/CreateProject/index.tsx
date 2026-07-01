@@ -1,7 +1,6 @@
 import { Card, Content, Infos, Links, Overlay } from "./style";
 import { useState } from "react";
 import { CreateButton } from "../../buttons/CreateButton";
-import { useApi } from "../../../hooks/useApi";
 import type { CreateProjectDTO } from "../../../service/types/project/create.dto";
 import { useAuth } from "../../../hooks/useAuth";
 import type { PopupProps } from "../popup.props";
@@ -16,10 +15,9 @@ import { SelectMember } from "../../misc/SelectMember";
 import { PlusField } from "../../textfields/PlusField";
 import { LinkCard } from "../../cards/LinkCard";
 import { Toasts } from "../../../maps/toasts";
+import ProjectService from "../../../service/modules/project/project.service";
 
 export function CreateProjectPopup(props: PopupProps) {
-  const api = useApi();
-
   const { user } = useAuth();
 
   const [projectName, setProjectName] = useState<string>('');
@@ -56,7 +54,7 @@ export function CreateProjectPopup(props: PopupProps) {
     props.closePopup();
   }
 
-  const onSubmit = (ev: React.MouseEvent) => {
+  const onSubmit = async (ev: React.MouseEvent) => {
     ev.preventDefault();
 
     const project: CreateProjectDTO = {
@@ -66,13 +64,7 @@ export function CreateProjectPopup(props: PopupProps) {
       ownerkey: user?.username,
     }
 
-    console.log(project);
-    api.post<CreateProjectDTO>({
-      route: '/project',
-      data: project
-    }).then(
-      response => console.log(response)
-    );
+    await ProjectService.create(project);
 
     props.closePopup();
   }

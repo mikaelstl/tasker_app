@@ -1,0 +1,21 @@
+* {
+  box-sizing: border-box;
+  padding: 0px;
+  margin: 0px;
+  font-family: "Poppins", sans-serif;
+  color: white;
+}
+
+input {
+  border: none;
+  &:focus {
+    outline: 0;
+  }
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  height: fit-content;
+}

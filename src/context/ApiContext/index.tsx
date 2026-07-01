@@ -1,8 +1,8 @@
 import { createContext } from "react";
-import { Api } from "../../service/api/Api";
+import { ApiClient } from "../../service/api";
 
 interface ApiContextInterface {
-  api: Api
+  api: ApiClient
 }
 
 export const ApiContext = createContext<ApiContextInterface | undefined>(undefined);

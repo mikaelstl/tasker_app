@@ -7,13 +7,11 @@ import { Button } from "@/components/buttons/Button";
 import { useState } from "react";
 import { Toasts } from "@/maps/toasts";
 import type { ApiError } from "@/service/types/response/error";
-import { useApi } from "@/hooks/useApi";
-import type { OrganizationCreateDTO } from "@/service/types/organization/create.dto";
-import type { OrganizationDTO } from "@/service/types/organization/organization.dto";
 import { Building2 } from "@/components/icons";
 import { useOrganization } from "@/hooks/useOrganization";
 import { OrgRole } from "@/utils/enums/OrgRole";
 import { useNavigate } from "react-router-dom";
+import OrganizationService from "@/service/modules/organization/organization.service";
 
 interface CreateOrgStageProps {
 }
@@ -22,21 +20,15 @@ export function CreateOrg({
 }: CreateOrgStageProps): React.ReactNode {
   const navigate = useNavigate();
 
-  const api = useApi();
   const { setOrg } = useOrganization();
 
   const [ name, setName ] = useState<string>('');
 
   const hendleCreateOrg = async () => {
     try {
-      const response = await api.post<OrganizationCreateDTO>({ 
-        route: `/org`,
-        data: {
-          name
-        }
+      const data = await OrganizationService.create({
+        name,
       });
-      
-      const data: OrganizationDTO = response.data;
 
       setOrg(data.id, OrgRole.OWNER);
 

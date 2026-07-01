@@ -2,7 +2,6 @@ import { Container, Content, HeaderContainer } from "./style";
 import { Logo } from "../../components/images/Logo";
 import { SectionTitle } from "../../components/base/SectionTitle";
 import { useEffect, useState } from "react";
-import { useApi } from "../../hooks/useApi";
 import { Toasts } from "../../maps/toasts";
 import type { ApiError } from "../../service/types/response/error";
 import { Scroller } from "../../components/misc/Scroller";
@@ -11,21 +10,19 @@ import { OrganizationCard } from "../../components/cards/OrganizationCard";
 import type { UserOrganizationSummaryDTO } from "@/service/types/affiliation/summary.dto";
 import { useOrganization } from "@/hooks/useOrganization";
 import { OrgRole } from "@/utils/enums/OrgRole";
+import AffiliationService from "@/service/modules/affiliation/affiliation.service";
 
 // VIRAR TELA PROPRIA
 
 export function ChoseWorkspace() {
   const navigate = useNavigate();
 
-  const api = useApi();
   const { defineOrg } = useOrganization();
 
   const [affiliations, setOrgs] = useState<UserOrganizationSummaryDTO[]>([]);
   const loadOrgs = async () => {
     try {
-      const response = await api.get({ route: `/affiliations` });
-
-      const data: UserOrganizationSummaryDTO[] = response.data;
+      const data = await AffiliationService.list();
 
       console.log("DATA: " + data.length);
 

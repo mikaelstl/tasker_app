@@ -6,21 +6,24 @@ import { ApiProvider } from './providers/ApiProvider/index.tsx'
 import { AuthProvider } from './providers/AuthProvider/index.tsx'
 import { ToastContainer } from 'react-toastify'
 import { OrganizationProvider } from './providers/OrganizationProvider/index.tsx'
+import { ServicesProvider } from './providers/ServicesProvider/index.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ApiProvider>
-      <OrganizationProvider>
-        <AuthProvider>
-          <App />
-          <ToastContainer
-            position="bottom-right"
-            hideProgressBar={true}
-            autoClose={4000}
-            closeOnClick
-          />
-        </AuthProvider>
-      </OrganizationProvider>
+      <ServicesProvider>
+        <OrganizationProvider>
+          <AuthProvider>
+            <App />
+            <ToastContainer
+              position="bottom-right"
+              hideProgressBar={true}
+              autoClose={4000}
+              closeOnClick
+            />
+          </AuthProvider>
+        </OrganizationProvider>
+      </ServicesProvider>
     </ApiProvider>
   </StrictMode>,
 )
