@@ -1,7 +1,7 @@
 import type { ApiResponse } from "@/service/types/response/response";
 import type { CreateCommentDTO } from "../../types/comment/comment.create.dto";
 import type { CommentDTO } from "../../types/comment/comment.dto";
-import type { CommentQueryDTO } from "./types/query.dto";
+import type { CommentQueryDTO } from "@/service/types/comment/query.dto";
 
 import { ApiClient } from "@/service/api";
 
@@ -53,5 +53,3 @@ export class CommentService implements CommentServiceI {
     return response;
   }
 }
-
-export default CommentService;

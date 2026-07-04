@@ -63,5 +63,3 @@ export class EventService implements EventServiceI {
     return response;
   }
 }
-
-export default EventService;

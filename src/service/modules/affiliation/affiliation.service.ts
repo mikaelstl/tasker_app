@@ -65,5 +65,3 @@ export class AffiliationService implements AffiliationServiceI {
     return response;
   }
 }
-
-export default AffiliationService;

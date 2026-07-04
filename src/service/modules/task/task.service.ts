@@ -8,7 +8,7 @@ import { ApiClient } from "@/service/api";
 
 interface TaskServiceI {
   create(data: CreateTaskDTO): Promise<ApiResponse<TaskDTO>>;
-  list(queries: TaskQueryDTO, projectkey: string): Promise<ApiResponse<TaskDTO[]>>;
+  list(projectkey: string, queries?: TaskQueryDTO): Promise<ApiResponse<TaskDTO[]>>;
   find(code: string): Promise<ApiResponse<TaskDTO>>;
   update(code: string, update: EditTaskDTO): Promise<ApiResponse<TaskDTO>>;
   delete(id: string): Promise<ApiResponse<TaskDTO>>;
@@ -30,7 +30,7 @@ export class TaskService implements TaskServiceI {
     return response;
   }
 
-  async list(queries: TaskQueryDTO, projectkey: string): Promise<ApiResponse<TaskDTO[]>> {
+  async list(projectkey: string, queries?: TaskQueryDTO): Promise<ApiResponse<TaskDTO[]>> {
     const response = await this.api.load<TaskDTO[], TaskQueryDTO>({
       route: `/tasks/${projectkey}`,
       params: queries,
@@ -64,5 +64,3 @@ export class TaskService implements TaskServiceI {
     return response;
   }
 }
-
-export default TaskService;

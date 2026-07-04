@@ -4,7 +4,7 @@ import { TextAreaInput } from "../../base/TextAreaInput";
 import { CalendarInput } from "../../base/CalendarInput";
 import { useEffect, useState } from "react";
 import { CreateButton } from "../../buttons/CreateButton";
-import { useApi } from "../../../hooks/useApi";
+import { useServices } from "../../../hooks/useServices";
 import { Form } from "../../misc/Form/style";
 import type { PopupProps } from "../popup.props";
 import type { CreateTaskDTO } from "../../../service/types/task/create.dto";
@@ -18,7 +18,7 @@ import { DeleteBtn } from "../../buttons/DeleteBtn";
 import type { UserDTO } from "../../../service/types/user/user.dto";
 
 export function CreateTaskPopup(props: PopupProps) {
-  const api = useApi();
+  const { tasks } = useServices();
 
   // const navigate = useNavigate();
 
@@ -76,18 +76,12 @@ export function CreateTaskPopup(props: PopupProps) {
     }
 
     console.log(task);
-    api.post<CreateTaskDTO>({
-      route: '/tasks',
-      data: task
-    }).then(
-      response => {
-        console.log(response);
-        Toasts['info']('Created task with success')
-      }
-    );
-
-    setPriority(TaskPriority.LOW)
-    props.closePopup();
+    void tasks.create(task).then(response => {
+      console.log(response);
+      Toasts['info']('Created task with success');
+      setPriority(TaskPriority.LOW);
+      props.closePopup();
+    });
   }
 
   useEffect(() => {

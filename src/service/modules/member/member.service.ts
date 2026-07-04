@@ -42,5 +42,3 @@ export class MemberService implements MemberServiceI {
     return response;
   }
 }
-
-export default MemberService;

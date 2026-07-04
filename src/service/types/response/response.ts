@@ -1,7 +1,7 @@
 export interface ApiResponse<T> {
   readonly status: number;
   
-  readonly message: string | string[];
+  readonly message: string;
   
   readonly data: T;
   

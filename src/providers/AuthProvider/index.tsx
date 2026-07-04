@@ -5,10 +5,11 @@ import { Toasts } from "../../maps/toasts";
 import type { CurrentAccountDTO } from "../../service/types/account/current-account.dto";
 import { AuthContext } from "../../context/AuthContext";
 import { useOrganization } from "@/hooks/useOrganization";
-import AccountService from "@/service/modules/account/account.service";
+import { useServices } from "@/hooks/useServices";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { clearOrg } = useOrganization();
+  const { AccountService } = useServices()
 
   const [user, setUser] = useState<CurrentAccountDTO | null>(null);
   const [token, setToken] = useState<string | null>(null);
@@ -26,13 +27,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = async (data: LoginDTO) => {
     try {
-      const auth = await AccountService.login(data);
+      const response = await AccountService.login(data);
+      
+      const auth = response.data;
+
       const acc: CurrentAccountDTO = AccountService.buildCurrentAccount(auth);
 
       localStorage.setItem('tasker.api.user', JSON.stringify(acc));
       localStorage.setItem('tasker.api.token', auth.access_token);
       setUser(acc);
       setToken(auth.access_token);
+
+      Toasts['info'](response.message);
     } catch (err: any) {
       const { errors } = err as ApiError;
 
@@ -71,7 +77,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
 
         setAuthenticating(false);
-        return res;
+
+        return res.data;
       } catch (error) {
         const err = error as ApiError;
 

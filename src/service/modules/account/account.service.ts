@@ -62,7 +62,3 @@ export class AccountService implements AccountServiceI {
     return response;
   }
 }
-
-const accountService = new AccountService(new ApiClient());
-
-export default accountService;

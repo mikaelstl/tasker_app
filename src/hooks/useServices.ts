@@ -7,26 +7,26 @@ export function useServices() {
   if (!ctx) throw new Error("useServices must be used only inside ServicesProvider");
 
   const {
-    accounts,
-    users,
-    projects,
-    organizations,
-    tasks,
-    affiliations,
-    comments,
-    events,
-    members
+    AccountService,
+    UserService,
+    ProjectService,
+    OrganizationService,
+    TaskService,
+    AffiliationService,
+    CommentService,
+    EventService,
+    MemberService
   } = ctx;
 
   return {
-    accounts,
-    users,
-    projects,
-    organizations,
-    tasks,
-    affiliations,
-    comments,
-    events,
-    members
+    AccountService,
+    UserService,
+    ProjectService,
+    OrganizationService,
+    TaskService,
+    AffiliationService,
+    CommentService,
+    EventService,
+    MemberService
   };
 }

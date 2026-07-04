@@ -26,7 +26,7 @@ export function ServicesProvider({ children }: { children: React.ReactNode }) {
       events: new EventService(api),
       members: new MemberService(api),
     }
-  }, []);
+  }, [api]);
 
   return (
     <ServicesContext.Provider value={{ ...services }}>

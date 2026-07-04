@@ -3,19 +3,18 @@ import { TextInput } from "../../base/TextInput";
 import { CalendarInput } from "../../base/CalendarInput";
 import { useState } from "react";
 import { CreateButton } from "../../buttons/CreateButton";
-import { useApi } from "../../../hooks/useApi";
+import { useServices } from "../../../hooks/useServices";
 import { Form } from "../../misc/Form/style";
 import type { PopupProps } from "../popup.props";
 import type { CreateEventDTO } from "../../../service/types/events/event.create.dto";
 import { useParams } from "react-router-dom";
 import { Toasts } from "../../../maps/toasts";
-import type { ApiResponse } from "../../../service/types/response/response";
 import { ContentHeader } from "../../base/ContentHeader";
 import { DeleteBtn } from "../../buttons/DeleteBtn";
 import { Text } from "../../base/Text";
 
 export function CreateEventPopup(props: PopupProps) {
-  const api = useApi();
+  const { events } = useServices();
 
   const { id } = useParams();
 
@@ -37,16 +36,10 @@ export function CreateEventPopup(props: PopupProps) {
       project: id!,
     }
 
-    api.post<CreateEventDTO>({
-      route: '/events',
-      data: event
-    }).then(
-      (response: ApiResponse) => {
-        Toasts['info'](response.message as string)
-      }
-    );
-
-    props.closePopup();
+    void events.create(event).then((response) => {
+      Toasts['info'](response.message as string);
+      props.closePopup();
+    });
   }
 
   if (!props.showPopup) return null;

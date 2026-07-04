@@ -70,5 +70,3 @@ export class ProjectService implements ProjectServiceI {
     return response;
   }
 }
-
-export default ProjectService;

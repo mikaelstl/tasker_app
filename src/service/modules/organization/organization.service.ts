@@ -33,5 +33,3 @@ export class OrganizationService implements OrganizationServiceI {
     return response;
   }
 }
-
-export default OrganizationService;
