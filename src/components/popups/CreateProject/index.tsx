@@ -15,10 +15,11 @@ import { SelectMember } from "../../misc/SelectMember";
 import { PlusField } from "../../textfields/PlusField";
 import { LinkCard } from "../../cards/LinkCard";
 import { Toasts } from "../../../maps/toasts";
-import ProjectService from "../../../service/modules/project/project.service";
+import { useServices } from "@/hooks/useServices";
 
 export function CreateProjectPopup(props: PopupProps) {
   const { user } = useAuth();
+  const { ProjectService } = useServices();
 
   const [projectName, setProjectName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
@@ -105,6 +106,7 @@ export function CreateProjectPopup(props: PopupProps) {
           <SelectMember
             label="Manager"
             data={[{
+              accountkey: '648c864f',
               id: '648c864f',
               name: 'mikael',
               username: 'mikaelst',

@@ -10,19 +10,21 @@ import { OrganizationCard } from "../../components/cards/OrganizationCard";
 import type { UserOrganizationSummaryDTO } from "@/service/types/affiliation/summary.dto";
 import { useOrganization } from "@/hooks/useOrganization";
 import { OrgRole } from "@/utils/enums/OrgRole";
-import AffiliationService from "@/service/modules/affiliation/affiliation.service";
+import { useServices } from "@/hooks/useServices";
 
 // VIRAR TELA PROPRIA
 
 export function ChoseWorkspace() {
   const navigate = useNavigate();
+  const { AffiliationService } = useServices();
 
   const { defineOrg } = useOrganization();
 
   const [affiliations, setOrgs] = useState<UserOrganizationSummaryDTO[]>([]);
   const loadOrgs = async () => {
     try {
-      const data = await AffiliationService.list();
+      const response = await AffiliationService.list();
+      const data = response.data;
 
       console.log("DATA: " + data.length);
 

@@ -11,14 +11,12 @@ import { Building2 } from "@/components/icons";
 import { useOrganization } from "@/hooks/useOrganization";
 import { OrgRole } from "@/utils/enums/OrgRole";
 import { useNavigate } from "react-router-dom";
-import OrganizationService from "@/service/modules/organization/organization.service";
+import { useServices } from "@/hooks/useServices";
 
-interface CreateOrgStageProps {
-}
 
-export function CreateOrg({
-}: CreateOrgStageProps): React.ReactNode {
+export function CreateOrg(): React.ReactNode {
   const navigate = useNavigate();
+  const { OrganizationService } = useServices();
 
   const { setOrg } = useOrganization();
 
@@ -26,9 +24,11 @@ export function CreateOrg({
 
   const hendleCreateOrg = async () => {
     try {
-      const data = await OrganizationService.create({
+      const response = await OrganizationService.create({
         name,
       });
+
+      const data = response.data;
 
       setOrg(data.id, OrgRole.OWNER);
 

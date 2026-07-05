@@ -9,10 +9,11 @@ import { useAuth } from "../../hooks/useAuth.ts";
 import { CreateProjectPopup } from "../../components/popups/CreateProject/index.tsx";
 import { ContentHeader } from "../../components/base/ContentHeader/index.tsx";
 import { Text } from "../../components/base/Text/index.ts";
-import ProjectService from "../../service/modules/project/project.service.ts";
+import { useServices } from "@/hooks/useServices.ts";
 
 export function Projects() {
   const { user } = useAuth();
+  const { ProjectService } = useServices();
 
   const [projects, setProjects] = useState<ProjectDTO[]>([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -26,8 +27,8 @@ export function Projects() {
 
     ProjectService.list({
       ownerkey: user.username,
-    }).then((result) => {
-      setProjects(result);
+    }).then(({ data }) => {
+      setProjects(data);
     });
   }, [isPopupOpen, user?.username]);
 

@@ -8,6 +8,7 @@ import { Container, Day, Event, Month, Name } from "./style"
 import { formatNumber } from "../../utils/formatNumber"
 // import { useEffect, useState } from "react"
 import { SectionTitle } from "../base/SectionTitle"
+import { ItalicTitle } from "../base/ItalicTitle"
 
 interface ImportantDatesProps {
   events: EventDTO[]
@@ -37,29 +38,37 @@ export function ImportantDates({
 
       <Scroller className="vertical">
         {
-          events.map((event) =>{
-            const eventDate = DateTime.fromISO(event.date, { zone: 'utc' });
+          events.length !== 0 ? (
+            events.map((event) => {
+              const eventDate = DateTime.fromISO(event.date, { zone: "utc" });
+              const sameDateEvents = events.filter(
+                (evt) => DateTime.fromISO(evt.date, { zone: "utc" }).hasSame(eventDate, "day"),
+              );
 
-            const sameDateEvents = events.filter(evt => DateTime.fromISO(evt.date, { zone: 'utc' }).hasSame(eventDate, 'day'));
+              return (
+                <Margin key={event.id} bottom="20px">
+                  <Month id="month">
+                    <Subtitle>{eventDate.monthShort} {eventDate.day}, {eventDate.year}</Subtitle>
+                    {
+                      sameDateEvents.map((evt) => {
+                        const date = DateTime.fromISO(evt.date, { zone: "utc" });
 
-            return <Margin bottom="20px">
-              <Month id="month">
-                <Subtitle>{eventDate.monthShort} {eventDate.day}, {eventDate.year}</Subtitle>
-                {
-                  sameDateEvents
-                  .map(
-                    (evt) => {
-                    const date = DateTime.fromISO(evt.date, { zone: 'utc' });
-                    return <Event id="event">
-                      <Day id="day">
-                        <Text>{formatNumber(date.hour)}:{formatNumber(date.minute)}</Text>
-                      </Day>
-                      <Name>{evt.title}</Name>
-                    </Event>}
-                  )
-                }
-              </Month>
-            </Margin>}
+                        return (
+                          <Event key={evt.id} id="event">
+                            <Day id="day">
+                              <Text>{formatNumber(date.hour)}:{formatNumber(date.minute)}</Text>
+                            </Day>
+                            <Name>{evt.title}</Name>
+                          </Event>
+                        );
+                      })
+                    }
+                  </Month>
+                </Margin>
+              );
+            })
+          ) : (
+            <ItalicTitle>Sem eventos importantes</ItalicTitle>
           )
         }
       </Scroller>

@@ -1,4 +1,4 @@
-import axios, { type AxiosInstance, type AxiosResponse } from "axios"
+import axios, { type AxiosInstance } from "axios"
 import type { ApiError } from "../types/response/error";
 import type { ApiResponse } from "../types/response/response";
 
@@ -10,7 +10,7 @@ export class ApiClient {
   constructor() {
     this.api = axios.create({
       baseURL: this.path,
-      timeout: 10000,
+      timeout: 5000,
       headers: {
         "Content-Type": "application/json"
       }
@@ -19,36 +19,36 @@ export class ApiClient {
   }
 
   async register<P, R>(params: { route: string, data?: P }): Promise<ApiResponse<R>> {
-    const response: AxiosResponse<ApiResponse<R>> = await this.api.post(params.route, params.data);
+    const response: ApiResponse<R> = await this.api.post(params.route, params.data);
 
-    return response.data;
+    return response;
   }
 
   async load<R, Q>({ route, params, headers}: { route: string, params?: Q, headers?: any }): Promise<ApiResponse<R>> {
-    const response: AxiosResponse<ApiResponse<R>> = await this.api.get(route, {
+    const response: ApiResponse<R> = await this.api.get(route, {
       headers: headers,
       params: params
     });
 
-    return response.data;
+    return response;
   }
 
   async remove<R>(params: { route: string }): Promise<ApiResponse<R>> {
-    const response: AxiosResponse<ApiResponse<R>> = await this.api.delete(params.route);
+    const response: ApiResponse<R> = await this.api.delete(params.route);
 
-    return response.data;
+    return response;
   }
 
   async change<P, R>(params: { route: string, data?: P }): Promise<ApiResponse<R>> {
-    const response: AxiosResponse<ApiResponse<R>> = await this.api.patch(params.route, params.data);
+    const response: ApiResponse<R> = await this.api.patch(params.route, params.data);
 
-    return response.data;
+    return response;
   }
 
   async update<P, R>(params: { route: string, data?: P }): Promise<ApiResponse<R>> {
-    const response: AxiosResponse<ApiResponse<R>> = await this.api.put(params.route, params.data);
+    const response: ApiResponse<R> = await this.api.put(params.route, params.data);
 
-    return response.data;
+    return response;
   }
 
   private config() {

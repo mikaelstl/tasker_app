@@ -9,7 +9,7 @@ import { useServices } from "@/hooks/useServices";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { clearOrg } = useOrganization();
-  const { AccountService } = useServices()
+  const { AccountService } = useServices();
 
   const [user, setUser] = useState<CurrentAccountDTO | null>(null);
   const [token, setToken] = useState<string | null>(null);
@@ -28,8 +28,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (data: LoginDTO) => {
     try {
       const response = await AccountService.login(data);
-      
+      console.log(response);
+    
       const auth = response.data;
+
+      console.log(auth);
 
       const acc: CurrentAccountDTO = AccountService.buildCurrentAccount(auth);
 

@@ -3,34 +3,30 @@ import { Badge } from "../../badge/Badge";
 import { Subtitle } from "../../base/Subtitle";
 import { User } from "../../misc/User";
 import { Container, Indicator, Leading } from "./style";
+import type { MemberStatDTO } from "@/service/types/member/member-stat.dto";
 
 interface MemberStatTileProps {
-  username: string;
-  project: string;
-  // tasks: {
-  //   total: number,
-  //   done: number
-  // },
+  member: MemberStatDTO;
 }
 
 export function MemberStatTile(props: MemberStatTileProps) {
   return (
     <Container className="tskr-member-stats-tile">
       <Leading>
-        <Subtitle>{props.project}</Subtitle>
-        <User username={props.username} />
+        <Subtitle>{props.member.project}</Subtitle>
+        <User username={props.member.username} />
       </Leading>
       <Indicator>
         <Subtitle>Started</Subtitle>
-        <Badge color={Palette.lightBlue_50}>00</Badge>
+        <Badge color={Palette.lightBlue_50}>{String(props.member.started).padStart(2, "0")}</Badge>
       </Indicator>
       <Indicator>
         <Subtitle>Done</Subtitle>
-        <Badge color={Palette.green_50}>00</Badge>
+        <Badge color={Palette.green_50}>{String(props.member.done).padStart(2, "0")}</Badge>
       </Indicator>
       <Indicator>
         <Subtitle>Overdue</Subtitle>
-        <Badge color={Palette.red_50}>00</Badge>
+        <Badge color={Palette.red_50}>{String(props.member.overdue).padStart(2, "0")}</Badge>
       </Indicator>
     </Container>
   )

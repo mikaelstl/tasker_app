@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import Palette from "@/assets/palette";
 
 const Content = styled.div`
   display: flex;
@@ -49,11 +50,26 @@ const Infos= styled.div`
   padding: 0px 20px;
 `;
 
+const StateMessage = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  padding: 0 20px;
+
+  color: ${Palette.gray};
+
+  button {
+    width: fit-content;
+  }
+`;
+
 export {
   Content,
   Categories,
   Greating,
   Items,
   Main,
-  Infos
+  Infos,
+  StateMessage,
 }

@@ -16,15 +16,15 @@ export function ServicesProvider({ children }: { children: React.ReactNode }) {
 
   const services = useMemo(() => {
     return {
-      accounts: new AccountService(api),
-      users: new UserService(api),
-      projects: new ProjectService(api),
-      organizations: new OrganizationService(api),
-      tasks: new TaskService(api),
-      affiliations: new AffiliationService(api),
-      comments: new CommentService(api),
-      events: new EventService(api),
-      members: new MemberService(api),
+      AccountService: new AccountService(api),
+      UserService: new UserService(api),
+      ProjectService: new ProjectService(api),
+      OrganizationService: new OrganizationService(api),
+      TaskService: new TaskService(api),
+      AffiliationService: new AffiliationService(api),
+      CommentService: new CommentService(api),
+      EventService: new EventService(api),
+      MemberService: new MemberService(api),
     }
   }, [api]);
 
