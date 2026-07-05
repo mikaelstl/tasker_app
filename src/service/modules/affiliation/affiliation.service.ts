@@ -9,7 +9,7 @@ export interface APIMessage {
   readonly message: string;
 }
 
-interface AffiliationServiceI {
+export interface AffiliationServiceI {
   create(data: DefineAffiliationDTO): Promise<ApiResponse<AffiliationDTO>>;
   list(): Promise<ApiResponse<UserOrganizationSummaryDTO[]>>;
   delete(id: string): Promise<ApiResponse<null>>;

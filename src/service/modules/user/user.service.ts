@@ -11,7 +11,7 @@ export interface UserQueryDTO {
   readonly accountkey?: string;
 }
 
-interface UserServiceI {
+export interface UserServiceI {
   create(data: CreateUserDTO): Promise<ApiResponse<UserDTO>>;
   list(): Promise<ApiResponse<UserDTO[]>>;
   find(params: UserQueryDTO): Promise<ApiResponse<UserDTO>>;

@@ -6,7 +6,7 @@ import type { EditTaskDTO } from "../../types/task/edit.dto";
 
 import { ApiClient } from "@/service/api";
 
-interface TaskServiceI {
+export interface TaskServiceI {
   create(data: CreateTaskDTO): Promise<ApiResponse<TaskDTO>>;
   list(projectkey: string, queries?: TaskQueryDTO): Promise<ApiResponse<TaskDTO[]>>;
   find(code: string): Promise<ApiResponse<TaskDTO>>;

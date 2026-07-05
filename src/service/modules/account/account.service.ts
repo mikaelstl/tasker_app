@@ -7,7 +7,7 @@ import type { CurrentAccountDTO } from "../../types/account/current-account.dto"
 import { ApiClient } from "@/service/api";
 import type { ApiResponse } from "@/service/types/response/response";
 
-interface AccountServiceI {
+export interface AccountServiceI {
   register(data: CreateAccountDTO): Promise<ApiResponse<AccountDTO>>;
   login(data: LoginDTO): Promise<ApiResponse<AuthDTO>>;
   validate(): Promise<ApiResponse<boolean>>;

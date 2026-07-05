@@ -4,7 +4,7 @@ import type { OrganizationDTO } from "../../types/organization/organization.dto"
 
 import { ApiClient } from "@/service/api";
 
-interface OrganizationServiceI {
+export interface OrganizationServiceI {
   create(data: OrganizationCreateDTO): Promise<ApiResponse<OrganizationDTO>>;
   delete(id: string): Promise<ApiResponse<OrganizationDTO>>;
 }

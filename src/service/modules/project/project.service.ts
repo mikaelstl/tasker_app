@@ -12,7 +12,7 @@ export interface EditProjectDTO {
   readonly progress?: ProjectProgress;
 }
 
-interface ProjectServiceI {
+export interface ProjectServiceI {
   list(params?: ProjectQueryDTO): Promise<ApiResponse<ProjectDTO[]>>;
   create(data: CreateProjectDTO): Promise<ApiResponse<ProjectDTO>>;
   find(id: string): Promise<ApiResponse<ProjectDTO>>;

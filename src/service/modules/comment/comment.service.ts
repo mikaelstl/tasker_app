@@ -5,7 +5,7 @@ import type { CommentQueryDTO } from "@/service/types/comment/query.dto";
 
 import { ApiClient } from "@/service/api";
 
-interface CommentServiceI {
+export interface CommentServiceI {
   create(data: CreateCommentDTO): Promise<ApiResponse<CommentDTO>>;
   list(queries: CommentQueryDTO): Promise<ApiResponse<CommentDTO[]>>;
   find(id: string): Promise<ApiResponse<CommentDTO>>;

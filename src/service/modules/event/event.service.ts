@@ -5,7 +5,7 @@ import type { EventQueryDTO } from "../../types/events/event.query.dto";
 
 import { ApiClient } from "@/service/api";
 
-interface EventServiceI {
+export interface EventServiceI {
   create(data: CreateEventDTO): Promise<ApiResponse<EventDTO>>;
   list(queries: EventQueryDTO): Promise<ApiResponse<EventDTO[]>>;
   find(code: string): Promise<ApiResponse<EventDTO>>;

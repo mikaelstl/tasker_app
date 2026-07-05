@@ -4,7 +4,7 @@ import type { DefineMemberDTO } from "@/service/types/member/define.dto";
 
 import { ApiClient } from "@/service/api";
 
-interface MemberServiceI {
+export interface MemberServiceI {
   create(data: DefineMemberDTO): Promise<ApiResponse<ProjectMember>>;
   list(projectkey: string): Promise<ApiResponse<ProjectMember[]>>;
   delete(id: string): Promise<ApiResponse<ProjectMember>>;
