@@ -1,0 +1,71 @@
+/* src/assets/styles/palette.css */
+
+:root {
+  /* Marca */
+  --tskr-light-blue: #508cee;
+  --tskr-blue: #29449d;
+  --tskr-blue-hover: #3555b8;
+  --tskr-blue-active: #20377f;
+
+  /* Estados */
+  --tskr-green: #26998d;
+  --tskr-green-hover: #32aa9e;
+
+  --tskr-yellow: #fcaf62;
+  --tskr-yellow-hover: #ffbd7d;
+
+  --tskr-red: #bc3b4c;
+  --tskr-red-hover: #d34b5e;
+
+  /* Fundos */
+  --tskr-foreground: #0f0e14;
+  --tskr-background: #0b0a0f;
+
+  /* Superfícies */
+  --tskr-surface: #1d1b27;
+  --tskr-surface-hover: #252231;
+  --tskr-surface-elevated: #292638;
+  --tskr-surface-strong: #322e43;
+
+  /* Bordas */
+  --tskr-border: #302c40;
+  --tskr-border-soft: rgba(86, 82, 107, 0.30);
+  --tskr-border-strong: rgba(86, 82, 107, 0.60);
+
+  /* Textos */
+  --tskr-text-primary: #eeecf5;
+  --tskr-text-secondary: #d9d3f8;
+  --tskr-text-muted: #817b9a;
+  --tskr-text-disabled: #56526b;
+
+  /* Transparências da marca */
+  --tskr-glass-blue-10: rgba(41, 68, 157, 0.10);
+  --tskr-glass-blue-25: rgba(41, 68, 157, 0.25);
+  --tskr-glass-blue-50: rgba(41, 68, 157, 0.50);
+
+  --tskr-glass-light-blue-25: rgba(80, 140, 238, 0.25);
+  --tskr-glass-light-blue-50: rgba(80, 140, 238, 0.50);
+
+  --tskr-glass-green-15: rgba(38, 153, 141, 0.15);
+  --tskr-glass-green-25: rgba(38, 153, 141, 0.25);
+  --tskr-glass-green-50: rgba(38, 153, 141, 0.50);
+
+  --tskr-glass-yellow-15: rgba(252, 175, 98, 0.15);
+  --tskr-glass-yellow-25: rgba(252, 175, 98, 0.25);
+  --tskr-glass-yellow-50: rgba(252, 175, 98, 0.50);
+
+  --tskr-glass-red-15: rgba(188, 59, 76, 0.15);
+  --tskr-glass-red-25: rgba(188, 59, 76, 0.25);
+  --tskr-glass-red-50: rgba(188, 59, 76, 0.50);
+
+  --tskr-glass-gray-25: rgba(86, 82, 107, 0.25);
+  --tskr-glass-gray-50: rgba(86, 82, 107, 0.50);
+
+  --tskr-gray-50: #56526b;
+  --tskr-gray-100: #322E43;
+  --tskr-gray-500: #1D1B27;
+  --tskr-gray-700: #0F0E14;
+  --tskr-gray-900: #0B0A0F;
+
+  --tskr-grad-white: linear-gradient(160deg, #eeecf5 0%, #817b9a 100%);
+}

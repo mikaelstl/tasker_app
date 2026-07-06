@@ -1,4 +1,4 @@
-import { LogoIcon } from "../../images/LogoIcon";
+import { LogoIcon } from "../../images/logo-icon";
 import Icon from "../../../assets/icons/favicon.svg";
 import { Title } from "../../base/Title";
 import { Container, Logo, UserInfos } from "./style";
@@ -16,7 +16,7 @@ export function AppBar() {
   return (
     <Container className="tskr-app-bar">
       <Logo className="tskr-appbar-logo">
-        <LogoIcon source={Icon}/>
+        <LogoIcon />
         <Title>Tasker</Title>
       </Logo>
       <UserInfos className="tskr-user-infos">
