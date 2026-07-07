@@ -4,7 +4,7 @@ import { Logo } from "@/components/images/logo";
 import { LogoIcon } from "@/components/images/logo-icon";
 import type { LoginDTO } from "@/service/types/auth/login.dto";
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
+import { toast } from "@/components/shadcn-studio/sonner";
 
 export function Login() {
   const { login } = useAuth();
@@ -22,7 +22,10 @@ export function Login() {
     } catch (err) {
       console.error(err);
     }
+  }
 
+  const toRegister = () => {
+    navigate('/register');
   }
 
   return (
@@ -39,7 +42,7 @@ export function Login() {
         </div>
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-xs">
-            <LoginForm login={handleLogin}/>
+            <LoginForm login={handleLogin} register={toRegister}/>
           </div>
         </div>
       </div>

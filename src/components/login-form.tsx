@@ -17,7 +17,8 @@ import * as z from "zod";
 import type { LoginDTO } from "@/service/types/auth/login.dto";
 
 interface LoginFormProps extends React.ComponentProps<"form"> {
-  login: (data: LoginDTO) => Promise<void>
+  login: (data: LoginDTO) => Promise<void>;
+  register: () => void;
 }
 
 const schema = z.object({
@@ -28,6 +29,7 @@ const schema = z.object({
 
 export function LoginForm({
   login,
+  register,
   className,
   ...props
 }: LoginFormProps) {
@@ -40,7 +42,7 @@ export function LoginForm({
       onSubmit: schema
     },
     onSubmit: async ({ value }) => await login(value)
-  })
+  });
 
   const onSubmit = (evt: React.FormEvent) => {
     evt.preventDefault();
@@ -51,6 +53,7 @@ export function LoginForm({
     <form
       className={cn("flex flex-col gap-6", className)}
       {...props}
+      noValidate
       onSubmit={onSubmit}
     >
       <FieldGroup>
@@ -64,7 +67,7 @@ export function LoginForm({
             return (
               <Field data-invalid={isInvalid}>
                 <FieldLabel htmlFor={field.name}>Email</FieldLabel>
-                <InputGroup align="start">
+                <InputGroup>
                   <InputGroupInput
                     id={field.name}
                     type="email"
@@ -76,7 +79,7 @@ export function LoginForm({
                     autoComplete="email"
                     required
                   />
-                  <InputGroupAddon align="start">
+                  <InputGroupAddon align="inline-start">
                     <Mail className="size-4" aria-hidden="true" />
                   </InputGroupAddon>
                 </InputGroup>
@@ -100,7 +103,7 @@ export function LoginForm({
                   </a> */}
                 </div>
 
-                <InputGroup align="start">
+                <InputGroup>
                   <InputGroupInput
                     id={field.name}
                     type="password"
@@ -110,7 +113,7 @@ export function LoginForm({
                     aria-invalid={isInvalid}
                     required
                   />
-                  <InputGroupAddon align="start">
+                  <InputGroupAddon align="inline-start">
                     <KeyRound className="size-4" aria-hidden="true" />
                   </InputGroupAddon>
                 </InputGroup>
@@ -123,7 +126,7 @@ export function LoginForm({
         </Field>
         <FieldSeparator>Or</FieldSeparator>
         <Field>
-          <Button variant="outline" type="button">
+          <Button variant="outline" type="button" onClick={register}>
             Create your account
           </Button>
         </Field>

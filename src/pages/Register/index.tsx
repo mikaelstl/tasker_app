@@ -1,17 +1,15 @@
-import { Content } from "./style";
-import { Logo } from "../../components/images/Logo";
 import type { ApiError } from "../../service/types/response/error";
-import { Toasts } from "../../maps/toasts";
 import { useAuth } from "../../hooks/useAuth";
-import { Title } from "../../components/base/Title";
-import { CreateAccountForm, type UserData } from "../../components/CreateAccountForm";
 import { useServices } from "@/hooks/useServices";
+import { SignupForm, type RegisterData } from "@/components/signup-form";
+import { LogoIcon } from "@/components/images/logo-icon";
+import { toast } from "@/components/shadcn-studio/sonner";
 
 export function Register() {
   const { login } = useAuth();
   const { AccountService, UserService } = useServices();
 
-  const createAccount = async (data: UserData) => {
+  const handleRegister = async (data: RegisterData) => {
     try {
       const response = await AccountService.register({
         email: data.email,
@@ -26,7 +24,7 @@ export function Register() {
         accountkey: account.id,
       });
 
-      Toasts["info"]("Account created successfully");
+      toast.success("Account created successfully");
 
       login({
         email: data.email, password: data.password
@@ -35,19 +33,25 @@ export function Register() {
       const { errors } = error as ApiError;
 
       errors.forEach((err) => {
-        const notification = Toasts[err.level];
-
-        notification(err.message);
+        toast.warning(err.message);
       });
     }
   };
 
   return (
-    <Content>
-      <Logo width={182}/>
-      <Title>CREATE YOUR ACCOUNT</Title>
-      <CreateAccountForm
-        createAccount={createAccount}/>
-    </Content>
+    <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-background p-6 md:p-10">
+      <div className="flex w-full max-w-sm flex-col gap-6">
+        <a href="/login" className="flex items-center gap-2 self-center font-medium">
+          <div className="flex size-6 items-center justify-center text-primary-foreground">
+            <LogoIcon className="size-6" />
+          </div>
+          Tasker
+        </a>
+        <SignupForm
+          className="tskr-register-form"
+          register={handleRegister}
+        />
+      </div>
+    </div>
   );
 }

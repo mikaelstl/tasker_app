@@ -127,9 +127,9 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
 
-  --color-destructive: var(--destructive);
-  --color-destructive-hover: var(--destructive-hover);
-  --color-destructive-foreground: var(--destructive-foreground);
+  --color-destructive: var(--overdue);
+  --color-destructive-hover: var(--overdue-hover);
+  --color-destructive-foreground: var(--overdue-foreground);
 
   --color-border: var(--border);
   --color-input: var(--input);
