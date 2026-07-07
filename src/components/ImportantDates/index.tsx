@@ -3,12 +3,12 @@ import type { EventDTO } from "../../service/types/events/event.dto"
 import { Subtitle } from "../base/Subtitle"
 import { Text } from "../base/Text"
 import { Margin } from "../misc/Margin"
-import { Scroller } from "../misc/Scroller"
 import { Container, Day, Event, Month, Name } from "./style"
 import { formatNumber } from "../../utils/formatNumber"
 // import { useEffect, useState } from "react"
 import { SectionTitle } from "../base/SectionTitle"
 import { ItalicTitle } from "../base/ItalicTitle"
+import Scroller from "../misc/scroller"
 
 interface ImportantDatesProps {
   events: EventDTO[]
@@ -36,7 +36,7 @@ export function ImportantDates({
     <Container className="important-dates">
       <SectionTitle>Important dates</SectionTitle>
 
-      <Scroller className="vertical">
+      <Scroller orientation="vertical">
         {
           events.length !== 0 ? (
             events.map((event) => {

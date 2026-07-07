@@ -53,7 +53,7 @@ export function OrganizerContent() {
         </Infos>
         <Items>
           <Title>Projects</Title>
-          <Scroller className="tskr-projects-scroller">
+          <Scroller className="tskr-projects-scroller" orientation="horizontal">
             {
             projects.length !== 0
               ? projects.map((project) => (

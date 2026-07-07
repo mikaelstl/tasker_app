@@ -17,6 +17,7 @@
   --popover-foreground: var(--tskr-text-primary);
 
   --primary: var(--tskr-blue);
+  --primary-muted: var(--tskr-glass-blue-50);
   --primary-hover: var(--tskr-blue-hover);
   --primary-foreground: var(--tskr-text-primary);
 
@@ -48,23 +49,23 @@
 
   --warning: var(--tskr-yellow);
   --warning-foreground: #21170d;
-  --warning-muted: var(--tskr-yellow-25);
+  --warning-muted: var(--tskr-glass-yellow-50);
 
   --info: var(--tskr-green);
   --info-foreground: var(--tskr-text-primary);
-  --info-muted: var(--tskr-green-25);
+  --info-muted: var(--tskr-glass-green-50);
 
   --started: var(--tskr-blue);
   --started-foreground: var(--tskr-text-primary);
-  --started-muted: var(--tskr-blue-50);
+  --started-muted: var(--tskr-glass-blue-50);
 
   --review: var(--tskr-yellow);
   --review-foreground: var(--tskr-text-primary);
-  --review-muted: var(--tskr-yellow-25);
+  --review-muted: var(--tskr-glass-yellow-50);
 
   --overdue: var(--tskr-red);
   --overdue-foreground: var(--tskr-text-primary);
-  --overdue-muted: var(--tskr-red-25);
+  --overdue-muted: var(--tskr-glass-red-25);
 
   /*
    * Gráficos

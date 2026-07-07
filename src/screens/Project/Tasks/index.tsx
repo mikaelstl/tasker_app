@@ -135,7 +135,7 @@ export function Tasks() {
       <Content id="tasks-steps">
         <Step className="tasks-step">
           <Title>PENDING</Title>
-          <Scroller className="vertical">
+          <Scroller orientation="vertical">
             {
               tasks
                 .filter(task => task.stage === TaskStage.PENDING)
@@ -154,7 +154,7 @@ export function Tasks() {
         </Step>
         <Step className="tasks-step" color={Palette.blue}>
           <Title>STATED</Title>
-          <Scroller className="vertical">
+          <Scroller orientation="vertical">
             {
               tasks
                 .filter(task => task.stage === TaskStage.IN_PROGRESS)
@@ -173,7 +173,7 @@ export function Tasks() {
         </Step>
         <Step className="tasks-step" color={Palette.yellow}>
           <Title>REVIEW</Title>
-          <Scroller className="vertical">
+          <Scroller orientation="vertical">
             {
               tasks
                 .filter(task => task.stage === TaskStage.REVIEW)
@@ -192,7 +192,7 @@ export function Tasks() {
         </Step>
         <Step className="tasks-step" color={Palette.green}>
           <Title>DONE</Title>
-          <Scroller className="vertical">
+          <Scroller orientation="vertical">
             {
               tasks
                 .filter(task => task.stage === TaskStage.DONE)
@@ -211,7 +211,7 @@ export function Tasks() {
         </Step>
         <Step className="tasks-step" color={Palette.red}>
           <Title>OVERDUE</Title>
-          <Scroller className="vertical">
+          <Scroller orientation="vertical">
             {
               tasks
                 .filter(task => task.stage === TaskStage.DONE)

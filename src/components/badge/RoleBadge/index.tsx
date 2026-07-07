@@ -1,13 +1,12 @@
 import type { OrgRole } from "@/utils/enums/OrgRole";
-import { Badge } from "@/components/badge/Badge";
-import Palette from "@/assets/palette";
+import { Badge } from "@/components/ui/badge";
 
 type RoleBadgesType = {
   [k in OrgRole]: React.ReactNode
 }
 
 export const RoleBadges: RoleBadgesType = {
-  OWNER: <Badge color={Palette.blue_50}>Owner</Badge>,
-  MANAGER: <Badge color={Palette.yellow_50}>Manager</Badge>,
-  MEMBER: <Badge color={Palette.gray_50}>Member</Badge>,
+  OWNER: <Badge variant='default'>Owner</Badge>,
+  MANAGER: <Badge variant='warning'>Manager</Badge>,
+  MEMBER: <Badge variant='outline'>Member</Badge>,
 }

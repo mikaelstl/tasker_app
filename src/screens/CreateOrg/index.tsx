@@ -1,7 +1,7 @@
 import { Text } from "@/components/base/Text";
 import { TextInput } from "@/components/misc/Form/TextInput";
 import { Actions, Content } from "@/pages/Register/style";
-import { Logo } from "@/components/images/Logo";
+import { Logo } from "@/components/images/logo";
 import { Title } from "@/components/base/Title";
 import { Button } from "@/components/buttons/Button";
 import { useState } from "react";
@@ -47,7 +47,7 @@ export function CreateOrg(): React.ReactNode {
 
   return (
     <Content>
-      <Logo width={182}/>
+      <Logo />
       <Title>CREATE YOUR ORGANIZATION</Title>
       <div className="tskr-stage-input">
         <Text>Give a name for your organization</Text>

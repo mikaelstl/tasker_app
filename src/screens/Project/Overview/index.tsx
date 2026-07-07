@@ -188,7 +188,7 @@ export function Overview() {
           <Title>Activity</Title>
           {
             comments.length !== 0
-              ? <Scroller className="vertical">
+              ? <Scroller orientation="vertical">
                 {
                   comments.map((comment) => <CommentCard
                     content={comment.content}

@@ -1,7 +1,7 @@
 import { Container, Content } from "./style.ts";
 import { CreateButton } from "../../components/buttons/CreateButton/index.tsx";
 import { SearchField } from "../../components/textfields/SearchField/index.tsx";
-import { Scroller } from "../../components/misc/Scroller/index.ts";
+import { Scroller } from "../../components/misc/Scroller";
 import { ProjectTile } from "../../components/tiles/ProjectTile/index.tsx";
 import { useEffect, useState } from "react";
 import type { ProjectDTO } from "../../service/types/project/project.dto.ts";
@@ -46,7 +46,7 @@ export function Projects() {
       </ContentHeader>
       <Content id="projects">
         <SearchField filter sort />
-        <Scroller className="vertical">
+        <Scroller orientation="vertical">
           {
             projects.map((project) => <ProjectTile
               key={project.id}

@@ -62,7 +62,7 @@ export function Members() {
       <Content id="team">
         <SearchField filter sort />
         <MembersArea>
-          <Scroller className='vertical'>
+          <Scroller orientation="vertical">
             { owner ? <MemberTile type="owner" username={owner.userkey} tasks={{ done: owner.tasks.filter(tsk => tsk.stage === TaskStage.DONE).length, total: owner.tasks.length }} /> : <></> }
             {
               members

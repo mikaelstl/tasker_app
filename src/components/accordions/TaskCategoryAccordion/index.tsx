@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { Accordion, Header, Tasks } from "./style";
-import { Scroller } from "../../misc/Scroller";
 import { ItalicTitle } from "../../base/ItalicTitle";
 import { TaskCard } from "../../cards/TaskCard";
 import type { TaskDTO } from "../../../service/types/task/task.dto";
 import { Title } from "../../base/Title";
 import { ChevronDown, ChevronUp } from "@/components/icons";
+import Scroller from "@/components/misc/scroller";
 
 export function TaskCategoryAccordion(props: { visible?: boolean, title: string, tasks: TaskDTO[] }) {
   const [visible, setVisible] = useState(props.visible ?? false);
@@ -35,7 +35,7 @@ export function TaskCategoryAccordion(props: { visible?: boolean, title: string,
           <Tasks>
             {
               props.tasks.length !== 0
-                ? <Scroller className="horizontal">
+                ? <Scroller orientation="horizontal">
                   {
                     props.tasks.map(task => <TaskCard
                                               key={task.id}
