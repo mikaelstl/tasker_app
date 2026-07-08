@@ -81,13 +81,13 @@
    * Sidebar
    */
 
-  --sidebar: var(--tskr-background-deep);
-  --sidebar-foreground: var(--tskr-text-secondary);
+  --sidebar: var(--tskr-foreground);
+  --sidebar-foreground: var(--tskr-text-primary);
 
   --sidebar-primary: var(--tskr-blue);
   --sidebar-primary-foreground: var(--tskr-text-primary);
 
-  --sidebar-accent: var(--tskr-blue-10);
+  --sidebar-accent: var(--tskr-surface);
   --sidebar-accent-foreground: var(--tskr-text-primary);
 
   --sidebar-border: #201e2b;

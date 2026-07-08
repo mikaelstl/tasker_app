@@ -1,0 +1,87 @@
+import type { ReactElement } from 'react'
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu'
+import { LogOutIcon, User } from "lucide-react"
+
+type Props = {
+  trigger: ReactElement
+  defaultOpen?: boolean
+  align?: 'start' | 'center' | 'end'
+}
+
+const ProfileDropdown = ({ trigger, defaultOpen, align = 'end' }: Props) => {
+  return (
+    <DropdownMenu defaultOpen={defaultOpen}>
+      <DropdownMenuTrigger render={trigger} />
+      <DropdownMenuContent className='w-80' align={align || 'end'}>
+        <DropdownMenuGroup>
+          <DropdownMenuLabel className='flex items-center gap-4 px-4 py-2.5 font-normal'>
+            <div className='relative'>
+              <Avatar size='lg'>
+                <AvatarFallback><User/></AvatarFallback>
+              </Avatar>
+              <span className='ring-card absolute right-0 bottom-0 block size-2 rounded-full bg-info ring-2' />
+            </div>
+            <div className='flex flex-1 flex-col items-start'>
+              <span className='text-secondary-foreground text-lg font-semibold'>John Doe</span>
+              <span className='text-muted-foreground text-base'>john.doe@example.com</span>
+            </div>
+          </DropdownMenuLabel>
+        </DropdownMenuGroup>
+
+        <DropdownMenuSeparator />
+
+        {/* <DropdownMenuGroup>
+          <DropdownMenuItem className='gap-2 px-4 py-2.5 text-base'>
+            <UserIcon className='text-secondary-foreground size-5' />
+            <span>My account</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem className='gap-2 px-4 py-2.5 text-base'>
+            <SettingsIcon className='text-secondary-foreground size-5' />
+            <span>Settings</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem className='gap-2 px-4 py-2.5 text-base'>
+            <CreditCardIcon className='text-secondary-foreground size-5' />
+            <span>Billing</span>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+
+        <DropdownMenuSeparator />
+
+        <DropdownMenuGroup>
+          <DropdownMenuItem className='gap-2 px-4 py-2.5 text-base'>
+            <UsersIcon className='text-secondary-foreground size-5' />
+            <span>Manage team</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem className='gap-2 px-4 py-2.5 text-base'>
+            <SquarePenIcon className='text-secondary-foreground size-5' />
+            <span>Customization</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem className='gap-2 px-4 py-2.5 text-base'>
+            <CirclePlusIcon className='text-secondary-foreground size-5' />
+            <span>Add team account</span>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+
+        <DropdownMenuSeparator /> */}
+
+        <DropdownMenuGroup>
+          <DropdownMenuItem variant='destructive' className='gap-2 px-4 py-2.5 text-base'>
+            <LogOutIcon className='size-5' />
+            <span>Logout</span>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+}
+
+export default ProfileDropdown

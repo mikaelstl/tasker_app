@@ -1,25 +1,41 @@
-import { Outlet, useLocation } from "react-router-dom";
-import { AppBar } from "../../components/toolbars/AppBar";
-import { NavBar } from "../../components/toolbars/NavBar";
-import { Content, Page } from "./style";
-import { useEffect, useState } from "react";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/app-sidebar";
+import { Separator } from "@/components/ui/separator";
+import ProfileDropdown from "@/components/shadcn-studio/blocks/dropdown-profile";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { User } from "lucide-react";
 
 export function Home() {
-  const location = useLocation();
-
-  const [path, setPath] = useState('');
-
-  useEffect(() => {
-    setPath(location.pathname);
-  }, [location]);
-
   return (
-    <Page>
-      <AppBar />
-      <NavBar onProject={path.includes('project') && !path.includes('projects') ? true : false} />
-      <Content className="content">
-        <Outlet />
-      </Content>
-    </Page>
+    <div className='flex min-h-dvh w-full'>
+      <SidebarProvider>
+        <AppSidebar/>
+        <div className='flex flex-1 flex-col w-full'>
+          <header className='bg-foreground sticky top-0 z-50 border-b'>
+            <div className='w-full flex items-center justify-between gap-6 px-6 py-4 sm:px-8'>
+              <div className='flex items-center gap-4'>
+                <SidebarTrigger className='[&_svg]:size-5!' />
+                <Separator orientation='vertical' className='hidden h-4! data-vertical:self-center sm:block' />
+              </div>
+              <div className='flex items-center gap-1.5'>
+                <ProfileDropdown
+                  trigger={
+                    <Button variant='ghost' size='icon-lg'>
+                      <Avatar className='size-[inherit] rounded-full'>
+                        <AvatarFallback className='rounded-full'><User/></AvatarFallback>
+                      </Avatar>
+                    </Button>
+                  }
+                />
+              </div>
+            </div>
+          </header>
+          <main className='mx-auto size-full max-w-7xl flex-1 px-4 py-6 sm:px-6'>
+            {/*<Outlet />*/}
+          </main>
+        </div>
+      </SidebarProvider>
+    </div>
   )
 }
