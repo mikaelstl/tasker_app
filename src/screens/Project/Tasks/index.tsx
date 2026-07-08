@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Title } from "../../../components/base/Title";
 import { CreateButton } from "../../../components/buttons/CreateButton";
-import { TaskCard } from "../../../components/cards/TaskCard";
+import { TaskCard } from "@/components/cards/task-card";
 import { Margin } from "../../../components/misc/Margin";
 import { Scroller } from "../../../components/misc/Scroller";
 import { SearchField } from "../../../components/textfields/SearchField";
@@ -18,6 +18,7 @@ import Palette from "../../../assets/palette";
 import { ContentHeader } from "../../../components/base/ContentHeader";
 import { Text } from "../../../components/base/Text";
 import { TaskPriority } from "../../../service/types/task/priority.dto";
+import { PlusIcon } from "lucide-react";
 
 export function Tasks() {
   // const api = useApi();
@@ -143,9 +144,12 @@ export function Tasks() {
                   <Margin bottom="12px">
                     <TaskCard
                       key={task.id}
+                      code={task.code}
                       title={task.name}
+                      description={task.description}
+                      priority={TaskPriority.HIGH}
                       due_date={task.due_date}
-                      priority={task.priority}
+                      owner={task.owner}
                     />
                   </Margin>
                 )
@@ -162,9 +166,12 @@ export function Tasks() {
                   <Margin bottom="12px">
                     <TaskCard
                       key={task.id}
+                      code={task.code}
                       title={task.name}
+                      description={task.description}
+                      priority={TaskPriority.HIGH}
                       due_date={task.due_date}
-                      priority={task.priority}
+                      owner={task.owner}
                     />
                   </Margin>
                 )
@@ -181,9 +188,12 @@ export function Tasks() {
                   <Margin bottom="12px">
                     <TaskCard
                       key={task.id}
+                      code={task.code}
                       title={task.name}
+                      description={task.description}
+                      priority={TaskPriority.HIGH}
                       due_date={task.due_date}
-                      priority={task.priority}
+                      owner={task.owner}
                     />
                   </Margin>
                 )
@@ -200,9 +210,12 @@ export function Tasks() {
                   <Margin bottom="12px">
                     <TaskCard
                       key={task.id}
+                      code={task.code}
                       title={task.name}
+                      description={task.description}
+                      priority={TaskPriority.HIGH}
                       due_date={task.due_date}
-                      priority={task.priority}
+                      owner={task.owner}
                     />
                   </Margin>
                 )
@@ -219,9 +232,12 @@ export function Tasks() {
                   <Margin bottom="12px">
                     <TaskCard
                       key={task.id}
+                      code={task.code}
                       title={task.name}
+                      description={task.description}
+                      priority={TaskPriority.HIGH}
                       due_date={task.due_date}
-                      priority={task.priority}
+                      owner={task.owner}
                     />
                   </Margin>
                 )

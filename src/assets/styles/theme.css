@@ -84,14 +84,14 @@
   --sidebar: var(--tskr-foreground);
   --sidebar-foreground: var(--tskr-text-primary);
 
-  --sidebar-primary: var(--tskr-blue);
+  --sidebar-primary: var(--tskr-surface);
   --sidebar-primary-foreground: var(--tskr-text-primary);
 
-  --sidebar-accent: var(--tskr-surface);
+  --sidebar-accent: var(--tskr-glass-gray-25);
   --sidebar-accent-foreground: var(--tskr-text-primary);
 
   --sidebar-border: #201e2b;
-  --sidebar-ring: var(--tskr-light-blue);
+  --sidebar-ring: var(--tskr-glass-gray-25);
 
   /*
    * Dimensões

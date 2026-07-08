@@ -4,7 +4,7 @@ import { ItalicTitle } from "@/components/base/ItalicTitle";
 import { MemberStatTile } from "@/components/tiles/MemberStatTile";
 import { SectionTitle } from "@/components/base/SectionTitle";
 import { Title } from "@/components/base/Title";
-import { TaskCard } from "@/components/cards/TaskCard";
+import { TaskCard } from "@/components/cards/task-card";
 import { Margin } from "@/components/misc/Margin";
 import { Greating, Infos, Items, Main, StateMessage } from "../style";
 import type { DashboardMetricDTO } from "../services/dashboard.types";
@@ -65,9 +65,13 @@ export function ManagerContent() {
               ? deadlines.map((task) => (
                 <Margin key={task.id} right="12px">
                   <TaskCard
+                    key={task.id}
+                    code={task.code}
                     title={task.name}
+                    description={task.description}
+                    priority={TaskPriority.HIGH}
                     due_date={task.due_date}
-                    priority={task.priority ?? TaskPriority.MEDIUM}
+                    owner={task.owner}
                   />
                 </Margin>
               ))

@@ -1,12 +1,10 @@
-
 import {
   SidebarGroup,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
-import { useEffect, useState } from "react"
-import { useLocation, useNavigate } from "react-router-dom"
+} from "@/components/ui/sidebar";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export function NavMain({
   items,
@@ -20,15 +18,9 @@ export function NavMain({
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [path, setPath] = useState('');
-
   function isActive(path: string) {
-    return location.pathname === path || location.pathname.startsWith(`${path}/`)
+    return location.pathname === path || location.pathname.includes(`/${path}`)
   }
-
-  useEffect(() => {
-    setPath(location.pathname);
-  }, [location]);
 
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">

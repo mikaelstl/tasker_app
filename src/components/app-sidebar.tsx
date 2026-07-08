@@ -9,12 +9,11 @@ import {
   SidebarContent,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { TerminalIcon, AppWindow, Inbox, FolderOpen } from "lucide-react";
-import { useLocation } from "react-router-dom";
-import { useEffect, useMemo, useState } from "react";
+import { AppWindow, Inbox, FolderOpen } from "lucide-react";
+import { LogoIcon } from "./images/logo-icon";
+import { NavSecondary } from "./nav-secondary";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const data = {
@@ -62,6 +61,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         ],
       },
     ],
+    secondary: [
+      {
+        title: "Trocar",
+        url: "workspaces",
+        icon: (<AppWindow />),
+      },
+    ],
   }
 
   return (
@@ -69,21 +75,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" render={<a href="#" />}>
-              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                <TerminalIcon className="size-4" />
-              </div>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">Tasker</span>
-              </div>
-            </SidebarMenuButton>
+            <div className="flex items-center gap-2 font-medium p-2">
+              <LogoIcon className="size-8" />
+              Tasker
+            </div>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.pages} />
         <NavProjects items={data.project} />
-        {/* <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
+        <NavSecondary items={data.secondary} className="mt-auto" />
       </SidebarContent>
       {/* <SidebarFooter>
         <NavUser user={data.user} />

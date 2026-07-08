@@ -1,20 +1,15 @@
-import { Container } from "./style"
 import type { DateTime } from "luxon";
-import Palette from "../../../assets/palette";
-import { Subtitle } from "../../base/Subtitle";
-import { Calendar } from "@/components/icons";
+import { CalendarDays } from "lucide-react";
 
 interface DateBadgeProps {
   date: DateTime
 }
 
-export function DateBadge(props: DateBadgeProps) {
+export function DateBadge({ date }: DateBadgeProps) {
   return (
-    <Container className="tskr-date-badge">
-      <Calendar color={Palette.gray}/>
-      <Subtitle>
-        {props.date.day} {props.date.monthShort} {props.date.year}
-      </Subtitle>
-    </Container>
+    <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+      <CalendarDays className="h-3.5 w-3.5" />
+      <span>{date.day} {date.monthShort} {date.hour}:{date.minute}</span>
+    </div>
   )
 }

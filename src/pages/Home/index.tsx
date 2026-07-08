@@ -5,6 +5,7 @@ import ProfileDropdown from "@/components/shadcn-studio/blocks/dropdown-profile"
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { User } from "lucide-react";
+import { Outlet } from "react-router-dom";
 
 export function Home() {
   return (
@@ -31,8 +32,8 @@ export function Home() {
               </div>
             </div>
           </header>
-          <main className='mx-auto size-full max-w-7xl flex-1 px-4 py-6 sm:px-6'>
-            {/*<Outlet />*/}
+          <main className='size-full flex-1'>
+            <Outlet />
           </main>
         </div>
       </SidebarProvider>
