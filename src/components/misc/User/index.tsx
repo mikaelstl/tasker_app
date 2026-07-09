@@ -7,10 +7,16 @@ interface UserProps {
   online?: boolean;
   username: string
   className?: string;
+  size?: "default" | "sm" | "lg"
 }
 
-export function User(props: UserProps) {
-  const initials = props.username
+export function User({
+  image,
+  username,
+  className,
+  size
+}: UserProps) {
+  const initials = username
     .trim()
     .split(/\s+/)
     .slice(0, 2)
@@ -19,14 +25,14 @@ export function User(props: UserProps) {
     .slice(0, 2);
 
   return (
-    <div className={cn("inline-flex items-center gap-2.5", props.className)}>
-      <Avatar size="sm" className="relative">
-        {props.image ? <AvatarImage src={props.image} alt={props.username} /> : null}
+    <div className={cn("inline-flex items-center gap-2.5", className)}>
+      <Avatar size={size} className="relative">
+        {image ? <AvatarImage src={image} alt={username} /> : null}
         <AvatarFallback>{initials || <UserIcon />}</AvatarFallback>
       </Avatar>
       <div className="flex items-center gap-2">
         <span className="text-sm font-medium leading-none">
-          {props.username}
+          {username}
         </span>
       </div>
     </div>

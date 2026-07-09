@@ -15,7 +15,7 @@ import { EditProject } from "./screens/Project/Edit"
 import { TaskOverview } from "./screens/Project/TaskOverview"
 import { PrivateRoute } from "./routes/PrivateRoute"
 import { ChoseWorkspace } from "./screens/ChoseWorkspace/ChoseWorkspace"
-import { Screen } from "./components/base/Screen"
+import { Screen } from "@/components/base/Screen"
 import { CreateOrg } from "./screens/CreateOrg"
 import { ProtectedRoute } from "./routes/ProtectedRoute"
 

@@ -36,7 +36,7 @@ export function TaskCard({
   return (
     <Card
       className={cn(
-        "group cursor-pointer rounded-xl border bg-card transition-all w-sm",
+        "group cursor-pointer rounded-xl border transition-all w-sm",
         "hover:border-primary hover:shadow-sm",
         className
       )}

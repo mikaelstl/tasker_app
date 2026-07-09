@@ -6,7 +6,7 @@ type RoleBadgesType = {
 }
 
 export const RoleBadges: RoleBadgesType = {
-  OWNER: <Badge variant='default'>Owner</Badge>,
-  MANAGER: <Badge variant='warning'>Manager</Badge>,
-  MEMBER: <Badge variant='outline'>Member</Badge>,
+  OWNER: <Badge variant='default'>owner</Badge>,
+  MANAGER: <Badge variant='warning'>manager</Badge>,
+  MEMBER: <Badge variant='outline'>member</Badge>,
 }

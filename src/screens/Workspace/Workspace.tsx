@@ -1,14 +1,13 @@
 import type { ComponentType } from "react";
-import { Content } from "./style";
 import { useOrganization } from "@/hooks/useOrganization";
 import { OrgRole } from "@/utils/enums/OrgRole";
 import { MemberContent } from "./member/MemberContent";
-import { OrganizerContent } from "./organizer/OrganizerContent";
+import { OwnerContent } from "./owner/OwnerContent";
 import { ManagerContent } from "./manager/ManagerContent";
 
 const UserProfileContent: Record<OrgRole, ComponentType> = {
   [OrgRole.MEMBER]: MemberContent,
-  [OrgRole.OWNER]: OrganizerContent,
+  [OrgRole.OWNER]: OwnerContent,
   [OrgRole.MANAGER]: ManagerContent,
 };
 
@@ -17,8 +16,8 @@ export function Workspace() {
   const ContentComponent = UserProfileContent[org?.role ?? OrgRole.MEMBER];
 
   return (
-    <Content className="workspace-content">
+    <div className="size-full h-full workspace-content">
       <ContentComponent />
-    </Content>
+    </div>
   );
 }

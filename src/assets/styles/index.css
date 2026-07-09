@@ -24,5 +24,19 @@
   }
   html {
     @apply font-sans;
+    scrollbar-width: auto;
+    scrollbar-color: var(--tskr-border-strong) transparent;
+  }
+
+  html::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  html::-webkit-scrollbar-thumb {
+    background-color: var(--tskr-border-strong);
+  }
+
+  html::-webkit-scrollbar-corner {
+    background: transparent;
   }
 }

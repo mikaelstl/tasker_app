@@ -15,7 +15,7 @@ const badgeVariants = cva(
         warning:
           "bg-review-muted text-secondary-foreground border-review",
         info:
-          "bg-info-muted text-secondary-foreground border-info",
+          "bg-info-muted/40 text-secondary-foreground border-info",
         destructive:
           "bg-destructive/20 text-destructive border-destructive focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:focus-visible:ring-destructive/40",
         outline:

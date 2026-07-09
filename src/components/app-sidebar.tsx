@@ -11,7 +11,7 @@ import {
   SidebarMenu,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { AppWindow, Inbox, FolderOpen } from "lucide-react";
+import { AppWindow, Inbox, FolderOpen, GalleryVerticalEnd } from "lucide-react";
 import { LogoIcon } from "./images/logo-icon";
 import { NavSecondary } from "./nav-secondary";
 
@@ -65,7 +65,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       {
         title: "Trocar",
         url: "workspaces",
-        icon: (<AppWindow />),
+        icon: (<GalleryVerticalEnd />),
       },
     ],
   }

@@ -19,12 +19,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/useAuth";
 import { TaskStage } from "@/service/types/task/stage.dto";
 
 import { useMemberDashboard } from "./useMemberDashboard";
+import LoadingState from "@/components/loading-state";
 
 type StatCardProps = {
   label: string;
@@ -51,47 +50,6 @@ function StatCard({ label, value, description, icon }: StatCardProps) {
         </div>
       </CardContent>
     </Card>
-  );
-}
-
-function LoadingState() {
-  return (
-    <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
-      <Card className="border-border/60 bg-card/80 shadow-sm">
-        <CardHeader className="space-y-3">
-          <Skeleton className="h-5 w-24" />
-          <Skeleton className="h-8 w-56" />
-          <Skeleton className="h-4 w-full max-w-lg" />
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-            <Skeleton className="h-24 rounded-xl" />
-            <Skeleton className="h-24 rounded-xl" />
-            <Skeleton className="h-24 rounded-xl" />
-            <Skeleton className="h-24 rounded-xl" />
-          </div>
-          <Separator />
-          <div className="space-y-3">
-            <Skeleton className="h-12 w-full rounded-xl" />
-            <Skeleton className="h-12 w-full rounded-xl" />
-            <Skeleton className="h-12 w-full rounded-xl" />
-            <Skeleton className="h-12 w-full rounded-xl" />
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card className="border-border/60 bg-card/80 shadow-sm">
-        <CardHeader className="space-y-3">
-          <Skeleton className="h-5 w-36" />
-          <Skeleton className="h-4 w-48" />
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <Skeleton className="h-16 w-full rounded-xl" />
-          <Skeleton className="h-16 w-full rounded-xl" />
-          <Skeleton className="h-16 w-full rounded-xl" />
-        </CardContent>
-      </Card>
-    </div>
   );
 }
 
@@ -135,7 +93,7 @@ export function MemberContent() {
 
   const tasks = data?.tasks ?? [];
   const events = data?.events ?? [];
-  const username = user?.username?.trim() || "MEMBER";
+  const username = user?.username?.trim() || "Member";
 
   const taskBuckets = useMemo(() => {
     return {
@@ -183,38 +141,44 @@ export function MemberContent() {
   if (error) {
     return <ErrorState error={error} refetch={refetch} />;
   }
-
   return (
-    <div className="grid xl:grid-cols-[minmax(0,1fr)_360px]">
-      <Card className="bg-transparent shadow-sm">
-        <CardHeader className="space-y-3">
-          <CardTitle className="tskr-workspace-greating text-2xl sm:text-3xl">
-            Olá! {username}
-          </CardTitle>
-        </CardHeader>
-
-        <CardContent className="space-y-6">
-          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-            {stats.map((stat) => (
-              <StatCard
-                key={stat.label}
-                label={stat.label}
-                value={stat.value}
-                description={stat.description}
-                icon={stat.icon}
-              />
-            ))}
+    <div className="flex h-full flex-1 flex-row overflow-hidden">
+      <div className="mx-auto flex h-full w-full max-w-7xl flex-col gap-8 overflow-y-auto p-8">
+        <section className="flex flex-col gap-2">
+          <div>
+            <h1 className="tskr-workspace-greating text-2xl sm:text-3xl text-secondary-foreground">
+              Olá! {username}
+            </h1>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Acompanhe suas tarefas, prioridades e prazos importantes em um só lugar.
+            </p>
           </div>
+        </section>
 
+        <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          {stats.map((stat) => (
+            <StatCard
+              key={stat.label}
+              label={stat.label}
+              value={stat.value}
+              description={stat.description}
+              icon={stat.icon}
+            />
+          ))}
+        </section>
+
+        <section className="flex flex-col gap-4">
           {tasks.length === 0 ? (
-            <div className="flex min-h-40 flex-col items-center justify-center rounded-2xl border border-dashed border-border/70 bg-muted/20 px-6 py-10 text-center">
-              <p className="text-base font-medium text-foreground">
-                Sem tarefas para exibir
-              </p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Assim que houver tarefas atribuídas, elas aparecerão aqui.
-              </p>
-            </div>
+            <Card className="border-border/60 bg-card/80 shadow-sm">
+              <CardContent className="flex min-h-40 flex-col items-center justify-center rounded-2xl border border-dashed border-border/70 bg-muted/20 px-6 py-10 text-center">
+                <p className="text-base font-medium text-foreground">
+                  Sem tarefas para exibir
+                </p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Assim que houver tarefas atribuídas, elas aparecerão aqui.
+                </p>
+              </CardContent>
+            </Card>
           ) : (
             <div className="space-y-4">
               <TaskCategoryAccordion
@@ -227,10 +191,10 @@ export function MemberContent() {
               <TaskCategoryAccordion title="Atrasadas" tasks={taskBuckets.overdue} />
             </div>
           )}
-        </CardContent>
-      </Card>
+        </section>
+      </div>
 
-      <div className="min-w-0">
+      <div className="h-full xl:row-span-2 xl:h-full">
         <ImportantDates events={events} />
       </div>
     </div>

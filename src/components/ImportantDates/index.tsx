@@ -1,77 +1,137 @@
 import { DateTime } from "luxon"
-import type { EventDTO } from "../../service/types/events/event.dto"
-import { Subtitle } from "../base/Subtitle"
-import { Text } from "../base/Text"
-import { Margin } from "../misc/Margin"
-import { Container, Day, Event, Month, Name } from "./style"
-import { formatNumber } from "../../utils/formatNumber"
-// import { useEffect, useState } from "react"
-import { SectionTitle } from "../base/SectionTitle"
-import { ItalicTitle } from "../base/ItalicTitle"
-import Scroller from "../misc/scroller"
+import { CalendarDays, Clock3 } from "lucide-react"
+import type { EventDTO } from "@/service/types/events/event.dto"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Separator } from "@/components/ui/separator"
+import { cn } from "@/lib/utils"
 
 interface ImportantDatesProps {
   events: EventDTO[]
 }
 
-// type DateType = {
-//   date: DateTime,
-//   events: EventDTO[]
-// }
+type GroupedEvent = {
+  dateKey: string
+  label: string
+  events: {
+    id: string
+    title: string
+    time: string
+  }[]
+}
 
-export function ImportantDates({
-  events
-}: ImportantDatesProps) {
-  // const [ dates, setDates ] = useState<DateType[]>([]);
-  
-  // useEffect(() => {
-  //   events.map(
-  //     (evt) => {
-  //       const date = DateTime.fromISO(evt.date, { zone: 'utc' });
-  //     }
-  //   )
-  // }, [])
+export function ImportantDates({ events }: ImportantDatesProps) {
+  const groupedEvents = events
+    .slice()
+    .sort(
+      (a, b) =>
+        DateTime.fromISO(a.date, { zone: "utc" }).toMillis() -
+        DateTime.fromISO(b.date, { zone: "utc" }).toMillis(),
+    )
+    .reduce<GroupedEvent[]>((acc, event) => {
+      const eventDate = DateTime.fromISO(event.date, { zone: "utc" })
+      const dateKey = eventDate.toISODate() ?? event.date
+
+      const time = `${String(eventDate.hour).padStart(2, "0")}:${String(eventDate.minute).padStart(2, "0")}`
+      const label = eventDate.toFormat("LLL dd, yyyy")
+      const currentGroup = acc.find((group) => group.dateKey === dateKey)
+
+      if (currentGroup) {
+        currentGroup.events.push({
+          id: event.id,
+          title: event.title,
+          time,
+        })
+
+        return acc
+      }
+
+      acc.push({
+        dateKey,
+        label,
+        events: [
+          {
+            id: event.id,
+            title: event.title,
+            time,
+          },
+        ],
+      })
+
+      return acc
+    }, [])
 
   return (
-    <Container className="important-dates">
-      <SectionTitle>Important dates</SectionTitle>
+    <Card className="flex h-full min-h-0 w-sm flex-col rounded-none bg-foreground shadow-sm">
+      <CardHeader className="space-y-2 border-b pb-4">
+        <div className="flex items-center gap-2">
+          <CalendarDays className="size-4" />
+          <CardTitle className="text-base font-semibold">
+            Important dates
+          </CardTitle>
+        </div>
+        <p className="text-sm text-muted-foreground">
+          Upcoming events grouped by date.
+        </p>
+      </CardHeader>
 
-      <Scroller orientation="vertical">
-        {
-          events.length !== 0 ? (
-            events.map((event) => {
-              const eventDate = DateTime.fromISO(event.date, { zone: "utc" });
-              const sameDateEvents = events.filter(
-                (evt) => DateTime.fromISO(evt.date, { zone: "utc" }).hasSame(eventDate, "day"),
-              );
+      <CardContent className="min-h-0 flex-1 p-4">
+        <ScrollArea className="h-full pr-4">
+          <div className="space-y-4">
+            {groupedEvents.length > 0 ? (
+              groupedEvents.map((group, groupIndex) => (
+                <div key={group.dateKey} className="space-y-3">
+                  {groupIndex > 0 ? <Separator /> : null}
 
-              return (
-                <Margin key={event.id} bottom="20px">
-                  <Month id="month">
-                    <Subtitle>{eventDate.monthShort} {eventDate.day}, {eventDate.year}</Subtitle>
-                    {
-                      sameDateEvents.map((evt) => {
-                        const date = DateTime.fromISO(evt.date, { zone: "utc" });
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="space-y-1">
+                      <p className="text-sm font-medium">
+                        {group.label}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {group.events.length} event
+                        {group.events.length > 1 ? "s" : ""}
+                      </p>
+                    </div>
+                  </div>
 
-                        return (
-                          <Event key={evt.id} id="event">
-                            <Day id="day">
-                              <Text>{formatNumber(date.hour)}:{formatNumber(date.minute)}</Text>
-                            </Day>
-                            <Name>{evt.title}</Name>
-                          </Event>
-                        );
-                      })
-                    }
-                  </Month>
-                </Margin>
-              );
-            })
-          ) : (
-            <ItalicTitle>Sem eventos importantes</ItalicTitle>
-          )
-        }
-      </Scroller>
-    </Container>
+                  <div className="space-y-2">
+                    {group.events.map((event) => (
+                      <div
+                        key={event.id}
+                        className={cn(
+                          "flex items-start gap-3 rounded-lg border bg-background/60 p-3",
+                          "transition-colors hover:bg-muted/60",
+                        )}
+                      >
+                        <div className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
+                          <Clock3 className="size-4" />
+                        </div>
+
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-medium leading-snug">
+                            {event.title}
+                          </p>
+                          <p className="text-sm text-muted-foreground">{event.time}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="rounded-lg border border-dashed bg-muted/30 p-6 text-center">
+                <p className="text-sm font-medium">
+                  Sem eventos importantes
+                </p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Quando houver eventos, eles aparecerão aqui.
+                </p>
+              </div>
+            )}
+          </div>
+        </ScrollArea>
+      </CardContent>
+    </Card>
   )
 }
