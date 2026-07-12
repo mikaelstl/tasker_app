@@ -6,9 +6,9 @@ import { useOrganization } from "@/hooks/useOrganization";
 import { OrgRole } from "@/utils/enums/OrgRole";
 import { useServices } from "@/hooks/useServices";
 import { LogoIcon } from "@/components/images/logo-icon";
-import Scroller from "@/components/misc/scroller";
 import { OrganizationCard } from "@/components/cards/OrganizationCard";
 import { toast } from "sonner";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 // VIRAR TELA PROPRIA
 
@@ -59,21 +59,13 @@ export function ChoseWorkspace() {
   return (
     <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-background p- md:p-10">
       <div className="flex w-full max-w-sm flex-col gap-6">
-        <a href="/login" className="flex items-center gap-2 self-center font-medium">
+        <div className="flex items-center gap-2 self-center font-medium">
           <div className="flex size-6 items-center justify-center text-primary-foreground">
             <LogoIcon className="size-6" />
           </div>
           Tasker
-        </a>
-        <OrganizationCard
-          orgkey={"abc"}
-          role={OrgRole.MANAGER}
-          name={"Org Teste"}
-          members={0}
-          projects={0}
-          onSelect={handleChoseWorkspace}
-        />
-        <Scroller className="tskr-workspaces gap-2" orientation="vertical">
+        </div>
+        <ScrollArea className="h-1/2">
           {
             affiliations.map(
               org => (
@@ -89,7 +81,7 @@ export function ChoseWorkspace() {
               )
             )
           }
-        </Scroller>
+        </ScrollArea>
       </div>
     </div>
     // <Container>

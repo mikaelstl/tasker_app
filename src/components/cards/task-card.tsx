@@ -1,17 +1,24 @@
-import { DateTime } from "luxon";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { DateTime } from "luxon"
+import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import type { TaskPriority } from "@/service/types/task/priority.dto";
-import { User } from "../misc/User";
-import { CheckCircle2 } from "lucide-react";
+import { User } from "../misc/User"
+import { CheckCircle2 } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { DateBadge } from "../badge/DateBadge";
+import { DateBadge } from "../badge/DateBadge"
 
-const priorityVariantMap: Record<TaskPriority, "destructive" | "warning" | "info" | "outline"> = {
+const priorityVariantMap: Record<TaskPriority, "destructive" | "warning" | "default" | "secondary"> = {
   EXTREME: "destructive",
   HIGH: "warning",
-  MEDIUM: "info",
-  LOW: "outline",
+  MEDIUM: "default",
+  LOW: "secondary",
+}
+
+const priorityLabelMap: Record<TaskPriority, string> = {
+  EXTREME: "Crítica",
+  HIGH: "Alta",
+  MEDIUM: "Média",
+  LOW: "Baixa",
 }
 
 interface TaskCardProps {
@@ -26,18 +33,19 @@ interface TaskCardProps {
 }
 
 export function TaskCard({
+  code,
   title,
   priority,
   due_date,
-  code,
   owner,
+  description,
   className,
 }: TaskCardProps) {
   return (
     <Card
       className={cn(
-        "group cursor-pointer rounded-xl border transition-all w-sm",
-        "hover:border-primary hover:shadow-sm",
+        "group cursor-pointer rounded-xl border-0 transition-all w-sm",
+        "hover:border-primary hover:border hover:shadow-sm",
         className
       )}
     >
@@ -60,10 +68,17 @@ export function TaskCard({
             variant={priorityVariantMap[priority]}
             className={cn("rounded-md")}
           >
-            {priority}
+            {priorityLabelMap[priority]}
           </Badge>
         </div>
       </CardHeader>
+      {description ? (
+        <CardContent className="pb-4">
+          <p className="line-clamp-2 text-sm text-muted-foreground">
+            {description}
+          </p>
+        </CardContent>
+      ) : null}
       <CardFooter className="flex items-center justify-between border-t pt-4">
         <User username={owner} />
         <DateBadge date={DateTime.fromISO(due_date)} />

@@ -1,14 +1,11 @@
 import { DateTime } from "luxon";
-import { Subtitle } from "../../base/Subtitle";
-import { Text } from "../../base/Text";
-import { Avatar } from "../../misc/Avatar";
-import { Card, Line, Texts } from "./style";
-import { Title } from "../../base/Title";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { User } from "@/components/misc/User";
 
 interface CommentCardDTO {
-  readonly content:     string;
-  readonly date:        DateTime;
-  readonly owner:    string;
+  readonly content: string;
+  readonly date: string;
+  readonly owner: string;
 }
 
 export function CommentCard({
@@ -17,14 +14,18 @@ export function CommentCard({
   owner,
 }: CommentCardDTO) {
   return (
-    <Card className="comment-card">
-      <Avatar size="medium" image=""/>
-      <Texts>
-        <Title>{owner}</Title>
-        <Text>{content}</Text>
-      </Texts>
-      <Line/>
-      <Subtitle className="tskr-subtitle">{date.day}, {date.monthShort} {date.hour}:{date.minute}</Subtitle>
+    <Card className="tskr-comment-card bg-secondary/40">
+      <CardHeader className="flex flex-1 justify-between">
+        <User username={owner} />
+        <p className="shrink-0 text-xs text-muted-foreground">
+          {DateTime.fromISO(date, { zone: "utc" }).toFormat("LLL dd, yyyy")}
+        </p>
+      </CardHeader>
+      <CardContent>
+        <p className="text-sm leading-6 text-secondary-foreground">
+          {content}
+        </p>
+      </CardContent>
     </Card>
   )
 }

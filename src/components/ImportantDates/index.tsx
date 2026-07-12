@@ -67,11 +67,11 @@ export function ImportantDates({ events }: ImportantDatesProps) {
         <div className="flex items-center gap-2">
           <CalendarDays className="size-4" />
           <CardTitle className="text-base font-semibold">
-            Important dates
+            Datas importantes
           </CardTitle>
         </div>
         <p className="text-sm text-muted-foreground">
-          Upcoming events grouped by date.
+          Próximos eventos agrupados por data.
         </p>
       </CardHeader>
 
@@ -89,7 +89,7 @@ export function ImportantDates({ events }: ImportantDatesProps) {
                         {group.label}
                       </p>
                       <p className="text-sm text-muted-foreground">
-                        {group.events.length} event
+                        {group.events.length} evento
                         {group.events.length > 1 ? "s" : ""}
                       </p>
                     </div>
@@ -122,7 +122,7 @@ export function ImportantDates({ events }: ImportantDatesProps) {
             ) : (
               <div className="rounded-lg border border-dashed bg-muted/30 p-6 text-center">
                 <p className="text-sm font-medium">
-                  Sem eventos importantes
+                  Sem datas importantes
                 </p>
                 <p className="mt-1 text-sm text-muted-foreground">
                   Quando houver eventos, eles aparecerão aqui.

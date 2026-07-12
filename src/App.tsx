@@ -40,7 +40,7 @@ function App() {
 
                 <Route path="workspace" element={<Workspace />} />
                 <Route path="projects" element={<Projects />} />
-                <Route path="project" element={<Project />}>
+                <Route path="project/:id" element={<Project />}>
                   <Route index element={<Navigate to="overview" replace />} />
 
                   <Route path="overview" element={<Overview />} />
@@ -49,7 +49,7 @@ function App() {
                   <Route path="calendar" element={<Events />} />
                   <Route path="stats" element={<Stats />} />
                   <Route path="edit" element={<EditProject />} />
-                  <Route path="task" element={<TaskOverview />} />
+                  <Route path="task/:id" element={<TaskOverview />} />
                 </Route>
               </Route>
             </Route>

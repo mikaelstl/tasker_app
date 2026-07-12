@@ -48,7 +48,7 @@ export function ProjectTile({
 }: ProjectTileProps) {
   const navigate = useNavigate()
 
-  const goToProjectPage = () => navigate(`/home/project/overview`)
+  const goToProjectPage = () => navigate(`/home/project/${id}/overview`)
 
   const dueDate = DateTime.fromISO(due_date, { zone: "utc" });
 
