@@ -33,7 +33,7 @@ export function Login() {
       <div className="tskr-login-page-logo h-full flex flex-col items-center justify-center relative">
         <Logo />
       </div>
-      <div className="tskr-login-form-container flex flex-col gap-4 p-6 md:p-10 bg-foreground">
+      <div className="tskr-login-form-container flex flex-col gap-4 p-6 md:p-10 bg-background">
         <div className="tskr-login-page-icon flex justify-center gap-2 md:justify-start">
           <a href="#" className="flex items-center gap-2 font-medium">
             <LogoIcon className="size-6" />

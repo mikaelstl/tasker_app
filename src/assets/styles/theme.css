@@ -21,8 +21,8 @@
   --primary-hover: var(--tskr-blue-hover);
   --primary-foreground: var(--tskr-text-primary);
 
-  --secondary: var(--tskr-surface-strong);
-  --secondary-hover: #3d3851;
+  --secondary: var(--tskr-surface);
+  --secondary-hover: var(--tskr-surface-strong);
   --secondary-foreground: var(--tskr-text-primary);
 
   --muted: var(--tskr-surface);

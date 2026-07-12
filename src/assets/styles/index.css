@@ -20,7 +20,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-secondary-foreground;
+    @apply bg-foreground text-secondary-foreground;
   }
   html {
     @apply font-sans;

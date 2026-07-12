@@ -1,12 +1,33 @@
-import { Avatar } from "../Avatar";
-import { Container, type TeamContainerProps } from "./style";
+import { Avatar, AvatarFallback, AvatarGroup, AvatarGroupCount, AvatarImage } from "@/components/ui/avatar";
 
-export function Team(props: TeamContainerProps) {
+const avatars = [
+  {
+    src: 'https://cdn.shadcnstudio.com/ss-assets/avatar/avatar-3.png',
+    fallback: 'OS',
+    name: 'Olivia Sparks'
+  },
+  {
+    src: 'https://cdn.shadcnstudio.com/ss-assets/avatar/avatar-6.png',
+    fallback: 'HL',
+    name: 'Howard Lloyd'
+  },
+  {
+    src: 'https://cdn.shadcnstudio.com/ss-assets/avatar/avatar-5.png',
+    fallback: 'HR',
+    name: 'Hallie Richards'
+  }
+]
+
+export function Team() {
   return (
-    <Container className="tskr-team" color={props.color}>
-      <Avatar size="small" image=""/>
-      <Avatar size="small" image=""/>
-      <Avatar size="small" image=""/>
-    </Container>
+    <AvatarGroup>
+      {avatars.map((avatar, index) => (
+        <Avatar key={index} className='ring-card ring-2'>
+          <AvatarImage className='ring-card ring-2' src={avatar.src} alt={avatar.name} />
+          <AvatarFallback className='ring-card ring-2'>{avatar.fallback}</AvatarFallback>
+        </Avatar>
+      ))}
+      <AvatarGroupCount className='ring-card ring-2'>+n</AvatarGroupCount>
+    </AvatarGroup>
   )
 }

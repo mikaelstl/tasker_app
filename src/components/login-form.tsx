@@ -126,7 +126,7 @@ export function LoginForm({
         </Field>
         <FieldSeparator>Or</FieldSeparator>
         <Field>
-          <Button variant="outline" type="button" onClick={register}>
+          <Button variant="secondary" type="button" onClick={register}>
             Create your account
           </Button>
         </Field>

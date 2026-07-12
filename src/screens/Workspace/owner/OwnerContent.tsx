@@ -23,11 +23,14 @@ import {
 } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { Updates } from "@/components/Updates"
-import type { ProjectDTO } from "@/service/types/project/project.dto"
 import { ProjectHealthStatus, ProjectHealthBadge } from "@/components/badge/project-health-badge"
 import { DateBadge } from "@/components/badge/DateBadge"
 import { DateTime } from "luxon";
 import { cn } from "@/lib/utils"
+import { useAuth } from "@/hooks/useAuth"
+import { useOwnerDashboard } from "./useOwnerDashboard"
+import LoadingState from "@/components/loading-state"
+import { ErrorState } from "@/components/error-state"
 
 const projectStats = [
   {
@@ -124,13 +127,28 @@ const projects = [
 ]
 
 export function OwnerContent() {
+  const { user } = useAuth();
+  const { loading, error, data, refetch } = useOwnerDashboard();
+
+  // const projects = data?.projects ?? [];
+
+  const username = user?.username?.trim() || "Proprietário";
+
+  if (loading) {
+    return <LoadingState />;
+  }
+
+  if (error) {
+    return <ErrorState error={error} refetch={refetch} />;
+  }
+
   return (
     <div className="flex flex-1 flex-row h-full overflow-hidden">
       <div className="mx-auto flex w-full h-full max-w-7xl flex-col gap-8 p-8 overflow-y-auto">
         <section className="flex flex-col gap-2">
           <div>
             <h1 className="tskr-workspace-greating text-secondary-foreground text-2xl sm:text-3xl">
-              Olá! mikaelst
+              Olá! {username}
             </h1>
             <p className="mt-1 text-sm text-zinc-400">
               Acompanhe a saúde dos projetos, prazos importantes e ações da sua organização.

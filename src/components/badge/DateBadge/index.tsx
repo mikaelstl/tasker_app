@@ -1,5 +1,6 @@
 import type { DateTime } from "luxon";
-import { CalendarDays } from "lucide-react";
+import { CalendarClock } from "lucide-react";
+import { formatNumber } from "@/utils/formatNumber";
 
 interface DateBadgeProps {
   date: DateTime
@@ -7,9 +8,9 @@ interface DateBadgeProps {
 
 export function DateBadge({ date }: DateBadgeProps) {
   return (
-    <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-      <CalendarDays className="h-3.5 w-3.5" />
-      <span>{date.day} {date.monthShort} {date.hour}:{date.minute}</span>
+    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+      <CalendarClock className="size-4" />
+      <span className="tskr-date-label">{formatNumber(date.day)} {date.monthShort} {formatNumber(date.hour)}:{formatNumber(date.minute)}</span>
     </div>
   )
 }

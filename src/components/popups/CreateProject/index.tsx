@@ -16,9 +16,11 @@ import { PlusField } from "../../textfields/PlusField";
 import { LinkCard } from "../../cards/LinkCard";
 import { Toasts } from "../../../maps/toasts";
 import { useServices } from "@/hooks/useServices";
+import { useOrganization } from "@/hooks/useOrganization";
 
 export function CreateProjectPopup(props: PopupProps) {
   const { user } = useAuth();
+  const { org } = useOrganization();
   const { ProjectService } = useServices();
 
   const [projectName, setProjectName] = useState<string>('');
@@ -62,7 +64,7 @@ export function CreateProjectPopup(props: PopupProps) {
       title: projectName,
       description,
       due_date: new Date(dueDate),
-      ownerkey: user?.username,
+      ownerkey: org?.orgkey ?? user?.username,
     }
 
     await ProjectService.create(project);

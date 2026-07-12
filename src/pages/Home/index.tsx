@@ -11,7 +11,7 @@ export function Home() {
       <div className="grid h-dvh w-full grid-cols-[auto_1fr] grid-rows-[61px_1fr] bg-background text-foreground">
         <AppSidebar />
 
-        <header className="col-start-2 row-start-1 flex items-center justify-between border-b bg-foreground px-8">
+        <header className="col-start-2 row-start-1 flex items-center justify-between bg-foreground px-8">
           <div className="flex items-center gap-5">
             <SidebarTrigger className="size-8 text-muted-foreground" />
 

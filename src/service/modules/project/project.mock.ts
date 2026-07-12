@@ -50,7 +50,7 @@ export class ProjectMockService implements ProjectServiceI {
       id: createMockId("project"),
       title: data.title,
       description: data.description,
-      ownerkey: data.ownerkey ?? mockData.currentAccount.username,
+      ownerkey: data.ownerkey ?? mockData.organizations[0]?.id ?? "org-001",
       due_date: data.due_date.toISOString(),
     });
 

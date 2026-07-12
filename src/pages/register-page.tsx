@@ -1,5 +1,5 @@
-import type { ApiError } from "../../service/types/response/error";
-import { useAuth } from "../../hooks/useAuth";
+import type { ApiError } from "@/service/types/response/error";
+import { useAuth } from "@/hooks/useAuth";
 import { useServices } from "@/hooks/useServices";
 import { SignupForm, type RegisterData } from "@/components/signup-form";
 import { LogoIcon } from "@/components/images/logo-icon";
