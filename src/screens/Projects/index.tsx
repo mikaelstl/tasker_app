@@ -5,15 +5,14 @@ import { Scroller } from "../../components/misc/Scroller/index.ts";
 import { ProjectTile } from "../../components/tiles/ProjectTile/index.tsx";
 import { useEffect, useState } from "react";
 import { ProjectProgress, type ProjectDTO } from "../../service/types/project/project.dto.ts";
-import { useApi } from "../../hooks/useApi.ts";
 import { useAuth } from "../../hooks/useAuth.ts";
 import { CreateProjectPopup } from "../../components/popups/CreateProject/index.tsx";
-import type { ProjectQueryDTO } from "../../service/types/project/project.query.dto.ts";
 import { ContentHeader } from "../../components/base/ContentHeader/index.tsx";
 import { Text } from "../../components/base/Text/index.ts";
+import { useServices } from "../../hooks/useServices.ts";
 
 export function Projects() {
-  const api = useApi();
+  const { ProjectService } = useServices();
 
   const { user } = useAuth();
 
@@ -33,17 +32,14 @@ export function Projects() {
   };
 
   useEffect(() => {
-    api.get<ProjectQueryDTO>({
-      route: '/project/list',
-      params: {
-        ownerkey: user?.username
-      }
+    ProjectService.list({
+      ownerkey: user?.username
     }).then(
       (result) => {
         setProjects(result.data);
       }
     );
-  }, [isPopupOpen]);
+  }, [ProjectService, isPopupOpen, user?.username]);
 
   return (
     <Container className="projects-content">

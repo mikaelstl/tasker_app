@@ -1,26 +1,25 @@
-import { Screen } from "../../components/base/Screen";
 import { Content, HeaderContainer, StageContainer } from "./style";
 import { Logo } from "../../components/images/Logo";
-import { useApi } from "../../hooks/useApi";
 import type { CreateUserDTO } from "../../service/types/user/create.dto";
 import type { ApiError } from "../../service/types/response/error";
 import { Toasts } from "../../maps/toasts";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
-import type { UserDTO } from "../../service/types/user/user.dto";
 import { useEffect, useState } from "react";
 import { SectionTitle } from "../../components/base/SectionTitle";
 import type { CreateAccountDTO } from "../../service/types/account/create.dto";
 import type { AccountDTO } from "../../service/types/account/account.dto";
+import type { UserDTO } from "../../service/types/user/user.dto";
 import { CreateAccountStageEnum } from "../../utils/enums/CreateAccountStage";
 import { SetEmailStage } from "./stages/SetEmailStage";
 import { SetAccountStage } from "./stages/SetAccountStage";
 import { CreateOrgStage } from "./stages/CreateOrgStage";
 import { UseSystemStage } from "./stages/UseSystemStage";
 import validator from "validator";
+import { useServices } from "../../hooks/useServices";
 
 export function Register() {
-  const api = useApi();
+  const { AccountService, UserService } = useServices();
 
   const navigate = useNavigate();
 
@@ -44,12 +43,9 @@ export function Register() {
 
   const createUser = async (data: CreateUserDTO) => {
     try {
-      const response = await api.post<CreateUserDTO>({
-        route: "/users",
-        data: data,
-      });
+      const response = await UserService.create(data);
 
-      setUser(response.data as UserDTO);
+      setUser(response.data);
     } catch (error) {
       const { errors } = error as ApiError;
 
@@ -63,12 +59,8 @@ export function Register() {
 
   const createAccount = async (data: CreateAccountDTO) => {
     try {
-      const response = await api.post<CreateAccountDTO>({
-        route: "/accounts/register",
-        data: data,
-      });
-
-      const { id } = response.data as AccountDTO;
+      const response = await AccountService.register(data);
+      const { id } = response.data;
 
       setAccount(response.data);
 

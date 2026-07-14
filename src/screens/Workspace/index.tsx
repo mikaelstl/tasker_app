@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Margin } from "../../components/misc/Margin/index.ts";
-// import { useApi } from "../../hooks/useApi.ts";
 import { Categories, Content, Greating, Infos, Items, Main } from "./style.ts";
 // import { useAuth } from "../../hooks/useAuth.ts";
 import { ItalicTitle } from "../../components/base/ItalicTitle/index.ts";
@@ -199,19 +198,7 @@ const UserProfileContent = {
 }
 
 export function Workspace() {
-  // const api = useApi();
-
   // const { user } = useAuth();
-
-  useEffect(() => {
-    /* api.get({
-      route: `/tasks`
-    }).then(
-      (result) => {
-        setTasks(result.data);
-      }
-    ); */
-  }, []);
 
   return (
     <Content className="workspace-content">

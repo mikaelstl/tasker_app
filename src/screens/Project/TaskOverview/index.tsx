@@ -4,7 +4,6 @@ import { Text } from "../../../components/base/Text";
 import { Title } from "../../../components/base/Title";
 import { CommentCard } from "../../../components/cards/CommentCard";
 import { Scroller } from "../../../components/misc/Scroller";
-import { useApi } from "../../../hooks/useApi";
 import { Comments, Container, Description, Links, Tag, Tags, TaskInfo } from "./style";
 import type { ApiError } from "../../../service/types/response/error";
 import { Toasts } from "../../../maps/toasts";
@@ -13,21 +12,20 @@ import { DateTime } from "luxon";
 import { ItalicTitle } from "../../../components/base/ItalicTitle";
 import { ProgressBadge } from "../../../maps/progress";
 import { MessageField } from "../../../components/textfields/MessageField";
-import type { CreateCommentDTO } from "../../../service/types/comment/comment.create.dto";
 import { useAuth } from "../../../hooks/useAuth";
 import type { CommentDTO } from "../../../service/types/comment/comment.dto";
-import type { ApiResponse } from "../../../service/types/response/response";
 import { SectionTitle } from "../../../components/base/SectionTitle";
 import { Subtitle } from "../../../components/base/Subtitle";
 import { EditButton } from "../../../components/buttons/EditBtn";
 import { PriorityBadge } from "../../../maps/priority";
 import { User } from "../../../components/misc/User";
 import { Link } from "../../../components/cards/LinkCard/style";
+import { useServices } from "../../../hooks/useServices";
 
 export function TaskOverview() {
   const navigate = useNavigate();
 
-  const api = useApi();
+  const { CommentService } = useServices();
 
   const { user } = useAuth();
 
@@ -36,11 +34,8 @@ export function TaskOverview() {
   const [comments, setComments] = useState<CommentDTO[]>([]);
   const getComments = async () => {
     try {
-      const response = await api.get({
-        route: `/comments?projectkey=${id}`
-      });
-
-      const data: CommentDTO[] = response.data;
+      const response = await CommentService.list({ projectkey: id });
+      const data = response.data;
 
       setComments(data);
     } catch (error) {
@@ -58,17 +53,14 @@ export function TaskOverview() {
   }
   const sendComment = async (message: string) => {
     try {
-      const response: ApiResponse = await api.post<CreateCommentDTO>({
-        route: `/comments`,
-        data: {
-          content: message,
-          projectkey: id!,
-          ownerkey: user!.username,
-          date: new Date()
-        }
+      const response = await CommentService.create({
+        content: message,
+        projectkey: id!,
+        ownerkey: user!.username,
+        date: new Date()
       });
 
-      Toasts['info'](response.message as string);
+      Toasts['info'](response.message);
 
       getComments();
     } catch (error) {
@@ -112,6 +104,7 @@ export function TaskOverview() {
             ? <Scroller className="vertical">
               {
                 comments.map((comment) => <CommentCard
+                  key={comment.id}
                   content={comment.content}
                   date={DateTime.fromISO(comment.date, { zone: 'utc' })}
                   owner={comment.ownerkey}

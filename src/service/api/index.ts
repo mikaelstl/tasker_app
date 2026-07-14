@@ -1,7 +1,8 @@
-import axios, { type AxiosInstance } from "axios"
+import axios, { type AxiosInstance } from "axios";
 import type { ApiError } from "../types/response/error";
+import type { ApiResponse } from "../types/response/response";
 
-export class Api {
+export class ApiClient {
   private api: AxiosInstance;
 
   private get path(): string { return "http://localhost:3000"}
@@ -9,7 +10,7 @@ export class Api {
   constructor() {
     this.api = axios.create({
       baseURL: this.path,
-      timeout: 10000,
+      timeout: 5000,
       headers: {
         "Content-Type": "application/json"
       }
@@ -17,18 +18,36 @@ export class Api {
     this.config();
   }
 
-  async post<T>(params: { route: string, data: T }): Promise<any> {
-    const response = this.api.post(params.route, params.data);
-    
+  async register<P, R>(params: { route: string, data?: P }): Promise<ApiResponse<R>> {
+    const response: ApiResponse<R> = await this.api.post(params.route, params.data);
+
     return response;
   }
 
-  async get<Q>({ route, params, headers}: { route: string, params?: Q, headers?: any }): Promise<any> {
-    const response = this.api.get(route, {
+  async load<R, Q>({ route, params, headers}: { route: string, params?: Q, headers?: any }): Promise<ApiResponse<R>> {
+    const response: ApiResponse<R> = await this.api.get(route, {
       headers: headers,
       params: params
     });
-    
+
+    return response;
+  }
+
+  async remove<R>(params: { route: string }): Promise<ApiResponse<R>> {
+    const response: ApiResponse<R> = await this.api.delete(params.route);
+
+    return response;
+  }
+
+  async change<P, R>(params: { route: string, data?: P }): Promise<ApiResponse<R>> {
+    const response: ApiResponse<R> = await this.api.patch(params.route, params.data);
+
+    return response;
+  }
+
+  async update<P, R>(params: { route: string, data?: P }): Promise<ApiResponse<R>> {
+    const response: ApiResponse<R> = await this.api.put(params.route, params.data);
+
     return response;
   }
 
@@ -36,15 +55,16 @@ export class Api {
     // APPLYNG TOKEN INTO REQUEST
     this.api.interceptors.request.use(
       (config: any) => {
-        const token = localStorage.getItem('token');
-        const xOrgKey = localStorage.getItem('orgkey');
+        const token = localStorage.getItem('tasker.api.token');
+        const xOrgKey = localStorage.getItem('tasker.api.org');
+        config.headers ??= {};
       
         if (token) config.headers['Authorization'] = `Bearer ${token}`;
-        if (xOrgKey) config.headers['X-Org-Key'] = `Bearer ${token}`;
+        if (xOrgKey) config.headers['X-Org-Key'] = xOrgKey;
 
         return config;
       },
-      (err) => {
+      (err: any) => {
         if (["ECONNREFUSED", "ENOTFOUND", "ETIMEDOUT", "ERR_NETWORK"].includes(err.code || "") && !err.response) {
           console.warn("🚫 Falha de rede ou CORS bloqueado.");  
           
@@ -59,7 +79,7 @@ export class Api {
           });
         }
 
-        if (err.status === 401) {
+        if ((err.response?.status ?? err.status) === 401) {
           return Promise.reject({
             status: 401,
             errors: [{
@@ -79,7 +99,7 @@ export class Api {
 
     this.api.interceptors.response.use(
       (response: any) => response.data,
-      (err) => {
+      (err: any) => {
         if (["ECONNREFUSED", "ENOTFOUND", "ETIMEDOUT", "ERR_NETWORK"].includes(err.code || "") && !err.response) {
           console.warn("🚫 Falha de rede ou CORS bloqueado.");  
           
@@ -94,10 +114,10 @@ export class Api {
           });
         }
         
-        if (err.status === 401) {
+        if ((err.response?.status ?? err.status) === 401) {
           console.log("ERRO 401");
           
-          localStorage.removeItem("token");
+          localStorage.removeItem("tasker.api.token");
           window.location.href = "/login";
 
           return Promise.reject({

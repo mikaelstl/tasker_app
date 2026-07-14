@@ -16,12 +16,6 @@ import { MemberStatsAccordion } from "../../../components/accordions/MemberStats
 export function Stats() {
   const navigate = useNavigate();
 
-  // const api = useApi();
-
-  // const { user } = useAuth();
-
-  // const { id } = useParams();
-
   return (
     <Container className="tskr-proj-stats">
       <ProjectInfo>
