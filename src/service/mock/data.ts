@@ -7,15 +7,15 @@ import type { EventDTO } from "../types/events/event.dto";
 import type { MemberStatDTO } from "../types/member/member-stat.dto";
 import type { ProjectMember } from "../types/member/member.dto";
 import type { OrganizationDTO } from "../types/organization/organization.dto";
-import type { ProjectDTO, ProjectProgress } from "../types/project/project.dto";
+import { ProjectProgress, type ProjectDTO } from "../types/project/project.dto";
 import type { ApiResponse } from "../types/response/response";
 import type { TaskDTO } from "../types/task/task.dto";
 import type { UserDTO } from "../types/user/user.dto";
 
-import { OrgRole } from "@/utils/enums/OrgRole";
 import { MemberRole } from "../types/member/role.dto";
 import { TaskPriority } from "../types/task/priority.dto";
 import { TaskStage } from "../types/task/stage.dto";
+import { OrgRole } from "../../utils/enums/OrgRole";
 
 type MockEventCategory = "RELEASE" | "MEETING" | "REVIEW" | "PLANNING" | "TESTS" | "LAUNCH";
 
@@ -29,24 +29,24 @@ type MockUser = UserDTO & {
   readonly updated_at: string;
 };
 
-type MockOrganization = OrganizationDTO & {
-  readonly owner?: MockUser;
-  readonly projects?: MockProject[];
-  readonly members?: MockAffiliation[];
+type MockOrganization = Omit<OrganizationDTO, "owner" | "projects" | "members"> & {
+  owner?: MockUser;
+  projects?: MockProject[];
+  members?: MockAffiliation[];
 };
 
-type MockAffiliation = AffiliationDTO & {
+type MockAffiliation = Omit<AffiliationDTO, "org" | "user"> & {
   readonly created_at: string;
   readonly updated_at: string;
-  readonly org?: MockOrganization;
-  readonly user?: MockUser;
+  org?: MockOrganization;
+  user?: MockUser;
 };
 
 type MockProject = ProjectDTO & {
   readonly managerkey?: string | null;
   readonly created_at: string;
   readonly updated_at: string;
-  readonly members?: MockMember[];
+  members?: MockMember[];
 };
 
 type MockMember = Omit<ProjectMember, "tasks"> & {
@@ -284,6 +284,7 @@ export function createMockCurrentAccount(data: Partial<CurrentAccountDTO> = {}):
 }
 
 const userSeeds = [
+  { username: "mikaelst", name: "Mikael Stanley", password: "Senha@15" },
   { username: "ana.silva", name: "Ana Silva", password: "Senha@01" },
   { username: "bruno.lima", name: "Bruno Lima", password: "Senha@02" },
   { username: "clara.melo", name: "Clara Melo", password: "Senha@03" },
@@ -411,16 +412,20 @@ const affiliations = organizations.flatMap((organization, orgIndex) => {
   const orgUsers = [seed.ownerUsername, seed.managerUsername, ...seed.memberUsernames, seed.crossMemberUsername];
 
   return orgUsers.map((username, index) =>
-    createMockAffiliation({
-      id: createMockId("affiliation"),
-      orgkey: organization.id,
-      userkey: username,
-      role: index === 0 ? OrgRole.OWNER : index === 1 ? OrgRole.MANAGER : OrgRole.MEMBER,
-      org: organization,
-      user: usersByUsername.get(username),
-      created_at: isoAt(orgIndex * 45 + index * 5),
-      updated_at: isoAt(orgIndex * 45 + index * 5),
-    }),
+    {
+      const user = usersByUsername.get(username);
+
+      return createMockAffiliation({
+        id: createMockId("affiliation"),
+        orgkey: organization.id,
+        userkey: username,
+        role: index === 0 ? OrgRole.OWNER : index === 1 ? OrgRole.MANAGER : OrgRole.MEMBER,
+        org: organization,
+        ...(user ? { user } : {}),
+        created_at: isoAt(orgIndex * 45 + index * 5),
+        updated_at: isoAt(orgIndex * 45 + index * 5),
+      });
+    },
   );
 });
 

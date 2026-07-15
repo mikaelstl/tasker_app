@@ -1,14 +1,14 @@
-import { useEffect, useMemo, useState } from "react";
-import { useApi } from "../../hooks/useApi";
+import { useEffect, useState } from "react";
 import type { LoginDTO } from "../../service/types/auth/login.dto";
 import type { ApiError } from "../../service/types/response/error";
 import type { AuthDTO } from "../../service/types/auth/auth.dto";
 import { Toasts } from "../../maps/toasts";
 import type { CurrentAccountDTO } from "../../service/types/account/current-account.dto";
 import { AuthContext } from "../../context/AuthContext";
+import { useServices } from "../../hooks/useServices";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const api = useApi();
+  const { AccountService } = useServices();
 
   const [user, setUser] = useState<CurrentAccountDTO | null>(null);
   const [token, setToken] = useState<string | null>(null);
@@ -26,15 +26,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = async (data: LoginDTO) => {
     try {
-      const response = await api.post<LoginDTO>({ route: '/auth/login', data: data });
+      const response = await AccountService.login(data);
 
       const auth = response.data as AuthDTO;
-
-      const acc: CurrentAccountDTO = {
-        id: auth.account,
-        email: auth.email,
-        username: auth.username,
-      }
+      const acc: CurrentAccountDTO = AccountService.buildCurrentAccount(auth);
 
       console.log(acc);
 
@@ -70,7 +65,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     if (tk) {
       try {
-        const res: any = await api.get({ route: "/auth/validate" });
+        const res = await AccountService.validate();
 
         console.log("RESPONSE FROM '/auth/validate' >>>>>>");
         console.log(res);

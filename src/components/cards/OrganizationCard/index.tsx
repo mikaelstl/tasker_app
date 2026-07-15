@@ -1,58 +1,58 @@
-import { FolderOpenIcon, UserGroupIcon } from "@heroicons/react/20/solid"
-import { formatOrgAvatar } from "../../../utils/formatOrgAvatar"
-import { SectionTitle } from "../../base/SectionTitle"
-import { Avatar, Container } from "./style"
-import { Subtitle } from "../../base/Subtitle"
+import { FolderOpenIcon, UserGroupIcon } from "@heroicons/react/20/solid";
+import { RoleBadge } from "@/maps/role-badge";
+import type { OrgRole } from "@/utils/enums/OrgRole";
+import { formatOrgAvatar } from "../../../utils/formatOrgAvatar";
+import { Avatar, Container, Meta, MetaDivider, MetaItem, Title } from "./style";
 
 interface OrganizatioCardProps {
-  name: string,
-  members: number,
-  projects: number
+  name: string;
+  members: number;
+  projects: number;
+  role: OrgRole;
 }
 
 interface OrgCardLabelProps {
-  value: number,
-  type: OrgCardLabelType,
+  value: number;
+  type: OrgCardLabelType;
 }
 
-type OrgCardLabelType = 'members' | 'projects'
-
-type IconTypeMap ={
-  [K in OrgCardLabelType]: React.ReactNode
-} 
+type OrgCardLabelType = "members" | "projects";
 
 const OrgCardLabel = ({
   value,
-  type
+  type,
 }: OrgCardLabelProps) => {
-  const IconTypeMap: IconTypeMap = {
-    'members': <UserGroupIcon width={16}/>,
-    'projects': <FolderOpenIcon width={16}/>,
-  }
+  const IconTypeMap = {
+    members: <UserGroupIcon width={16} />,
+    projects: <FolderOpenIcon width={16} />,
+  };
 
   return (
-    <div>
+    <MetaItem>
       {IconTypeMap[type]}
-      <Subtitle>{value} {`${type.charAt(0).toLocaleUpperCase()}`}</Subtitle>
-    </div>
-  )
-}
+      <span>{String(value).padStart(2, "0")} {type}</span>
+    </MetaItem>
+  );
+};
 
 export function OrganizationCard({
   name,
   members,
-  projects
+  projects,
+  role,
 }: OrganizatioCardProps) {
   return (
     <Container>
       <Avatar>
-        <SectionTitle>{formatOrgAvatar(name)}</SectionTitle>
+        <span>{formatOrgAvatar(name)}</span>
       </Avatar>
-      <SectionTitle>{name}</SectionTitle>
-      <div>
-        <OrgCardLabel type="members" value={members}/>
-        <OrgCardLabel type="projects" value={projects}/>
-      </div>
+      <Title>{name}</Title>
+      {RoleBadge[role]}
+      <Meta>
+        <OrgCardLabel type="members" value={members} />
+        <MetaDivider />
+        <OrgCardLabel type="projects" value={projects} />
+      </Meta>
     </Container>
-  )
+  );
 }

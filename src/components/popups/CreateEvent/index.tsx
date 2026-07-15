@@ -3,19 +3,18 @@ import { TextInput } from "../../base/TextInput";
 import { CalendarInput } from "../../base/CalendarInput";
 import { useState } from "react";
 import { CreateButton } from "../../buttons/CreateButton";
-import { useApi } from "../../../hooks/useApi";
 import { Form } from "../../misc/Form/style";
 import type { PopupProps } from "../popup.props";
 import type { CreateEventDTO } from "../../../service/types/events/event.create.dto";
 import { useParams } from "react-router-dom";
 import { Toasts } from "../../../maps/toasts";
-import type { ApiResponse } from "../../../service/types/response/response";
 import { ContentHeader } from "../../base/ContentHeader";
 import { DeleteBtn } from "../../buttons/DeleteBtn";
 import { Text } from "../../base/Text";
+import { useServices } from "../../../hooks/useServices";
 
 export function CreateEventPopup(props: PopupProps) {
-  const api = useApi();
+  const { EventService } = useServices();
 
   const { id } = useParams();
 
@@ -28,7 +27,7 @@ export function CreateEventPopup(props: PopupProps) {
     props.closePopup();
   }
 
-  const onSubmit = (ev:React.FormEvent) => {
+  const onSubmit = async (ev:React.FormEvent) => {
     ev.preventDefault();
 
     const event: CreateEventDTO = {
@@ -37,16 +36,14 @@ export function CreateEventPopup(props: PopupProps) {
       project: id!,
     }
 
-    api.post<CreateEventDTO>({
-      route: '/events',
-      data: event
-    }).then(
-      (response: ApiResponse) => {
-        Toasts['info'](response.message as string)
-      }
-    );
-
-    props.closePopup();
+    try {
+      const response = await EventService.create(event);
+      Toasts['info'](response.message as string);
+      props.closePopup();
+    } catch (error) {
+      console.error(error);
+      Toasts['error']('Failed to create event');
+    }
   }
 
   if (!props.showPopup) return null;

@@ -1,10 +1,10 @@
 import { useMemo } from "react";
-import { Api } from "../../service/api/Api";
 import { ApiContext } from "../../context/ApiContext";
+import { ApiClient } from "../../service/api";
 
 export function ApiProvider({ children }: { children: React.ReactNode }) {
   const api = useMemo(() => {
-    return new Api();
+    return new ApiClient();
   }, []);
 
   return (

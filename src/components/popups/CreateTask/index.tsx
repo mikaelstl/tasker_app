@@ -4,7 +4,6 @@ import { TextAreaInput } from "../../base/TextAreaInput";
 import { CalendarInput } from "../../base/CalendarInput";
 import { useEffect, useState } from "react";
 import { CreateButton } from "../../buttons/CreateButton";
-import { useApi } from "../../../hooks/useApi";
 import { Form } from "../../misc/Form/style";
 import type { PopupProps } from "../popup.props";
 import type { CreateTaskDTO } from "../../../service/types/task/create.dto";
@@ -16,40 +15,16 @@ import { ContentHeader } from "../../base/ContentHeader";
 import { Text } from "../../base/Text";
 import { DeleteBtn } from "../../buttons/DeleteBtn";
 import type { UserDTO } from "../../../service/types/user/user.dto";
+import { useServices } from "../../../hooks/useServices";
 
 export function CreateTaskPopup(props: PopupProps) {
-  const api = useApi();
+  const { TaskService } = useServices();
 
   // const navigate = useNavigate();
 
   const { id } = useParams();
 
   const [members, setMembers] = useState<UserDTO[]>([]);
-  /* const getMembers = async () => {
-    try {
-      const response = await api.get({
-        route: `/project/${id}/members`,
-      });
-
-      console.log('MEMBERS >>>> ',response.data);
-
-      const data: ProjectMember[] = response.data;
-
-      setMembers(data);
-    } catch (error) {
-      const { errors } = error as ApiError;
-
-      errors?.forEach(
-        err => {
-          const notify = Toasts[err.level];
-          notify(err.message);
-        }
-      );
-
-      navigate('../../');
-    }
-  } */
-
   const [taskName, setTaskName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [dueDate, setDueDate] = useState<string>('');
@@ -63,7 +38,7 @@ export function CreateTaskPopup(props: PopupProps) {
     props.closePopup();
   }
 
-  const onSubmit = (ev: React.FormEvent) => {
+  const onSubmit = async (ev: React.FormEvent) => {
     ev.preventDefault();
 
     const task: CreateTaskDTO = {
@@ -76,18 +51,16 @@ export function CreateTaskPopup(props: PopupProps) {
     }
 
     console.log(task);
-    api.post<CreateTaskDTO>({
-      route: '/tasks',
-      data: task
-    }).then(
-      response => {
-        console.log(response);
-        Toasts['info']('Created task with success')
-      }
-    );
-
-    setPriority(TaskPriority.LOW)
-    props.closePopup();
+    try {
+      const response = await TaskService.create(task);
+      console.log(response);
+      Toasts['info']('Created task with success');
+      setPriority(TaskPriority.LOW)
+      props.closePopup();
+    } catch (error) {
+      console.error(error);
+      Toasts['error']('Failed to create task');
+    }
   }
 
   useEffect(() => {

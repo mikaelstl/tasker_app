@@ -7,6 +7,7 @@ import { useAuth } from "../../../hooks/useAuth"
 import { FolderOpenIcon } from "@heroicons/react/20/solid"
 import { useEffect, useState } from "react"
 import { CalendarIcon, ChartBarIcon, ClipboardIcon, UserIcon } from "@heroicons/react/24/solid"
+import { useOrganization } from "../../../hooks/useOrganization"
 
 interface ProjectNavAccordionProps {
   isOpen: boolean
@@ -113,6 +114,12 @@ export function NavBar({
   const navigate = useNavigate();
 
   const { logout } = useAuth();
+  const { clearOrg } = useOrganization();
+
+  const onChangeWorkspace = () => {
+    clearOrg();
+    navigate('/workspaces', { replace: true });
+  }
 
   const onLogout = () => {
     logout();
@@ -121,7 +128,7 @@ export function NavBar({
 
   return (
     <Container className="tskr-nav-bar">
-      <Nav>
+      <Nav className="tskr-nav-pages">
         <NavItem
           className="tskr-nav-item"
           type="button"
@@ -143,6 +150,10 @@ export function NavBar({
       </Nav>
       { onProject ? <ProjectNavAccordion isOpen/> : <></> }
       <Actions className="tskr-nav-actions">
+        <NavItem className="tskr-nav-item" onClick={onChangeWorkspace}>
+          <WindowIcon width="18" />
+          Trocar workspace
+        </NavItem>
         {/* <NavItem className="tskr-nav-item" activated>
           <Cog6ToothIcon width="18"/>
           Settings

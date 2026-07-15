@@ -7,15 +7,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@*":               ["./src/*"],
-      // "@components/*":   [ "./src/app/components/*" ],
-      // "@base/*":         [ "./src/app/components/base/*" ],
-      // "@pages/*":        [ "./src/app/repositories/*" ],
-      // "@screens/*":      [ "./src/app/screens/*" ],
-      // "@routes/*":       [ "./src/app/routes/*" ],
-      // "@services/*":     [ "./src/app/service/*" ],
-      // "@api/*":          [ "./src/app/service/api/*" ],
-      // "@assets/*":       [ "./src/assets/*" ],
+      "@/*":             [ "./src/*" ],
     },
     "noUnusedLocals": false,
     "noUnusedParameters": false,

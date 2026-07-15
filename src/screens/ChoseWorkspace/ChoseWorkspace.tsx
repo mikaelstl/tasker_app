@@ -1,11 +1,10 @@
 import { Button } from "../../components/buttons/Button";
-import { Content, HeaderContainer } from "./style";
+import { Actions, Content, CreateOrganizationButton, HeaderContainer, WorkspaceScroller } from "./style";
 import { Logo } from "../../components/images/Logo";
 import { SectionTitle } from "../../components/base/SectionTitle";
 import { useEffect, useState } from "react";
 import { Toasts } from "../../maps/toasts";
 import type { ApiError } from "../../service/types/response/error";
-import { Scroller } from "../../components/misc/Scroller";
 import { useNavigate } from "react-router-dom";
 import { OrganizationCard } from "../../components/cards/OrganizationCard";
 import type { UserOrganizationSummaryDTO } from "../../service/types/affiliation/summary.dto";
@@ -55,14 +54,19 @@ export function ChoseWorkspace() {
         <Logo width={182} />
         <SectionTitle>CHOSE WORKSPACE</SectionTitle>
       </HeaderContainer>
-      <Scroller className="tskr-workspaces vertical">
+      <WorkspaceScroller className="tskr-workspaces vertical">
         {
           workspaces.map(
-            workspace => <OrganizationCard key={workspace.orgkey} name={workspace.name} members={workspace.members} projects={workspace.projects}/>
+            workspace => <OrganizationCard key={workspace.orgkey} name={workspace.name} members={workspace.members} projects={workspace.projects} role={workspace.role}/>
           )
         }
-      </Scroller>
-      <Button onClick={() => console.log("Chosed")}>Chose</Button>
+      </WorkspaceScroller>
+      <Actions>
+        <Button onClick={() => console.log("Chosed")}>Chose</Button>
+        <CreateOrganizationButton onClick={() => navigate("/register")}>
+          Create organization
+        </CreateOrganizationButton>
+      </Actions>
     </Content>
   )
 }
