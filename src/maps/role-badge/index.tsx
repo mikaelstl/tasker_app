@@ -1,25 +1,13 @@
-import styled from "styled-components";
 import Palette from "../../assets/palette";
 import { Badge } from "../../components/badge/Badge";
 import type { OrgRole } from "../../utils/enums/OrgRole";
 
-const RoleBadgeBase = styled(Badge)`
-  grid-area: badge;
-  justify-self: end;
-  align-self: start;
+type RoleBadgeType = {
+  [k in OrgRole]: React.ReactNode
+}
 
-  padding: 2px 8px;
-  border-radius: 4px;
-
-  color: ${Palette.white};
-  font-size: 11px;
-  font-weight: 700;
-  line-height: 1.2;
-  text-transform: uppercase;
-`;
-
-export const RoleBadge: Record<OrgRole, JSX.Element> = {
-  OWNER: <RoleBadgeBase color={Palette.blue}>OWNER</RoleBadgeBase>,
-  MANAGER: <RoleBadgeBase color={Palette.green}>MANAGER</RoleBadgeBase>,
-  MEMBER: <RoleBadgeBase color={Palette.gray}>MEMBER</RoleBadgeBase>,
-};
+export const RoleBadge: RoleBadgeType = {
+  'MANAGER': <Badge color={Palette.yellow_50}>Manager</Badge>,
+  'OWNER': <Badge color={Palette.blue_50}>Owner</Badge>,
+  'MEMBER': <Badge color={Palette.gray_50}>Member</Badge>,
+}

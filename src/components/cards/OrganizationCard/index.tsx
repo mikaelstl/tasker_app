@@ -1,7 +1,7 @@
 import { FolderOpenIcon, UserGroupIcon } from "@heroicons/react/20/solid";
 import { RoleBadge } from "@/maps/role-badge";
 import type { OrgRole } from "@/utils/enums/OrgRole";
-import { formatOrgAvatar } from "../../../utils/formatOrgAvatar";
+import { formatOrgAvatar } from "@/utils/formatOrgAvatar";
 import { Avatar, Container, Meta, MetaDivider, MetaItem, Title } from "./style";
 
 interface OrganizatioCardProps {

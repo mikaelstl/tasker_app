@@ -5,16 +5,14 @@ const Container = styled.div`
   display: grid;
   grid-template-areas:
     "avatar title badge"
-    "avatar meta badge";
-  grid-template-columns: min-content minmax(0, 1fr) auto;
-  grid-template-rows: min-content min-content;
+    "avatar meta .";
   column-gap: 16px;
   row-gap: 8px;
   align-items: center;
 
   padding: 16px;
 
-  width: 100%;
+  width: fit-content;
   min-height: 98px;
   box-sizing: border-box;
 
