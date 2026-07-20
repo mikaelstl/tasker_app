@@ -1,6 +1,9 @@
 import type { ApiResponse } from "@/service/types/response/response";
 import type { CreateProjectDTO } from "../../types/project/create.dto";
-import type { ProjectDTO, ProjectProgress } from "../../types/project/project.dto";
+import {
+  ProjectProgress,
+  type ProjectDTO,
+} from "../../types/project/project.dto";
 import type { ProjectQueryDTO } from "../../types/project/project.query.dto";
 import type { EditProjectDTO, ProjectServiceI } from "../../modules/project/project.service";
 import type { GenerateStatsReportDTO } from "../../types/stats/generate-stats-report.dto";
@@ -12,6 +15,7 @@ import {
   type ProjectStatsReport,
 } from "../../types/stats/stats.types";
 import { TaskStage } from "../../types/task/stage.dto";
+import { downloadDocument } from "../../common/downloadDocument";
 
 import { mockData, createMockId, createMockProject, createMockResponse } from "../data";
 
@@ -193,7 +197,7 @@ export class ProjectMockService implements ProjectServiceI {
   async generateReport(
     id: string,
     data: GenerateStatsReportDTO = {},
-  ): Promise<ApiResponse<ProjectStatsReport>> {
+  ): Promise<void> {
     const now = new Date().toISOString();
     const report: ProjectStatsReport = {
       id: `report-${this.reports.length + 1}`,
@@ -209,12 +213,28 @@ export class ProjectMockService implements ProjectServiceI {
     };
 
     this.reports.unshift(report);
+    const statsResponse = await this.stats(id, { cutoffAt: data.cutoffAt });
+    const { ProjectStatsReportDocument } = await import(
+      "../../common/ProjectStatsReportDocument"
+    );
+    const document = await new ProjectStatsReportDocument().generate({
+      reportId: report.id,
+      periodType: report.period_type,
+      stats: statsResponse.data,
+      historicalSnapshots: this.reports
+        .filter((item) => item.projectkey === id)
+        .flatMap((item) => item.payload_json?.historicalSnapshots ?? []),
+    });
+    const projectName = statsResponse.data.project.title
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-zA-Z0-9]+/g, "-")
+      .replace(/^-|-$/g, "")
+      .toLowerCase();
 
-    return createMockResponse(
-      report,
-      `/project/${id}/stats/report`,
-      "Relatório de desempenho gerado com sucesso.",
-      201,
+    downloadDocument(
+      document,
+      `relatorio-${projectName || id}-${now.slice(0, 10)}.pdf`,
     );
   }
 

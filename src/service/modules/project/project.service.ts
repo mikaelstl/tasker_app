@@ -28,7 +28,7 @@ export interface ProjectServiceI {
   generateReport(
     id: string,
     data?: GenerateStatsReportDTO,
-  ): Promise<ApiResponse<ProjectStatsReport>>;
+  ): Promise<void>;
   listReports(id: string): Promise<ApiResponse<ProjectStatsReport[]>>;
   findReport(id: string, reportkey: string): Promise<ApiResponse<ProjectStatsReport>>;
 }
@@ -98,13 +98,12 @@ export class ProjectService implements ProjectServiceI {
   async generateReport(
     id: string,
     data?: GenerateStatsReportDTO,
-  ): Promise<ApiResponse<ProjectStatsReport>> {
-    const response = await this.api.register<GenerateStatsReportDTO, ProjectStatsReport>({
-      route: `/project/${id}/stats/report`,
+  ): Promise<void> {
+    await this.api.download<GenerateStatsReportDTO>({
+      route: `/project/${id}/stats/reports`,
       data,
+      fallbackFilename: `relatorio-projeto-${id}.pdf`,
     });
-
-    return response;
   }
 
   async listReports(id: string): Promise<ApiResponse<ProjectStatsReport[]>> {

@@ -1,4 +1,8 @@
-import axios, { type AxiosInstance } from "axios";
+import axios, {
+  type AxiosInstance,
+  type AxiosRequestConfig,
+  type AxiosResponse,
+} from "axios";
 import type { ApiError } from "../types/response/error";
 import type { ApiResponse } from "../types/response/response";
 
@@ -24,7 +28,15 @@ export class ApiClient {
     return response;
   }
 
-  async load<R, Q>({ route, params, headers}: { route: string, params?: Q, headers?: any }): Promise<ApiResponse<R>> {
+  async load<R, Q>({
+    route,
+    params,
+    headers,
+  }: {
+    route: string;
+    params?: Q;
+    headers?: AxiosRequestConfig["headers"];
+  }): Promise<ApiResponse<R>> {
     const response: ApiResponse<R> = await this.api.get(route, {
       headers: headers,
       params: params
@@ -51,90 +63,143 @@ export class ApiClient {
     return response;
   }
 
+  async download<P>({
+    route,
+    data,
+    fallbackFilename,
+  }: {
+    route: string;
+    data?: P;
+    fallbackFilename: string;
+  }): Promise<void> {
+    const response = await this.api.post<
+      Blob,
+      AxiosResponse<Blob>,
+      P | undefined
+    >(route, data, {
+      responseType: "blob",
+      headers: {
+        Accept: "application/pdf",
+      },
+    });
+    const filename = this.downloadFilename(
+      response.headers["content-disposition"],
+      fallbackFilename,
+    );
+    const url = URL.createObjectURL(response.data);
+    const anchor = document.createElement("a");
+
+    anchor.href = url;
+    anchor.download = filename;
+    anchor.style.display = "none";
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 0);
+  }
+
   private config() {
     // APPLYNG TOKEN INTO REQUEST
     this.api.interceptors.request.use(
-      (config: any) => {
+      (config) => {
         const token = localStorage.getItem('tasker.api.token');
         const xOrgKey = localStorage.getItem('tasker.api.org');
-        config.headers ??= {};
       
         if (token) config.headers['Authorization'] = `Bearer ${token}`;
         if (xOrgKey) config.headers['X-Org-Key'] = xOrgKey;
 
         return config;
       },
-      (err: any) => {
-        if (["ECONNREFUSED", "ENOTFOUND", "ETIMEDOUT", "ERR_NETWORK"].includes(err.code || "") && !err.response) {
-          console.warn("🚫 Falha de rede ou CORS bloqueado.");  
-          
-          return Promise.reject({
-            status: 500,
-            errors: [{
-              level: 'critical',
-              message: 'Server offline'
-            }],
-            timestamp: new Date().toISOString(),
-            path: '/'
-          });
-        }
-
-        if ((err.response?.status ?? err.status) === 401) {
-          return Promise.reject({
-            status: 401,
-            errors: [{
-              level: 'error',
-              message: err.response.data.message
-            }],
-            timestamp: new Date().toISOString(),
-            path: '/'
-          });
-        }
-
-        const error: ApiError = err.response.data;
-        
-        return Promise.reject(error)
-      }
+      (error: unknown) => this.rejectApiError(error, false),
     );
 
     this.api.interceptors.response.use(
-      (response: any) => response.data,
-      (err: any) => {
-        if (["ECONNREFUSED", "ENOTFOUND", "ETIMEDOUT", "ERR_NETWORK"].includes(err.code || "") && !err.response) {
-          console.warn("🚫 Falha de rede ou CORS bloqueado.");  
-          
-          return Promise.reject({
-            status: 500,
-            errors: [{
-              level: 'critical',
-              message: 'Server offline'
-            }],
-            timestamp: new Date().toISOString(),
-            path: '/'
-          });
-        }
-        
-        if ((err.response?.status ?? err.status) === 401) {
-          console.log("ERRO 401");
-          
-          localStorage.removeItem("tasker.api.token");
-          window.location.href = "/login";
-
-          return Promise.reject({
-            status: 401,
-            errors: [{
-              level: 'error',
-              message: err.response.data.message
-            }],
-            timestamp: new Date().toISOString(),
-            path: '/'
-          });
-        }
-
-        const error: ApiError = err.response.data;
-
-        return Promise.reject(error);
-      }
+      (response) => (
+        response.config.responseType === "blob"
+          ? response
+          : response.data
+      ) as AxiosResponse,
+      (error: unknown) => this.rejectApiError(error, true),
     );
+  }
+
+  private rejectApiError(error: unknown, redirectOnUnauthorized: boolean): Promise<never> {
+    if (!axios.isAxiosError(error)) {
+      return Promise.reject(error);
+    }
+
+    if (
+      ["ECONNREFUSED", "ENOTFOUND", "ETIMEDOUT", "ERR_NETWORK"].includes(error.code ?? "")
+      && !error.response
+    ) {
+      console.warn("🚫 Falha de rede ou CORS bloqueado.");
+
+      return Promise.reject({
+        status: 500,
+        errors: [{
+          level: "critical",
+          message: "Server offline",
+        }],
+        timestamp: new Date().toISOString(),
+        path: "/",
+      } satisfies ApiError);
+    }
+
+    if (error.response?.status === 401) {
+      if (redirectOnUnauthorized) {
+        localStorage.removeItem("tasker.api.token");
+        window.location.href = "/login";
+      }
+
+      return Promise.reject({
+        status: 401,
+        errors: [{
+          level: "error",
+          message: this.responseMessage(error.response.data),
+        }],
+        timestamp: new Date().toISOString(),
+        path: "/",
+      } satisfies ApiError);
+    }
+
+    return Promise.reject(error.response?.data ?? error);
+  }
+
+  private responseMessage(data: unknown): string {
+    if (
+      typeof data === "object"
+      && data !== null
+      && "message" in data
+      && typeof data.message === "string"
+    ) {
+      return data.message;
+    }
+
+    return "Não autorizado.";
+  }
+
+  private downloadFilename(
+    contentDisposition: string | undefined,
+    fallback: string,
+  ): string {
+    if (!contentDisposition) {
+      return fallback;
+    }
+
+    const encoded = contentDisposition.match(/filename\*=UTF-8''([^;]+)/i)?.[1];
+
+    if (encoded) {
+      try {
+        return decodeURIComponent(encoded.replace(/^["']|["']$/g, ""));
+      } catch {
+        return fallback;
+      }
+    }
+
+    return contentDisposition
+      .match(/filename\s*=\s*"([^"]+)"|filename\s*=\s*([^;]+)/i)
+      ?.slice(1)
+      .find(Boolean)
+      ?.trim() ?? fallback;
   }
 }
