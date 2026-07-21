@@ -13,7 +13,8 @@ const Card = styled.div`
 
   gap: 12px;
 
-  border-bottom: 1px solid ${Palette.items};
+  border: 1px solid ${Palette.details};
+  border-radius: 6px;
   
   padding: 20px;
 

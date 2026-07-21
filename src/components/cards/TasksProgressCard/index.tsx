@@ -22,15 +22,15 @@ export function TasksProgressCard({ stats }: TasksProgressCardProps) {
           <Title className="tskr-title">INICIADAS</Title>
           <Title className="tskr-title">{stats.started}</Title>
         </Card>
-        <Card color={Palette.green_50}>
+        <Card $backgroundColor={Palette.green_50} $borderColor={Palette.green}>
           <Title className="tskr-title">CONCLUÍDAS</Title>
           <Title className="tskr-title">{stats.done}</Title>
         </Card>
-        <Card color={Palette.yellow_50}>
+        <Card $backgroundColor={Palette.yellow_50} $borderColor={Palette.yellow}>
           <Title className="tskr-title">EM REVISÃO</Title>
           <Title className="tskr-title">{stats.review}</Title>
         </Card>
-        <Card color={Palette.red_50}>
+        <Card $backgroundColor={Palette.red_50} $borderColor={Palette.red}>
           <Title className="tskr-title">ATRASADAS</Title>
           <Title className="tskr-title">{stats.overdue}</Title>
         </Card>

@@ -26,15 +26,15 @@ export function ActiveProjectsCard({
           <Title className="tskr-title">TOTAL</Title>
           <Title className="tskr-title">{total}</Title>
         </Card>
-        <Card color={Palette.green_50}>
+        <Card $backgroundColor={Palette.green_50} $borderColor={Palette.green}>
           {ProjectHealthyBadge['SAFE']}
           <Title className="tskr-title">{safe}</Title>
         </Card>
-        <Card color={Palette.yellow_50}>
+        <Card $backgroundColor={Palette.yellow_50} $borderColor={Palette.yellow}>
           {ProjectHealthyBadge['WARNING']}
           <Title className="tskr-title">{warning}</Title>
         </Card>
-        <Card color={Palette.red_50}>
+        <Card $backgroundColor={Palette.red_50} $borderColor={Palette.red}>
           {ProjectHealthyBadge['CRITICAL']}
           <Title className="tskr-title">{critical}</Title>
         </Card>

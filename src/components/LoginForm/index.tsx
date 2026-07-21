@@ -4,7 +4,7 @@ import { Container, Form, SubmitButton, Inputs } from "../misc/Form/style";
 import { CreateAccount } from "./CreateAccount";
 import type { LoginDTO } from "../../service/types/auth/login.dto";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { SectionTitle } from "../base/SectionTitle";
 
 interface LoginFormProps {
@@ -13,6 +13,7 @@ interface LoginFormProps {
 
 export function LoginForm({ login }: LoginFormProps) {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [email, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -32,7 +33,14 @@ export function LoginForm({ login }: LoginFormProps) {
 
       console.log("login success");
 
-      navigate('/workspaces');
+      const state = location.state as {
+        from?: { pathname?: string; search?: string };
+      } | null;
+      const returnPath = state?.from?.pathname
+        ? `${state.from.pathname}${state.from.search ?? ""}`
+        : "/workspaces";
+
+      navigate(returnPath, { replace: true });
     } catch (err) {
       console.error(err);
     }

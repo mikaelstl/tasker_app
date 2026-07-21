@@ -20,4 +20,9 @@ export const Button = styled.button<ButtonProps>`
   height: fit-content;
 
   cursor: pointer;
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
 `;

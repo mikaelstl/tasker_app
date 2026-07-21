@@ -255,9 +255,10 @@ interface OrganizationSeed extends Pick<OrganizationDTO, "name"> {
 const organizationSeeds: OrganizationSeed[] = [
   {
     name: "Aurora Tech",
-    ownerUsername: "ana.silva",
+    ownerUsername: "mikaelst",
     affiliations: [
-      { username: "ana.silva", role: OrgRole.OWNER },
+      { username: "mikaelst", role: OrgRole.OWNER },
+      { username: "ana.silva", role: OrgRole.MEMBER },
       { username: "fernando.santos", role: OrgRole.MANAGER },
       { username: "karla.rocha", role: OrgRole.MANAGER },
       { username: "lucas.vieira", role: OrgRole.MEMBER },
@@ -267,9 +268,10 @@ const organizationSeeds: OrganizationSeed[] = [
   },
   {
     name: "Nimbus Digital",
-    ownerUsername: "bruno.lima",
+    ownerUsername: "mikaelst",
     affiliations: [
-      { username: "bruno.lima", role: OrgRole.OWNER },
+      { username: "mikaelst", role: OrgRole.OWNER },
+      { username: "bruno.lima", role: OrgRole.MEMBER },
       { username: "giovana.pereira", role: OrgRole.MANAGER },
       { username: "nicolas.freitas", role: OrgRole.MEMBER },
       { username: "olivia.mendes", role: OrgRole.MANAGER },
@@ -279,9 +281,10 @@ const organizationSeeds: OrganizationSeed[] = [
   },
   {
     name: "Orion Labs",
-    ownerUsername: "clara.melo",
+    ownerUsername: "mikaelst",
     affiliations: [
-      { username: "clara.melo", role: OrgRole.OWNER },
+      { username: "mikaelst", role: OrgRole.OWNER },
+      { username: "clara.melo", role: OrgRole.MEMBER },
       { username: "henrique.ramos", role: OrgRole.MANAGER },
       { username: "quiteria.martins", role: OrgRole.MEMBER },
       { username: "rafael.lopes", role: OrgRole.MEMBER },
@@ -291,9 +294,10 @@ const organizationSeeds: OrganizationSeed[] = [
   },
   {
     name: "Vertex Solucoes",
-    ownerUsername: "diego.souza",
+    ownerUsername: "mikaelst",
     affiliations: [
-      { username: "diego.souza", role: OrgRole.OWNER },
+      { username: "mikaelst", role: OrgRole.OWNER },
+      { username: "diego.souza", role: OrgRole.MANAGER },
       { username: "isabela.cunha", role: OrgRole.MANAGER },
       { username: "tiago.ribeiro", role: OrgRole.MEMBER },
       { username: "karla.rocha", role: OrgRole.MEMBER },
@@ -303,9 +307,10 @@ const organizationSeeds: OrganizationSeed[] = [
   },
   {
     name: "Atlas Commerce",
-    ownerUsername: "elisa.alves",
+    ownerUsername: "mikaelst",
     affiliations: [
-      { username: "elisa.alves", role: OrgRole.OWNER },
+      { username: "mikaelst", role: OrgRole.OWNER },
+      { username: "elisa.alves", role: OrgRole.MEMBER },
       { username: "joao.cesar", role: OrgRole.MANAGER },
       { username: "lucas.vieira", role: OrgRole.MEMBER },
       { username: "mariana.nunes", role: OrgRole.MANAGER },

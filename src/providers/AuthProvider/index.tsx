@@ -37,10 +37,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem('token', auth.access_token);
       setUser(acc);
       setToken(auth.access_token);
-    } catch (err: any) {
-      const { errors } = err as ApiError;
+    } catch (error: unknown) {
+      const { errors } = error as ApiError;
 
-      console.log(err);
+      console.log(error);
 
       errors?.forEach(
         err => {
@@ -50,6 +50,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           notify(err.message);
         }
       );
+
+      throw error;
     }
   }
 

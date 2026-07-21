@@ -62,6 +62,27 @@ const MemberGrid = styled.div`
   gap: 12px;
 `;
 
+const HeaderStats = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-right: 8px;
+`;
+
+const HeaderStat = styled.div`
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  color: ${Palette.gray};
+  white-space: nowrap;
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+`;
+
 const EmptyMessage = styled.p`
   margin: 0;
   color: ${Palette.gray};
@@ -75,6 +96,8 @@ export {
   GroupCount,
   GroupHeader,
   GroupTitle,
+  HeaderStat,
+  HeaderStats,
   MemberGrid,
   RoleGroup,
 };

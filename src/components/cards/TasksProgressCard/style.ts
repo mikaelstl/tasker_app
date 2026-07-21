@@ -19,7 +19,8 @@ const Header = styled.div`
 `;
 
 interface CardProps {
-  color?: string
+  $backgroundColor?: string;
+  $borderColor?: string;
 }
 
 const Card = styled.div<CardProps>`
@@ -27,10 +28,11 @@ const Card = styled.div<CardProps>`
   justify-content: space-between;
   align-items: center;
   
-  background-color: ${props => props.color ?? Palette.lightBlue_50};
+  background-color: ${props => props.$backgroundColor ?? Palette.lightBlue_50};
 
   width: 100%;
 
+  border: 1px solid ${props => props.$borderColor ?? Palette.lightBlue};
   border-radius: 4px;
 
   .tskr-title {

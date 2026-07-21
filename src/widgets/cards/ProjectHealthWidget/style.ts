@@ -1,7 +1,8 @@
 import styled from "styled-components";
 
 interface HealthTileProps {
-  background?: string;
+  $backgroundColor?: string;
+  $borderColor?: string;
 }
 
 const HealthTile = styled.div<HealthTileProps>`
@@ -13,7 +14,8 @@ const HealthTile = styled.div<HealthTileProps>`
 
   width: 100%;
 
-  background-color: ${props => props.background ?? 'none'};
+  background-color: ${props => props.$backgroundColor ?? 'none'};
+  border: 1px solid ${props => props.$borderColor ?? 'transparent'};
 `;
 
 export {

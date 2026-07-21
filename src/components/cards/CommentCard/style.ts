@@ -18,6 +18,9 @@ const Card = styled.div`
   width: 100%;
   height: 100px;
 
+  border: 1px solid ${Palette.details};
+  border-radius: 6px;
+
   position: relative;
 
   .tskr-subtitle {

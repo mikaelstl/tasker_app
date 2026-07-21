@@ -28,6 +28,7 @@ const Card = styled.div`
 
   width: 60%;
 
+  border: 1px solid ${Palette.details};
   border-radius: 6px;
 `;
 

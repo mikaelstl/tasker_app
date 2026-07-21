@@ -13,8 +13,9 @@ const Card = styled.div`
 
   overflow: hidden;
 
-  border-radius: 0px 6px 6px 0px;
   padding: 10px 10px 0px 0px;
+  border: 1px solid ${Palette.details};
+  border-radius: 6px;
 
   background-color: ${Palette.items};
 

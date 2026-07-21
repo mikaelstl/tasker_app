@@ -1,7 +1,7 @@
 import type { ApiResponse } from "@/service/types/response/response";
-import type { DefineAffiliationDTO } from "../../types/affiliation/define.dto";
 import type { AffiliationDTO } from "../../types/affiliation/affiliation.dto";
 import type { UserOrganizationSummaryDTO } from "../../types/affiliation/summary.dto";
+import type { AffiliationInviteDTO } from "../../types/affiliation/invite.dto";
 
 import { ApiClient } from "@/service/api";
 
@@ -10,9 +10,10 @@ export interface APIMessage {
 }
 
 export interface AffiliationServiceI {
-  create(data: DefineAffiliationDTO): Promise<ApiResponse<AffiliationDTO>>;
   list(): Promise<ApiResponse<UserOrganizationSummaryDTO[]>>;
   listByOrganization(orgkey: string): Promise<ApiResponse<AffiliationDTO[]>>;
+  createInvite(orgkey: string): Promise<ApiResponse<AffiliationInviteDTO>>;
+  acceptInvite(token: string): Promise<ApiResponse<AffiliationDTO>>;
   delete(id: string): Promise<ApiResponse<null>>;
   promote(id: string): Promise<ApiResponse<AffiliationDTO | APIMessage>>;
   demote(id: string): Promise<ApiResponse<AffiliationDTO | APIMessage>>;
@@ -23,15 +24,6 @@ export class AffiliationService implements AffiliationServiceI {
 
   constructor(api: ApiClient) {
     this.api = api;
-  }
-
-  async create(data: DefineAffiliationDTO): Promise<ApiResponse<AffiliationDTO>> {
-    const response = await this.api.register<DefineAffiliationDTO, AffiliationDTO>({
-      route: "/affiliations",
-      data,
-    });
-
-    return response;
   }
 
   async list(): Promise<ApiResponse<UserOrganizationSummaryDTO[]>> {
@@ -45,6 +37,23 @@ export class AffiliationService implements AffiliationServiceI {
   async listByOrganization(orgkey: string): Promise<ApiResponse<AffiliationDTO[]>> {
     const response = await this.api.load<AffiliationDTO[], void>({
       route: `/affiliations/${orgkey}`,
+    });
+
+    return response;
+  }
+
+  async createInvite(orgkey: string): Promise<ApiResponse<AffiliationInviteDTO>> {
+    const response = await this.api.register<{ orgkey: string }, AffiliationInviteDTO>({
+      route: "/affiliations/invites",
+      data: { orgkey },
+    });
+
+    return response;
+  }
+
+  async acceptInvite(token: string): Promise<ApiResponse<AffiliationDTO>> {
+    const response = await this.api.register<void, AffiliationDTO>({
+      route: `/affiliations/invites/${token}/accept`,
     });
 
     return response;

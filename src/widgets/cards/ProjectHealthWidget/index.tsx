@@ -6,9 +6,9 @@ import { Container, Content, Header } from "../../base/style";
 import { HealthTile } from "./style";
 
 const HealthTiles = {
-  'SAFE': <HealthTile className="tskr-safe-health-tile" background={Palette.green_50}>{ProjectHealthIcon.SAFE}<SectionTitle>SEGURO</SectionTitle></HealthTile>,
-  'WARNING': <HealthTile className="tskr-warning-health-tile" background={Palette.yellow_50}>{ProjectHealthIcon.WARNING}<SectionTitle>ATENÇÃO</SectionTitle></HealthTile>,
-  'CRITICAL': <HealthTile className="tskr-critical-health-tile" background={Palette.red_50}>{ProjectHealthIcon.CRITICAL}<SectionTitle>CRÍTICO</SectionTitle></HealthTile>
+  'SAFE': <HealthTile className="tskr-safe-health-tile" $backgroundColor={Palette.green_50} $borderColor={Palette.green}>{ProjectHealthIcon.SAFE}<SectionTitle>SEGURO</SectionTitle></HealthTile>,
+  'WARNING': <HealthTile className="tskr-warning-health-tile" $backgroundColor={Palette.yellow_50} $borderColor={Palette.yellow}>{ProjectHealthIcon.WARNING}<SectionTitle>ATENÇÃO</SectionTitle></HealthTile>,
+  'CRITICAL': <HealthTile className="tskr-critical-health-tile" $backgroundColor={Palette.red_50} $borderColor={Palette.red}>{ProjectHealthIcon.CRITICAL}<SectionTitle>CRÍTICO</SectionTitle></HealthTile>
 }
 
 export function ProjectHealthWidget() {

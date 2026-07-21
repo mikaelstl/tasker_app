@@ -19,6 +19,7 @@ const Card = styled.div`
   
   padding: 4px 8px;
   margin-left: 28px;
+  border: 1px solid ${Palette.details};
   border-radius: 4px;
 
   .tskr-title {

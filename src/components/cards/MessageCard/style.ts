@@ -11,8 +11,9 @@ const Card = styled.div`
   overflow-wrap: break-word;
   white-space: pre-wrap;
 
-  border-radius: 25px;
   padding: 8px 24px;
+  border: 1px solid ${Palette.details};
+  border-radius: 25px;
 
   &.sent {
     background-color: ${Palette.blue};

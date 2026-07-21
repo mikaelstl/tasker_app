@@ -17,6 +17,7 @@ import { PrivateRoute } from "./routes/PrivateRoute"
 import { ChoseWorkspace } from "./screens/ChoseWorkspace/ChoseWorkspace"
 import { Screen } from "./components/base/Screen"
 import { Organization } from "./screens/Organization"
+import { AcceptInvite } from "./screens/AcceptInvite"
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
 
         <Route element={<PrivateRoute/>}>
           <Route path="/workspaces" element={<ChoseWorkspace />} />
+          <Route path="/invite/:token" element={<AcceptInvite />} />
 
           <Route path="/home" element={<Home />}>
             <Route index element={<Navigate to="workspace" replace />} />

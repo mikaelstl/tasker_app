@@ -8,6 +8,7 @@ const Container = styled.div`
   gap: 10px;
 
   padding: 10px;
+  border: 1px solid ${Palette.details};
   border-radius: 6px;
 
   background-color: ${Palette.items};
