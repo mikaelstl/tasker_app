@@ -26,7 +26,7 @@ export function Events() {
   };
 
   const [ events, setEvents ] = useState<EventDTO[]>([]);
-  const getEvents = async () => {
+  const loadEvents = async () => {
     try {
       if (!id) return;
       const response = await EventService.list({ projectkey: id });
@@ -45,7 +45,7 @@ export function Events() {
   }
 
   useEffect(() => {
-    void getEvents();
+    void loadEvents();
   }, [EventService, isPopupOpen, id])
 
   return (

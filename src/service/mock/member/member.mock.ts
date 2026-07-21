@@ -10,7 +10,7 @@ function requireProjectFromCurrentOrg(projectkey: string, path: string) {
   const { orgkey } = requireMockOrgRequest(path, mockData.affiliations);
   const project = mockData.projects.find((item) => item.id === projectkey);
 
-  if (!project || project.ownerkey !== orgkey) {
+  if (!project || project.orgkey !== orgkey) {
     throw createMockRequestError(
       path,
       403,
@@ -25,7 +25,7 @@ export class MemberMockService implements MemberServiceI {
   async create(data: DefineMemberDTO): Promise<ApiResponse<ProjectMember>> {
     const project = requireProjectFromCurrentOrg(data.project, "/members");
     const affiliation = mockData.affiliations.find(
-      (item) => item.id === data.user && item.orgkey === project.ownerkey,
+      (item) => item.id === data.user && item.orgkey === project.orgkey,
     );
 
     if (!affiliation) {
@@ -44,6 +44,7 @@ export class MemberMockService implements MemberServiceI {
     });
 
     mockData.members.push(member);
+    project.members?.push(member);
 
     return createMockResponse(member, "/members");
   }
@@ -70,6 +71,16 @@ export class MemberMockService implements MemberServiceI {
 
     if (index >= 0) {
       mockData.members.splice(index, 1);
+      const project = mockData.projects.find(
+        (item) => item.id === member.projectkey,
+      );
+      const projectMemberIndex = project?.members?.findIndex(
+        (item) => item.id === member.id,
+      ) ?? -1;
+
+      if (projectMemberIndex >= 0) {
+        project?.members?.splice(projectMemberIndex, 1);
+      }
     }
 
     return createMockResponse(member, `/members/remove/${id}`);

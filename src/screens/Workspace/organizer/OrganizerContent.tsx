@@ -23,7 +23,7 @@ interface OrganizerContentProps {
 export function OrganizerContent({ username }: OrganizerContentProps) {
   const navigate = useNavigate();
   const { org } = useOrganization();
-  const { loading, error, data, refetch } = useOrganizerDashboard(org?.orgkey);
+  const { loading, error, data, loadDashboard } = useOrganizerDashboard(org?.orgkey);
 
   if (loading) {
     return (
@@ -39,7 +39,7 @@ export function OrganizerContent({ username }: OrganizerContentProps) {
       <Main>
         <Greating><SectionTitle>Olá, {username}!</SectionTitle></Greating>
         <Text>{error}</Text>
-        <Button type="button" onClick={() => void refetch()}>Tentar novamente</Button>
+        <Button type="button" onClick={() => void loadDashboard()}>Tentar novamente</Button>
       </Main>
     );
   }
@@ -64,7 +64,7 @@ export function OrganizerContent({ username }: OrganizerContentProps) {
                     id={project.id}
                     title={project.title}
                     description={project.description}
-                    stage={project.progress}
+                    stage={project.stage}
                     deadline={project.due_date}
                     members={project.members ?? []}
                   />

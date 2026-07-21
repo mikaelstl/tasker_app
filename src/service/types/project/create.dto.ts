@@ -1,6 +1,6 @@
 export interface CreateProjectDTO {
   readonly title: string;
   readonly description: string;
-  readonly ownerkey: string | undefined;
+  readonly orgkey: string;
   readonly due_date: Date;
 }

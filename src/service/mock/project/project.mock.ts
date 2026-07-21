@@ -1,7 +1,7 @@
 import type { ApiResponse } from "@/service/types/response/response";
 import type { CreateProjectDTO } from "../../types/project/create.dto";
 import {
-  ProjectProgress,
+  ProjectStage,
   type ProjectDTO,
 } from "../../types/project/project.dto";
 import type { ProjectQueryDTO } from "../../types/project/project.query.dto";
@@ -38,11 +38,11 @@ function matchesProjectQuery(project: ProjectDTO, params?: ProjectQueryDTO): boo
     return false;
   }
 
-  if (params.ownerkey && project.ownerkey !== params.ownerkey) {
+  if (params.orgkey && project.orgkey !== params.orgkey) {
     return false;
   }
 
-  if (params.progress && project.progress !== params.progress) {
+  if (params.stage && project.stage !== params.stage) {
     return false;
   }
 
@@ -57,9 +57,34 @@ export class ProjectMockService implements ProjectServiceI {
   private readonly reports: ProjectStatsReport[] = [];
 
   async list(params?: ProjectQueryDTO): Promise<ApiResponse<ProjectDTO[]>> {
-    const { orgkey } = requireMockOrgRequest("/project/list", mockData.affiliations);
+    const { currentAccount, orgkey } = requireMockOrgRequest(
+      "/project/list",
+      mockData.affiliations,
+    );
+    const affiliation = mockData.affiliations.find(
+      (item) => item.orgkey === orgkey && item.userkey === currentAccount.username,
+    );
     const projects = mockData.projects.filter(
-      (project) => project.ownerkey === orgkey && matchesProjectQuery(project, params),
+      (project) => {
+        if (project.orgkey !== orgkey || !matchesProjectQuery(project, params)) {
+          return false;
+        }
+
+        if (affiliation?.role === OrgRole.OWNER) {
+          return true;
+        }
+
+        if (affiliation?.role === OrgRole.MANAGER) {
+          return project.managerkey === currentAccount.username;
+        }
+
+        return project.members?.some(
+          (member) =>
+            member.userkey === currentAccount.username ||
+            member.user?.userkey === currentAccount.username ||
+            member.user?.user?.username === currentAccount.username,
+        ) ?? false;
+      },
     );
 
     return createMockResponse(projects, "/project/list");
@@ -82,11 +107,19 @@ export class ProjectMockService implements ProjectServiceI {
       );
     }
 
+    if (data.orgkey !== orgkey) {
+      throw createMockRequestError(
+        "/project",
+        403,
+        "O projeto deve pertencer à organização acessada.",
+      );
+    }
+
     const project = createMockProject({
       id: createMockId("project"),
       title: data.title,
       description: data.description,
-      ownerkey: orgkey,
+      orgkey: data.orgkey,
       due_date: data.due_date.toISOString(),
     });
 
@@ -97,14 +130,14 @@ export class ProjectMockService implements ProjectServiceI {
 
   async find(id: string): Promise<ApiResponse<ProjectDTO>> {
     const { orgkey } = requireMockOrgRequest(`/project/${id}`, mockData.affiliations);
-    const project = mockData.projects.find((item) => item.id === id && item.ownerkey === orgkey);
+    const project = mockData.projects.find((item) => item.id === id && item.orgkey === orgkey);
 
     return createMockResponse(project ?? createMockProject(), `/project/${id}`, project ? "OK" : "Projeto não encontrado", project ? 200 : 404, !project);
   }
 
   async update(id: string, data: EditProjectDTO): Promise<ApiResponse<ProjectDTO>> {
     const { orgkey } = requireMockOrgRequest(`/project/${id}`, mockData.affiliations);
-    const project = mockData.projects.find((item) => item.id === id && item.ownerkey === orgkey);
+    const project = mockData.projects.find((item) => item.id === id && item.orgkey === orgkey);
 
     if (!project) {
       return createMockResponse(createMockProject(), `/project/${id}`, "Projeto não encontrado", 404, true);
@@ -115,7 +148,7 @@ export class ProjectMockService implements ProjectServiceI {
       ...(data.title ? { title: data.title } : {}),
       ...(data.description ? { description: data.description } : {}),
       ...(data.due_date ? { due_date: data.due_date.toISOString() } : {}),
-      ...(data.progress ? { progress: data.progress as ProjectProgress } : {}),
+      ...(data.stage ? { stage: data.stage as ProjectStage } : {}),
     };
 
     Object.assign(project, nextProject);
@@ -125,7 +158,7 @@ export class ProjectMockService implements ProjectServiceI {
 
   async delete(id: string): Promise<ApiResponse<ProjectDTO>> {
     const { orgkey } = requireMockOrgRequest(`/project/del/${id}`, mockData.affiliations);
-    const index = mockData.projects.findIndex((item) => item.id === id && item.ownerkey === orgkey);
+    const index = mockData.projects.findIndex((item) => item.id === id && item.orgkey === orgkey);
     const project = index >= 0 ? mockData.projects[index] : createMockProject();
 
     if (index >= 0) {
@@ -167,12 +200,12 @@ export class ProjectMockService implements ProjectServiceI {
       project: {
         id: project?.id ?? id,
         title: project?.title ?? "Projeto não encontrado",
-        stage: project?.progress ?? "PENDING",
+        stage: project?.stage ?? "PENDING",
         startedAt: project ? new Date(project.created_at) : null,
         doneAt: null,
         deadline,
-        delayed: deadline < cutoffAt && project?.progress !== ProjectProgress.DONE,
-        organization: project?.ownerkey ?? "",
+        delayed: deadline < cutoffAt && project?.stage !== ProjectStage.DONE,
+        organization: project?.orgkey ?? "",
         manager: project?.managerkey ?? null,
       },
       summary: {

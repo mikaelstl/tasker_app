@@ -34,7 +34,7 @@ export function Overview() {
   const { id } = useParams();
 
   const [project, setProject] = useState<ProjectDTO | null>(null);
-  const getProject = async () => {
+  const loadProject = async () => {
     try {
       if (!id) return;
       const response = await ProjectService.find(id);
@@ -53,7 +53,7 @@ export function Overview() {
   }
 
   const [tasks, setTasks] = useState<TaskDTO[]>([]);
-  const getTasks = async () => {
+  const loadTasks = async () => {
     try {
       if (!id) return;
       const response = await TaskService.list(id);
@@ -72,7 +72,7 @@ export function Overview() {
   }
 
   const [events, setEvents] = useState<EventDTO[]>([]);
-  const getEvents = async () => {
+  const loadEvents = async () => {
     try {
       if (!id) return;
       const response = await EventService.list({ projectkey: id });
@@ -91,7 +91,7 @@ export function Overview() {
   }
 
   const [comments, setComments] = useState<CommentDTO[]>([]);
-  const getComments = async () => {
+  const loadComments = async () => {
     try {
       if (!id) return;
       const response = await CommentService.list({ projectkey: id });
@@ -122,7 +122,7 @@ export function Overview() {
 
       notifications.info(response.message);
 
-      getComments();
+      await loadComments();
     } catch (error) {
       const { errors } = error as ApiError;
 
@@ -137,10 +137,10 @@ export function Overview() {
   }
 
   useEffect(() => {
-    void getProject();
-    void getTasks();
-    void getEvents();
-    void getComments();
+    void loadProject();
+    void loadTasks();
+    void loadEvents();
+    void loadComments();
   }, [id]);
 
   if (project === null) return <><Text>Carregando...</Text></>;
@@ -151,7 +151,7 @@ export function Overview() {
         <ProjectInfo>
           <SectionTitle>{project?.title}</SectionTitle>
           <Subtitle>Iniciado em: --:-- Prazo: 00 de mm de aaaa</Subtitle>
-          {ProjectStageBadge[project.progress]}
+          {ProjectStageBadge[project.stage]}
           <EditButton type="button" onClick={() => navigate('../edit')} />
           <Description>
             <Subtitle>Descrição</Subtitle>

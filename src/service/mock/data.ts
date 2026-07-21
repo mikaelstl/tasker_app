@@ -7,7 +7,7 @@ import type { EventDTO } from "../types/events/event.dto";
 import type { MemberStatDTO } from "../types/member/member-stat.dto";
 import type { ProjectMember } from "../types/member/member.dto";
 import type { OrganizationDTO } from "../types/organization/organization.dto";
-import { ProjectProgress, type ProjectDTO } from "../types/project/project.dto";
+import { ProjectStage, type ProjectDTO } from "../types/project/project.dto";
 import type { ApiResponse } from "../types/response/response";
 import type { TaskDTO } from "../types/task/task.dto";
 import type { UserDTO } from "../types/user/user.dto";
@@ -140,9 +140,9 @@ export function createMockProject(data: Partial<ProjectDTO> = {}): ProjectDTO {
     id: data.id ?? "pro-000",
     title: data.title ?? "Projeto Mock",
     description: data.description ?? "Descricao do projeto mock",
-    ownerkey: data.ownerkey ?? "org-000",
+    orgkey: data.orgkey ?? "org-000",
     due_date: data.due_date ?? baseDate.toISOString(),
-    progress: data.progress ?? ProjectProgress.PENDING,
+    stage: data.stage ?? ProjectStage.PENDING,
     managerkey: data.managerkey ?? null,
     members: data.members ?? [],
     created_at: data.created_at ?? baseDate.toISOString(),
@@ -424,11 +424,11 @@ const projects = organizations.flatMap((organization, orgIndex) => {
       id: createMockId("project"),
       title: `${organization.name} - ${template.title}`,
       description: template.description,
-      ownerkey: organization.id,
-      managerkey: managerAffiliation?.id ?? null,
+      orgkey: organization.id,
+      managerkey: managerAffiliation?.userkey ?? null,
       due_date: dateAt(30 + orgIndex * 12 + projectIndex * 4),
-      progress:
-        [ProjectProgress.STARTED, ProjectProgress.REVIEW, ProjectProgress.PENDING, ProjectProgress.DONE, ProjectProgress.OVERDUE][
+      stage:
+        [ProjectStage.STARTED, ProjectStage.REVIEW, ProjectStage.PENDING, ProjectStage.DONE, ProjectStage.OVERDUE][
           (orgIndex + projectIndex) % 5
         ],
       created_at: isoAt(orgIndex * 100 + projectIndex * 10),
@@ -439,9 +439,9 @@ const projects = organizations.flatMap((organization, orgIndex) => {
 
 const projectsByOrg = new Map<string, ProjectDTO[]>();
 for (const project of projects) {
-  const currentOrgProjects = projectsByOrg.get(project.ownerkey) ?? [];
+  const currentOrgProjects = projectsByOrg.get(project.orgkey) ?? [];
   currentOrgProjects.push(project);
-  projectsByOrg.set(project.ownerkey, currentOrgProjects);
+  projectsByOrg.set(project.orgkey, currentOrgProjects);
 }
 
 const members: ProjectMember[] = [];

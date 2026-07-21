@@ -2,7 +2,6 @@ import { Card, Content, Infos, Links, Overlay } from "./style";
 import { useState } from "react";
 import { CreateButton } from "../../buttons/CreateButton";
 import type { CreateProjectDTO } from "../../../service/types/project/create.dto";
-import { useAuth } from "../../../hooks/useAuth";
 import type { PopupProps } from "../popup.props";
 import { ContentHeader } from "../../base/ContentHeader";
 import { DeleteBtn } from "../../buttons/DeleteBtn";
@@ -16,12 +15,14 @@ import { PlusField } from "../../textfields/PlusField";
 import { LinkCard } from "../../cards/LinkCard";
 import { useToast } from "@/hooks/useToast";
 import { useServices } from "../../../hooks/useServices";
+import { useOrganization } from "@/hooks/useOrganization";
+import type { ApiError } from "@/service/types/response/error";
 
 export function CreateProjectPopup(props: PopupProps) {
   const { ProjectService } = useServices();
-  const { warning, error } = useToast();
+  const notifications = useToast();
 
-  const { user } = useAuth();
+  const { org } = useOrganization();
 
   const [projectName, setProjectName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
@@ -32,7 +33,7 @@ export function CreateProjectPopup(props: PopupProps) {
     if (links.find(
       link => link === newLink
     )) {
-      warning('Link already added');
+      notifications.warning('Link already added');
       return;
     }
 
@@ -58,21 +59,32 @@ export function CreateProjectPopup(props: PopupProps) {
   const onSubmit = async (ev: React.MouseEvent) => {
     ev.preventDefault();
 
+    if (!org?.orgkey) {
+      notifications.warning('Selecione uma organização para criar o projeto');
+      return;
+    }
+
     const project: CreateProjectDTO = {
       title: projectName,
       description,
       due_date: new Date(dueDate),
-      ownerkey: user?.username,
+      orgkey: org.orgkey,
     }
 
-    console.log(project);
     try {
-      const response = await ProjectService.create(project);
-      console.log(response);
+      await ProjectService.create(project);
       props.closePopup();
     } catch (error) {
-      console.error(error);
-      error('Não foi possível criar o projeto');
+      const { errors } = error as ApiError;
+
+      if (!errors?.length) {
+        notifications.error('Não foi possível criar o projeto');
+        return;
+      }
+
+      errors.forEach((item) => {
+        notifications[item.level](item.message);
+      });
     }
   }
 

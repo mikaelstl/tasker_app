@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useServices } from "@/hooks/useServices";
 import type { CommentDTO } from "@/service/types/comment/comment.dto";
-import { ProjectProgress, type ProjectDTO } from "@/service/types/project/project.dto";
+import { ProjectStage, type ProjectDTO } from "@/service/types/project/project.dto";
 import type { ApiError } from "@/service/types/response/error";
 
 interface ProjectSummary {
@@ -41,7 +41,7 @@ function summarizeProjects(projects: ProjectDTO[]): ProjectSummary {
   return projects.reduce<ProjectSummary>((summary, project) => {
     summary.total += 1;
 
-    if (project.progress === ProjectProgress.OVERDUE) {
+    if (project.stage === ProjectStage.OVERDUE) {
       summary.critical += 1;
     } else if (new Date(project.due_date).getTime() - Date.now() <= 7 * 86_400_000) {
       summary.warning += 1;
@@ -55,7 +55,7 @@ function summarizeProjects(projects: ProjectDTO[]): ProjectSummary {
 
 function getDeadlineAlerts(projects: ProjectDTO[]): Deadline[] {
   return projects
-    .filter((project) => project.progress !== ProjectProgress.DONE)
+    .filter((project) => project.stage !== ProjectStage.DONE)
     .map((project) => ({
       projectkey: project.id,
       title: project.title,
@@ -75,7 +75,7 @@ export function useOrganizerDashboard(orgId?: string) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const refetch = useCallback(async () => {
+  const loadDashboard = useCallback(async () => {
     const currentRequest = ++requestId.current;
 
     if (!orgId) {
@@ -125,11 +125,11 @@ export function useOrganizerDashboard(orgId?: string) {
   }, [CommentService, MemberService, ProjectService, orgId]);
 
   useEffect(() => {
-    void refetch();
+    void loadDashboard();
     return () => {
       requestId.current += 1;
     };
-  }, [refetch]);
+  }, [loadDashboard]);
 
-  return { loading, error, data, refetch };
+  return { loading, error, data, loadDashboard };
 }

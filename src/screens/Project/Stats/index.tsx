@@ -28,7 +28,7 @@ export function Stats() {
             <Text>Gerar relatório</Text>
           </CreateButton>
         </Actions>
-        <ProjectProgress />
+        <ProjectProgressSection />
       </ProjectInfo>
       <Content className="tskr-proj-stats-content">
         <WidgetsContainer className="tskr-project-infos-widget">
@@ -56,7 +56,7 @@ export function Stats() {
   )
 }
 
-const ProjectProgress = () => {
+const ProjectProgressSection = () => {
   return (
     <ProgressCard>
       <ProgressContainer>

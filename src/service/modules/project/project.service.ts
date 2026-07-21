@@ -1,6 +1,6 @@
 import type { ApiResponse } from "@/service/types/response/response";
 import type { CreateProjectDTO } from "../../types/project/create.dto";
-import type { ProjectDTO, ProjectProgress } from "../../types/project/project.dto";
+import type { ProjectDTO, ProjectStage } from "../../types/project/project.dto";
 import type { ProjectQueryDTO } from "../../types/project/project.query.dto";
 import type { GenerateStatsReportDTO } from "../../types/stats/generate-stats-report.dto";
 import type { ProjectStatsQueryDTO } from "../../types/stats/project-stats-query.dto";
@@ -15,7 +15,7 @@ export interface EditProjectDTO {
   readonly title?: string;
   readonly description?: string;
   readonly due_date?: Date;
-  readonly progress?: ProjectProgress;
+  readonly stage?: ProjectStage;
 }
 
 export interface ProjectServiceI {

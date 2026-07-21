@@ -64,7 +64,7 @@ export function useMemberDashboard(orgId?: string) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const refetch = useCallback(async () => {
+  const loadDashboard = useCallback(async () => {
     const currentRequest = ++requestId.current;
     const username = user?.username;
 
@@ -117,11 +117,11 @@ export function useMemberDashboard(orgId?: string) {
   }, [EventService, MemberService, ProjectService, TaskService, orgId, user?.username]);
 
   useEffect(() => {
-    void refetch();
+    void loadDashboard();
     return () => {
       requestId.current += 1;
     };
-  }, [refetch]);
+  }, [loadDashboard]);
 
   const taskCategories = useMemo(() => categorizeTasks(data.tasks), [data.tasks]);
 
@@ -129,6 +129,6 @@ export function useMemberDashboard(orgId?: string) {
     loading,
     error,
     data: { ...data, taskCategories },
-    refetch,
+    loadDashboard,
   };
 }

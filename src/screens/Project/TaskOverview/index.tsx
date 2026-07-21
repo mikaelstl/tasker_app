@@ -33,7 +33,7 @@ export function TaskOverview() {
   const { id } = useParams();
 
   const [comments, setComments] = useState<CommentDTO[]>([]);
-  const getComments = async () => {
+  const loadComments = async () => {
     try {
       const response = await CommentService.list({ projectkey: id });
       const data = response.data;
@@ -62,7 +62,7 @@ export function TaskOverview() {
 
       notifications.info(response.message);
 
-      getComments();
+      await loadComments();
     } catch (error) {
       const { errors } = error as ApiError;
 

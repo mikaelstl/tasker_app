@@ -6,10 +6,13 @@ import { useToast } from "@/hooks/useToast";
 import type { CurrentAccountDTO } from "../../service/types/account/current-account.dto";
 import { AuthContext } from "../../context/AuthContext";
 import { useServices } from "../../hooks/useServices";
+import { useOrganization } from "@/hooks/useOrganization";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { AccountService } = useServices();
   const notifications = useToast();
+
+  const { clearOrg } = useOrganization();
 
   const [user, setUser] = useState<CurrentAccountDTO | null>(null);
   const [token, setToken] = useState<string | null>(null);
@@ -56,10 +59,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const logout = () => {
+    clearOrg();
     setUser(null);
-    setToken(null)
-    localStorage.removeItem('user');
-    localStorage.removeItem('token');
+    setToken(null);
+    localStorage.clear();
   }
 
   const validate = async (): Promise<boolean> => {

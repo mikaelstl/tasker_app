@@ -33,7 +33,7 @@ export function Tasks() {
   };
 
   const [tasks, setTasks] = useState<TaskDTO[]>([]);
-  const getTasks = async () => {
+  const loadTasks = async () => {
     try {
       if (!id) return;
       const response = await TaskService.list(id);
@@ -52,7 +52,7 @@ export function Tasks() {
   }
 
   useEffect(() => {
-    void getTasks();
+    void loadTasks();
   }, [TaskService, isPopupOpen, id]);
 
   return (

@@ -4,7 +4,7 @@ import { useServices } from "@/hooks/useServices";
 import type { EventDTO } from "@/service/types/events/event.dto";
 import type { MemberStatDTO } from "@/service/types/member/member-stat.dto";
 import type { ProjectMember } from "@/service/types/member/member.dto";
-import { ProjectProgress, type ProjectDTO } from "@/service/types/project/project.dto";
+import { ProjectStage, type ProjectDTO } from "@/service/types/project/project.dto";
 import type { ApiError } from "@/service/types/response/error";
 import { TaskStage } from "@/service/types/task/stage.dto";
 import type { TaskDTO } from "@/service/types/task/task.dto";
@@ -57,7 +57,7 @@ function getStats(tasks: TaskDTO[]): ManagerStats {
 
 function getDeadlines(projects: ProjectDTO[]): Deadline[] {
   return projects
-    .filter((project) => project.progress !== ProjectProgress.DONE)
+    .filter((project) => project.stage !== ProjectStage.DONE)
     .map((project) => ({
       projectkey: project.id,
       title: project.title,
@@ -116,7 +116,7 @@ export function useManagerDashboard(orgId?: string) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const refetch = useCallback(async () => {
+  const loadDashboard = useCallback(async () => {
     const currentRequest = ++requestId.current;
     const username = user?.username;
 
@@ -181,11 +181,11 @@ export function useManagerDashboard(orgId?: string) {
   ]);
 
   useEffect(() => {
-    void refetch();
+    void loadDashboard();
     return () => {
       requestId.current += 1;
     };
-  }, [refetch]);
+  }, [loadDashboard]);
 
-  return { loading, error, data, refetch };
+  return { loading, error, data, loadDashboard };
 }

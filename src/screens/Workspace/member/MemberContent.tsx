@@ -14,7 +14,7 @@ interface MemberContentProps {
 
 export function MemberContent({ username }: MemberContentProps) {
   const { org } = useOrganization();
-  const { loading, error, data, refetch } = useMemberDashboard(org?.orgkey);
+  const { loading, error, data, loadDashboard } = useMemberDashboard(org?.orgkey);
 
   if (loading) {
     return (
@@ -30,7 +30,7 @@ export function MemberContent({ username }: MemberContentProps) {
       <Main>
         <Greating><SectionTitle>Olá, {username}!</SectionTitle></Greating>
         <Text>{error}</Text>
-        <Button type="button" onClick={() => void refetch()}>Tentar novamente</Button>
+        <Button type="button" onClick={() => void loadDashboard()}>Tentar novamente</Button>
       </Main>
     );
   }

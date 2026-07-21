@@ -22,7 +22,7 @@ export function Members() {
 
   const [ owner, setOwner ] = useState<ProjectMember | undefined>(undefined);
   const [members, setMembers] = useState<ProjectMember[]>([]);
-  const getMembers = async () => {
+  const loadMembers = async () => {
     try {
       if (!id) return;
       const response = await MemberService.list(id);
@@ -44,7 +44,7 @@ export function Members() {
   }
 
   useEffect(() => {
-    void getMembers();
+    void loadMembers();
   }, [MemberService, id]);
 
   return (

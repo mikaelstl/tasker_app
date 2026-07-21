@@ -19,44 +19,48 @@ import { Screen } from "./components/base/Screen"
 import { Organization } from "./screens/Organization"
 import { AcceptInvite } from "./screens/AcceptInvite"
 import { CreateOrg } from "./screens/CreateOrg"
+import { ProtectedRoute } from "./routes/ProtectedRoute"
 
 function App() {
   return (
     <Screen>
       <BrowserRouter>
-      <Routes>
-        <Route path="*" element={<Navigate to="/login" replace />} />
+        <Routes>
+          <Route path="*" element={<Navigate to="/login" replace />} />
 
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
-        <Route element={<PrivateRoute/>}>
-          <Route path="/workspaces" element={<ChoseWorkspace />} />
-          <Route path="/invite/:token" element={<AcceptInvite />} />
-          <Route path="/org/register" element={<CreateOrg />} />
+          <Route element={<PrivateRoute />}>
+            <Route path="/org/register" element={<CreateOrg />} />
 
-          <Route path="/home" element={<Home />}>
-            <Route index element={<Navigate to="workspace" replace />} />
+            <Route path="/workspaces" element={<ChoseWorkspace />} />
+            <Route path="/invite/:token" element={<AcceptInvite/>}/>
 
-            <Route path="workspace" element={<Workspace />} />
-            <Route path="projects" element={<Projects />} />
-            <Route path="organization" element={<Organization />} />
+            <Route element={<ProtectedRoute />}>
+              <Route path="/home" element={<Home />}>
+                <Route index element={<Navigate to="workspace" replace />} />
 
-            <Route path="project/:id" element={<Project />}>
-              <Route index element={<Navigate to="overview" replace />} />
+                <Route path="workspace" element={<Workspace />} />
+                <Route path="projects" element={<Projects />} />
+                <Route path="organization" element={<Organization />} />
 
-              <Route path="overview" element={<Overview />} />
-              <Route path="tasks" element={<Tasks />} />
-              <Route path="members" element={<Members />} />
-              <Route path="calendar" element={<Events />} />
-              <Route path="stats" element={<Stats />} />
-              <Route path="edit" element={<EditProject />} />
-              <Route path="task" element={<TaskOverview />} />
+                <Route path="project/:id" element={<Project />}>
+                  <Route index element={<Navigate to="overview" replace />} />
+
+                  <Route path="overview" element={<Overview />} />
+                  <Route path="tasks" element={<Tasks />} />
+                  <Route path="members" element={<Members />} />
+                  <Route path="calendar" element={<Events />} />
+                  <Route path="stats" element={<Stats />} />
+                  <Route path="edit" element={<EditProject />} />
+                  <Route path="task/:id" element={<TaskOverview />} />
+                </Route>
+              </Route>
             </Route>
           </Route>
-        </Route>
-      </Routes>
-    </BrowserRouter>
+        </Routes>
+      </BrowserRouter>
     </Screen>
   )
 }

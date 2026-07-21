@@ -4,7 +4,7 @@ import { Card, Content, Footer, Leading, OpenProjectButton, Trailing } from "./s
 import { DateBadge } from "../../badge/DateBadge";
 import { useNavigate } from "react-router-dom";
 import { DateTime } from "luxon";
-import type { ProjectProgress } from "../../../service/types/project/project.dto";
+import type { ProjectStage } from "../../../service/types/project/project.dto";
 import type { ProjectMember } from "../../../service/types/member/member.dto";
 import { ProjectStageBadge } from "../../../maps/project-stage";
 import { Team } from "@/components/misc/Team";
@@ -15,7 +15,7 @@ interface ProjectCardProps {
   title: string;
   description: string;
   deadline: string;
-  stage: ProjectProgress;
+  stage: ProjectStage;
   members: readonly ProjectMember[];
 }
 

@@ -17,7 +17,7 @@ interface ManagerContentProps {
 
 export function ManagerContent({ username }: ManagerContentProps) {
   const { org } = useOrganization();
-  const { loading, error, data, refetch } = useManagerDashboard(org?.orgkey);
+  const { loading, error, data, loadDashboard } = useManagerDashboard(org?.orgkey);
 
   if (loading) {
     return (
@@ -33,7 +33,7 @@ export function ManagerContent({ username }: ManagerContentProps) {
       <Main>
         <Greating><SectionTitle>Olá, {username}!</SectionTitle></Greating>
         <Text>{error}</Text>
-        <Button type="button" onClick={() => void refetch()}>Tentar novamente</Button>
+        <Button type="button" onClick={() => void loadDashboard()}>Tentar novamente</Button>
       </Main>
     );
   }

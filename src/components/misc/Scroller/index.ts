@@ -18,8 +18,7 @@ const Scroller = styled.div.withConfig({
   }
 
   &.vertical {
-    height: fit-content;
-    max-height: 100%;
+    height: 100%;
     
     flex-direction: column;
     overflow-y: auto;

@@ -64,7 +64,7 @@ function buildSummary(username: string): UserOrganizationSummaryDTO[] {
         role: currentAffiliation.role,
         name: organization.name,
         projects: mockData.projects.filter(
-          (item) => item.ownerkey === organization.id,
+          (item) => item.orgkey === organization.id,
         ).length,
         members: mockData.affiliations.filter(
           (item) => item.orgkey === organization.id,
@@ -108,6 +108,37 @@ export class AffiliationMockService implements AffiliationServiceI {
     const summary = buildSummary(currentAccount.username);
 
     return createMockResponse(summary, "/affiliations");
+  }
+
+  async participates(orgkey: string): Promise<ApiResponse<boolean>> {
+    const path = `/affiliations/participates/${orgkey}`;
+    const currentAccount = requireMockCurrentAccount(path);
+
+    try {
+      const affiliation = mockData.affiliations.find(
+        (item) => item.userkey === currentAccount.username && item.orgkey === orgkey,
+      );
+      const participates = Boolean(affiliation);
+
+      return createMockResponse(
+        participates,
+        path,
+        participates
+          ? "O usuário participa da organização."
+          : "O usuário não participa da organização.",
+      );
+    } catch (error: unknown) {
+      console.warn(
+        "[ERRO] ao verificar participação do usuário na organização.",
+        error,
+      );
+
+      return createMockResponse(
+        false,
+        path,
+        "O usuário não participa da organização.",
+      );
+    }
   }
 
   async listByOrganization(orgkey: string): Promise<ApiResponse<AffiliationDTO[]>> {

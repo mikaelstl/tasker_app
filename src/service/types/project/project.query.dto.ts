@@ -1,10 +1,10 @@
-import type { ProjectProgress } from "./project.dto";
+import type { ProjectStage } from "./project.dto";
 
 export interface ProjectQueryDTO {
   readonly id?: string;
   readonly title?: string;
   readonly description?: string;
-  readonly ownerkey?: string;
+  readonly orgkey?: string;
   readonly due_date?: Date;
-  readonly progress?: ProjectProgress;
+  readonly stage?: ProjectStage;
 }
