@@ -22,7 +22,7 @@ export function ActiveProjectsCard({
         <Title>Projetos ativos</Title>
       </Header>
       <Cards>
-        <Card>
+        <Card $backgroundColor={Palette.blue_50} $borderColor={Palette.blue}>
           <Title className="tskr-title">TOTAL</Title>
           <Title className="tskr-title">{total}</Title>
         </Card>

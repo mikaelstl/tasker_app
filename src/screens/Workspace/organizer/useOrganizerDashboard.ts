@@ -1,29 +1,77 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useApi } from "@/hooks/useApi";
-import {
-  createDashboardService,
-  getDashboardErrorMessage,
-  type OrganizerDashboardDTO,
-} from "../services/dashboard.service";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useServices } from "@/hooks/useServices";
+import type { CommentDTO } from "@/service/types/comment/comment.dto";
+import { ProjectProgress, type ProjectDTO } from "@/service/types/project/project.dto";
+import type { ApiError } from "@/service/types/response/error";
 
-const initialData: OrganizerDashboardDTO = {
+interface ProjectSummary {
+  total: number;
+  safe: number;
+  warning: number;
+  critical: number;
+}
+
+interface Deadline {
+  projectkey: string;
+  title: string;
+  dueDate: string;
+  daysRemaining: number;
+}
+
+interface OrganizerDashboardData {
+  projects: ProjectDTO[];
+  updates: CommentDTO[];
+  projectSummary: ProjectSummary;
+  deadlineAlerts: Deadline[];
+}
+
+const initialData: OrganizerDashboardData = {
   projects: [],
   updates: [],
-  projectSummary: {
-    total: 0,
-    safe: 0,
-    warning: 0,
-    critical: 0,
-  },
+  projectSummary: { total: 0, safe: 0, warning: 0, critical: 0 },
   deadlineAlerts: [],
 };
 
+function getErrorMessage(error: unknown): string {
+  const apiError = error as Partial<ApiError>;
+  return apiError.errors?.[0]?.message ?? "Não foi possível carregar o dashboard.";
+}
+
+function summarizeProjects(projects: ProjectDTO[]): ProjectSummary {
+  return projects.reduce<ProjectSummary>((summary, project) => {
+    summary.total += 1;
+
+    if (project.progress === ProjectProgress.OVERDUE) {
+      summary.critical += 1;
+    } else if (new Date(project.due_date).getTime() - Date.now() <= 7 * 86_400_000) {
+      summary.warning += 1;
+    } else {
+      summary.safe += 1;
+    }
+
+    return summary;
+  }, { total: 0, safe: 0, warning: 0, critical: 0 });
+}
+
+function getDeadlineAlerts(projects: ProjectDTO[]): Deadline[] {
+  return projects
+    .filter((project) => project.progress !== ProjectProgress.DONE)
+    .map((project) => ({
+      projectkey: project.id,
+      title: project.title,
+      dueDate: project.due_date,
+      daysRemaining: Math.ceil(
+        (new Date(project.due_date).getTime() - Date.now()) / 86_400_000,
+      ),
+    }))
+    .sort((left, right) => left.daysRemaining - right.daysRemaining)
+    .slice(0, 4);
+}
+
 export function useOrganizerDashboard(orgId?: string) {
-  const api = useApi();
-  const service = useMemo(() => createDashboardService(api), [api]);
+  const { ProjectService, CommentService, MemberService } = useServices();
   const requestId = useRef(0);
-  
-  const [data, setData] = useState<OrganizerDashboardDTO>(initialData);
+  const [data, setData] = useState<OrganizerDashboardData>(initialData);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -41,16 +89,40 @@ export function useOrganizerDashboard(orgId?: string) {
     setError(null);
 
     try {
-      const nextData = await service.getOrganizerDashboard(orgId);
+      const listedProjects = (await ProjectService.list()).data;
+      const projectsData = await Promise.all(listedProjects.map(async (project) => {
+        const [comments, members] = await Promise.all([
+          CommentService.list({ projectkey: project.id }),
+          MemberService.list(project.id),
+        ]);
+
+        return {
+          project: { ...project, members: members.data },
+          comments: comments.data,
+        };
+      }));
+      const projects = projectsData.map((item) => item.project);
+      const updates = projectsData
+        .flatMap((item) => item.comments)
+        .sort((left, right) => (
+          new Date(right.date).getTime() - new Date(left.date).getTime()
+        ));
+      const nextData: OrganizerDashboardData = {
+        projects,
+        updates,
+        projectSummary: summarizeProjects(projects),
+        deadlineAlerts: getDeadlineAlerts(projects),
+      };
+
       if (currentRequest === requestId.current) setData(nextData);
     } catch (requestError) {
       if (currentRequest === requestId.current) {
-        setError(getDashboardErrorMessage(requestError));
+        setError(getErrorMessage(requestError));
       }
     } finally {
       if (currentRequest === requestId.current) setLoading(false);
     }
-  }, [orgId, service]);
+  }, [CommentService, MemberService, ProjectService, orgId]);
 
   useEffect(() => {
     void refetch();

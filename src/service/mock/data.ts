@@ -155,7 +155,6 @@ export function createMockProjectMember(data: Partial<ProjectMember> = {}): Proj
     id: data.id ?? "mem-000",
     projectkey: data.projectkey ?? "pro-000",
     userkey: data.userkey ?? "aff-000",
-    role: data.role ?? MemberRole.MEMBER,
     tasks: data.tasks ?? [],
     user: data.user,
     created_at: data.created_at ?? baseDate.toISOString(),
@@ -339,11 +338,17 @@ const taskTemplates = [
   "Publicar versao",
 ];
 
-const commentTemplates = [
-  "Revisao encaminhada para a proxima etapa.",
-  "Ajustes pontuais foram aplicados e a entrega segue ok.",
-  "Dependencia externa ainda em acompanhamento.",
-  "Bloco validado com o time responsavel.",
+interface AuditLogContext {
+  projectTitle: string;
+  taskCode: string;
+  assignee: string;
+}
+
+const auditLogTemplates: Array<(context: AuditLogContext) => string> = [
+  ({ taskCode }) => `Alterou a tarefa ${taskCode} para REVIEW`,
+  ({ projectTitle }) => `Alterou o estágio do projeto ${projectTitle} para CONCLUÍDO`,
+  ({ taskCode }) => `Alterou a prioridade da tarefa ${taskCode} para ALTA`,
+  ({ taskCode, assignee }) => `Atribuiu a tarefa ${taskCode} para ${assignee}`,
 ];
 
 const eventCategories = ["RELEASE", "MEETING", "REVIEW", "PLANNING", "TESTS", "LAUNCH"] as const;
@@ -462,7 +467,6 @@ for (const [orgIndex, organization] of organizations.entries()) {
         id: createMockId("member"),
         projectkey: project.id,
         userkey: affiliation.id,
-        role: memberIndex === 0 ? MemberRole.OWNER : MemberRole.MEMBER,
         user: affiliation,
         created_at: isoAt(orgIndex * 160 + projectIndex * 12 + memberIndex * 3),
         updated_at: isoAt(orgIndex * 160 + projectIndex * 12 + memberIndex * 3),
@@ -513,23 +517,32 @@ for (const [orgIndex, organization] of organizations.entries()) {
 
 const comments = projects.flatMap((project, projectIndex) => {
   const projectMembers = projectMembersByProject.get(project.id) ?? [];
+  const projectTasks = tasks.filter((task) => task.project === project.id);
   const authors = projectMembers
     .map((member) => affiliations.find((affiliation) => affiliation.id === member.userkey)?.userkey)
     .filter((username): username is string => Boolean(username))
     .map((username) => usersByUsername.get(username))
     .filter((user): user is UserDTO => Boolean(user));
 
-  return Array.from({ length: 2 + (projectIndex % 2) }).map((_, commentIndex) =>
-    createMockComment({
+  return Array.from({ length: 2 + (projectIndex % 2) }).map((_, commentIndex) => {
+    const author = authors[commentIndex % authors.length] ?? users[0];
+    const task = projectTasks[commentIndex % projectTasks.length];
+    const template = auditLogTemplates[(projectIndex + commentIndex) % auditLogTemplates.length];
+
+    return createMockComment({
       id: createMockId("comment"),
-      content: commentTemplates[(projectIndex + commentIndex) % commentTemplates.length],
+      content: template({
+        projectTitle: project.title,
+        taskCode: task?.code ?? "TSK-0000",
+        assignee: author.username,
+      }),
       date: isoAt(400 + projectIndex * 6 + commentIndex * 4),
-      ownerkey: authors[commentIndex % authors.length]?.username ?? users[0].username,
+      ownerkey: author.username,
       projectkey: project.id,
       created_at: isoAt(400 + projectIndex * 6 + commentIndex * 4),
       updated_at: isoAt(400 + projectIndex * 6 + commentIndex * 4),
-    }),
-  );
+    });
+  });
 });
 
 const events = projects.flatMap((project, projectIndex) =>

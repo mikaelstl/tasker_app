@@ -1,51 +1,135 @@
+import Palette from "@/assets/palette";
 import styled from "styled-components";
-import Palette from "../../../assets/palette";
 
 const Card = styled.div`
-  display: grid;
+  min-width: 48rem;
 
-  grid-template-areas: "task-leading tskr-title tskr-priority"
-                       "task-leading tskr-avatar tskr-date";
-  grid-template-columns: min-content 1fr 1.3fr;
-  grid-template-rows: auto min-content min-content;
-  
-  gap: 10px;
-
-  overflow: hidden;
-
-  padding: 10px 10px 0px 0px;
-  border: 1px solid ${Palette.details};
-  border-radius: 6px;
+  cursor: pointer;
 
   background-color: ${Palette.items};
 
-  width: 270px;
-  height: 100px;
+  border: 1px solid transparent;
+  border-radius: 0.75rem;
 
-  .tskr-priority {
-    grid-area: tskr-priority;
-    display: flex;
-    justify-content: flex-end;
+  color: ${Palette.white};
+
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    background-color 150ms ease;
+
+  &:hover {
+    border-color: ${Palette.blue};
+
+    box-shadow:
+      0 1px 2px ${Palette.gray_25},
+      0 2px 6px ${Palette.gray_25};
   }
 
-  .tskr-date {
-    grid-area: tskr-date;
-    display: flex;
-    align-items: end;
-    height: 100%;
-    width: 100%;
+  overflow: hidden;
+`;
+
+const CardHeader = styled.div`
+  padding: 1.5rem;
+  padding-bottom: 0.75rem;
+`;
+
+const HeaderContainer = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 0.75rem;
+`;
+
+const TitleContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.25rem;
+
+  min-width: 0;
+`;
+
+const CodeContainer = styled.div`
+  display: flex;
+  align-items: center;
+
+  gap: 0.25rem;
+
+  color: ${Palette.lightBlue};
+
+  svg {
+    fill: ${Palette.lightBlue};
   }
 `;
 
-const Leading = styled.div`
-  grid-area: task-leading;
+const Code = styled.p`
+  margin: 0;
 
-  width: 4px;
-  height: 100%;
-  background-color: ${Palette.blue};
+  color: ${Palette.gray};
+
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 500;
+`;
+
+const CardTitle = styled.h3`
+  margin: 0;
+
+  color: ${Palette.white};
+
+  font-size: 1rem;
+  line-height: 1.375;
+  font-weight: 600;
+
+  overflow: hidden;
+
+  display: -webkit-box;
+
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+`;
+
+const CardContent = styled.div`
+  padding: 0 1.5rem 1rem;
+`;
+
+const Description = styled.p`
+  margin: 0;
+
+  color: ${Palette.gray};
+
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+
+  overflow: hidden;
+
+  display: -webkit-box;
+
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+`;
+
+const CardFooter = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 1rem 1.5rem 1.5rem;
+
+  border-top: 1px solid ${Palette.details};
 `;
 
 export {
   Card,
-  Leading,
+  CardHeader,
+  HeaderContainer,
+  TitleContainer,
+  CodeContainer,
+  Code,
+  CardTitle,
+  CardContent,
+  Description,
+  CardFooter
 }

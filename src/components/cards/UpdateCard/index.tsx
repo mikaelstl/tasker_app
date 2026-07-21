@@ -1,31 +1,51 @@
 import { DateTime } from "luxon";
-import { Subtitle } from "../../base/Subtitle";
-import { Text } from "../../base/Text";
-import { Avatar } from "../../misc/Avatar";
-import { Card, Line, Texts } from "./style";
-import { Title } from "../../base/Title";
-import { formatNumber } from "../../../utils/formatNumber";
+import {
+  Card,
+  Content,
+  Description,
+  Header,
+  TrackerDot,
+  TimelineMarker,
+  UpdateDate,
+} from "./style";
+import { User } from "@/components/misc/User";
 
 interface UpdateCardDTO {
-  readonly content:     string;
-  readonly date:        DateTime;
-  readonly owner:    string;
+  readonly content: string;
+  readonly date: DateTime;
+  readonly owner: string;
+  readonly hasPrevious?: boolean;
+  readonly hasNext?: boolean;
 }
 
 export function UpdateCard({
   content,
   date,
   owner,
+  hasPrevious = false,
+  hasNext = false,
 }: UpdateCardDTO) {
+  const localizedDate = date.setLocale("pt-BR");
+
   return (
-    <Card className="comment-card">
-      <Avatar size="medium" image=""/>
-      <Texts>
-        <Title>{owner}</Title>
-        <Text>{content}</Text>
-      </Texts>
-      <Line/>
-      <Subtitle className="tskr-subtitle">{formatNumber(date.day)} {date.setLocale("pt-BR").monthShort} {formatNumber(date.hour)}:{formatNumber(date.minute)}</Subtitle>
+    <Card className="tskr-update-card" role="listitem">
+      <TimelineMarker
+        $hasPrevious={hasPrevious}
+        $hasNext={hasNext}
+        aria-hidden="true"
+      >
+        <TrackerDot />
+      </TimelineMarker>
+
+      <Content>
+        <Header>
+          <User username={owner}/>
+          <UpdateDate as="time" dateTime={date.toISO() ?? undefined}>
+            {localizedDate.toFormat("dd LLL • HH:mm")}
+          </UpdateDate>
+        </Header>
+        <Description>{content}</Description>
+      </Content>
     </Card>
   )
 }

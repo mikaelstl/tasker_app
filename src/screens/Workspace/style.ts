@@ -1,3 +1,5 @@
+import Palette from "@/assets/palette";
+import { Button } from "@/components/buttons/Button";
 import styled from "styled-components";
 
 const Content = styled.div`
@@ -28,6 +30,10 @@ const Greating = styled.div`
 `;
 
 const Items = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
   width: 100%;
 
   padding: 20px 20px;
@@ -39,6 +45,8 @@ const Main = styled.main`
   gap: 20px;
 
   width: 100%;
+
+  overflow-y: auto;
 `;
 
 const Infos= styled.div`
@@ -50,11 +58,21 @@ const Infos= styled.div`
   padding: 0px 20px;
 `;
 
+const SeeMoreBtn = styled(Button)`
+  display: flex;
+  justify-content: center;
+
+  width: 100%;
+  border: 1px dashed ${Palette.gray};
+  background-color: ${Palette.gray_25};
+`;
+
 export {
   Content,
   Categories,
   Greating,
   Items,
   Main,
-  Infos
+  Infos,
+  SeeMoreBtn
 }

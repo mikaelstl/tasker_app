@@ -2,7 +2,7 @@ import { ArrowLeftStartOnRectangleIcon, ChevronDownIcon, ChevronUpIcon } from "@
 import { BuildingOffice2Icon, InboxStackIcon, WindowIcon } from "@heroicons/react/20/solid"
 import Palette from "../../../assets/palette"
 import { Accordion, Actions, Container, Leading, Nav, NavItem, ProjectNav } from "./style"
-import { useLocation, useNavigate } from "react-router-dom"
+import { useLocation, useMatch, useNavigate } from "react-router-dom"
 import { useAuth } from "../../../hooks/useAuth"
 import { FolderOpenIcon } from "@heroicons/react/20/solid"
 import { useEffect, useState } from "react"
@@ -11,14 +11,17 @@ import { useOrganization } from "../../../hooks/useOrganization"
 
 interface ProjectNavAccordionProps {
   isOpen: boolean
+  projectId: string
 }
 
 const ProjectNavAccordion = ({
-  isOpen
+  isOpen,
+  projectId
 }: ProjectNavAccordionProps) => {
   const navigate = useNavigate();
 
   const location = useLocation();
+  const projectPath = `/home/project/${projectId}`;
 
   const [path, setPath] = useState('');
   const [icon, setIcon] = useState(<ChevronDownIcon width={20} />)
@@ -55,8 +58,8 @@ const ProjectNavAccordion = ({
             <NavItem 
               className="tskr-nav-item"
               type="button"
-              onClick={() => navigate('./project/overview')}
-              $activated={path.includes('project/overview')}
+              onClick={() => navigate(`${projectPath}/overview`)}
+              $activated={path === `${projectPath}/overview`}
             >
               <WindowIcon width="18" />
               Visão geral
@@ -64,8 +67,8 @@ const ProjectNavAccordion = ({
             <NavItem 
               className="tskr-nav-item"
               type="button"
-              onClick={() => navigate('./project/tasks')}
-              $activated={path.includes('project/tasks')}
+              onClick={() => navigate(`${projectPath}/tasks`)}
+              $activated={path === `${projectPath}/tasks`}
             >
               <ClipboardIcon width="18" />
               Tarefas
@@ -73,8 +76,8 @@ const ProjectNavAccordion = ({
             <NavItem 
               className="tskr-nav-item"
               type="button"
-              onClick={() => navigate('./project/calendar')}
-              $activated={path.includes('project/calendar')}
+              onClick={() => navigate(`${projectPath}/calendar`)}
+              $activated={path === `${projectPath}/calendar`}
             >
               <CalendarIcon width="18" />
               Calendário
@@ -82,8 +85,8 @@ const ProjectNavAccordion = ({
             <NavItem 
               className="tskr-nav-item"
               type="button"
-              onClick={() => navigate('./project/members')}
-              $activated={path.includes('project/members')}
+              onClick={() => navigate(`${projectPath}/members`)}
+              $activated={path === `${projectPath}/members`}
             >
               <UserIcon width="18" />
               Membros
@@ -91,8 +94,8 @@ const ProjectNavAccordion = ({
             <NavItem 
               className="tskr-nav-item"
               type="button"
-              onClick={() => navigate('./project/stats')}
-              $activated={path.includes('project/stats')}
+              onClick={() => navigate(`${projectPath}/stats`)}
+              $activated={path === `${projectPath}/stats`}
             >
               <ChartBarIcon width="18" />
               Estatísticas
@@ -104,15 +107,11 @@ const ProjectNavAccordion = ({
   )
 }
 
-interface NavBarProps {
-  onProject: boolean
-}
-
-export function NavBar({
-  onProject
-}: NavBarProps) {
+export function NavBar() {
   const navigate = useNavigate();
   const location = useLocation();
+  const projectMatch = useMatch("/home/project/:id/*");
+  const projectId = projectMatch?.params.id;
   const isActive = (route: string) => {
     const routePath = `/home/${route}`;
 
@@ -163,7 +162,7 @@ export function NavBar({
           Organização
         </NavItem>
       </Nav>
-      { onProject ? <ProjectNavAccordion isOpen/> : <></> }
+      {projectId ? <ProjectNavAccordion isOpen projectId={projectId} /> : null}
       <Actions className="tskr-nav-actions">
         <NavItem className="tskr-nav-item" onClick={onChangeWorkspace}>
           <WindowIcon width="18" />

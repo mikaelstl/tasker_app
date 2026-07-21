@@ -18,11 +18,19 @@ const Card = styled.div`
   max-width: 100%;
 
   border: 1px solid ${Palette.details};
-  border-radius: 6px;
+  border-radius: 12px;
 
   background-color: ${Palette.items};
 
   cursor: pointer;
+
+  &:hover .tskr-open-proj-btn {
+    border: 1px solid ${Palette.blue_50};
+  }
+
+  &:hover .tskr-open-proj-btn svg {
+    fill: ${Palette.lightBlue};
+  }
 `;
 
 const Leading = styled.div`
@@ -56,7 +64,7 @@ const Trailing = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  justify-content: space-between;
+  justify-content: center;
 `;
 
 const OpenProjectButton = styled.button`
@@ -74,16 +82,6 @@ const OpenProjectButton = styled.button`
   background-color: transparent;
 
   cursor: pointer;
-
-  svg {
-    width: 20px;
-    height: 20px;
-    transition: color 0.2s ease;
-  }
-
-  &:hover svg {
-    color: ${Palette.lightBlue};
-  }
 `;
 
 export {

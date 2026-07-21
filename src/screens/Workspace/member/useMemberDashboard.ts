@@ -1,14 +1,18 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useApi } from "@/hooks/useApi";
+import { useAuth } from "@/hooks/useAuth";
+import { useServices } from "@/hooks/useServices";
+import type { EventDTO } from "@/service/types/events/event.dto";
+import type { ProjectMember } from "@/service/types/member/member.dto";
+import type { ApiError } from "@/service/types/response/error";
 import { TaskStage } from "@/service/types/task/stage.dto";
 import type { TaskDTO } from "@/service/types/task/task.dto";
-import {
-  createDashboardService,
-  getDashboardErrorMessage,
-  type MemberDashboardDTO,
-} from "../services/dashboard.service";
 
-const initialData: MemberDashboardDTO = {
+interface MemberDashboardData {
+  tasks: TaskDTO[];
+  events: EventDTO[];
+}
+
+const initialData: MemberDashboardData = {
   tasks: [],
   events: [],
 };
@@ -18,6 +22,17 @@ export interface MemberTaskCategories {
   thisWeek: TaskDTO[];
   pending: TaskDTO[];
   overdue: TaskDTO[];
+}
+
+function getErrorMessage(error: unknown): string {
+  const apiError = error as Partial<ApiError>;
+  return apiError.errors?.[0]?.message ?? "Não foi possível carregar o dashboard.";
+}
+
+function belongsToUser(member: ProjectMember, username: string): boolean {
+  return member.userkey === username
+    || member.user?.userkey === username
+    || member.user?.user?.username === username;
 }
 
 function categorizeTasks(tasks: TaskDTO[]): MemberTaskCategories {
@@ -42,17 +57,18 @@ function categorizeTasks(tasks: TaskDTO[]): MemberTaskCategories {
 }
 
 export function useMemberDashboard(orgId?: string) {
-  const api = useApi();
-  const service = useMemo(() => createDashboardService(api), [api]);
+  const { user } = useAuth();
+  const { ProjectService, TaskService, EventService, MemberService } = useServices();
   const requestId = useRef(0);
-  const [data, setData] = useState<MemberDashboardDTO>(initialData);
+  const [data, setData] = useState<MemberDashboardData>(initialData);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const refetch = useCallback(async () => {
     const currentRequest = ++requestId.current;
+    const username = user?.username;
 
-    if (!orgId) {
+    if (!orgId || !username) {
       setData(initialData);
       setError(null);
       setLoading(false);
@@ -63,16 +79,42 @@ export function useMemberDashboard(orgId?: string) {
     setError(null);
 
     try {
-      const nextData = await service.getMemberDashboard(orgId);
+      const projects = (await ProjectService.list()).data;
+      const projectData = await Promise.all(projects.map(async (project) => {
+        const [tasks, events, members] = await Promise.all([
+          TaskService.list(project.id),
+          EventService.list({ projectkey: project.id }),
+          MemberService.list(project.id),
+        ]);
+        const membershipKeys = members.data
+          .filter((member) => belongsToUser(member, username))
+          .flatMap((member) => [member.id, member.userkey]);
+
+        if (membershipKeys.length === 0) {
+          return { tasks: [], events: [] };
+        }
+
+        return {
+          tasks: tasks.data.filter((task) => (
+            task.owner === username || membershipKeys.includes(task.owner)
+          )),
+          events: events.data,
+        };
+      }));
+      const nextData: MemberDashboardData = {
+        tasks: projectData.flatMap((project) => project.tasks),
+        events: projectData.flatMap((project) => project.events),
+      };
+
       if (currentRequest === requestId.current) setData(nextData);
     } catch (requestError) {
       if (currentRequest === requestId.current) {
-        setError(getDashboardErrorMessage(requestError));
+        setError(getErrorMessage(requestError));
       }
     } finally {
       if (currentRequest === requestId.current) setLoading(false);
     }
-  }, [orgId, service]);
+  }, [EventService, MemberService, ProjectService, TaskService, orgId, user?.username]);
 
   useEffect(() => {
     void refetch();

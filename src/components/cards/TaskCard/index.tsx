@@ -1,32 +1,57 @@
-import { Title } from "../../base/Title";
-import { DateBadge } from "../../badge/DateBadge";
-import { Avatar } from "../../misc/Avatar";
-import { Card, Leading } from "./style";
+import { TaskPriority } from "@/service/types/task/priority.dto";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle, Code, CodeContainer, Description, HeaderContainer, TitleContainer } from "./style";
+import { CheckCircleIcon } from "@heroicons/react/16/solid";
+import { PriorityBadge } from "@/maps/priority";
+import { User } from "@/components/misc/User";
+import { DateBadge } from "@/components/badge/DateBadge";
 import { DateTime } from "luxon";
-import { PriorityBadge } from "../../../maps/priority";
-import type { TaskPriority } from "../../../service/types/task/priority.dto";
-import { useNavigate } from "react-router-dom";
 
 interface TaskCardProps {
+  code: string;
   title: string;
-  due_date: string;
+  description?: string;
   priority: TaskPriority;
+  owner: string;
+  due_date: string;
+  className?: string;
 }
 
-export function TaskCard(props: TaskCardProps) {
-  const navigate = useNavigate();
-
+export function TaskCard({
+  code,
+  title,
+  description,
+  priority,
+  owner,
+  due_date,
+}: TaskCardProps) {
   return (
-    <Card className="tskr-task-card" onClick={() => navigate('/home/project/task')}>
-      <Leading />
-      <Title>{props.title}</Title>
-      <div className="tskr-priority">
-        {PriorityBadge[props.priority]}
-      </div>
-      <Avatar online={false} size="small" image="" />
-      <div className="tskr-date">
-        <DateBadge date={DateTime.fromISO(props.due_date, { zone: 'utc' })} />
-      </div>
+    <Card className="tskr-task-card">
+      <CardHeader>
+        <HeaderContainer>
+          <TitleContainer>
+            <CodeContainer>
+              <CheckCircleIcon width={16} />
+
+              <Code>{code}</Code>
+            </CodeContainer>
+
+            <CardTitle>{title}</CardTitle>
+          </TitleContainer>
+
+          {PriorityBadge[priority]}
+        </HeaderContainer>
+      </CardHeader>
+
+      {description && (
+        <CardContent>
+          <Description>{description}</Description>
+        </CardContent>
+      )}
+
+      <CardFooter>
+        <User username={owner} />
+        <DateBadge date={DateTime.fromISO(due_date)} />
+      </CardFooter>
     </Card>
-  )
+  );
 }

@@ -10,15 +10,18 @@ import { Divider } from "@/components/misc/Divider";
 import { Margin } from "@/components/misc/Margin";
 import { Updates } from "@/components/Updates";
 import { useOrganization } from "@/hooks/useOrganization";
-import { Greating, Infos, Items, Main } from "../style";
+import { Greating, Infos, Items, Main, SeeMoreBtn } from "../style";
 import { useOrganizerDashboard } from "./useOrganizerDashboard";
 import { ProjectCard } from "@/components/cards/ProjectCard";
+import { useNavigate } from "react-router-dom";
+import { ChevronRightIcon } from "@heroicons/react/16/solid";
 
 interface OrganizerContentProps {
   username: string;
 }
 
 export function OrganizerContent({ username }: OrganizerContentProps) {
+  const navigate = useNavigate();
   const { org } = useOrganization();
   const { loading, error, data, refetch } = useOrganizerDashboard(org?.orgkey);
 
@@ -49,23 +52,29 @@ export function OrganizerContent({ username }: OrganizerContentProps) {
           <ActiveProjectsCard {...data.projectSummary} />
           <DeadlineAlertsCard deadlines={data.deadlineAlerts} />
           <Divider />
-          <ShortcutsCard />
+          {/* <ShortcutsCard /> */}
         </Infos>
-        <Items>
+        <Items className="tskr-owner-projects-list">
           <Title>Projetos</Title>
           {data.projects.length > 0 ? (
-            data.projects.map((project) => (
-              <Margin key={project.id} right="12px">
-                <ProjectCard
-                  id={project.id}
-                  title={project.title}
-                  description={project.description}
-                  stage={project.progress}
-                  deadline={project.due_date}
-                  members={project.members ?? []}
-                />
-              </Margin>
-            ))
+            <>
+              {data.projects.slice(0, 4).map((project) => (
+                <Margin key={project.id} right="12px">
+                  <ProjectCard
+                    id={project.id}
+                    title={project.title}
+                    description={project.description}
+                    stage={project.progress}
+                    deadline={project.due_date}
+                    members={project.members ?? []}
+                  />
+                </Margin>
+              ))}
+              <SeeMoreBtn type="button" onClick={() => navigate("/home/projects")}>
+                Ver mais
+                <ChevronRightIcon width={20}/>
+              </SeeMoreBtn>
+            </>
           ) : (
             <ItalicTitle>Nenhum projeto encontrado</ItalicTitle>
           )}

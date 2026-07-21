@@ -50,8 +50,8 @@ export function ProjectCard({
         />
       </Footer>
       <Trailing className="tskr-card-Trailing">
-        <OpenProjectButton type="button" aria-label={`Abrir projeto ${title}`}>
-          <ChevronRightIcon aria-hidden="true" />
+        <OpenProjectButton className="tskr-open-proj-btn" type="button" aria-label={`Abrir projeto ${title}`}>
+          <ChevronRightIcon width={20}/>
         </OpenProjectButton>
       </Trailing>
     </Card>

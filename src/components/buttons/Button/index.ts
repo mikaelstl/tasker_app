@@ -14,7 +14,7 @@ export const Button = styled.button<ButtonProps>`
   background-color: ${props => props.color ?? Palette.blue};
 
   padding: 10px 16px;
-  border-radius: 6px;
+  border-radius: 12px;
 
   width: fit-content;
   height: fit-content;

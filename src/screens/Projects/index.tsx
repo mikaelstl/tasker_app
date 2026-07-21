@@ -2,7 +2,6 @@ import { Container, Content } from "./style.ts";
 import { CreateButton } from "../../components/buttons/CreateButton/index.tsx";
 import { SearchField } from "../../components/textfields/SearchField/index.tsx";
 import { Scroller } from "../../components/misc/Scroller/index.ts";
-import { ProjectTile } from "../../components/tiles/ProjectTile/index.tsx";
 import { useEffect, useState } from "react";
 import { ProjectProgress, type ProjectDTO } from "../../service/types/project/project.dto.ts";
 import { useAuth } from "../../hooks/useAuth.ts";
@@ -10,6 +9,7 @@ import { CreateProjectPopup } from "../../components/popups/CreateProject/index.
 import { ContentHeader } from "../../components/base/ContentHeader/index.tsx";
 import { Text } from "../../components/base/Text/index.ts";
 import { useServices } from "../../hooks/useServices.ts";
+import { ProjectCard } from "@/components/cards/ProjectCard/index.tsx";
 
 export function Projects() {
   const { ProjectService } = useServices();
@@ -60,13 +60,14 @@ export function Projects() {
         <SearchField filter sort />
         <Scroller className="vertical">
           {
-            projects.map((project) => <ProjectTile
+            projects.map((project) => <ProjectCard
               key={project.id}
               id={project.id}
               title={project.title}
-              progress={project.progress}
-              due_date={project.due_date}
-              members={project.members}
+              description={project.description}
+              stage={project.progress}
+              deadline={project.due_date}
+              members={project.members ?? []}
             />)
           }
         </Scroller>

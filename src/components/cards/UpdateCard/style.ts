@@ -1,57 +1,101 @@
 import styled from "styled-components";
 import Palette from "../../../assets/palette";
+import { Subtitle } from "../../base/Subtitle";
+import { Text } from "../../base/Text";
 
 const Card = styled.div`
   display: grid;
-
-  grid-template-areas:
-    "tskr-avatar tskr-comment-data"
-    "tskr-comment-line tskr-subtitle"
-  ;
-
-  grid-template-columns: min-content auto;
-  grid-template-rows: min-content auto;
-
-  row-gap: 2px;
+  grid-template-columns: 10px minmax(0, 1fr);
   column-gap: 12px;
 
   width: 100%;
-  height: 85px;
-
-  border-radius: 6px;
+  min-height: 96px;
+  padding-bottom: 16px;
 
   position: relative;
+`;
 
-  .tskr-subtitle {
-    height: 100%;
+const TimelineMarker = styled.div<{
+  $hasPrevious: boolean;
+  $hasNext: boolean;
+}>`
+  position: relative;
+  align-self: stretch;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    left: 4px;
+    width: 2px;
+    background-color: ${Palette.details};
+  }
+
+  &::before {
+    display: ${({ $hasPrevious }) => $hasPrevious ? "block" : "none"};
+    top: 0;
+    bottom: calc(50% + 5px);
+  }
+
+  &::after {
+    display: ${({ $hasNext }) => $hasNext ? "block" : "none"};
+    top: calc(50% + 5px);
+    bottom: -16px;
   }
 `;
 
-const Texts = styled.div`
-  grid-area: tskr-comment-data;
-
-  display: flex;
-  align-items: center;
-
-  gap: 10px;
-
-  height: 100%;
+const TrackerDot = styled.span`
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: ${Palette.details};
+  transform: translateY(-50%);
 `;
 
-const Line = styled.div`
-  grid-area: tskr-comment-line;
+const Content = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 
-  height: 100%;
+  min-width: 0;
+  padding: 12px 14px;
 
-  border-left: 3px solid ${Palette.items};
+  border: 1px solid ${Palette.details};
+  border-radius: 10px;
+  background-color: ${Palette.content};
+`;
 
-  left: 48%;
+const Header = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+`;
 
-  position: absolute;
+const UpdateDate = styled(Subtitle)`
+  flex-shrink: 0;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+`;
+
+const Description = styled(Text)`
+  font-size: 14px;
+  color: ${Palette.white_50};
+  line-height: 1.45;
+  overflow-wrap: anywhere;
 `;
 
 export {
   Card,
-  Texts,
-  Line
+  Content,
+  Description,
+  Header,
+  TrackerDot,
+  TimelineMarker,
+  UpdateDate,
 }
