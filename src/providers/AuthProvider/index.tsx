@@ -2,13 +2,14 @@ import { useEffect, useState } from "react";
 import type { LoginDTO } from "../../service/types/auth/login.dto";
 import type { ApiError } from "../../service/types/response/error";
 import type { AuthDTO } from "../../service/types/auth/auth.dto";
-import { Toasts } from "../../maps/toasts";
+import { useToast } from "@/hooks/useToast";
 import type { CurrentAccountDTO } from "../../service/types/account/current-account.dto";
 import { AuthContext } from "../../context/AuthContext";
 import { useServices } from "../../hooks/useServices";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { AccountService } = useServices();
+  const notifications = useToast();
 
   const [user, setUser] = useState<CurrentAccountDTO | null>(null);
   const [token, setToken] = useState<string | null>(null);
@@ -46,8 +47,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         err => {
           console.warn(err);
 
-          const notify = Toasts[err.level];
-          notify(err.message);
+          notifications[err.level](err.message);
         }
       );
 
@@ -73,8 +73,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         console.log(res);
 
         if (!res) {
-          const notify = Toasts['warning'];
-          notify('Unknown error');
+          notifications.warning('Unknown error');
           return false;
         }
 
@@ -84,8 +83,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const err = error as ApiError;
 
         err?.errors?.forEach(e => {
-          const notify = Toasts[e.level];
-          notify(e.message);
+          notifications[e.level](e.message);
         });
 
         setAuthenticating(false);

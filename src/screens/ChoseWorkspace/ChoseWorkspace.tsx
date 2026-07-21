@@ -2,22 +2,27 @@ import { Actions, Content, CreateOrganizationButton, HeaderContainer, WorkspaceS
 import { Logo } from "../../components/images/Logo";
 import { SectionTitle } from "../../components/base/SectionTitle";
 import { useEffect, useState } from "react";
-import { Toasts } from "../../maps/toasts";
+import { useToast } from "@/hooks/useToast";
 import type { ApiError } from "../../service/types/response/error";
 import { useNavigate } from "react-router-dom";
 import { OrganizationCard } from "../../components/cards/OrganizationCard";
 import type { UserOrganizationSummaryDTO } from "../../service/types/affiliation/summary.dto";
 import { useServices } from "../../hooks/useServices";
 import { useOrganization } from "../../hooks/useOrganization";
+import { Separator } from "@/components/LoginForm/CreateAccount/style";
+import { Divider } from "@/components/base/Divider";
+import { Text } from "@/components/base/Text";
+import { Button } from "@/components/buttons/Button";
 
 // VIRAR TELA PROPRIA
 
 export function ChoseWorkspace() {
   const navigate = useNavigate();
+  const notifications = useToast();
 
   const { AffiliationService } = useServices();
   const { defineOrg } = useOrganization();
-  
+
   const [workspaces, setWorkspaces] = useState<UserOrganizationSummaryDTO[]>([]);
   const loadOrgs = async () => {
     try {
@@ -26,7 +31,7 @@ export function ChoseWorkspace() {
       const data = response.data;
 
       if (data.length === 0) {
-        Toasts['warning']("Você não participa nem possui organizações. Crie uma organização para continuar.");
+        notifications.warning("Você não participa nem possui organizações. Crie uma organização para continuar.");
         navigate('/register');
         return;
       }
@@ -37,8 +42,7 @@ export function ChoseWorkspace() {
 
       errors?.forEach(
         err => {
-          const notify = Toasts[err.level];
-          notify(err.message);
+          notifications[err.level](err.message);
         }
       )
     }
@@ -76,7 +80,12 @@ export function ChoseWorkspace() {
         }
       </WorkspaceScroller>
       <Actions>
-        <CreateOrganizationButton onClick={() => navigate("/register")}>
+        <Separator className="tskr-saparator">
+          <Divider />
+          <Text>OU</Text>
+          <Divider />
+        </Separator>
+        <CreateOrganizationButton className="tskr-create-org-btn" onClick={() => navigate("/org/register")}>
           Criar organização
         </CreateOrganizationButton>
       </Actions>

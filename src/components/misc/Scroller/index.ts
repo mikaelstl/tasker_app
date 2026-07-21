@@ -1,7 +1,14 @@
 import styled from "styled-components";
 
-const Scroller = styled.div`
+interface ScrollerProps {
+  gap?: string | number;
+}
+
+const Scroller = styled.div.withConfig({
+  shouldForwardProp: prop => prop !== "gap",
+})<ScrollerProps>`
   display: flex;
+  gap: ${props => typeof props.gap === "number" ? `${props.gap}px` : props.gap ?? 0};
   
   &.horizontal {
     width: 100%;
@@ -11,7 +18,9 @@ const Scroller = styled.div`
   }
 
   &.vertical {
-    height: 100%;
+    height: fit-content;
+    max-height: 100%;
+    
     flex-direction: column;
     overflow-y: auto;
     overflow-y: overlay;

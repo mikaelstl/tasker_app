@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import Palette from "../../assets/palette";
+import Palette from "@/assets/palette";
 
 const Content = styled.div`
   display: flex;

@@ -6,7 +6,7 @@ import { Text } from "@/components/base/Text";
 import { InviteMemberPopup } from "@/components/popups/InviteMember";
 import { useOrganization } from "@/hooks/useOrganization";
 import { useServices } from "@/hooks/useServices";
-import { Toasts } from "@/maps/toasts";
+import { useToast, type ToastNotifications } from "@/hooks/useToast";
 import type { AffiliationDTO } from "@/service/types/affiliation/affiliation.dto";
 import type { UserOrganizationSummaryDTO } from "@/service/types/affiliation/summary.dto";
 import type { ApiError } from "@/service/types/response/error";
@@ -34,20 +34,25 @@ const ROLE_TITLES: Record<OrgRole, string> = {
   [OrgRole.MEMBER]: "Membros",
 };
 
-function notifyError(error: unknown, fallback: string) {
+function notifyError(
+  error: unknown,
+  fallback: string,
+  notifications: ToastNotifications,
+) {
   const { errors } = error as ApiError;
 
   if (!errors?.length) {
-    Toasts.error(fallback);
+    notifications.error(fallback);
     return;
   }
 
-  errors.forEach((item) => Toasts[item.level](item.message));
+  errors.forEach((item) => notifications[item.level](item.message));
 }
 
 export function Organization() {
   const { org } = useOrganization();
   const { AffiliationService } = useServices();
+  const notifications = useToast();
   const [organization, setOrganization] = useState<UserOrganizationSummaryDTO | null>(null);
   const [members, setMembers] = useState<AffiliationDTO[]>([]);
   const [loading, setLoading] = useState(true);
@@ -85,7 +90,7 @@ export function Organization() {
           setMembers(membersResponse.data);
         }
       } catch (error) {
-        notifyError(error, "Não foi possível carregar a organização.");
+        notifyError(error, "Não foi possível carregar a organização.", notifications);
       } finally {
         if (active) {
           setLoading(false);
@@ -130,9 +135,9 @@ export function Organization() {
             }
           : item
       )));
-      Toasts.info(action === "promote" ? "Membro promovido a gestor." : "Gestor rebaixado a membro.");
+      notifications.info(action === "promote" ? "Membro promovido a gestor." : "Gestor rebaixado a membro.");
     } catch (error) {
-      notifyError(error, "Não foi possível alterar o papel do participante.");
+      notifyError(error, "Não foi possível alterar o papel do participante.", notifications);
     } finally {
       setBusyMemberId(null);
     }
@@ -150,9 +155,9 @@ export function Organization() {
     try {
       await AffiliationService.delete(member.id);
       setMembers((current) => current.filter((item) => item.id !== member.id));
-      Toasts.info("Participante removido da organização.");
+      notifications.info("Participante removido da organização.");
     } catch (error) {
-      notifyError(error, "Não foi possível remover o participante.");
+      notifyError(error, "Não foi possível remover o participante.", notifications);
     } finally {
       setBusyMemberId(null);
     }
@@ -166,9 +171,9 @@ export function Organization() {
     try {
       const response = await AffiliationService.createInvite(org.orgkey);
       setInviteLink(`${window.location.origin}/invite/${encodeURIComponent(response.data.token)}`);
-      Toasts.info("Link de convite criado.");
+      notifications.info("Link de convite criado.");
     } catch (error) {
-      notifyError(error, "Não foi possível criar o convite.");
+      notifyError(error, "Não foi possível criar o convite.", notifications);
     } finally {
       setCreatingInvite(false);
     }
@@ -187,9 +192,9 @@ export function Organization() {
 
     try {
       await navigator.clipboard.writeText(inviteLink);
-      Toasts.info("Link de convite copiado.");
+      notifications.info("Link de convite copiado.");
     } catch {
-      Toasts.warning("Não foi possível copiar automaticamente. Selecione o link e copie manualmente.");
+      notifications.warning("Não foi possível copiar automaticamente. Selecione o link e copie manualmente.");
     }
   };
 

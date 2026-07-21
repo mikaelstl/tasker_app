@@ -6,7 +6,7 @@ import { Container, Content, MembersArea } from "./style";
 import { useEffect, useState } from "react";
 import type { ProjectMember } from "../../../service/types/member/member.dto";
 import type { ApiError } from "../../../service/types/response/error";
-import { Toasts } from "../../../maps/toasts";
+import { useToast } from "@/hooks/useToast";
 import { MemberRole } from "../../../service/types/member/role.dto";
 import { TaskStage } from "../../../service/types/task/stage.dto";
 import { ContentHeader } from "../../../components/base/ContentHeader";
@@ -16,6 +16,7 @@ import { useServices } from "../../../hooks/useServices";
 
 export function Members() {
   const navigate = useNavigate();
+  const notifications = useToast();
   const { id } = useParams();
   const { MemberService } = useServices();
 
@@ -34,8 +35,7 @@ export function Members() {
 
       errors?.forEach(
         err => {
-          const notify = Toasts[err.level];
-          notify(err.message);
+          notifications[err.level](err.message);
         }
       )
 

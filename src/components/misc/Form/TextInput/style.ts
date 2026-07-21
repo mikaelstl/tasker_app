@@ -1,6 +1,18 @@
 import styled from "styled-components";
 import Palette from "../../../../assets/palette";
 
+const Field = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
+
+const Label = styled.label`
+  color: ${Palette.gray};
+  font-size: 14px;
+  font-weight: 600;
+`;
+
 const Container = styled.div`
   display: flex;
   align-items: center;
@@ -48,6 +60,8 @@ const ShowPassword = styled.button`
 `;
 
 export {
+  Field,
+  Label,
   Container,
   Input,
   ShowPassword

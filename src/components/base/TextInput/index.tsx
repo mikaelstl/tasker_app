@@ -10,8 +10,8 @@ interface TextInput {
 export function TextInput(props: TextInput) {
   return (
     <Container className="tskr-input">
-      <Label htmlFor="text-input">{props.label}</Label>
-      <Input type="text" name="text-input"
+      <Label htmlFor="tskr-text-input">{props.label}</Label>
+      <Input type="text" name="tskr-text-input"
         value={props.value}
         placeholder="Escreva aqui..."
         onChange={(evt) => {

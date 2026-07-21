@@ -7,7 +7,7 @@ import { Scroller } from "../../../components/misc/Scroller";
 import { Comments, Container, Content, Description, ProjectInfo } from "./style";
 import type { ProjectDTO } from "../../../service/types/project/project.dto";
 import type { ApiError } from "../../../service/types/response/error";
-import { Toasts } from "../../../maps/toasts";
+import { useToast } from "@/hooks/useToast";
 import { useNavigate, useParams } from "react-router-dom";
 import { DateTime } from "luxon";
 import type { TaskDTO } from "../../../service/types/task/task.dto";
@@ -25,6 +25,7 @@ import { useServices } from "../../../hooks/useServices";
 
 export function Overview() {
   const navigate = useNavigate();
+  const notifications = useToast();
 
   const { ProjectService, TaskService, EventService, CommentService } = useServices();
 
@@ -43,8 +44,7 @@ export function Overview() {
 
       errors?.forEach(
         err => {
-          const notify = Toasts[err.level];
-          notify(err.message);
+          notifications[err.level](err.message);
         }
       )
 
@@ -63,8 +63,7 @@ export function Overview() {
 
       errors?.forEach(
         err => {
-          const notify = Toasts[err.level];
-          notify(err.message);
+          notifications[err.level](err.message);
         }
       )
 
@@ -83,8 +82,7 @@ export function Overview() {
 
       errors?.forEach(
         err => {
-          const notify = Toasts[err.level];
-          notify(err.message);
+          notifications[err.level](err.message);
         }
       )
 
@@ -105,8 +103,7 @@ export function Overview() {
 
       errors?.forEach(
         err => {
-          const notify = Toasts[err.level];
-          notify(err.message);
+          notifications[err.level](err.message);
         }
       )
 
@@ -123,7 +120,7 @@ export function Overview() {
         date: new Date()
       });
 
-      Toasts['info'](response.message);
+      notifications.info(response.message);
 
       getComments();
     } catch (error) {
@@ -131,8 +128,7 @@ export function Overview() {
 
       errors?.forEach(
         err => {
-          const notify = Toasts[err.level];
-          notify(err.message);
+          notifications[err.level](err.message);
         }
       )
 

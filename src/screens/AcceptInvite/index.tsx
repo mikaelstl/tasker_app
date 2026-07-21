@@ -6,11 +6,12 @@ import { CreateButton } from "@/components/buttons/CreateButton";
 import { Text } from "@/components/base/Text";
 import { useOrganization } from "@/hooks/useOrganization";
 import { useServices } from "@/hooks/useServices";
-import { Toasts } from "@/maps/toasts";
+import { useToast } from "@/hooks/useToast";
 import type { ApiError } from "@/service/types/response/error";
 import { Card, Container, Description, IconArea } from "./style";
 
 export function AcceptInvite() {
+  const notifications = useToast();
   const { token } = useParams();
   const navigate = useNavigate();
   const { AffiliationService } = useServices();
@@ -19,7 +20,7 @@ export function AcceptInvite() {
 
   const acceptInvite = async () => {
     if (!token) {
-      Toasts.error("Link de convite inválido.");
+      notifications.error("Link de convite inválido.");
       return;
     }
 
@@ -29,15 +30,15 @@ export function AcceptInvite() {
       const response = await AffiliationService.acceptInvite(token);
 
       defineOrg(response.data.orgkey, response.data.role);
-      Toasts.info("Você entrou na organização.");
+      notifications.info("Você entrou na organização.");
       navigate("/home/organization", { replace: true });
     } catch (error) {
       const { errors } = error as ApiError;
 
       if (!errors?.length) {
-        Toasts.error("Não foi possível aceitar o convite.");
+        notifications.error("Não foi possível aceitar o convite.");
       } else {
-        errors.forEach((item) => Toasts[item.level](item.message));
+        errors.forEach((item) => notifications[item.level](item.message));
       }
     } finally {
       setAccepting(false);

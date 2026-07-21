@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import Palette from "../../assets/palette";
 import { Scroller } from "../../components/misc/Scroller";
+import { Button } from "@/components/buttons/Button";
 
 const Content = styled.div`
   display: flex;
@@ -10,8 +11,6 @@ const Content = styled.div`
   gap: 24px;
   
   height: 100%;
-
-  background-color: ${Palette.tool_bars};
 `;
 
 const HeaderContainer = styled.div`
@@ -23,7 +22,7 @@ const HeaderContainer = styled.div`
 
 const WorkspaceScroller = styled(Scroller)`
   max-height: 70%;
-  height: 70%;
+  height: fit-content;
 
   gap: 12px;
 
@@ -35,21 +34,32 @@ const WorkspaceScroller = styled(Scroller)`
 `;
 
 const Actions = styled.div`
-  display: grid;
-  gap: 14px;
-  justify-items: center;
-  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  width: 30%;
 `;
 
-const CreateOrganizationButton = styled.button`
+const CreateOrganizationButton = styled(Button)`
+  display: flex;
+  justify-content: center;
+
   color: ${Palette.white};
   font-size: 14px;
   font-weight: 500;
 
-  background-color: transparent;
-  border: 0;
-  padding: 0;
+  width: 100%;
+
+  background: ${Palette.items};
+  border: 1px solid ${Palette.details};
+
   cursor: pointer;
+
+  &:hover {
+    background: ${Palette.details};
+    border: 1px solid ${Palette.gray};
+  }
 `;
 
 export {

@@ -3,6 +3,6 @@ import Palette from "../../../assets/palette";
 
 export const Label = styled.label`
   font-size: 14px;
-  color: ${Palette.gray};
-  font-weight: 600;
+  color: ${Palette.white};
+  font-weight: 500;
 `;

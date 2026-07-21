@@ -15,11 +15,12 @@ import { ContentHeader } from "../../../components/base/ContentHeader";
 import { PlusIcon } from "@heroicons/react/16/solid";
 import { Text } from "../../../components/base/Text";
 import { useNavigate, useParams } from "react-router-dom";
-import { Toasts } from "../../../maps/toasts";
+import { useToast } from "@/hooks/useToast";
 import { useServices } from "../../../hooks/useServices";
 
 export function Tasks() {
   const navigate = useNavigate();
+  const notifications = useToast();
   const { id } = useParams();
   const { TaskService } = useServices();
 
@@ -42,8 +43,7 @@ export function Tasks() {
 
       errors?.forEach(
         err => {
-          const notify = Toasts[err.level];
-          notify(err.message);
+          notifications[err.level](err.message);
         }
       )
 

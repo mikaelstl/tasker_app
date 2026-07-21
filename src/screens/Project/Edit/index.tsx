@@ -11,7 +11,7 @@ import { SelectMember } from "../../../components/misc/SelectMember";
 import { Infos, Links } from "../../../components/popups/CreateProject/style";
 import { PlusField } from "../../../components/textfields/PlusField";
 import { AdvancedSettings, Container, Content, MembersArea } from "./style";
-import { Toasts } from "../../../maps/toasts";
+import { useToast } from "@/hooks/useToast";
 import { LinkCard } from "../../../components/cards/LinkCard";
 import { User } from "../../../components/misc/User";
 import { DeleteWidget } from "../../../widgets/cards/DeleteWidget";
@@ -21,6 +21,7 @@ import { useNavigate } from "react-router-dom";
 
 export function EditProject() {
   const navigate = useNavigate();
+  const { warning } = useToast();
 
   const [links, setLinks] = useState<string[]>([]);
   
@@ -28,9 +29,7 @@ export function EditProject() {
       if (links.find(
         link => link === newLink
       )) {
-        const alert = Toasts['warning'];
-  
-        alert('Link already added');
+        warning('Link already added');
         return;
       }
   

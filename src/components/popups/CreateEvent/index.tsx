@@ -7,7 +7,7 @@ import { Form } from "../../misc/Form/style";
 import type { PopupProps } from "../popup.props";
 import type { CreateEventDTO } from "../../../service/types/events/event.create.dto";
 import { useParams } from "react-router-dom";
-import { Toasts } from "../../../maps/toasts";
+import { useToast } from "@/hooks/useToast";
 import { ContentHeader } from "../../base/ContentHeader";
 import { DeleteBtn } from "../../buttons/DeleteBtn";
 import { Text } from "../../base/Text";
@@ -15,6 +15,7 @@ import { useServices } from "../../../hooks/useServices";
 
 export function CreateEventPopup(props: PopupProps) {
   const { EventService } = useServices();
+  const { info, error } = useToast();
 
   const { id } = useParams();
 
@@ -38,11 +39,11 @@ export function CreateEventPopup(props: PopupProps) {
 
     try {
       const response = await EventService.create(event);
-      Toasts['info'](response.message as string);
+      info(response.message as string);
       props.closePopup();
     } catch (error) {
       console.error(error);
-      Toasts['error']('Não foi possível criar o evento');
+      error('Não foi possível criar o evento');
     }
   }
 

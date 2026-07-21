@@ -18,13 +18,14 @@ import { ChoseWorkspace } from "./screens/ChoseWorkspace/ChoseWorkspace"
 import { Screen } from "./components/base/Screen"
 import { Organization } from "./screens/Organization"
 import { AcceptInvite } from "./screens/AcceptInvite"
+import { CreateOrg } from "./screens/CreateOrg"
 
 function App() {
   return (
     <Screen>
       <BrowserRouter>
       <Routes>
-        <Route path="*" element={<Navigate to="/workspaces" replace />} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
 
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -32,6 +33,7 @@ function App() {
         <Route element={<PrivateRoute/>}>
           <Route path="/workspaces" element={<ChoseWorkspace />} />
           <Route path="/invite/:token" element={<AcceptInvite />} />
+          <Route path="/org/register" element={<CreateOrg />} />
 
           <Route path="/home" element={<Home />}>
             <Route index element={<Navigate to="workspace" replace />} />

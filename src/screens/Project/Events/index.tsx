@@ -7,12 +7,13 @@ import type { EventDTO } from "../../../service/types/events/event.dto";
 import type { ApiError } from "../../../service/types/response/error";
 import { ContentHeader } from "../../../components/base/ContentHeader";
 import { Text } from "../../../components/base/Text";
-import { Toasts } from "../../../maps/toasts";
+import { useToast } from "@/hooks/useToast";
 import { useNavigate, useParams } from "react-router-dom";
 import { useServices } from "../../../hooks/useServices";
 
 export function Events() {
   const navigate = useNavigate();
+  const notifications = useToast();
   const { id } = useParams();
   const { EventService } = useServices();
 
@@ -35,8 +36,7 @@ export function Events() {
 
       errors?.forEach(
         err => {
-          const notify = Toasts[err.level];
-          notify(err.message);
+          notifications[err.level](err.message);
         }
       )
 

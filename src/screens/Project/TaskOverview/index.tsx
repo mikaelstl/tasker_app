@@ -6,7 +6,7 @@ import { CommentCard } from "../../../components/cards/CommentCard";
 import { Scroller } from "../../../components/misc/Scroller";
 import { Comments, Container, Description, Links, Tag, Tags, TaskInfo } from "./style";
 import type { ApiError } from "../../../service/types/response/error";
-import { Toasts } from "../../../maps/toasts";
+import { useToast } from "@/hooks/useToast";
 import { useNavigate, useParams } from "react-router-dom";
 import { DateTime } from "luxon";
 import { ItalicTitle } from "../../../components/base/ItalicTitle";
@@ -24,6 +24,7 @@ import { useServices } from "../../../hooks/useServices";
 
 export function TaskOverview() {
   const navigate = useNavigate();
+  const notifications = useToast();
 
   const { CommentService } = useServices();
 
@@ -43,8 +44,7 @@ export function TaskOverview() {
 
       errors?.forEach(
         err => {
-          const notify = Toasts[err.level];
-          notify(err.message);
+          notifications[err.level](err.message);
         }
       )
 
@@ -60,7 +60,7 @@ export function TaskOverview() {
         date: new Date()
       });
 
-      Toasts['info'](response.message);
+      notifications.info(response.message);
 
       getComments();
     } catch (error) {
@@ -68,8 +68,7 @@ export function TaskOverview() {
 
       errors?.forEach(
         err => {
-          const notify = Toasts[err.level];
-          notify(err.message);
+          notifications[err.level](err.message);
         }
       )
 

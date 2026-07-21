@@ -14,11 +14,12 @@ import { SectionTitle } from "../../base/SectionTitle";
 import { SelectMember } from "../../misc/SelectMember";
 import { PlusField } from "../../textfields/PlusField";
 import { LinkCard } from "../../cards/LinkCard";
-import { Toasts } from "../../../maps/toasts";
+import { useToast } from "@/hooks/useToast";
 import { useServices } from "../../../hooks/useServices";
 
 export function CreateProjectPopup(props: PopupProps) {
   const { ProjectService } = useServices();
+  const { warning, error } = useToast();
 
   const { user } = useAuth();
 
@@ -31,9 +32,7 @@ export function CreateProjectPopup(props: PopupProps) {
     if (links.find(
       link => link === newLink
     )) {
-      const alert = Toasts['warning'];
-
-      alert('Link already added');
+      warning('Link already added');
       return;
     }
 
@@ -73,7 +72,7 @@ export function CreateProjectPopup(props: PopupProps) {
       props.closePopup();
     } catch (error) {
       console.error(error);
-      Toasts['error']('Não foi possível criar o projeto');
+      error('Não foi possível criar o projeto');
     }
   }
 

@@ -10,7 +10,7 @@ import type { CreateTaskDTO } from "../../../service/types/task/create.dto";
 import { useParams } from "react-router-dom";
 import { TaskPriority } from "../../../service/types/task/priority.dto";
 import { SelectMember } from "../../misc/SelectMember";
-import { Toasts } from "../../../maps/toasts";
+import { useToast } from "@/hooks/useToast";
 import { ContentHeader } from "../../base/ContentHeader";
 import { Text } from "../../base/Text";
 import { DeleteBtn } from "../../buttons/DeleteBtn";
@@ -19,6 +19,7 @@ import { useServices } from "../../../hooks/useServices";
 
 export function CreateTaskPopup(props: PopupProps) {
   const { TaskService } = useServices();
+  const { info, error } = useToast();
 
   // const navigate = useNavigate();
 
@@ -54,12 +55,12 @@ export function CreateTaskPopup(props: PopupProps) {
     try {
       const response = await TaskService.create(task);
       console.log(response);
-      Toasts['info']('Tarefa criada com sucesso');
+      info('Tarefa criada com sucesso');
       setPriority(TaskPriority.LOW)
       props.closePopup();
     } catch (error) {
       console.error(error);
-      Toasts['error']('Não foi possível criar a tarefa');
+      error('Não foi possível criar a tarefa');
     }
   }
 
