@@ -83,22 +83,22 @@ export function TaskOverview() {
     <Container className="tskr-task-overview">
       <TaskInfo>
         <Links>
-          <Link href="./project">Project_id</Link>
+          <Link href="./project">ID do projeto</Link>
           <Subtitle>/</Subtitle>
           <Subtitle>TSK-000</Subtitle>
         </Links>
-        <SectionTitle>Task Title</SectionTitle>
+        <SectionTitle>Título da tarefa</SectionTitle>
         <DateBadge date={DateTime.local()} />
         {ProgressBadge['STARTED']}
         <EditButton type="button" onClick={() => console.log('Open edit task modal')} />
         <TaskTags />
       </TaskInfo>
       <Description className="tskr-task-description">
-        <Subtitle>Description</Subtitle>
-        <Text>Some description</Text>
+        <Subtitle>Descrição</Subtitle>
+        <Text>Descrição da tarefa</Text>
       </Description>
       <Comments className="tskr-task-activity">
-        <Title>Activity</Title>
+        <Title>Atividade</Title>
         {
           comments.length !== 0
             ? <Scroller className="vertical">
@@ -111,7 +111,7 @@ export function TaskOverview() {
                 />)
               }
             </Scroller>
-            : <ItalicTitle>Without comments</ItalicTitle>
+            : <ItalicTitle>Sem comentários</ItalicTitle>
         }
         <MessageField send={sendComment} />
       </Comments>
@@ -139,17 +139,17 @@ const TaskTag = ({
 const TaskTags = () => {
   return (
     <Tags className="tskr-task-tag">
-      <TaskTag label="Priority">
+      <TaskTag label="Prioridade">
         {PriorityBadge['EXTREME']}
       </TaskTag>
-      <TaskTag label="Owner">
+      <TaskTag label="Responsável">
         <User username="mikaelst" />
       </TaskTag>
-      <TaskTag label="Created">
-        <Text>00 mm, yyyy</Text>
+      <TaskTag label="Criada em">
+        <Text>00 mm, aaaa</Text>
       </TaskTag>
-      <TaskTag label="Last update">
-        <Text>00 mm, yyyy</Text>
+      <TaskTag label="Última atualização">
+        <Text>00 mm, aaaa</Text>
       </TaskTag>
     </Tags>
   )

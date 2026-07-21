@@ -26,13 +26,13 @@ export class AccountMockService implements AccountServiceI {
     const account = mockData.accounts.find((item) => item.email === data.email && item.password === data.password);
 
     if (!account) {
-      return createMockResponse(mockData.auth, "/auth/login", "Account not found", 404, true);
+      return createMockResponse(mockData.auth, "/auth/login", "Conta não encontrada", 404, true);
     }
 
     const user = mockData.users.find((item) => item.accountkey === account.id);
 
     if (!user) {
-      return createMockResponse(mockData.auth, "/auth/login", "User not found", 404, true);
+      return createMockResponse(mockData.auth, "/auth/login", "Usuário não encontrado", 404, true);
     }
 
     const auth = createMockAuth({

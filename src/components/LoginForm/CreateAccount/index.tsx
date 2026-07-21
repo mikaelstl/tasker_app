@@ -10,12 +10,12 @@ export function CreateAccount() {
     <Container className="tskr-create-account">
       <Separator className="tskr-saparator">
         <Divider/>
-        <Text>OR</Text>
+        <Text>OU</Text>
         <Divider/>
       </Separator>
       <CreateAccountBtn className="tskr-create-account-btn"
         onClick={() => navigate("/register")}
-      >Create account</CreateAccountBtn>
+      >Criar conta</CreateAccountBtn>
     </Container>
   )
 }

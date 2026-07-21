@@ -34,20 +34,20 @@ export function ImportantDates({
 
   return (
     <Container className="important-dates">
-      <SectionTitle>Important dates</SectionTitle>
+      <SectionTitle>Datas importantes</SectionTitle>
 
       <Scroller className="vertical">
         {events.length === 0
           ? <ItalicTitle>Nenhum evento encontrado</ItalicTitle>
           :
           events.map((event) =>{
-            const eventDate = DateTime.fromISO(event.date, { zone: 'utc' });
+            const eventDate = DateTime.fromISO(event.date, { zone: 'utc' }).setLocale('pt-BR');
 
             const sameDateEvents = events.filter(evt => DateTime.fromISO(evt.date, { zone: 'utc' }).hasSame(eventDate, 'day'));
 
             return <Margin key={event.id} bottom="20px">
               <Month id="month">
-                <Subtitle>{eventDate.monthShort} {eventDate.day}, {eventDate.year}</Subtitle>
+                <Subtitle>{eventDate.day} de {eventDate.monthShort} de {eventDate.year}</Subtitle>
                 {
                   sameDateEvents
                   .map(

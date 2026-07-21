@@ -11,7 +11,7 @@ export function DeleteBtn({
 }: DeleteButtonProps) {
   return (
     <Button onClick={onClick} color={Palette.red}>
-      <Text>Cancel</Text>
+      <Text>Cancelar</Text>
     </Button>
   )
 }

@@ -19,11 +19,11 @@ export function UseSystemStage({
 }: UseSystemStageProps) {
   return (
     <>
-      <Title>What you want to do now?</Title>
+      <Title>O que você deseja fazer agora?</Title>
       <Actions>
         <div className="tskr-use-system-stage-btns">
-          <Button onClick={createOrg}><Text>Create Organization</Text></Button>
-          <Button onClick={login} color={Palette.details}><Text>Use system</Text></Button>
+          <Button onClick={createOrg}><Text>Criar organização</Text></Button>
+          <Button onClick={login} color={Palette.details}><Text>Usar o sistema</Text></Button>
         </div>
         <BackStageBtn handleStage={() => handleStage(CreateAccountStageEnum.SET_ACCOUNT)} />
       </Actions>

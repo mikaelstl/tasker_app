@@ -26,7 +26,7 @@ export function ChoseWorkspace() {
       const data = response.data;
 
       if (data.length === 0) {
-        Toasts['warning']("You don't participates or have organizations. Please create a organization.");
+        Toasts['warning']("Você não participa nem possui organizações. Crie uma organização para continuar.");
         navigate('/register');
         return;
       }
@@ -57,7 +57,7 @@ export function ChoseWorkspace() {
     <Content>
       <HeaderContainer className="tskr-stage-header-container">
         <Logo width={182} />
-        <SectionTitle>CHOSE WORKSPACE</SectionTitle>
+        <SectionTitle>ESCOLHA UMA ÁREA DE TRABALHO</SectionTitle>
       </HeaderContainer>
       <WorkspaceScroller className="tskr-workspaces vertical">
         {
@@ -77,7 +77,7 @@ export function ChoseWorkspace() {
       </WorkspaceScroller>
       <Actions>
         <CreateOrganizationButton onClick={() => navigate("/register")}>
-          Create organization
+          Criar organização
         </CreateOrganizationButton>
       </Actions>
     </Content>

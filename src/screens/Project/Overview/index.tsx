@@ -154,21 +154,21 @@ export function Overview() {
       <Content className="tskr-proj-content">
         <ProjectInfo>
           <SectionTitle>{project?.title}</SectionTitle>
-          <Subtitle>Stated at: --:-- Due date: mm 00, yyyy</Subtitle>
+          <Subtitle>Iniciado em: --:-- Prazo: 00 de mm de aaaa</Subtitle>
           {ProgressBadge[project.progress]}
           <EditButton type="button" onClick={() => navigate('../edit')} />
           <Description>
-            <Subtitle>Description</Subtitle>
+            <Subtitle>Descrição</Subtitle>
             <Text>{project.description}</Text>
           </Description>
         </ProjectInfo>
         <TaskCategoryAccordion
           visible
-          title="Most Important"
+          title="Mais importantes"
           tasks={tasks}
         />
         <Comments className="tskr-overview-comments">
-          <Title>Activity</Title>
+          <Title>Atividade</Title>
           {
             comments.length !== 0
               ? <Scroller className="vertical">
@@ -181,7 +181,7 @@ export function Overview() {
                   />)
                 }
               </Scroller>
-              : <ItalicTitle>Without comments</ItalicTitle>
+              : <ItalicTitle>Sem comentários</ItalicTitle>
           }
           <MessageField send={sendComment} />
         </Comments>

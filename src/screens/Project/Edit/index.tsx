@@ -49,33 +49,33 @@ export function EditProject() {
   return (
     <Container className="tskr-edit-project-page">
       <ContentHeader
-        title="Edit Project"
+        title="Editar projeto"
       >
         <DeleteBtn onClick={() => navigate('../')}/>
         <CreateButton type="button">
-          <Text>Add member</Text>
+          <Text>Adicionar membro</Text>
         </CreateButton>
       </ContentHeader>
       <Content className="tskr-edit-fields">
         <Infos>
           <TextInput
-            label="Project name"
+            label="Nome do projeto"
             value=''
             onChange={() => { }}
           />
           <TextAreaInput
-            label="Description"
+            label="Descrição"
             value=''
             onChange={() => { }}
           />
           <CalendarInput
-            label="Due date"
+            label="Prazo"
             value=''
             onChange={() => { }}
           />
         </Infos>
         <SelectMember
-          label="Manager"
+          label="Gestor"
           data={[{
             id: '648c864f',
             name: 'mikael',
@@ -83,7 +83,7 @@ export function EditProject() {
           }]}
         />
         <MembersArea>
-          <SectionTitle>Members</SectionTitle>
+          <SectionTitle>Membros</SectionTitle>
           <User username="mikaelst"/>
           <User username="siegfried"/>
         </MembersArea>
@@ -100,7 +100,7 @@ export function EditProject() {
           }
         </Links>
         <AdvancedSettings>
-          <Title>Advanced Settings</Title>
+          <Title>Configurações avançadas</Title>
           <EnableTimeTrackWidget/>
           <DeleteWidget/>
         </AdvancedSettings>

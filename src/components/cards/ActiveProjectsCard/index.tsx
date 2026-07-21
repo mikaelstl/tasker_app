@@ -19,7 +19,7 @@ export function ActiveProjectsCard({
   return (
     <Container className="tskr-active-projects-card">
       <Header>
-        <Title>Active Projects</Title>
+        <Title>Projetos ativos</Title>
       </Header>
       <Cards>
         <Card>

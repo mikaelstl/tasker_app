@@ -13,7 +13,7 @@ export function DateBadge(props: DateBadgeProps) {
     <Container className="tskr-date-badge">
       <CalendarIcon width={18} fill={Palette.gray}/>
       <Subtitle>
-        {props.date.day} {props.date.monthShort} {props.date.year}
+        {props.date.setLocale("pt-BR").toFormat("dd LLL yyyy")}
       </Subtitle>
     </Container>
   )

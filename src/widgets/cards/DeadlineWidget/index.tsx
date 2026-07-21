@@ -9,7 +9,7 @@ export function DeadlineWidget() {
   return (
     <Container>
       <Header>
-        <Title>Deadline</Title>
+        <Title>Prazo</Title>
       </Header>
       <Date>
         <SectionTitle>
@@ -17,7 +17,7 @@ export function DeadlineWidget() {
         </SectionTitle>
       </Date>
       <DaysTile>
-        <Subtitle><Bold>00</Bold> Days left</Subtitle>
+        <Subtitle><Bold>00</Bold> dias restantes</Subtitle>
       </DaysTile>
     </Container>
   )

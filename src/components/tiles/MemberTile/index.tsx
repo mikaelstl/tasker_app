@@ -14,12 +14,17 @@ interface MemberTile {
   type: 'member' | 'owner',
 }
 
+const MemberTypeLabel = {
+  member: 'Membro',
+  owner: 'Proprietário',
+};
+
 export function MemberTile(props: MemberTile) {
   return (
     <Container id="member-tile">
       <User username={props.username}/>
-      <Badge color={props.type === 'member' ? Palette.lightBlue_50 : Palette.red_50}>{props.type}</Badge>
-      <Text id="total-tasks">{formatNumber(props.tasks.done)} out of {formatNumber(props.tasks.total, 3)}</Text>
+      <Badge color={props.type === 'member' ? Palette.lightBlue_50 : Palette.red_50}>{MemberTypeLabel[props.type]}</Badge>
+      <Text id="total-tasks">{formatNumber(props.tasks.done)} de {formatNumber(props.tasks.total, 3)}</Text>
     </Container>
   )
 }

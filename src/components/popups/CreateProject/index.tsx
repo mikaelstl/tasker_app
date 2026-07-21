@@ -73,7 +73,7 @@ export function CreateProjectPopup(props: PopupProps) {
       props.closePopup();
     } catch (error) {
       console.error(error);
-      Toasts['error']('Failed to create project');
+      Toasts['error']('Não foi possível criar o projeto');
     }
   }
 
@@ -83,35 +83,35 @@ export function CreateProjectPopup(props: PopupProps) {
     <Overlay className="tskr-popup-overlay">
       <Card className="tskr-popup-create-project">
         <ContentHeader
-          title="Create Project"
+          title="Criar projeto"
         >
           <DeleteBtn onClick={handleClose} />
           <CreateButton type="submit"
             onClick={onSubmit}
           >
-            <Text>Create</Text>
+            <Text>Criar</Text>
           </CreateButton>
         </ContentHeader>
         <Content>
           <Infos>
             <TextInput
-              label="Project name"
+              label="Nome do projeto"
               value={projectName}
               onChange={(value) => setProjectName(value)}
             />
             <TextAreaInput
-              label="Description"
+              label="Descrição"
               value={description}
               onChange={(value) => setDescription(value)}
             />
             <CalendarInput
-              label="Due date"
+              label="Prazo"
               value={dueDate}
               onChange={(value) => setDueDate(value)}
             />
           </Infos>
           <SelectMember
-            label="Manager"
+            label="Gestor"
             data={[{
               id: '648c864f',
               name: 'mikael',

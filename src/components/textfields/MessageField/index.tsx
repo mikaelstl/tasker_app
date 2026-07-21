@@ -22,14 +22,14 @@ export function MessageField({ send }: MessageFieldProps) {
         <ChatBubbleOvalLeftIcon width="24"/>
         <input
           type="text"
-          placeholder="Write something..."
+          placeholder="Escreva algo..."
           value={message}
           onChange={(evt) => setMessage(evt.target.value)}  
         />
       </Field>
       <Button type="button" id="send" onClick={handleSend}>
         <PaperAirplaneIcon size={15}/>
-        <Text>Send</Text>
+        <Text>Enviar</Text>
       </Button>
     </Container>
   )

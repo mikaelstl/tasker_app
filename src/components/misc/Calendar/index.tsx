@@ -38,7 +38,7 @@ interface CalendarProps {
 export function Calendar({
   events
 }: CalendarProps) {
-  const today = DateTime.now();
+  const today = DateTime.now().setLocale('pt-BR');
   const [month, setMonth] = useState<Month>({
     short: today.monthShort!,
     name: today.monthLong
@@ -100,7 +100,7 @@ export function Calendar({
       }
     }
 
-    const weeks = Info.weekdays('short').map(
+    const weeks = Info.weekdays('short', { locale: 'pt-BR' }).map(
       (weekday) => weekday[0].toUpperCase() + weekday.substring(1).toLowerCase().replace('.', '')
     )
     setWeekdays(

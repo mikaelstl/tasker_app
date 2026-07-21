@@ -78,7 +78,7 @@ export function PerformanceChart() {
   return (
     <Container className="tskr-performance-chart">
       <Header>
-        <Title>Performance per member</Title>
+        <Title>Desempenho por membro</Title>
         <SelectUserInput data={data} onChange={handleSelect}/>
       </Header>
       <Content>

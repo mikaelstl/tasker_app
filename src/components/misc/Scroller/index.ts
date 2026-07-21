@@ -6,13 +6,15 @@ const Scroller = styled.div`
   &.horizontal {
     width: 100%;
     flex-direction: row;
-    overflow-x: scroll;
+    overflow-x: auto;
+    overflow-x: overlay;
   }
 
   &.vertical {
     height: 100%;
     flex-direction: column;
-    overflow-y: scroll;
+    overflow-y: auto;
+    overflow-y: overlay;
   }
 `;
 

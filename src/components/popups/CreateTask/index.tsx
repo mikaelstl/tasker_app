@@ -54,12 +54,12 @@ export function CreateTaskPopup(props: PopupProps) {
     try {
       const response = await TaskService.create(task);
       console.log(response);
-      Toasts['info']('Created task with success');
+      Toasts['info']('Tarefa criada com sucesso');
       setPriority(TaskPriority.LOW)
       props.closePopup();
     } catch (error) {
       console.error(error);
-      Toasts['error']('Failed to create task');
+      Toasts['error']('Não foi possível criar a tarefa');
     }
   }
 
@@ -86,11 +86,11 @@ export function CreateTaskPopup(props: PopupProps) {
     <Overlay className="tskr-popup-overlay">
       <Card className="tskr-popup-create-project">
         <ContentHeader
-          title="Create new Task"
+          title="Criar nova tarefa"
         >
           <DeleteBtn onClick={handleClose} />
           <CreateButton type="submit">
-            <Text>Create task</Text>
+            <Text>Criar tarefa</Text>
           </CreateButton>
         </ContentHeader>
         <Form
@@ -98,23 +98,23 @@ export function CreateTaskPopup(props: PopupProps) {
           onSubmit={onSubmit}
         >
           <TextInput
-            label="Task name"
+            label="Nome da tarefa"
             value={taskName}
             onChange={(value) => setTaskName(value)}
           />
           <TextAreaInput
-            label="Description"
+            label="Descrição"
             value={description}
             onChange={(value) => setDescription(value)}
           />
           <CalendarInput
-            label="Due date"
+            label="Prazo"
             value={dueDate}
             onChange={(value) => setDueDate(value)}
           />
         </Form>
         <SelectMember
-          label="Owner"
+          label="Responsável"
           data={members}
         />
       </Card>

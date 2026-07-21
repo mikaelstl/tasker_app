@@ -11,23 +11,23 @@ export function TasksInfosWidget() {
     <Container>
       <Header>
         <Title>00</Title>
-        <Text>Total Tasks</Text>
+        <Text>Total de tarefas</Text>
       </Header>
       <Content>
         <Tile>
           <CheckIcon width={22} fill={Palette.green} />
           <Title>00</Title>
-          <Text>Done</Text>
+          <Text>Concluídas</Text>
         </Tile>
         <Tile>
           <ArrowTrendingUpIcon width={22} fill={Palette.yellow} />
           <Title>00</Title>
-          <Text>In progress</Text>
+          <Text>Em andamento</Text>
         </Tile>
         <Tile>
           <ExclamationTriangleIcon width={22} fill={Palette.red} />
           <Title>00</Title>
-          <Text>Overdue</Text>
+          <Text>Atrasadas</Text>
         </Tile>
       </Content>
     </Container>

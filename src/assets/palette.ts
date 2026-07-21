@@ -11,6 +11,7 @@ const Palette = {
   transparent: '#FF000000',
   
   gray: '#56526b',
+  gray_25: 'rgba(106, 101, 134, 0.25)',
   gray_50: 'rgba(106, 101, 134, 0.50)',
   
   lightBlue: '#508CEE',

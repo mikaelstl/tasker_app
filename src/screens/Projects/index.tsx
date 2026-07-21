@@ -52,7 +52,7 @@ export function Projects() {
       >
         <CreateButton type="button" onClick={handlePopup}>
           <Text>
-            Create new project
+            Criar novo projeto
           </Text>
         </CreateButton>
       </ContentHeader>

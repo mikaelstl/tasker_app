@@ -20,15 +20,15 @@ export function MemberStatTile(props: MemberStatTileProps) {
         <User username={props.username} />
       </Leading>
       <Indicator>
-        <Subtitle>Started</Subtitle>
+        <Subtitle>Iniciadas</Subtitle>
         <Badge color={Palette.lightBlue_50}>{props.started}</Badge>
       </Indicator>
       <Indicator>
-        <Subtitle>Done</Subtitle>
+        <Subtitle>Concluídas</Subtitle>
         <Badge color={Palette.green_50}>{props.done}</Badge>
       </Indicator>
       <Indicator>
-        <Subtitle>Overdue</Subtitle>
+        <Subtitle>Atrasadas</Subtitle>
         <Badge color={Palette.red_50}>{props.overdue}</Badge>
       </Indicator>
     </Container>

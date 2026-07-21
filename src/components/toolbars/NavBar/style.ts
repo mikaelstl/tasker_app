@@ -16,14 +16,15 @@ const Container = styled.div`
 const Nav = styled.nav`
   display: grid;
   grid-auto-flow: row;
+  gap: 4px;
   
   border-bottom: 1px solid ${Palette.items};
   
-  padding: 10px 0px;
+  padding: 10px 4px;
 `;
 
 interface NavItemProps {
-  activated?: boolean;
+  $activated?: boolean;
 }
 
 const NavItem = styled.button<NavItemProps>`
@@ -35,17 +36,19 @@ const NavItem = styled.button<NavItemProps>`
   
   padding: 10px 20px;
   
-  background: none;
+  background-color: ${({ $activated }) => $activated ? Palette.gray_25 : Palette.transparent};
   border: none;
-  color: ${props => props.activated ? Palette.white : Palette.gray};
+  border-radius: 6px;
 
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   
   cursor: pointer;
 
-  svg {
-    fill: ${props => props.activated ? Palette.white : Palette.gray};
+  transition: background-color 160ms ease;
+
+  &:hover {
+    background-color: ${Palette.gray_25};
   }
 `;
 
@@ -68,11 +71,13 @@ const Accordion = styled.button`
 `;
 
 const Actions = styled.div`
+  padding: 4px;
+
   .log-out {
     color: ${Palette.red}
   }
   
-  svg {
+  .log-out svg {
     fill: ${Palette.red};
   }
 `;

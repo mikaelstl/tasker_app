@@ -20,7 +20,7 @@ export function AppBar() {
         <Title>Tasker</Title>
       </Logo>
       <UserInfos className="tskr-user-infos">
-        <BellIcon width={28}/>
+        {/* <BellIcon width={28}/> */}
         <button type="button" onClick={goToProfile}>
           <Avatar online={false} image="" size="medium"/>
         </button>

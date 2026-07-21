@@ -8,14 +8,18 @@ import { useOrganization } from "@/hooks/useOrganization";
 import { Categories, Greating, Main } from "../style";
 import { useMemberDashboard } from "./useMemberDashboard";
 
-export function MemberContent() {
+interface MemberContentProps {
+  username: string;
+}
+
+export function MemberContent({ username }: MemberContentProps) {
   const { org } = useOrganization();
   const { loading, error, data, refetch } = useMemberDashboard(org?.orgkey);
 
   if (loading) {
     return (
       <Main>
-        <Greating><SectionTitle>Hello! MEMBER</SectionTitle></Greating>
+        <Greating><SectionTitle>Olá, {username}!</SectionTitle></Greating>
         <Text>Carregando dashboard...</Text>
       </Main>
     );
@@ -24,7 +28,7 @@ export function MemberContent() {
   if (error) {
     return (
       <Main>
-        <Greating><SectionTitle>Hello! MEMBER</SectionTitle></Greating>
+        <Greating><SectionTitle>Olá, {username}!</SectionTitle></Greating>
         <Text>{error}</Text>
         <Button type="button" onClick={() => void refetch()}>Tentar novamente</Button>
       </Main>
@@ -37,13 +41,13 @@ export function MemberContent() {
   return (
     <>
       <Categories>
-        <Greating><SectionTitle>Hello! MEMBER</SectionTitle></Greating>
+        <Greating><SectionTitle>Olá, {username}!</SectionTitle></Greating>
         {hasTasks ? (
           <>
-            <TaskCategoryAccordion visible title="Today" tasks={taskCategories.today} />
-            <TaskCategoryAccordion title="To this Week" tasks={taskCategories.thisWeek} />
-            <TaskCategoryAccordion title="Pending" tasks={taskCategories.pending} />
-            <TaskCategoryAccordion title="Overdue" tasks={taskCategories.overdue} />
+            <TaskCategoryAccordion visible title="Hoje" tasks={taskCategories.today} />
+            <TaskCategoryAccordion title="Nesta semana" tasks={taskCategories.thisWeek} />
+            <TaskCategoryAccordion title="Pendentes" tasks={taskCategories.pending} />
+            <TaskCategoryAccordion title="Atrasadas" tasks={taskCategories.overdue} />
           </>
         ) : (
           <ItalicTitle>Nenhuma tarefa encontrada</ItalicTitle>

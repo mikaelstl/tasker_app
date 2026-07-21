@@ -99,7 +99,7 @@ export class ProjectMockService implements ProjectServiceI {
     const { orgkey } = requireMockOrgRequest(`/project/${id}`, mockData.affiliations);
     const project = mockData.projects.find((item) => item.id === id && item.ownerkey === orgkey);
 
-    return createMockResponse(project ?? createMockProject(), `/project/${id}`, project ? "OK" : "Project not found", project ? 200 : 404, !project);
+    return createMockResponse(project ?? createMockProject(), `/project/${id}`, project ? "OK" : "Projeto não encontrado", project ? 200 : 404, !project);
   }
 
   async update(id: string, data: EditProjectDTO): Promise<ApiResponse<ProjectDTO>> {
@@ -107,7 +107,7 @@ export class ProjectMockService implements ProjectServiceI {
     const project = mockData.projects.find((item) => item.id === id && item.ownerkey === orgkey);
 
     if (!project) {
-      return createMockResponse(createMockProject(), `/project/${id}`, "Project not found", 404, true);
+      return createMockResponse(createMockProject(), `/project/${id}`, "Projeto não encontrado", 404, true);
     }
 
     const nextProject: ProjectDTO = {
@@ -212,7 +212,7 @@ export class ProjectMockService implements ProjectServiceI {
     return createMockResponse(
       stats,
       `/project/${id}/stats`,
-      project ? "OK" : "Project not found",
+      project ? "OK" : "Projeto não encontrado",
       project ? 200 : 404,
       !project,
     );

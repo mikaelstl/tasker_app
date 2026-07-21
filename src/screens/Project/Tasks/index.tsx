@@ -64,7 +64,7 @@ export function Tasks() {
           onClick={handleOpenPopup}
         >
           <PlusIcon width={20} />
-          <Text>New Task</Text>
+          <Text>Nova tarefa</Text>
         </CreateButton>
       </ContentHeader>
       <Margin margin="0px 20px">
@@ -72,7 +72,7 @@ export function Tasks() {
       </Margin>
       <Content id="tasks-steps">
         <Step className="tasks-step">
-          <Title>PENDING</Title>
+          <Title>PENDENTES</Title>
           <Scroller className="vertical">
             {
               tasks
@@ -91,7 +91,7 @@ export function Tasks() {
           </Scroller>
         </Step>
         <Step className="tasks-step" color={Palette.blue}>
-          <Title>STATED</Title>
+          <Title>INICIADAS</Title>
           <Scroller className="vertical">
             {
               tasks
@@ -110,7 +110,7 @@ export function Tasks() {
           </Scroller>
         </Step>
         <Step className="tasks-step" color={Palette.yellow}>
-          <Title>REVIEW</Title>
+          <Title>EM REVISÃO</Title>
           <Scroller className="vertical">
             {
               tasks
@@ -129,7 +129,7 @@ export function Tasks() {
           </Scroller>
         </Step>
         <Step className="tasks-step" color={Palette.green}>
-          <Title>DONE</Title>
+          <Title>CONCLUÍDAS</Title>
           <Scroller className="vertical">
             {
               tasks
@@ -148,7 +148,7 @@ export function Tasks() {
           </Scroller>
         </Step>
         <Step className="tasks-step" color={Palette.red}>
-          <Title>OVERDUE</Title>
+          <Title>ATRASADAS</Title>
           <Scroller className="vertical">
             {
               tasks

@@ -25,7 +25,7 @@ export function UpdateCard({
         <Text>{content}</Text>
       </Texts>
       <Line/>
-      <Subtitle className="tskr-subtitle">{formatNumber(date.day)} {date.monthShort} {formatNumber(date.hour)}:{formatNumber(date.minute)}</Subtitle>
+      <Subtitle className="tskr-subtitle">{formatNumber(date.day)} {date.setLocale("pt-BR").monthShort} {formatNumber(date.hour)}:{formatNumber(date.minute)}</Subtitle>
     </Card>
   )
 }

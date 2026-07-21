@@ -76,14 +76,14 @@ export class TaskMockService implements TaskServiceI {
   async find(code: string): Promise<ApiResponse<TaskDTO>> {
     const task = mockData.tasks.find((item) => item.code === code);
 
-    return createMockResponse(task ?? createMockTask(), `/tasks/${code}`, task ? "OK" : "Task not found", task ? 200 : 404, !task);
+    return createMockResponse(task ?? createMockTask(), `/tasks/${code}`, task ? "OK" : "Tarefa não encontrada", task ? 200 : 404, !task);
   }
 
   async update(code: string, update: EditTaskDTO): Promise<ApiResponse<TaskDTO>> {
     const task = mockData.tasks.find((item) => item.code === code);
 
     if (!task) {
-      return createMockResponse(createMockTask(), `/tasks/${code}`, "Task not found", 404, true);
+      return createMockResponse(createMockTask(), `/tasks/${code}`, "Tarefa não encontrada", 404, true);
     }
 
     Object.assign(task, {

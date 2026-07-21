@@ -31,6 +31,7 @@ const Content = styled.div`
   width: 70%;
 
   overflow: auto;
+  overflow: overlay;
   
   padding: 20px 0px;
 `;

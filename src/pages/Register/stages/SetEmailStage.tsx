@@ -22,22 +22,22 @@ export function SetEmailStage({
       <div className="tskr-stage-input">
         <TextInput
           type="email"
-          placeholder="Enter your e-mail"
+          placeholder="Informe seu e-mail"
           value={email}
           onChange={(value) => setEmail(value)}
           icon={<EnvelopeIcon width={24} />}
         />
-        <Text>Please enter an e-mail</Text>
+        <Text>Informe um e-mail</Text>
       </div>
       <StageButton onClick={() => {
         if (validator.isEmpty(email) || !validator.isEmail(email)) {
-          Toasts['warning']("Please enter a valid e-mail.")
+          Toasts['warning']("Informe um e-mail válido.")
           return;
         }
 
         handleStage(CreateAccountStageEnum.SET_ACCOUNT)
       }}>
-        <Text>Advance</Text>
+        <Text>Avançar</Text>
       </StageButton>
     </>
   )

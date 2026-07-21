@@ -11,6 +11,42 @@
   margin: 0px;
   font-family: "Poppins", sans-serif;
   color: white;
+
+  /* A barra so ganha cor quando a area rolavel esta sob o mouse. */
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  scrollbar-gutter: auto;
+}
+
+*:hover {
+  scrollbar-color: #56526b transparent;
+}
+
+/* Chrome, Edge e Safari */
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  background-color: transparent;
+}
+
+*::-webkit-scrollbar-track,
+*::-webkit-scrollbar-corner {
+  background-color: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  background-clip: padding-box;
+  border: 2px solid transparent;
+  border-radius: 999px;
+}
+
+*:hover::-webkit-scrollbar-thumb {
+  background-color: #56526b;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: #508cee;
 }
 
 input {

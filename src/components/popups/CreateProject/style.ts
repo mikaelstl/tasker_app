@@ -57,6 +57,7 @@ const Content = styled.div`
   width: 100%;
 
   overflow: auto;
+  overflow: overlay;
 `;
 
 const Infos = styled.div`

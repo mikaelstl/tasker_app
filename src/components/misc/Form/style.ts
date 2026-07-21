@@ -17,6 +17,7 @@ const Form = styled.div`
   gap: 25px;
 
   overflow: auto;
+  overflow: overlay;
 `;
 
 const SubmitButton = styled.button`

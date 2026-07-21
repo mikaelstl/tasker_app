@@ -42,7 +42,7 @@ export function CreateEventPopup(props: PopupProps) {
       props.closePopup();
     } catch (error) {
       console.error(error);
-      Toasts['error']('Failed to create event');
+      Toasts['error']('Não foi possível criar o evento');
     }
   }
 
@@ -52,21 +52,21 @@ export function CreateEventPopup(props: PopupProps) {
     <Overlay className="tskr-popup-overlay">
       <Card className="tskr-popup-create-project">
         <ContentHeader
-          title="Add Event"
+          title="Adicionar evento"
         >
           <CreateButton type="submit">
-            <Text>Add event</Text>
+            <Text>Adicionar evento</Text>
           </CreateButton>
           <DeleteBtn onClick={handleClose}/>
         </ContentHeader>
         <Form onSubmit={onSubmit}>
           <TextInput
-            label="Event name"
+            label="Nome do evento"
             value={eventName}
             onChange={(value) => setEventName(value)}
           />
           <CalendarInput
-            label="Date"
+            label="Data"
             value={date}
             onChange={(value) => setDate(value)}
           />

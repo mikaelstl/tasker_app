@@ -13,19 +13,19 @@ export function SearchField(props: SearchFieldProps) {
     <Container className="search-field">
       <Search id="search">
         <MagnifyingGlassIcon width="24"/>
-        <input type="text" placeholder="Search"/>
+        <input type="text" placeholder="Pesquisar"/>
       </Search>
       { props.filter ?? false
           ? <Button type="button" id="filter">
               <AdjustmentsHorizontalIcon width="20"/>
-              <Text>Filter</Text>
+              <Text>Filtrar</Text>
             </Button>
           : <></>
       }
       { props.sort ?? false
           ? <Button type="button" id="sort">
               <ChevronUpIcon width="20"/>
-              <Text>Sort</Text>
+              <Text>Ordenar</Text>
             </Button>
           : <></>
       }

@@ -13,7 +13,7 @@ export function TextAreaInput(props: TextAreaInput) {
       <Label htmlFor="textarea-input">{props.label}</Label>
       <TextArea name="textarea-input"
         cols={6}
-        placeholder="Write here..."
+        placeholder="Escreva aqui..."
         value={props.value}
         onChange={(evt) => {
             evt.preventDefault()

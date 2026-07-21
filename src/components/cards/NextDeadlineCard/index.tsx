@@ -15,11 +15,11 @@ export function NextDeadlineCard({ deadline }: NextDeadlineCardProps) {
   return (
     <Container className="tskr-next-deadline-card">
       <Header>
-        <Title>Next Deadline</Title>
+        <Title>Próximo prazo</Title>
         <CalendarIcon width={20}/>
       </Header>
       <Infos>
-        <Date>{DateTime.fromISO(deadline.dueDate).toFormat("MMM dd, yyyy")}</Date>
+        <Date>{DateTime.fromISO(deadline.dueDate).setLocale("pt-BR").toFormat("dd 'de' LLL 'de' yyyy")}</Date>
         <Subtitle>{deadline.title}</Subtitle>
       </Infos>
     </Container>

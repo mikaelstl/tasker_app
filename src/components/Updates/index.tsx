@@ -16,7 +16,7 @@ export function Updates({
 }: UpdatesProps) {
   return (
     <Container className="tskr-updates">
-      <SectionTitle>Updates</SectionTitle>
+      <SectionTitle>Atualizações</SectionTitle>
 
       <Scroller className="vertical">
         {updates.length === 0

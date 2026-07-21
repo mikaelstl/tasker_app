@@ -117,7 +117,7 @@ export function Chart({
           },
         ]}
         role="application"
-        ariaLabel="Bar chart"
+        ariaLabel="Gráfico de barras"
       />
     </Container>
   )

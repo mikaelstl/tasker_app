@@ -13,7 +13,7 @@ export function TextInput(props: TextInput) {
       <Label htmlFor="text-input">{props.label}</Label>
       <Input type="text" name="text-input"
         value={props.value}
-        placeholder="Write here..."
+        placeholder="Escreva aqui..."
         onChange={(evt) => {
             evt.preventDefault()
             props.onChange!(evt.target.value)

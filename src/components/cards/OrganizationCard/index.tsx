@@ -20,6 +20,11 @@ interface OrgCardLabelProps {
 
 type OrgCardLabelType = "members" | "projects";
 
+const OrgCardLabelText: Record<OrgCardLabelType, string> = {
+  members: "membros",
+  projects: "projetos",
+};
+
 const OrgCardLabel = ({
   value,
   type,
@@ -32,7 +37,7 @@ const OrgCardLabel = ({
   return (
     <MetaItem>
       {IconTypeMap[type]}
-      <span>{String(value).padStart(2, "0")} {type}</span>
+      <span>{String(value).padStart(2, "0")} {OrgCardLabelText[type]}</span>
     </MetaItem>
   );
 };

@@ -10,8 +10,8 @@ export function ChatCard() {
       <Leading className="chat-leading">
         <Avatar online={false} size="small" image=""/>
         <div id="texts">
-          <Title>chat_name</Title>
-          <Subtitle>message</Subtitle>
+          <Title>Nome do chat</Title>
+          <Subtitle>Mensagem</Subtitle>
         </div>
       </Leading>
       <Badge>+n</Badge>

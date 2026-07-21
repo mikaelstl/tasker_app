@@ -111,7 +111,7 @@ export class AffiliationMockService implements AffiliationServiceI {
     const affiliation = mockData.affiliations.find((item) => item.id === id);
 
     if (!affiliation) {
-      return createMockResponse({ message: "Affiliation not found" }, `/affiliations/promote/${id}`, "Affiliation not found", 404, true);
+      return createMockResponse({ message: "Vínculo não encontrado" }, `/affiliations/promote/${id}`, "Vínculo não encontrado", 404, true);
     }
 
     if (affiliation.orgkey !== orgkey) {
@@ -132,7 +132,7 @@ export class AffiliationMockService implements AffiliationServiceI {
     const affiliation = mockData.affiliations.find((item) => item.id === id);
 
     if (!affiliation) {
-      return createMockResponse({ message: "Affiliation not found" }, `/affiliations/demote/${id}`, "Affiliation not found", 404, true);
+      return createMockResponse({ message: "Vínculo não encontrado" }, `/affiliations/demote/${id}`, "Vínculo não encontrado", 404, true);
     }
 
     if (affiliation.orgkey !== orgkey) {

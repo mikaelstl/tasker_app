@@ -55,7 +55,7 @@ export function Events() {
         title=""
       >
         <CreateButton type="button" onClick={handleOpenPopup}>
-          <Text>New Event</Text>
+          <Text>Novo evento</Text>
         </CreateButton>
       </ContentHeader>
       <CalendarArea id="calendar-area">

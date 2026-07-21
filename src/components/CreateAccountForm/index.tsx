@@ -34,7 +34,7 @@ export function CreateAccountForm(props: CreateAccountFormProps) {
         <Inputs className="create-account-inputs">
           <TextInput
             icon={<UserIcon style={{ width: 24, height: 24 }}/>}
-            placeholder="Name"
+            placeholder="Nome"
             value={name}
             onChange={(value) => setName(value)}
           />
@@ -46,18 +46,18 @@ export function CreateAccountForm(props: CreateAccountFormProps) {
           />
           <TextInput 
             icon={<TagIcon style={{ width: 24, height: 24 }}/>} 
-            placeholder="Username"
+            placeholder="Nome de usuário"
             value={username}
             onChange={(value) => setUsername(value)}
           />
           <TextInput type="password" 
             icon={<KeyIcon style={{ width: 24, height: 24 }}/>} 
-            placeholder="Password"
+            placeholder="Senha"
             value={password}
             onChange={(value) => setPassword(value)}
           />
         </Inputs>
-        <SubmitButton type="submit">Create Account</SubmitButton>
+        <SubmitButton type="submit">Criar conta</SubmitButton>
       </Form>
     </Container>
   )

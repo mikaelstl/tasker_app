@@ -103,7 +103,7 @@ export function Register() {
     <Content>
       <HeaderContainer className="tskr-stage-header-container">
         <Logo width={182} />
-        <SectionTitle>CREATE YOUR ACCOUNT</SectionTitle>
+        <SectionTitle>CRIE SUA CONTA</SectionTitle>
       </HeaderContainer>
 
       <StageContainer className="tskr-stage-container">
@@ -127,7 +127,7 @@ export function Register() {
               validator.isEmpty(username) ||
               validator.isEmpty(password)
             ) {
-              Toasts["warning"]("Please fill in all fields.");
+              Toasts["warning"]("Preencha todos os campos.");
               return;
             }
 

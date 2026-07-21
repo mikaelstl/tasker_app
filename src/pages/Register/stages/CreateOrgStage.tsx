@@ -15,16 +15,16 @@ export function CreateOrgStage({
   return (
     <>
       <div className="tskr-stage-input">
-        <Text>Give a name for your organization</Text>
+        <Text>Dê um nome à sua organização</Text>
         <TextInput
           type="text"
-          placeholder="Name"
+          placeholder="Nome"
           icon={<BuildingOfficeIcon width={24} />}
         />
       </div>
       <Actions>
         <StageButton onClick={() => console.log("DO LOGIN")}>
-          <Text>Create organization</Text>
+          <Text>Criar organização</Text>
         </StageButton>
         <BackStageBtn handleStage={() => handleStage(CreateAccountStageEnum.USE_SYSTEM)} />
       </Actions>

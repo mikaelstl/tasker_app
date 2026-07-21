@@ -6,14 +6,14 @@ import { Title } from "../../components/base/Title";
 export const ProjectHealthyBadge = {
   'SAFE': <Badge color={Palette.transparent}>
             <ShieldCheckIcon fill={Palette.green} width={22}/>
-            <Title>SAFE</Title>
+            <Title>SEGURO</Title>
           </Badge>,
   'WARNING': <Badge color={Palette.transparent}>
               <ShieldExclamationIcon fill={Palette.yellow} width={22}/>
-              <Title>WARNING</Title>
+              <Title>ATENÇÃO</Title>
             </Badge>,
   'CRITICAL': <Badge color={Palette.transparent}>
                 <ExclamationTriangleIcon fill={Palette.red} width={22}/>
-                <Title>CRITICAL</Title>
+                <Title>CRÍTICO</Title>
               </Badge>,
 }

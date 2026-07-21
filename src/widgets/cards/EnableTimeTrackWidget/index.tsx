@@ -6,9 +6,9 @@ import { Container } from "./style";
 export function EnableTimeTrackWidget() {
   return (
     <Container className="tskr-enable-time-track">
-      <Text>Enable Time Tracking</Text>
+      <Text>Ativar controle de tempo</Text>
       <ToggleSwitch/>
-      <Subtitle>Enable time tracking on tasks to monitor the amount of time team members spend on each task.</Subtitle>
+      <Subtitle>Ative o controle de tempo nas tarefas para acompanhar quanto tempo os membros da equipe dedicam a cada uma delas.</Subtitle>
     </Container>
   )
 }

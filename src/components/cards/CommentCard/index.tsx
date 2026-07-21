@@ -24,7 +24,7 @@ export function CommentCard({
         <Text>{content}</Text>
       </Texts>
       <Line/>
-      <Subtitle className="tskr-subtitle">{date.day}, {date.monthShort} {date.hour}:{date.minute}</Subtitle>
+      <Subtitle className="tskr-subtitle">{date.day} {date.setLocale("pt-BR").monthShort}, {date.hour}:{date.minute}</Subtitle>
     </Card>
   )
 }

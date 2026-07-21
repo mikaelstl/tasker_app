@@ -49,14 +49,14 @@ export class EventMockService implements EventServiceI {
   async find(code: string): Promise<ApiResponse<EventDTO>> {
     const event = mockData.events.find((item) => item.id === code);
 
-    return createMockResponse(event ?? createMockEvent(), `/events/${code}`, event ? "OK" : "Event not found", event ? 200 : 404, !event);
+    return createMockResponse(event ?? createMockEvent(), `/events/${code}`, event ? "OK" : "Evento não encontrado", event ? 200 : 404, !event);
   }
 
   async update(code: string, update: any): Promise<ApiResponse<EventDTO>> {
     const event = mockData.events.find((item) => item.id === code);
 
     if (!event) {
-      return createMockResponse(createMockEvent(), `/events/${code}`, "Event not found", 404, true);
+      return createMockResponse(createMockEvent(), `/events/${code}`, "Evento não encontrado", 404, true);
     }
 
     Object.assign(event, {

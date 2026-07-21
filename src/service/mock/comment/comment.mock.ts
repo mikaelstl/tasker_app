@@ -54,7 +54,7 @@ export class CommentMockService implements CommentServiceI {
   async find(id: string): Promise<ApiResponse<CommentDTO>> {
     const comment = mockData.comments.find((item) => item.id === id);
 
-    return createMockResponse(comment ?? createMockComment(), `/comments/${id}`, comment ? "OK" : "Comment not found", comment ? 200 : 404, !comment);
+    return createMockResponse(comment ?? createMockComment(), `/comments/${id}`, comment ? "OK" : "Comentário não encontrado", comment ? 200 : 404, !comment);
   }
 
   async delete(id: string): Promise<ApiResponse<CommentDTO>> {

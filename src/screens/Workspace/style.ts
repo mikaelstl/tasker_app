@@ -18,7 +18,8 @@ const Categories = styled.div`
   gap: 20px;
 
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
+  overflow-y: overlay;
 `;
 
 const Greating = styled.div`

@@ -17,6 +17,7 @@ const Content = styled.div`
   gap: 20px;
 
   overflow: auto;
+  overflow: overlay;
 
   width: 100%;
   height: 100%;

@@ -51,7 +51,7 @@ export class UserMockService implements UserServiceI {
       return true;
     });
 
-    return createMockResponse(user ?? createMockUser(), "/users", user ? "OK" : "User not found", user ? 200 : 404, !user);
+    return createMockResponse(user ?? createMockUser(), "/users", user ? "OK" : "Usuário não encontrado", user ? 200 : 404, !user);
   }
 
   async delete(username: string): Promise<ApiResponse<UserDTO>> {

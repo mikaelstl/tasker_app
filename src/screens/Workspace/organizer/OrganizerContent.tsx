@@ -14,14 +14,18 @@ import { useOrganization } from "@/hooks/useOrganization";
 import { Greating, Infos, Items, Main } from "../style";
 import { useOrganizerDashboard } from "./useOrganizerDashboard";
 
-export function OrganizerContent() {
+interface OrganizerContentProps {
+  username: string;
+}
+
+export function OrganizerContent({ username }: OrganizerContentProps) {
   const { org } = useOrganization();
   const { loading, error, data, refetch } = useOrganizerDashboard(org?.orgkey);
 
   if (loading) {
     return (
       <Main>
-        <Greating><SectionTitle>Hello! OWNER</SectionTitle></Greating>
+        <Greating><SectionTitle>Olá, {username}!</SectionTitle></Greating>
         <Text>Carregando dashboard...</Text>
       </Main>
     );
@@ -30,7 +34,7 @@ export function OrganizerContent() {
   if (error) {
     return (
       <Main>
-        <Greating><SectionTitle>Hello! OWNER</SectionTitle></Greating>
+        <Greating><SectionTitle>Olá, {username}!</SectionTitle></Greating>
         <Text>{error}</Text>
         <Button type="button" onClick={() => void refetch()}>Tentar novamente</Button>
       </Main>
@@ -40,7 +44,7 @@ export function OrganizerContent() {
   return (
     <>
       <Main>
-        <Greating><SectionTitle>Hello! OWNER</SectionTitle></Greating>
+        <Greating><SectionTitle>Olá, {username}!</SectionTitle></Greating>
         <Infos>
           <ActiveProjectsCard {...data.projectSummary} />
           <DeadlineAlertsCard deadlines={data.deadlineAlerts} />
@@ -48,7 +52,7 @@ export function OrganizerContent() {
           <ShortcutsCard />
         </Infos>
         <Items>
-          <Title>Projects</Title>
+          <Title>Projetos</Title>
           {data.projects.length > 0 ? (
             data.projects.map((project) => (
               <Margin key={project.id} right="12px">

@@ -29,6 +29,7 @@ const WorkspaceScroller = styled(Scroller)`
 
   &.vertical {
     overflow-y: auto;
+    overflow-y: overlay;
   }
   border: 1px solid;
 `;

@@ -40,19 +40,19 @@ export function MemberStatsAccordion(props: MemberStatsAccordionProps) {
         </Leading>
         <Indicators>
           <Indicator>
-            <Subtitle>Started</Subtitle>
+            <Subtitle>Iniciadas</Subtitle>
             <Badge color={Palette.lightBlue_50}>00</Badge>
           </Indicator>
           <Indicator>
-            <Subtitle>Done</Subtitle>
+            <Subtitle>Concluídas</Subtitle>
             <Badge color={Palette.green_50}>00</Badge>
           </Indicator>
           <Indicator>
-            <Subtitle>Done</Subtitle>
+            <Subtitle>Concluídas</Subtitle>
             <Badge color={Palette.yellow_50}>00</Badge>
           </Indicator>
           <Indicator>
-            <Subtitle>Overdue</Subtitle>
+            <Subtitle>Atrasadas</Subtitle>
             <Badge color={Palette.red_50}>00</Badge>
           </Indicator>
         </Indicators>
@@ -78,7 +78,7 @@ const PerformanceTile = () => {
     <SpentTimeTile className="tskr-performance-tile">
       <Task className="tskr-task-infos">
         <Subtitle>TSK-000</Subtitle>
-        <Title>Task title</Title>
+        <Title>Título da tarefa</Title>
       </Task>
       <Title>00h 00m</Title>
     </SpentTimeTile>

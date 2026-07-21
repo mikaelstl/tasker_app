@@ -19,13 +19,13 @@ export function Stats() {
   return (
     <Container className="tskr-proj-stats">
       <ProjectInfo>
-        <Title>Project title</Title>
-        <Subtitle>Stated at: --:-- Due date: mm 00, yyyy</Subtitle>
+        <Title>Título do projeto</Title>
+        <Subtitle>Iniciado em: --:-- Prazo: 00 de mm de aaaa</Subtitle>
         {ProgressBadge['STARTED']}
         <Actions>
           <EditButton type="button" onClick={() => navigate('../edit')} />
           <CreateButton type="button">
-            <Text>Generate Report</Text>
+            <Text>Gerar relatório</Text>
           </CreateButton>
         </Actions>
         <ProjectProgress />
@@ -41,7 +41,7 @@ export function Stats() {
           <ProdutivityChart />
         </WidgetsContainer>
         <Members>
-          <Title>Members</Title>
+          <Title>Membros</Title>
           <div>
             <MemberStatsAccordion
               username="mikaelstl"

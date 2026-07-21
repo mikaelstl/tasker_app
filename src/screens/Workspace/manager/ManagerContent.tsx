@@ -11,14 +11,18 @@ import { useOrganization } from "@/hooks/useOrganization";
 import { Greating, Infos, Items, Main } from "../style";
 import { useManagerDashboard } from "./useManagerDashboard";
 
-export function ManagerContent() {
+interface ManagerContentProps {
+  username: string;
+}
+
+export function ManagerContent({ username }: ManagerContentProps) {
   const { org } = useOrganization();
   const { loading, error, data, refetch } = useManagerDashboard(org?.orgkey);
 
   if (loading) {
     return (
       <Main>
-        <Greating><SectionTitle>Hello! MANAGER</SectionTitle></Greating>
+        <Greating><SectionTitle>Olá, {username}!</SectionTitle></Greating>
         <Text>Carregando dashboard...</Text>
       </Main>
     );
@@ -27,7 +31,7 @@ export function ManagerContent() {
   if (error) {
     return (
       <Main>
-        <Greating><SectionTitle>Hello! MANAGER</SectionTitle></Greating>
+        <Greating><SectionTitle>Olá, {username}!</SectionTitle></Greating>
         <Text>{error}</Text>
         <Button type="button" onClick={() => void refetch()}>Tentar novamente</Button>
       </Main>
@@ -37,7 +41,7 @@ export function ManagerContent() {
   return (
     <>
       <Main>
-        <Greating><SectionTitle>Hello! MANAGER</SectionTitle></Greating>
+        <Greating><SectionTitle>Olá, {username}!</SectionTitle></Greating>
         <Infos>
           <TasksProgressCard stats={data.stats} />
           {data.deadlines[0] ? (
@@ -47,7 +51,7 @@ export function ManagerContent() {
           )}
         </Infos>
         <Items>
-          <Title>Members Stats</Title>
+          <Title>Estatísticas dos membros</Title>
           {data.membersStats.length > 0 ? (
             data.membersStats.map((member) => (
               <MemberStatTile

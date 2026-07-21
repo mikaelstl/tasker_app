@@ -1,11 +1,11 @@
 import { Subtitle } from "../../base/Subtitle";
 import { Title } from "../../base/Title";
-import { Badge } from "../../badge/Badge";
 import { Card, Leading, Trailing } from "./style";
 import { DateBadge } from "../../badge/DateBadge";
 import { useNavigate } from "react-router-dom";
 import { DateTime } from "luxon";
 import type { ProjectProgress } from "../../../service/types/project/project.dto";
+import { ProgressBadge } from "../../../maps/progress";
 
 interface ProjectCardProps {
   id: string;
@@ -32,7 +32,7 @@ export function ProjectCard(props: ProjectCardProps) {
         />
       </Leading>
       <Trailing className="tskr-card-Trailing">
-        <Badge>{props.progress}</Badge>
+        {ProgressBadge[props.progress]}
         {/* <team /> */}
       </Trailing>
     </Card >

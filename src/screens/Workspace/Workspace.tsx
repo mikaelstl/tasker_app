@@ -5,8 +5,13 @@ import { ManagerContent } from "./manager/ManagerContent";
 import { MemberContent } from "./member/MemberContent";
 import { OrganizerContent } from "./organizer/OrganizerContent";
 import { Content } from "./style";
+import { useAuth } from "@/hooks/useAuth";
 
-const UserProfileContent: Record<OrgRole, ComponentType> = {
+interface WorkspaceContentProps {
+  username: string;
+}
+
+const UserProfileContent: Record<OrgRole, ComponentType<WorkspaceContentProps>> = {
   [OrgRole.MEMBER]: MemberContent,
   [OrgRole.OWNER]: OrganizerContent,
   [OrgRole.MANAGER]: ManagerContent,
@@ -14,11 +19,12 @@ const UserProfileContent: Record<OrgRole, ComponentType> = {
 
 export function Workspace() {
   const { org } = useOrganization();
+  const { user } = useAuth();
   const ContentComponent = UserProfileContent[org?.role ?? OrgRole.MEMBER];
 
   return (
     <Content className="workspace-content">
-      <ContentComponent />
+      <ContentComponent username={user?.username ?? "usuário"} />
     </Content>
   );
 }

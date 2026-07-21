@@ -31,7 +31,8 @@ const Comments = styled.div`
   border: 1px solid ${Palette.items};
 
   #cards {
-    overflow: scroll;
+    overflow: auto;
+    overflow: overlay;
   }
 `;
 

@@ -16,6 +16,7 @@ import { TaskOverview } from "./screens/Project/TaskOverview"
 import { PrivateRoute } from "./routes/PrivateRoute"
 import { ChoseWorkspace } from "./screens/ChoseWorkspace/ChoseWorkspace"
 import { Screen } from "./components/base/Screen"
+import { Organization } from "./screens/Organization"
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
 
             <Route path="workspace" element={<Workspace />} />
             <Route path="projects" element={<Projects />} />
+            <Route path="organization" element={<Organization />} />
 
             <Route path="project" element={<Project />}>
               <Route index element={<Navigate to="overview" replace />} />

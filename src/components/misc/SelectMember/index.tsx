@@ -51,7 +51,7 @@ export function SelectMember({
             ? <Field
                 autoFocus
                 value={query}
-                placeholder="Search..."
+                placeholder="Pesquisar..."
                 onChange={(evt) => setQuery(evt.target.value)}
               />
             : <User username={selected.username}/>}

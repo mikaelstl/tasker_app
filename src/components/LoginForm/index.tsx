@@ -40,24 +40,24 @@ export function LoginForm({ login }: LoginFormProps) {
 
   return (
     <Container className="tskr-login-form">
-      <SectionTitle>LOGIN</SectionTitle>
+      <SectionTitle>ENTRAR</SectionTitle>
       <Form>
         <Inputs className="tskr-form-inputs">
           <TextInput
             icon={<UserIcon width={24} />}
-            placeholder="User"
+            placeholder="Usuário"
             value={email}
             onChange={(value) => setUsername(value)}
           />
           <TextInput
             type="password"
             icon={<KeyIcon width={24} />}
-            placeholder="Password"
+            placeholder="Senha"
             value={password}
             onChange={(value) => setPassword(value)}
           />
         </Inputs>
-        <SubmitButton onClick={onSubmit}>Login</SubmitButton>
+        <SubmitButton onClick={onSubmit}>Entrar</SubmitButton>
       </Form>
       <CreateAccount />
     </Container>

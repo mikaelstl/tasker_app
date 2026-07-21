@@ -1,5 +1,5 @@
 import { ArrowLeftStartOnRectangleIcon, ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/16/solid"
-import { InboxStackIcon, WindowIcon } from "@heroicons/react/20/solid"
+import { BuildingOffice2Icon, InboxStackIcon, WindowIcon } from "@heroicons/react/20/solid"
 import Palette from "../../../assets/palette"
 import { Accordion, Actions, Container, Leading, Nav, NavItem, ProjectNav } from "./style"
 import { useLocation, useNavigate } from "react-router-dom"
@@ -45,7 +45,7 @@ const ProjectNavAccordion = ({
       <Accordion type="button" onClick={handleOpen}>
         <Leading>
           <FolderOpenIcon width={20} />
-          Project
+          Projeto
         </Leading>
         {icon}
       </Accordion>
@@ -56,46 +56,46 @@ const ProjectNavAccordion = ({
               className="tskr-nav-item"
               type="button"
               onClick={() => navigate('./project/overview')}
-              activated={ path.includes('project/overview') ? true : false }
+              $activated={path.includes('project/overview')}
             >
               <WindowIcon width="18" />
-              Overview
+              Visão geral
             </NavItem>
             <NavItem 
               className="tskr-nav-item"
               type="button"
               onClick={() => navigate('./project/tasks')}
-              activated={ path.includes('project/tasks') ? true : false }
+              $activated={path.includes('project/tasks')}
             >
               <ClipboardIcon width="18" />
-              Tasks
+              Tarefas
             </NavItem>
             <NavItem 
               className="tskr-nav-item"
               type="button"
               onClick={() => navigate('./project/calendar')}
-              activated={ path.includes('project/calendar') ? true : false }
+              $activated={path.includes('project/calendar')}
             >
               <CalendarIcon width="18" />
-              Calendar
+              Calendário
             </NavItem>
             <NavItem 
               className="tskr-nav-item"
               type="button"
               onClick={() => navigate('./project/members')}
-              activated={ path.includes('project/members') ? true : false }
+              $activated={path.includes('project/members')}
             >
               <UserIcon width="18" />
-              Members
+              Membros
             </NavItem>
             <NavItem 
               className="tskr-nav-item"
               type="button"
               onClick={() => navigate('./project/stats')}
-              activated={ path.includes('project/stats') ? true : false }
+              $activated={path.includes('project/stats')}
             >
               <ChartBarIcon width="18" />
-              Stats
+              Estatísticas
             </NavItem>
           </Nav>
           : <></>
@@ -112,6 +112,12 @@ export function NavBar({
   onProject
 }: NavBarProps) {
   const navigate = useNavigate();
+  const location = useLocation();
+  const isActive = (route: string) => {
+    const routePath = `/home/${route}`;
+
+    return location.pathname === routePath || location.pathname.startsWith(`${routePath}/`);
+  };
 
   const { logout } = useAuth();
   const { clearOrg } = useOrganization();
@@ -133,19 +139,28 @@ export function NavBar({
           className="tskr-nav-item"
           type="button"
           onClick={() => navigate('workspace')}
-          activated={true}
+          $activated={isActive('workspace')}
         >
           <WindowIcon width="18" />
-          Workspace
+          Área de trabalho
         </NavItem>
         <NavItem
           className="tskr-nav-item"
           type="button"
           onClick={() => navigate('projects')}
-          activated={true}
+          $activated={isActive('projects')}
         >
           <InboxStackIcon width="18" />
-          Projects
+          Projetos
+        </NavItem>
+        <NavItem
+          className="tskr-nav-item"
+          type="button"
+          onClick={() => navigate('organization')}
+          $activated={isActive('organization')}
+        >
+          <BuildingOffice2Icon width="18" />
+          Organização
         </NavItem>
       </Nav>
       { onProject ? <ProjectNavAccordion isOpen/> : <></> }
@@ -154,13 +169,13 @@ export function NavBar({
           <WindowIcon width="18" />
           Trocar workspace
         </NavItem>
-        {/* <NavItem className="tskr-nav-item" activated>
+        {/* <NavItem className="tskr-nav-item" $activated>
           <Cog6ToothIcon width="18"/>
           Settings
         </NavItem> */}
         <NavItem className="tskr-nav-item log-out" onClick={onLogout}>
           <ArrowLeftStartOnRectangleIcon width="18" fill={Palette.red} />
-          Logout
+          Sair
         </NavItem>
       </Actions>
     </Container >

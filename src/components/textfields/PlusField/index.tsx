@@ -19,7 +19,7 @@ export function PlusField({ add }: PlusFieldProps) {
       <Field id="plus">
         <input
           type="text"
-          placeholder="Write something..."
+          placeholder="Escreva algo..."
           value={value}
           onChange={(evt) => setValue(evt.target.value)}  
         />

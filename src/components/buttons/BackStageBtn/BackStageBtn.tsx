@@ -8,7 +8,7 @@ export function BackStageBtn(props: {
   return (
     <BackButton onClick={() => props.handleStage()}>
       <ArrowLeftIcon width={20} />
-      <Text>Back stage</Text>
+      <Text>Voltar</Text>
     </BackButton>
   )
 }

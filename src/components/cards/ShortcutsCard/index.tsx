@@ -6,20 +6,20 @@ export function ShortcutsCard() {
   return (
     <Container className="tskr-shortcuts-card">
       <Header>
-        <Title>Shortcuts</Title>
+        <Title>Atalhos</Title>
       </Header>
       <Actions>
         <Action>
           <PlusIcon width={20}/>
-          <Title>New Project</Title>
+          <Title>Novo projeto</Title>
         </Action>
         <Action>
           <ArrowTrendingUpIcon width={20} />
-          <Title>Generate Report</Title>
+          <Title>Gerar relatório</Title>
         </Action>
         <Action>
           <Cog6ToothIcon width={20} />
-          <Title>Org Settings</Title>
+          <Title>Configurações da organização</Title>
         </Action>
       </Actions>
 

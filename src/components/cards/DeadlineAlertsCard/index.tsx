@@ -19,7 +19,7 @@ export function DeadlineAlertsCard({ deadlines }: DeadlineAlertsCardProps) {
     <Container className="tskr-deadline-alerts-card">
       <Header>
         <ExclamationTriangleIcon fill={Palette.red} width={22}/>
-        <Title>Deadline Alerts</Title>
+        <Title>Alertas de prazo</Title>
       </Header>
       <Cards>
         {deadlines.length === 0 ? (
@@ -29,8 +29,8 @@ export function DeadlineAlertsCard({ deadlines }: DeadlineAlertsCardProps) {
             <Title>{deadline.title}</Title>
             <Text>
               {deadline.daysRemaining < 0
-                ? `${Math.abs(deadline.daysRemaining)} days overdue`
-                : `Due in ${deadline.daysRemaining} days`}
+                ? `${Math.abs(deadline.daysRemaining)} dias em atraso`
+                : `Vence em ${deadline.daysRemaining} dias`}
             </Text>
           </Card>
         ))}

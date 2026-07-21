@@ -17,7 +17,7 @@ interface EventAccordionProps {
 }
 
 export function EventAccordion(props: EventAccordionProps) {
-  const today = DateTime.local();
+  const today = DateTime.local().setLocale('pt-BR');
   const [contentOn, setContentOn] = useState(false);
 
   const showContent = () => {
@@ -60,7 +60,7 @@ export function EventAccordion(props: EventAccordionProps) {
               props.events.map((evt) => <CalendarFlagCard type="event">
                                           <div>
                                             <Text>{evt.title}</Text>
-                                            <Subtitle>Description</Subtitle>
+                                            <Subtitle>Descrição</Subtitle>
                                           </div>
                                         </CalendarFlagCard>)
             }

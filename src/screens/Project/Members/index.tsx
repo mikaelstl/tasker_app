@@ -55,7 +55,7 @@ export function Members() {
         <CreateButton
           type="button"
         >
-          <Text>Add member</Text>
+          <Text>Adicionar membro</Text>
         </CreateButton>
       </ContentHeader>
       <Content id="team">

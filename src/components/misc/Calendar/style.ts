@@ -103,6 +103,7 @@ const Events = styled.div`
   grid-area: events;
     
   overflow-y: auto;
+  overflow-y: overlay;
   
   height: 100%;
   

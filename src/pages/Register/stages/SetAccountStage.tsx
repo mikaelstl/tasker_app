@@ -32,37 +32,37 @@ export function SetAccountStage({
         <div className="tskr-stage-input">
           <TextInput
             type="text"
-            placeholder="Username"
+            placeholder="Nome de usuário"
             value={username}
             onChange={(value) => setUsername(value)}
             icon={<UserIcon width={24} />}
           />
-          <Text>Please enter an username</Text>
+          <Text>Informe um nome de usuário</Text>
         </div>
         <div className="tskr-stage-input">
           <TextInput
             type="text"
-            placeholder="Name"
+            placeholder="Nome"
             value={name}
             onChange={(value) => setName(value)}
             icon={<IdentificationIcon width={24} />}
           />
-          <Text>Please enter your name</Text>
+          <Text>Informe seu nome</Text>
         </div>
         <div className="tskr-stage-input">
           <TextInput
             type="password"
-            placeholder="Password"
+            placeholder="Senha"
             value={password}
             onChange={(value) => setPassword(value)}
             icon={<KeyIcon width={24} />}
           />
-          <Text>Please enter a password</Text>
+          <Text>Informe uma senha</Text>
         </div>
       </div>
       <Actions>
         <StageButton onClick={createAccount}>
-          <Text>Finish</Text>
+          <Text>Finalizar</Text>
         </StageButton>
         <BackStageBtn handleStage={() => handleStage(CreateAccountStageEnum.EMAIL)} />
       </Actions>

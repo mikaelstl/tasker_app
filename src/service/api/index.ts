@@ -138,7 +138,7 @@ export class ApiClient {
         status: 500,
         errors: [{
           level: "critical",
-          message: "Server offline",
+          message: "Servidor indisponível",
         }],
         timestamp: new Date().toISOString(),
         path: "/",

@@ -33,7 +33,8 @@ const Comments = styled.div`
   padding-bottom: 20px;
 
   #cards {
-    overflow: scroll;
+    overflow: auto;
+    overflow: overlay;
   }
 `;
 

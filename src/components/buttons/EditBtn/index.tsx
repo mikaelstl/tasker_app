@@ -14,7 +14,7 @@ export function EditButton(props: EditButtonProps) {
       type={props.type}
       color={Palette.items}
       onClick={props.onClick}>
-      <Text>Edit</Text>
+      <Text>Editar</Text>
     </Button>
   )
 }

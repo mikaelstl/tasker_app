@@ -21,7 +21,7 @@ export function ProdutivityChart() {
   return (
     <Container className="tskr-performance-chart">
       <Header>
-        <Title>Produtivity</Title>
+        <Title>Produtividade</Title>
       </Header>
       <Content>
         <Chart data={data}/>

@@ -55,6 +55,7 @@ const Options = styled.div`
   border-radius: 8px;
   max-height: 200px;
   overflow-y: auto;
+  overflow-y: overlay;
   z-index: 99999999;
 `;
 
