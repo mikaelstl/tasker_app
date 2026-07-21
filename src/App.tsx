@@ -40,7 +40,7 @@ function App() {
             <Route path="projects" element={<Projects />} />
             <Route path="organization" element={<Organization />} />
 
-            <Route path="project" element={<Project />}>
+            <Route path="project/:id" element={<Project />}>
               <Route index element={<Navigate to="overview" replace />} />
 
               <Route path="overview" element={<Overview />} />

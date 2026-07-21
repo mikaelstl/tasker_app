@@ -6,12 +6,15 @@ interface BadgeProps {
   text?: string;
 }
 
-export const Badge = styled.div<BadgeProps>`
+export const Badge = styled.span<BadgeProps>`
   grid-area: tskr-badge;
 
   display: inline-flex;
   align-items: center;
+  flex-wrap: nowrap;
   gap: 8px;
+
+  white-space: nowrap;
 
   font-weight: 600;
   font-size: 12px;

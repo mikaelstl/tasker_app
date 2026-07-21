@@ -66,6 +66,7 @@ export function Projects() {
               title={project.title}
               progress={project.progress}
               due_date={project.due_date}
+              members={project.members}
             />)
           }
         </Scroller>

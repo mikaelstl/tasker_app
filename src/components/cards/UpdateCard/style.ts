@@ -18,7 +18,6 @@ const Card = styled.div`
   width: 100%;
   height: 85px;
 
-  border: 1px solid ${Palette.details};
   border-radius: 6px;
 
   position: relative;

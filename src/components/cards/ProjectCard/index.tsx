@@ -1,40 +1,59 @@
 import { Subtitle } from "../../base/Subtitle";
 import { Title } from "../../base/Title";
-import { Card, Leading, Trailing } from "./style";
+import { Card, Content, Footer, Leading, OpenProjectButton, Trailing } from "./style";
 import { DateBadge } from "../../badge/DateBadge";
 import { useNavigate } from "react-router-dom";
 import { DateTime } from "luxon";
 import type { ProjectProgress } from "../../../service/types/project/project.dto";
-import { ProgressBadge } from "../../../maps/progress";
+import type { ProjectMember } from "../../../service/types/member/member.dto";
+import { ProjectStageBadge } from "../../../maps/project-stage";
+import { Team } from "@/components/misc/Team";
+import { ChevronRightIcon } from "@heroicons/react/16/solid";
 
 interface ProjectCardProps {
   id: string;
   title: string;
   description: string;
-  due_date: string;
-  progress: ProjectProgress;
+  deadline: string;
+  stage: ProjectProgress;
+  members: readonly ProjectMember[];
 }
 
-export function ProjectCard(props: ProjectCardProps) {
+export function ProjectCard({
+  id,
+  title,
+  description,
+  members,
+  deadline,
+  stage
+}: ProjectCardProps) {
   const navigate = useNavigate();
 
-  const goToProjectPage = () => navigate(`/home/project/overview`)
+  const goToProjectPage = () => navigate(`/home/project/${id}/overview`)
 
   return (
-    <Card className="tskr-project-card" onClick={goToProjectPage}>
-      <Leading className="tskr-card-leading">
-        <div className="text">
-          <Title>{props.title}</Title>
-          <Subtitle>{props.description}</Subtitle>
-        </div>
-        <DateBadge
-          date={DateTime.fromISO(props.due_date, { zone: 'utc'})}
-        />
+    <Card
+      key={id}
+      className="tskr-project-card" onClick={goToProjectPage}
+    >
+      <Leading>
+        {ProjectStageBadge[stage]}
       </Leading>
+      <Content className="tskr-card-leading">
+        <Title>{title}</Title>
+        <Subtitle>{description}</Subtitle>
+      </Content>
+      <Footer>
+        <Team members={members} />
+        <DateBadge
+          date={DateTime.fromISO(deadline, { zone: 'utc' })}
+        />
+      </Footer>
       <Trailing className="tskr-card-Trailing">
-        {ProgressBadge[props.progress]}
-        {/* <team /> */}
+        <OpenProjectButton type="button" aria-label={`Abrir projeto ${title}`}>
+          <ChevronRightIcon aria-hidden="true" />
+        </OpenProjectButton>
       </Trailing>
-    </Card >
+    </Card>
   )
 }

@@ -9,7 +9,7 @@ const Container = styled.div`
   padding: 20px 20px 0px 20px;
 
   width: fit-content;
-  min-width: 320px;
+  min-width: 360px;
   height: 100%;
   background-color: ${Palette.tool_bars};
 

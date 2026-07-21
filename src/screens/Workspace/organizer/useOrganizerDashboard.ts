@@ -22,6 +22,7 @@ export function useOrganizerDashboard(orgId?: string) {
   const api = useApi();
   const service = useMemo(() => createDashboardService(api), [api]);
   const requestId = useRef(0);
+  
   const [data, setData] = useState<OrganizerDashboardDTO>(initialData);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

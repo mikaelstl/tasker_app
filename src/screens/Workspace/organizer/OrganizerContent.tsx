@@ -8,11 +8,11 @@ import { Title } from "@/components/base/Title";
 import { Button } from "@/components/buttons/Button";
 import { Divider } from "@/components/misc/Divider";
 import { Margin } from "@/components/misc/Margin";
-import { ProjectTile } from "@/components/tiles/ProjectTile";
 import { Updates } from "@/components/Updates";
 import { useOrganization } from "@/hooks/useOrganization";
 import { Greating, Infos, Items, Main } from "../style";
 import { useOrganizerDashboard } from "./useOrganizerDashboard";
+import { ProjectCard } from "@/components/cards/ProjectCard";
 
 interface OrganizerContentProps {
   username: string;
@@ -56,11 +56,13 @@ export function OrganizerContent({ username }: OrganizerContentProps) {
           {data.projects.length > 0 ? (
             data.projects.map((project) => (
               <Margin key={project.id} right="12px">
-                <ProjectTile
+                <ProjectCard
                   id={project.id}
                   title={project.title}
-                  progress={project.progress}
-                  due_date={project.due_date}
+                  description={project.description}
+                  stage={project.progress}
+                  deadline={project.due_date}
+                  members={project.members ?? []}
                 />
               </Margin>
             ))

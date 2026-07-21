@@ -1,7 +1,7 @@
 import Palette from "../../assets/palette";
 import { Badge } from "../../components/badge/Badge";
 
-export const ProgressBadge = {
+export const ProjectStageBadge = {
   'OVERDUE': <Badge bg={Palette.red_25} text={Palette.red}>ATRASADO</Badge>,
   'STARTED': <Badge bg={Palette.blue_50} text={Palette.lightBlue}>EM ANDAMENTO</Badge>,
   'REVIEW':<Badge bg={Palette.yellow_25} text={Palette.yellow}>EM REVISÃO</Badge>,

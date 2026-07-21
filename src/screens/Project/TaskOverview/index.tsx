@@ -10,7 +10,7 @@ import { Toasts } from "../../../maps/toasts";
 import { useNavigate, useParams } from "react-router-dom";
 import { DateTime } from "luxon";
 import { ItalicTitle } from "../../../components/base/ItalicTitle";
-import { ProgressBadge } from "../../../maps/progress";
+import { ProjectStageBadge } from "../../../maps/project-stage";
 import { MessageField } from "../../../components/textfields/MessageField";
 import { useAuth } from "../../../hooks/useAuth";
 import type { CommentDTO } from "../../../service/types/comment/comment.dto";
@@ -89,7 +89,7 @@ export function TaskOverview() {
         </Links>
         <SectionTitle>Título da tarefa</SectionTitle>
         <DateBadge date={DateTime.local()} />
-        {ProgressBadge['STARTED']}
+        {ProjectStageBadge['STARTED']}
         <EditButton type="button" onClick={() => console.log('Open edit task modal')} />
         <TaskTags />
       </TaskInfo>

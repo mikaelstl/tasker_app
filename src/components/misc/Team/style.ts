@@ -2,24 +2,56 @@ import styled from "styled-components";
 import Palette from "../../../assets/palette";
 
 export interface TeamContainerProps {
-  color?: string
+  $outlineColor?: string;
 }
 
 export const Container = styled.div<TeamContainerProps>`
   grid-area: tskr-team;
 
-  display: flex;
+  display: inline-flex;
+  align-items: center;
+  isolation: isolate;
 
   width: fit-content;
 
-  object-fit: cover;
+  --team-avatar-outline: ${({ $outlineColor }) => $outlineColor ?? Palette.content};
 
-  .tskr-avatar {
-    margin-left: -14px;
-    outline: 3px solid ${props => props.color ?? Palette.content};
+  > * + * {
+    margin-left: -8px;
   }
+`;
 
-  .tskr-avatar:first-child {
-    margin-left: 0;
+const AvatarBase = styled.span`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 32px;
+
+  width: 32px;
+  height: 32px;
+
+  color: ${Palette.white};
+  outline: 2px solid var(--team-avatar-outline);
+  border-radius: 50%;
+
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.01em;
+
+  transition: transform 0.15s ease;
+
+  &:hover {
+    z-index: 1;
+    transform: translateY(-2px);
   }
+`;
+
+export const MemberAvatar = styled(AvatarBase)<{ $background: string }>`
+  background-color: ${({ $background }) => $background};
+`;
+
+export const RemainingMembers = styled(AvatarBase)`
+  color: ${Palette.white_50};
+  background-color: ${Palette.details};
 `;

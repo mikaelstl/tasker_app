@@ -11,7 +11,7 @@ interface DateBadgeProps {
 export function DateBadge(props: DateBadgeProps) {
   return (
     <Container className="tskr-date-badge">
-      <CalendarIcon width={18} fill={Palette.gray}/>
+      <CalendarIcon width={20} fill={Palette.gray}/>
       <Subtitle>
         {props.date.setLocale("pt-BR").toFormat("dd LLL yyyy")}
       </Subtitle>

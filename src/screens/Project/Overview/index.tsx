@@ -12,7 +12,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { DateTime } from "luxon";
 import type { TaskDTO } from "../../../service/types/task/task.dto";
 import { ItalicTitle } from "../../../components/base/ItalicTitle";
-import { ProgressBadge } from "../../../maps/progress";
+import { ProjectStageBadge } from "../../../maps/project-stage";
 import type { EventDTO } from "../../../service/types/events/event.dto";
 import { MessageField } from "../../../components/textfields/MessageField";
 import { useAuth } from "../../../hooks/useAuth";
@@ -155,7 +155,7 @@ export function Overview() {
         <ProjectInfo>
           <SectionTitle>{project?.title}</SectionTitle>
           <Subtitle>Iniciado em: --:-- Prazo: 00 de mm de aaaa</Subtitle>
-          {ProgressBadge[project.progress]}
+          {ProjectStageBadge[project.progress]}
           <EditButton type="button" onClick={() => navigate('../edit')} />
           <Description>
             <Subtitle>Descrição</Subtitle>

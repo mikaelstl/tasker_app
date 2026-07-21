@@ -1,5 +1,5 @@
 import { Text } from "../../../components/base/Text";
-import { ProgressBadge } from "../../../maps/progress";
+import { ProjectStageBadge } from "../../../maps/project-stage";
 import { Subtitle } from "../../../components/base/Subtitle";
 import { EditButton } from "../../../components/buttons/EditBtn";
 import { CreateButton } from "../../../components/buttons/CreateButton";
@@ -21,7 +21,7 @@ export function Stats() {
       <ProjectInfo>
         <Title>Título do projeto</Title>
         <Subtitle>Iniciado em: --:-- Prazo: 00 de mm de aaaa</Subtitle>
-        {ProgressBadge['STARTED']}
+        {ProjectStageBadge['STARTED']}
         <Actions>
           <EditButton type="button" onClick={() => navigate('../edit')} />
           <CreateButton type="button">
