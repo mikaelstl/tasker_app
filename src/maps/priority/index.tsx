@@ -2,8 +2,8 @@ import Palette from "../../assets/palette";
 import { Badge } from "../../components/badge/Badge";
 
 export const PriorityBadge = {
-  'EXTREME': <Badge color={Palette.red_50}>EXTREMA</Badge>,
-  'HIGH':<Badge color={Palette.yellow_50}>ALTA</Badge>,
-  'MEDIUM': <Badge color={Palette.blue_50}>MÉDIA</Badge>,
-  'LOW': <Badge color={Palette.gray_50}>BAIXA</Badge>,
+  'EXTREME': <Badge bg={Palette.red_50} text={Palette.red}>Extrema</Badge>,
+  'HIGH':<Badge bg={Palette.yellow_25} text={Palette.yellow}>Alta</Badge>,
+  'MEDIUM': <Badge bg={Palette.blue_50} text={Palette.blue}>Média</Badge>,
+  'LOW': <Badge bg={Palette.gray_25} text={Palette.gray}>Baixa</Badge>,
 }

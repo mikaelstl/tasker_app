@@ -41,19 +41,19 @@ export function MemberStatsAccordion(props: MemberStatsAccordionProps) {
         <Indicators>
           <Indicator>
             <Subtitle>Iniciadas</Subtitle>
-            <Badge color={Palette.lightBlue_50}>00</Badge>
+            <Badge bg={Palette.lightBlue_50} text={Palette.lightBlue}>00</Badge>
           </Indicator>
           <Indicator>
             <Subtitle>Concluídas</Subtitle>
-            <Badge color={Palette.green_50}>00</Badge>
+            <Badge bg={Palette.green_25} text={Palette.green}>00</Badge>
           </Indicator>
           <Indicator>
             <Subtitle>Concluídas</Subtitle>
-            <Badge color={Palette.yellow_50}>00</Badge>
+            <Badge bg={Palette.yellow_25} text={Palette.yellow}>00</Badge>
           </Indicator>
           <Indicator>
             <Subtitle>Atrasadas</Subtitle>
-            <Badge color={Palette.red_50}>00</Badge>
+            <Badge bg={Palette.red_25} text={Palette.red}>00</Badge>
           </Indicator>
         </Indicators>
         <Button type="button" onClick={handleVisible}>

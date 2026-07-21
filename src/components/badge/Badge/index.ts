@@ -2,7 +2,8 @@ import styled from "styled-components";
 import Palette from "../../../assets/palette";
 
 interface BadgeProps {
-  color?: string
+  bg?: string;
+  text?: string;
 }
 
 export const Badge = styled.div<BadgeProps>`
@@ -15,10 +16,11 @@ export const Badge = styled.div<BadgeProps>`
   font-weight: 600;
   font-size: 12px;
   padding: 5px 10px;
-  border-radius: 4px;
+  border-radius: 9999px;
 
   width: fit-content;
   height: fit-content;
 
-  background-color: ${props => props.color ?? Palette.red_50};
+  background-color: ${props => props.bg ?? Palette.gray_25};
+  /* color: ${props => props.text ?? Palette.white}; */
 `;

@@ -21,15 +21,15 @@ export function MemberStatTile(props: MemberStatTileProps) {
       </Leading>
       <Indicator>
         <Subtitle>Iniciadas</Subtitle>
-        <Badge color={Palette.lightBlue_50}>{props.started}</Badge>
+        <Badge bg={Palette.lightBlue_50} text={Palette.lightBlue}>{props.started}</Badge>
       </Indicator>
       <Indicator>
         <Subtitle>Concluídas</Subtitle>
-        <Badge color={Palette.green_50}>{props.done}</Badge>
+        <Badge bg={Palette.green_50} text={Palette.green}>{props.done}</Badge>
       </Indicator>
       <Indicator>
         <Subtitle>Atrasadas</Subtitle>
-        <Badge color={Palette.red_50}>{props.overdue}</Badge>
+        <Badge bg={Palette.red_50} text={Palette.red}>{props.overdue}</Badge>
       </Indicator>
     </Container>
   )
