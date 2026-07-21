@@ -1,10 +1,10 @@
 import styled from "styled-components";
 import Palette from "../../../assets/palette";
 
-const Container = styled.div`
+const Container = styled.button`
   display: grid;
   grid-template-areas:
-    "avatar title badge"
+    "avatar title tskr-badge"
     "avatar meta .";
   column-gap: 16px;
   row-gap: 8px;
@@ -20,6 +20,9 @@ const Container = styled.div`
   border-radius: 12px;
 
   background-color: ${Palette.items};
+  color: inherit;
+  font: inherit;
+  text-align: left;
   cursor: pointer;
 
   transition:

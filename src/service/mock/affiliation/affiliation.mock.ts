@@ -6,6 +6,11 @@ import { OrgRole } from "@/utils/enums/OrgRole";
 
 import { mockData, createMockAffiliation, createMockId, createMockResponse } from "../data";
 import type { AffiliationServiceI, APIMessage } from "../../modules/affiliation/affiliation.service";
+import {
+  createMockRequestError,
+  requireMockCurrentAccount,
+  requireMockOrgRequest,
+} from "../request-context";
 
 function nextRole(role: OrgRole, direction: "up" | "down"): OrgRole {
   if (direction === "up") {
@@ -23,22 +28,46 @@ function nextRole(role: OrgRole, direction: "up" | "down"): OrgRole {
   return OrgRole.MEMBER;
 }
 
-function buildSummary(): UserOrganizationSummaryDTO[] {
-  return mockData.organizations.map((organization) => {
-    const affiliations = mockData.affiliations.filter((item) => item.orgkey === organization.id);
+function buildSummary(username: string): UserOrganizationSummaryDTO[] {
+  const userAffiliations = mockData.affiliations
+    .filter((affiliation) => affiliation.userkey === username)
+    .flatMap((currentAffiliation) => {
+      const organization = mockData.organizations.find(
+        (item) => item.id === currentAffiliation.orgkey,
+      );
 
-    return {
-      orgkey: organization.id,
-      role: affiliations[0]?.role ?? OrgRole.MEMBER,
-      name: organization.name,
-      projects: organization.projects?.length ?? mockData.projects.filter((item) => item.ownerkey === organization.id).length,
-      members: organization.members?.length ?? affiliations.length,
-    };
-  });
+      if (!organization) {
+        return [];
+      }
+
+      return [{
+        orgkey: organization.id,
+        role: currentAffiliation.role,
+        name: organization.name,
+        projects: mockData.projects.filter(
+          (item) => item.ownerkey === organization.id,
+        ).length,
+        members: mockData.affiliations.filter(
+          (item) => item.orgkey === organization.id,
+        ).length,
+      }];
+    });
+
+    return userAffiliations;
 }
 
 export class AffiliationMockService implements AffiliationServiceI {
   async create(data: DefineAffiliationDTO): Promise<ApiResponse<AffiliationDTO>> {
+    const { orgkey } = requireMockOrgRequest("/affiliations", mockData.affiliations);
+
+    if (data.orgkey !== orgkey) {
+      throw createMockRequestError(
+        "/affiliations",
+        403,
+        "A organização da requisição difere do header x-org-key.",
+      );
+    }
+
     const affiliation = createMockAffiliation({
       id: createMockId("affiliation"),
       orgkey: data.orgkey,
@@ -52,11 +81,23 @@ export class AffiliationMockService implements AffiliationServiceI {
   }
 
   async list(): Promise<ApiResponse<UserOrganizationSummaryDTO[]>> {
-    return createMockResponse(buildSummary(), "/affiliations");
+    const currentAccount = requireMockCurrentAccount("/affiliations");
+    const summary = buildSummary(currentAccount.username);
+
+    return createMockResponse(summary, "/affiliations");
   }
 
   async delete(id: string): Promise<ApiResponse<null>> {
+    const { orgkey } = requireMockOrgRequest(`/affiliations/remove/${id}`, mockData.affiliations);
     const index = mockData.affiliations.findIndex((item) => item.id === id);
+
+    if (index >= 0 && mockData.affiliations[index].orgkey !== orgkey) {
+      throw createMockRequestError(
+        `/affiliations/remove/${id}`,
+        403,
+        "A afiliação não pertence à organização acessada.",
+      );
+    }
 
     if (index >= 0) {
       mockData.affiliations.splice(index, 1);
@@ -66,10 +107,19 @@ export class AffiliationMockService implements AffiliationServiceI {
   }
 
   async promote(id: string): Promise<ApiResponse<AffiliationDTO | APIMessage>> {
+    const { orgkey } = requireMockOrgRequest(`/affiliations/promote/${id}`, mockData.affiliations);
     const affiliation = mockData.affiliations.find((item) => item.id === id);
 
     if (!affiliation) {
       return createMockResponse({ message: "Affiliation not found" }, `/affiliations/promote/${id}`, "Affiliation not found", 404, true);
+    }
+
+    if (affiliation.orgkey !== orgkey) {
+      throw createMockRequestError(
+        `/affiliations/promote/${id}`,
+        403,
+        "A afiliação não pertence à organização acessada.",
+      );
     }
 
     affiliation.role = nextRole(affiliation.role, "up");
@@ -78,10 +128,19 @@ export class AffiliationMockService implements AffiliationServiceI {
   }
 
   async demote(id: string): Promise<ApiResponse<AffiliationDTO | APIMessage>> {
+    const { orgkey } = requireMockOrgRequest(`/affiliations/demote/${id}`, mockData.affiliations);
     const affiliation = mockData.affiliations.find((item) => item.id === id);
 
     if (!affiliation) {
       return createMockResponse({ message: "Affiliation not found" }, `/affiliations/demote/${id}`, "Affiliation not found", 404, true);
+    }
+
+    if (affiliation.orgkey !== orgkey) {
+      throw createMockRequestError(
+        `/affiliations/demote/${id}`,
+        403,
+        "A afiliação não pertence à organização acessada.",
+      );
     }
 
     affiliation.role = nextRole(affiliation.role, "down");

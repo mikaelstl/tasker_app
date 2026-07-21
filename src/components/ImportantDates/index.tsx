@@ -8,6 +8,7 @@ import { Container, Day, Event, Month, Name } from "./style"
 import { formatNumber } from "../../utils/formatNumber"
 // import { useEffect, useState } from "react"
 import { SectionTitle } from "../base/SectionTitle"
+import { ItalicTitle } from "../base/ItalicTitle"
 
 interface ImportantDatesProps {
   events: EventDTO[]
@@ -36,13 +37,15 @@ export function ImportantDates({
       <SectionTitle>Important dates</SectionTitle>
 
       <Scroller className="vertical">
-        {
+        {events.length === 0
+          ? <ItalicTitle>Nenhum evento encontrado</ItalicTitle>
+          :
           events.map((event) =>{
             const eventDate = DateTime.fromISO(event.date, { zone: 'utc' });
 
             const sameDateEvents = events.filter(evt => DateTime.fromISO(evt.date, { zone: 'utc' }).hasSame(eventDate, 'day'));
 
-            return <Margin bottom="20px">
+            return <Margin key={event.id} bottom="20px">
               <Month id="month">
                 <Subtitle>{eventDate.monthShort} {eventDate.day}, {eventDate.year}</Subtitle>
                 {
@@ -50,7 +53,7 @@ export function ImportantDates({
                   .map(
                     (evt) => {
                     const date = DateTime.fromISO(evt.date, { zone: 'utc' });
-                    return <Event id="event">
+                    return <Event key={evt.id} id="event">
                       <Day id="day">
                         <Text>{formatNumber(date.hour)}:{formatNumber(date.minute)}</Text>
                       </Day>
@@ -60,8 +63,7 @@ export function ImportantDates({
                 }
               </Month>
             </Margin>}
-          )
-        }
+          )}
       </Scroller>
     </Container>
   )

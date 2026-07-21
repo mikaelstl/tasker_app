@@ -21,8 +21,11 @@ export function Projects() {
     title: 'TCC',
     description: 'TCC',
     ownerkey: '653c6be4',
+    managerkey: null,
     due_date: new Date().toISOString(),
-    progress: ProjectProgress.STARTED
+    progress: ProjectProgress.STARTED,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
   }]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 

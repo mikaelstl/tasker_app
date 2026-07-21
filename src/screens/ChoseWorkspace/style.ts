@@ -22,13 +22,15 @@ const HeaderContainer = styled.div`
 `;
 
 const WorkspaceScroller = styled(Scroller)`
-  width: 100%;
   max-height: 70%;
   height: 70%;
+
+  gap: 12px;
 
   &.vertical {
     overflow-y: auto;
   }
+  border: 1px solid;
 `;
 
 const Actions = styled.div`

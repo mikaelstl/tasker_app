@@ -6,8 +6,8 @@ import type { CurrentAccountDTO } from "../../types/account/current-account.dto"
 import type { ApiResponse } from "@/service/types/response/response";
 
 import { mockData, createMockAccount, createMockAuth, createMockCurrentAccount, createMockId, createMockResponse } from "../data";
-import { OrgRole } from "../../../utils/enums/OrgRole";
 import type { AccountServiceI } from "../../modules/account/account.service";
+import { readMockRequestContext } from "../request-context";
 
 export class AccountMockService implements AccountServiceI {
   async register(data: CreateAccountDTO): Promise<ApiResponse<AccountDTO>> {
@@ -29,11 +29,16 @@ export class AccountMockService implements AccountServiceI {
       return createMockResponse(mockData.auth, "/auth/login", "Account not found", 404, true);
     }
 
-    const username = mockData.currentAccount.username ?? data.email.split("@")[0];
+    const user = mockData.users.find((item) => item.accountkey === account.id);
+
+    if (!user) {
+      return createMockResponse(mockData.auth, "/auth/login", "User not found", 404, true);
+    }
+
     const auth = createMockAuth({
       account: account.id,
       email: account.email,
-      username,
+      username: user.username,
       access_token: `mock-token-${account.id}`,
     });
 
@@ -43,7 +48,16 @@ export class AccountMockService implements AccountServiceI {
   }
 
   async validate(): Promise<ApiResponse<boolean>> {
-    const isValid = mockData.accounts.length > 0 && Boolean(mockData.auth.access_token);
+    const { currentAccount, token } = readMockRequestContext();
+    const isValid = Boolean(
+      currentAccount
+      && token
+      && token === `mock-token-${currentAccount.id}`
+      && mockData.accounts.some((account) => account.id === currentAccount.id)
+      && mockData.users.some(
+        (user) => user.accountkey === currentAccount.id && user.username === currentAccount.username,
+      ),
+    );
 
     return createMockResponse(isValid, "/auth/validate");
   }
@@ -59,11 +73,14 @@ export class AccountMockService implements AccountServiceI {
   }
 
   buildCurrentAccount(auth: AuthDTO): CurrentAccountDTO {
-    return createMockCurrentAccount({
+    const currentAccount = createMockCurrentAccount({
       id: auth.account,
       email: auth.email,
       username: auth.username,
-      role: mockData.currentAccount.role ?? OrgRole.OWNER,
     });
+
+    Object.assign(mockData.currentAccount, currentAccount);
+
+    return currentAccount;
   }
 }

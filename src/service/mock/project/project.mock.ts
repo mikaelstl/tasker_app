@@ -18,6 +18,8 @@ import { TaskStage } from "../../types/task/stage.dto";
 import { downloadDocument } from "../../common/downloadDocument";
 
 import { mockData, createMockId, createMockProject, createMockResponse } from "../data";
+import { createMockRequestError, requireMockOrgRequest } from "../request-context";
+import { OrgRole } from "@/utils/enums/OrgRole";
 
 function matchesProjectQuery(project: ProjectDTO, params?: ProjectQueryDTO): boolean {
   if (!params) {
@@ -55,17 +57,36 @@ export class ProjectMockService implements ProjectServiceI {
   private readonly reports: ProjectStatsReport[] = [];
 
   async list(params?: ProjectQueryDTO): Promise<ApiResponse<ProjectDTO[]>> {
-    const projects = mockData.projects.filter((project) => matchesProjectQuery(project, params));
+    const { orgkey } = requireMockOrgRequest("/project/list", mockData.affiliations);
+    const projects = mockData.projects.filter(
+      (project) => project.ownerkey === orgkey && matchesProjectQuery(project, params),
+    );
 
     return createMockResponse(projects, "/project/list");
   }
 
   async create(data: CreateProjectDTO): Promise<ApiResponse<ProjectDTO>> {
+    const { currentAccount, orgkey } = requireMockOrgRequest(
+      "/project",
+      mockData.affiliations,
+    );
+    const affiliation = mockData.affiliations.find(
+      (item) => item.orgkey === orgkey && item.userkey === currentAccount.username,
+    );
+
+    if (affiliation?.role !== OrgRole.OWNER) {
+      throw createMockRequestError(
+        "/project",
+        403,
+        "Apenas o owner da organização pode criar projetos.",
+      );
+    }
+
     const project = createMockProject({
       id: createMockId("project"),
       title: data.title,
       description: data.description,
-      ownerkey: data.ownerkey ?? mockData.organizations[0]?.id ?? "org-001",
+      ownerkey: orgkey,
       due_date: data.due_date.toISOString(),
     });
 
@@ -75,13 +96,15 @@ export class ProjectMockService implements ProjectServiceI {
   }
 
   async find(id: string): Promise<ApiResponse<ProjectDTO>> {
-    const project = mockData.projects.find((item) => item.id === id);
+    const { orgkey } = requireMockOrgRequest(`/project/${id}`, mockData.affiliations);
+    const project = mockData.projects.find((item) => item.id === id && item.ownerkey === orgkey);
 
     return createMockResponse(project ?? createMockProject(), `/project/${id}`, project ? "OK" : "Project not found", project ? 200 : 404, !project);
   }
 
   async update(id: string, data: EditProjectDTO): Promise<ApiResponse<ProjectDTO>> {
-    const project = mockData.projects.find((item) => item.id === id);
+    const { orgkey } = requireMockOrgRequest(`/project/${id}`, mockData.affiliations);
+    const project = mockData.projects.find((item) => item.id === id && item.ownerkey === orgkey);
 
     if (!project) {
       return createMockResponse(createMockProject(), `/project/${id}`, "Project not found", 404, true);
@@ -101,7 +124,8 @@ export class ProjectMockService implements ProjectServiceI {
   }
 
   async delete(id: string): Promise<ApiResponse<ProjectDTO>> {
-    const index = mockData.projects.findIndex((item) => item.id === id);
+    const { orgkey } = requireMockOrgRequest(`/project/del/${id}`, mockData.affiliations);
+    const index = mockData.projects.findIndex((item) => item.id === id && item.ownerkey === orgkey);
     const project = index >= 0 ? mockData.projects[index] : createMockProject();
 
     if (index >= 0) {
@@ -128,7 +152,7 @@ export class ProjectMockService implements ProjectServiceI {
   ): Promise<ApiResponse<ProjectStats>> {
     const project = mockData.projects.find((item) => item.id === id);
     const cutoffAt = params?.cutoffAt ? new Date(params.cutoffAt) : new Date();
-    const tasks = mockData.tasks.filter((task) => task.projectkey === id);
+    const tasks = mockData.tasks.filter((task) => task.project === id);
     const doneTasks = tasks.filter((task) => task.stage === TaskStage.DONE).length;
     const reviewTasks = tasks.filter((task) => task.stage === TaskStage.REVIEW).length;
     const startedTasks = tasks.filter((task) => task.stage === TaskStage.IN_PROGRESS).length;

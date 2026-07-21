@@ -4,4 +4,6 @@ export interface CommentDTO {
   readonly date:        string;
   readonly ownerkey:    string;
   readonly projectkey:  string;
+  readonly created_at:  string;
+  readonly updated_at:  string;
 }

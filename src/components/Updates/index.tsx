@@ -3,11 +3,12 @@ import { Scroller } from "../misc/Scroller"
 import { Container } from "./style"
 import { SectionTitle } from "../base/SectionTitle"
 import { UpdateCard } from "../cards/UpdateCard"
-import type { CommentDTO } from "../../service/types/comment/comment.dto"
+import type { UpdateDTO } from "../../service/types/comment/update.dto"
 import { Margin } from "../misc/Margin"
+import { ItalicTitle } from "../base/ItalicTitle"
 
 interface UpdatesProps {
-  updates: CommentDTO[]
+  updates: UpdateDTO[]
 }
 
 export function Updates({
@@ -18,17 +19,18 @@ export function Updates({
       <SectionTitle>Updates</SectionTitle>
 
       <Scroller className="vertical">
-        {
-          updates.map((_) =>{
-            return <Margin bottom="2px">
+        {updates.length === 0
+          ? <ItalicTitle>Nenhuma atualização encontrada</ItalicTitle>
+          :
+          updates.map((update) =>{
+            return <Margin key={update.id} bottom="2px">
               <UpdateCard
-                content="Atualização"
-                date={DateTime.local()}
-                owner="mikaelst"
+                content={update.content}
+                date={DateTime.fromISO(update.date)}
+                owner={update.ownerkey}
               />
             </Margin>}
-          )
-        }
+          )}
       </Scroller>
     </Container>
   )

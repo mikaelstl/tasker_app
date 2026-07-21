@@ -3,12 +3,14 @@ import { RoleBadge } from "@/maps/role-badge";
 import type { OrgRole } from "@/utils/enums/OrgRole";
 import { formatOrgAvatar } from "@/utils/formatOrgAvatar";
 import { Avatar, Container, Meta, MetaDivider, MetaItem, Title } from "./style";
+import { useEffect } from "react";
 
 interface OrganizatioCardProps {
   name: string;
   members: number;
   projects: number;
   role: OrgRole;
+  onClick?: () => void;
 }
 
 interface OrgCardLabelProps {
@@ -40,9 +42,11 @@ export function OrganizationCard({
   members,
   projects,
   role,
+  onClick,
 }: OrganizatioCardProps) {
+  useEffect(() => console.log("ROLE >>>>>> ", role), [])
   return (
-    <Container>
+    <Container type="button" onClick={onClick}>
       <Avatar>
         <span>{formatOrgAvatar(name)}</span>
       </Avatar>

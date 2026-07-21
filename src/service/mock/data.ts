@@ -17,73 +17,16 @@ import { TaskPriority } from "../types/task/priority.dto";
 import { TaskStage } from "../types/task/stage.dto";
 import { OrgRole } from "../../utils/enums/OrgRole";
 
-type MockEventCategory = "RELEASE" | "MEETING" | "REVIEW" | "PLANNING" | "TESTS" | "LAUNCH";
-
-type MockAccount = AccountDTO & {
-  readonly created_at: string;
-  readonly updated_at: string;
-};
-
-type MockUser = UserDTO & {
-  readonly created_at: string;
-  readonly updated_at: string;
-};
-
-type MockOrganization = Omit<OrganizationDTO, "owner" | "projects" | "members"> & {
-  owner?: MockUser;
-  projects?: MockProject[];
-  members?: MockAffiliation[];
-};
-
-type MockAffiliation = Omit<AffiliationDTO, "org" | "user"> & {
-  readonly created_at: string;
-  readonly updated_at: string;
-  org?: MockOrganization;
-  user?: MockUser;
-};
-
-type MockProject = ProjectDTO & {
-  readonly managerkey?: string | null;
-  readonly created_at: string;
-  readonly updated_at: string;
-  members?: MockMember[];
-};
-
-type MockMember = Omit<ProjectMember, "tasks"> & {
-  tasks: TaskDTO[];
-  readonly created_at: string;
-  readonly updated_at: string;
-  readonly user?: MockAffiliation;
-};
-
-type MockTask = TaskDTO & {
-  readonly projectkey: string;
-  readonly ownerkey: string;
-  readonly created_at: string;
-  readonly updated_at: string;
-};
-
-type MockComment = CommentDTO & {
-  readonly created_at: string;
-  readonly updated_at: string;
-};
-
-type MockEvent = EventDTO & {
-  readonly category: MockEventCategory;
-  readonly created_at: string;
-  readonly updated_at: string;
-};
-
 type MockDataShape = {
-  accounts: MockAccount[];
-  users: MockUser[];
-  organizations: MockOrganization[];
-  affiliations: MockAffiliation[];
-  projects: MockProject[];
-  members: MockMember[];
-  tasks: MockTask[];
-  comments: MockComment[];
-  events: MockEvent[];
+  accounts: AccountDTO[];
+  users: UserDTO[];
+  organizations: OrganizationDTO[];
+  affiliations: AffiliationDTO[];
+  projects: ProjectDTO[];
+  members: ProjectMember[];
+  tasks: TaskDTO[];
+  comments: CommentDTO[];
+  events: EventDTO[];
   memberStats: MemberStatDTO[];
   currentAccount: CurrentAccountDTO;
   auth: AuthDTO;
@@ -145,7 +88,7 @@ export function createMockResponse<T>(
   };
 }
 
-export function createMockAccount(data: Partial<MockAccount> = {}): MockAccount {
+export function createMockAccount(data: Partial<AccountDTO> = {}): AccountDTO {
   return {
     id: data.id ?? "acc-000",
     email: data.email ?? "conta@tasker.dev",
@@ -155,7 +98,7 @@ export function createMockAccount(data: Partial<MockAccount> = {}): MockAccount 
   };
 }
 
-export function createMockUser(data: Partial<MockUser> = {}): MockUser {
+export function createMockUser(data: Partial<UserDTO> = {}): UserDTO {
   return {
     id: data.id ?? "usr-000",
     name: data.name ?? "Usuario Mock",
@@ -166,7 +109,7 @@ export function createMockUser(data: Partial<MockUser> = {}): MockUser {
   };
 }
 
-export function createMockOrganization(data: Partial<MockOrganization> = {}): MockOrganization {
+export function createMockOrganization(data: Partial<OrganizationDTO> = {}): OrganizationDTO {
   return {
     id: data.id ?? "org-000",
     name: data.name ?? "Organizacao Mock",
@@ -179,7 +122,7 @@ export function createMockOrganization(data: Partial<MockOrganization> = {}): Mo
   };
 }
 
-export function createMockAffiliation(data: Partial<MockAffiliation> = {}): MockAffiliation {
+export function createMockAffiliation(data: Partial<AffiliationDTO> = {}): AffiliationDTO {
   return {
     id: data.id ?? "aff-000",
     orgkey: data.orgkey ?? "org-000",
@@ -192,7 +135,7 @@ export function createMockAffiliation(data: Partial<MockAffiliation> = {}): Mock
   };
 }
 
-export function createMockProject(data: Partial<MockProject> = {}): MockProject {
+export function createMockProject(data: Partial<ProjectDTO> = {}): ProjectDTO {
   return {
     id: data.id ?? "pro-000",
     title: data.title ?? "Projeto Mock",
@@ -207,7 +150,7 @@ export function createMockProject(data: Partial<MockProject> = {}): MockProject 
   };
 }
 
-export function createMockProjectMember(data: Partial<MockMember> = {}): MockMember {
+export function createMockProjectMember(data: Partial<ProjectMember> = {}): ProjectMember {
   return {
     id: data.id ?? "mem-000",
     projectkey: data.projectkey ?? "pro-000",
@@ -220,28 +163,23 @@ export function createMockProjectMember(data: Partial<MockMember> = {}): MockMem
   };
 }
 
-export function createMockTask(data: Partial<MockTask> = {}): MockTask {
-  const project = data.project ?? data.projectkey ?? "pro-000";
-  const owner = data.owner ?? data.ownerkey ?? "mem-000";
-
+export function createMockTask(data: Partial<TaskDTO> = {}): TaskDTO {
   return {
     id: data.id ?? "tsk-000",
     code: data.code ?? "TSK-0000",
     name: data.name ?? "Tarefa Mock",
     description: data.description ?? "Descricao da tarefa mock",
-    project,
-    owner,
+    project: data.project ?? "pro-000",
+    owner: data.owner ?? "mem-000",
     stage: data.stage ?? TaskStage.PENDING,
     priority: data.priority ?? TaskPriority.MEDIUM,
     due_date: data.due_date ?? baseDate.toISOString(),
-    projectkey: data.projectkey ?? project,
-    ownerkey: data.ownerkey ?? owner,
     created_at: data.created_at ?? baseDate.toISOString(),
     updated_at: data.updated_at ?? baseDate.toISOString(),
   };
 }
 
-export function createMockComment(data: Partial<MockComment> = {}): MockComment {
+export function createMockComment(data: Partial<CommentDTO> = {}): CommentDTO {
   return {
     id: data.id ?? "com-000",
     content: data.content ?? "Comentario mock",
@@ -253,7 +191,7 @@ export function createMockComment(data: Partial<MockComment> = {}): MockComment 
   };
 }
 
-export function createMockEvent(data: Partial<MockEvent> = {}): MockEvent {
+export function createMockEvent(data: Partial<EventDTO> = {}): EventDTO {
   return {
     id: data.id ?? "evt-000",
     title: data.title ?? "Evento mock",
@@ -279,7 +217,7 @@ export function createMockCurrentAccount(data: Partial<CurrentAccountDTO> = {}):
     id: data.id ?? "acc-000",
     username: data.username ?? "usuario.mock",
     email: data.email ?? "conta@tasker.dev",
-    role: data.role ?? OrgRole.OWNER,
+    ...(data.role ? { role: data.role } : {}),
   };
 }
 
@@ -307,43 +245,75 @@ const userSeeds = [
   { username: "tiago.ribeiro", name: "Tiago Ribeiro", password: "Senha@20" },
 ];
 
-const organizationSeeds = [
+type AffiliationSeed = Pick<UserDTO, "username"> & Pick<AffiliationDTO, "role">;
+
+interface OrganizationSeed extends Pick<OrganizationDTO, "name"> {
+  ownerUsername: UserDTO["username"];
+  affiliations: AffiliationSeed[];
+}
+
+const organizationSeeds: OrganizationSeed[] = [
   {
     name: "Aurora Tech",
     ownerUsername: "ana.silva",
-    managerUsername: "fernando.santos",
-    memberUsernames: ["karla.rocha", "lucas.vieira", "mariana.nunes"],
-    crossMemberUsername: "giovana.pereira",
+    affiliations: [
+      { username: "ana.silva", role: OrgRole.OWNER },
+      { username: "fernando.santos", role: OrgRole.MANAGER },
+      { username: "karla.rocha", role: OrgRole.MANAGER },
+      { username: "lucas.vieira", role: OrgRole.MEMBER },
+      { username: "mariana.nunes", role: OrgRole.MEMBER },
+      { username: "giovana.pereira", role: OrgRole.MEMBER },
+    ],
   },
   {
     name: "Nimbus Digital",
     ownerUsername: "bruno.lima",
-    managerUsername: "giovana.pereira",
-    memberUsernames: ["nicolas.freitas", "olivia.mendes", "paulo.barbosa"],
-    crossMemberUsername: "henrique.ramos",
+    affiliations: [
+      { username: "bruno.lima", role: OrgRole.OWNER },
+      { username: "giovana.pereira", role: OrgRole.MANAGER },
+      { username: "nicolas.freitas", role: OrgRole.MEMBER },
+      { username: "olivia.mendes", role: OrgRole.MANAGER },
+      { username: "paulo.barbosa", role: OrgRole.MEMBER },
+      { username: "henrique.ramos", role: OrgRole.MEMBER },
+    ],
   },
   {
     name: "Orion Labs",
     ownerUsername: "clara.melo",
-    managerUsername: "henrique.ramos",
-    memberUsernames: ["quiteria.martins", "rafael.lopes", "sophia.tavares"],
-    crossMemberUsername: "isabela.cunha",
+    affiliations: [
+      { username: "clara.melo", role: OrgRole.OWNER },
+      { username: "henrique.ramos", role: OrgRole.MANAGER },
+      { username: "quiteria.martins", role: OrgRole.MEMBER },
+      { username: "rafael.lopes", role: OrgRole.MEMBER },
+      { username: "sophia.tavares", role: OrgRole.MEMBER },
+      { username: "isabela.cunha", role: OrgRole.MEMBER },
+    ],
   },
   {
     name: "Vertex Solucoes",
     ownerUsername: "diego.souza",
-    managerUsername: "isabela.cunha",
-    memberUsernames: ["tiago.ribeiro", "karla.rocha", "nicolas.freitas"],
-    crossMemberUsername: "joao.cesar",
+    affiliations: [
+      { username: "diego.souza", role: OrgRole.OWNER },
+      { username: "isabela.cunha", role: OrgRole.MANAGER },
+      { username: "tiago.ribeiro", role: OrgRole.MEMBER },
+      { username: "karla.rocha", role: OrgRole.MEMBER },
+      { username: "nicolas.freitas", role: OrgRole.MEMBER },
+      { username: "joao.cesar", role: OrgRole.MANAGER },
+    ],
   },
   {
     name: "Atlas Commerce",
     ownerUsername: "elisa.alves",
-    managerUsername: "joao.cesar",
-    memberUsernames: ["lucas.vieira", "mariana.nunes", "olivia.mendes"],
-    crossMemberUsername: "fernando.santos",
+    affiliations: [
+      { username: "elisa.alves", role: OrgRole.OWNER },
+      { username: "joao.cesar", role: OrgRole.MANAGER },
+      { username: "lucas.vieira", role: OrgRole.MEMBER },
+      { username: "mariana.nunes", role: OrgRole.MANAGER },
+      { username: "olivia.mendes", role: OrgRole.MEMBER },
+      { username: "fernando.santos", role: OrgRole.MEMBER },
+    ],
   },
-] as const;
+];
 
 const projectTemplates = [
   { title: "Portal de Atendimento", description: "Experiencia central de suporte e abertura de chamados." },
@@ -371,7 +341,7 @@ const commentTemplates = [
   "Bloco validado com o time responsavel.",
 ];
 
-const eventCategories: MockEventCategory[] = ["RELEASE", "MEETING", "REVIEW", "PLANNING", "TESTS", "LAUNCH"];
+const eventCategories = ["RELEASE", "MEETING", "REVIEW", "PLANNING", "TESTS", "LAUNCH"] as const;
 
 const accountRecords = userSeeds.map((seed, index) =>
   createMockAccount({
@@ -409,17 +379,16 @@ const organizations = organizationSeeds.map((seed, index) =>
 
 const affiliations = organizations.flatMap((organization, orgIndex) => {
   const seed = organizationSeeds[orgIndex];
-  const orgUsers = [seed.ownerUsername, seed.managerUsername, ...seed.memberUsernames, seed.crossMemberUsername];
 
-  return orgUsers.map((username, index) =>
+  return seed.affiliations.map((affiliation, index) =>
     {
-      const user = usersByUsername.get(username);
+      const user = usersByUsername.get(affiliation.username);
 
       return createMockAffiliation({
         id: createMockId("affiliation"),
         orgkey: organization.id,
-        userkey: username,
-        role: index === 0 ? OrgRole.OWNER : index === 1 ? OrgRole.MANAGER : OrgRole.MEMBER,
+        userkey: affiliation.username,
+        role: affiliation.role,
         org: organization,
         ...(user ? { user } : {}),
         created_at: isoAt(orgIndex * 45 + index * 5),
@@ -429,7 +398,7 @@ const affiliations = organizations.flatMap((organization, orgIndex) => {
   );
 });
 
-const affiliationsByOrg = new Map<string, MockAffiliation[]>();
+const affiliationsByOrg = new Map<string, AffiliationDTO[]>();
 for (const affiliation of affiliations) {
   const current = affiliationsByOrg.get(affiliation.orgkey) ?? [];
   current.push(affiliation);
@@ -458,15 +427,15 @@ const projects = organizations.flatMap((organization, orgIndex) => {
   );
 });
 
-const projectsByOrg = new Map<string, MockProject[]>();
+const projectsByOrg = new Map<string, ProjectDTO[]>();
 for (const project of projects) {
   const currentOrgProjects = projectsByOrg.get(project.ownerkey) ?? [];
   currentOrgProjects.push(project);
   projectsByOrg.set(project.ownerkey, currentOrgProjects);
 }
 
-const members: MockMember[] = [];
-const projectMembersByProject = new Map<string, MockMember[]>();
+const members: ProjectMember[] = [];
+const projectMembersByProject = new Map<string, ProjectMember[]>();
 
 for (const [orgIndex, organization] of organizations.entries()) {
   const orgAffiliations = affiliationsByOrg.get(organization.id) ?? [];
@@ -481,7 +450,7 @@ for (const [orgIndex, organization] of organizations.entries()) {
       managerAffiliation,
       memberAffiliations[projectIndex % memberAffiliations.length],
       memberAffiliations[(projectIndex + 1) % memberAffiliations.length],
-    ].filter((item): item is MockAffiliation => Boolean(item));
+    ].filter((item): item is AffiliationDTO => Boolean(item));
 
     const projectMembers = selectedAffiliations.map((affiliation, memberIndex) =>
       createMockProjectMember({
@@ -497,11 +466,11 @@ for (const [orgIndex, organization] of organizations.entries()) {
 
     members.push(...projectMembers);
     projectMembersByProject.set(project.id, projectMembers);
-    project.members = projectMembers;
+    Object.assign(project, { members: projectMembers });
   });
 }
 
-const tasks: MockTask[] = [];
+const tasks: TaskDTO[] = [];
 
 for (const [orgIndex, organization] of organizations.entries()) {
   const orgProjects = projectsByOrg.get(organization.id) ?? [];
@@ -521,8 +490,6 @@ for (const [orgIndex, organization] of organizations.entries()) {
         description: `${taskTemplates[taskIndex % taskTemplates.length]} para ${project.title}.`,
         project: project.id,
         owner: owner.id,
-        projectkey: project.id,
-        ownerkey: owner.id,
         stage: stageOrder[(taskIndex + projectIndex) % stageOrder.length],
         priority: priorityOrder[(taskIndex + orgIndex) % priorityOrder.length],
         due_date: dateAt(30 + orgIndex * 12 + projectIndex * 4 - (7 - taskIndex)),
@@ -534,7 +501,7 @@ for (const [orgIndex, organization] of organizations.entries()) {
     tasks.push(...projectTasks);
 
     projectMembers.forEach((member) => {
-      member.tasks = projectTasks.filter((task) => task.owner === member.id);
+      Object.assign(member, { tasks: projectTasks.filter((task) => task.owner === member.id) });
     });
   });
 }
@@ -545,7 +512,7 @@ const comments = projects.flatMap((project, projectIndex) => {
     .map((member) => affiliations.find((affiliation) => affiliation.id === member.userkey)?.userkey)
     .filter((username): username is string => Boolean(username))
     .map((username) => usersByUsername.get(username))
-    .filter((user): user is MockUser => Boolean(user));
+    .filter((user): user is UserDTO => Boolean(user));
 
   return Array.from({ length: 2 + (projectIndex % 2) }).map((_, commentIndex) =>
     createMockComment({
@@ -588,8 +555,10 @@ const memberStats: MemberStatDTO[] = members.map((member) => {
 });
 
 for (const organization of organizations) {
-  organization.projects = projectsByOrg.get(organization.id) ?? [];
-  organization.members = affiliationsByOrg.get(organization.id) ?? [];
+  Object.assign(organization, {
+    projects: projectsByOrg.get(organization.id) ?? [],
+    members: affiliationsByOrg.get(organization.id) ?? [],
+  });
 }
 
 const currentUser = usersByUsername.get("ana.silva") ?? users[0];
@@ -621,15 +590,4 @@ export const mockData: MockDataShape = {
 };
 
 export default mockData;
-export type {
-  MockAccount,
-  MockAffiliation,
-  MockComment,
-  MockDataShape,
-  MockEvent,
-  MockMember,
-  MockOrganization,
-  MockProject,
-  MockTask,
-  MockUser,
-};
+export type { MockDataShape };

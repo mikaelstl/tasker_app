@@ -45,7 +45,7 @@ export function TaskCategoryAccordion(props: { visible?: boolean, title: string,
                                             />)
                   }
                 </Scroller>
-                : <ItalicTitle>Sem projetos acessados recentemente</ItalicTitle>
+                : <ItalicTitle>Nenhuma tarefa encontrada</ItalicTitle>
             }
           </Tasks>
           : <></>

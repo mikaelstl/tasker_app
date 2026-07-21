@@ -4,7 +4,17 @@ import { Text } from "../../base/Text";
 import Palette from "../../../assets/palette";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/solid";
 
-export function DeadlineAlertsCard() {
+interface DeadlineAlert {
+  projectkey: string;
+  title: string;
+  daysRemaining: number;
+}
+
+interface DeadlineAlertsCardProps {
+  deadlines: DeadlineAlert[];
+}
+
+export function DeadlineAlertsCard({ deadlines }: DeadlineAlertsCardProps) {
   return (
     <Container className="tskr-deadline-alerts-card">
       <Header>
@@ -12,22 +22,18 @@ export function DeadlineAlertsCard() {
         <Title>Deadline Alerts</Title>
       </Header>
       <Cards>
-        <Card>
-          <Title>Title</Title>
-          <Text>Due in 00 days</Text>
-        </Card>
-        <Card>
-          <Title>Title</Title>
-          <Text>00/00</Text>
-        </Card>
-        <Card>
-          <Title>Title</Title>
-          <Text>00/00</Text>
-        </Card>
-        <Card>
-          <Title>Title</Title>
-          <Text>00/00</Text>
-        </Card>
+        {deadlines.length === 0 ? (
+          <Text>Nenhum alerta de prazo</Text>
+        ) : deadlines.map((deadline) => (
+          <Card key={deadline.projectkey}>
+            <Title>{deadline.title}</Title>
+            <Text>
+              {deadline.daysRemaining < 0
+                ? `${Math.abs(deadline.daysRemaining)} days overdue`
+                : `Due in ${deadline.daysRemaining} days`}
+            </Text>
+          </Card>
+        ))}
       </Cards>
 
     </Container>

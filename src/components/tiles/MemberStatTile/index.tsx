@@ -7,10 +7,9 @@ import { Container, Indicator, Leading } from "./style";
 interface MemberStatTileProps {
   username: string;
   project: string;
-  // tasks: {
-  //   total: number,
-  //   done: number
-  // },
+  started: number;
+  done: number;
+  overdue: number;
 }
 
 export function MemberStatTile(props: MemberStatTileProps) {
@@ -22,15 +21,15 @@ export function MemberStatTile(props: MemberStatTileProps) {
       </Leading>
       <Indicator>
         <Subtitle>Started</Subtitle>
-        <Badge color={Palette.lightBlue_50}>00</Badge>
+        <Badge color={Palette.lightBlue_50}>{props.started}</Badge>
       </Indicator>
       <Indicator>
         <Subtitle>Done</Subtitle>
-        <Badge color={Palette.green_50}>00</Badge>
+        <Badge color={Palette.green_50}>{props.done}</Badge>
       </Indicator>
       <Indicator>
         <Subtitle>Overdue</Subtitle>
-        <Badge color={Palette.red_50}>00</Badge>
+        <Badge color={Palette.red_50}>{props.overdue}</Badge>
       </Indicator>
     </Container>
   )

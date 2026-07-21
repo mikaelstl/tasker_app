@@ -2,8 +2,16 @@ import { Title } from "../../base/Title";
 import { Container, Date, Header, Infos } from "./style";
 import { CalendarIcon } from "@heroicons/react/24/solid";
 import { Subtitle } from "../../base/Subtitle";
+import { DateTime } from "luxon";
 
-export function NextDeadlineCard() {
+interface NextDeadlineCardProps {
+  deadline: {
+    title: string;
+    dueDate: string;
+  };
+}
+
+export function NextDeadlineCard({ deadline }: NextDeadlineCardProps) {
   return (
     <Container className="tskr-next-deadline-card">
       <Header>
@@ -11,8 +19,8 @@ export function NextDeadlineCard() {
         <CalendarIcon width={20}/>
       </Header>
       <Infos>
-        <Date>Mm DD, YYYY</Date>
-        <Subtitle>Project</Subtitle>
+        <Date>{DateTime.fromISO(deadline.dueDate).toFormat("MMM dd, yyyy")}</Date>
+        <Subtitle>{deadline.title}</Subtitle>
       </Infos>
     </Container>
   )

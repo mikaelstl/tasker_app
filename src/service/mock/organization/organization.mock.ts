@@ -2,20 +2,40 @@ import type { ApiResponse } from "@/service/types/response/response";
 import type { OrganizationCreateDTO } from "../../types/organization/create.dto";
 import type { OrganizationDTO } from "../../types/organization/organization.dto";
 
-import { mockData, createMockId, createMockOrganization, createMockResponse } from "../data";
+import {
+  mockData,
+  createMockAffiliation,
+  createMockId,
+  createMockOrganization,
+  createMockResponse,
+} from "../data";
 import type { OrganizationServiceI } from "../../modules/organization/organization.service";
+import { requireMockCurrentAccount } from "../request-context";
+import { OrgRole } from "@/utils/enums/OrgRole";
 
 export class OrganizationMockService implements OrganizationServiceI {
   async create(data: OrganizationCreateDTO): Promise<ApiResponse<OrganizationDTO>> {
+    const currentAccount = requireMockCurrentAccount("/org");
     const organization = createMockOrganization({
       id: createMockId("org"),
       name: data.name,
-      ownerkey: data.ownerkey ?? mockData.currentAccount.username,
+      ownerkey: currentAccount.username,
       created_at: new Date(),
       updated_at: new Date(),
     });
 
     mockData.organizations.push(organization);
+    const affiliation = createMockAffiliation({
+      id: createMockId("affiliation"),
+      orgkey: organization.id,
+      userkey: currentAccount.username,
+      role: OrgRole.OWNER,
+      org: organization,
+      user: mockData.users.find((user) => user.username === currentAccount.username),
+    });
+
+    mockData.affiliations.push(affiliation);
+    Object.assign(organization, { members: [affiliation] });
 
     return createMockResponse(organization, "/org");
   }

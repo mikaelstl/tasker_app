@@ -11,4 +11,6 @@ export interface TaskDTO {
   readonly stage: TaskStage;
   readonly priority: TaskPriority;
   readonly due_date: string;
+  readonly created_at: string;
+  readonly updated_at: string;
 }
