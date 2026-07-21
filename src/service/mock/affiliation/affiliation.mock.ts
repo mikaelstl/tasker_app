@@ -87,6 +87,16 @@ export class AffiliationMockService implements AffiliationServiceI {
     return createMockResponse(summary, "/affiliations");
   }
 
+  async listByOrganization(orgkey: string): Promise<ApiResponse<AffiliationDTO[]>> {
+    requireMockOrgRequest(`/affiliations/${orgkey}`, mockData.affiliations);
+
+    const affiliations = mockData.affiliations.filter(
+      (affiliation) => affiliation.orgkey === orgkey,
+    );
+
+    return createMockResponse(affiliations, `/affiliations/${orgkey}`);
+  }
+
   async delete(id: string): Promise<ApiResponse<null>> {
     const { orgkey } = requireMockOrgRequest(`/affiliations/remove/${id}`, mockData.affiliations);
     const index = mockData.affiliations.findIndex((item) => item.id === id);
