@@ -23,6 +23,10 @@ function matchesEventQuery(event: EventDTO, queries: EventQueryDTO): boolean {
     return false;
   }
 
+  if (queries.category && event.category !== queries.category) {
+    return false;
+  }
+
   return true;
 }
 
@@ -33,6 +37,7 @@ export class EventMockService implements EventServiceI {
       title: data.title,
       projectkey: data.project,
       date: data.date.toISOString(),
+      category: data.category,
     });
 
     mockData.events.push(event);
@@ -52,7 +57,10 @@ export class EventMockService implements EventServiceI {
     return createMockResponse(event ?? createMockEvent(), `/events/${code}`, event ? "OK" : "Evento não encontrado", event ? 200 : 404, !event);
   }
 
-  async update(code: string, update: any): Promise<ApiResponse<EventDTO>> {
+  async update(
+    code: string,
+    update: Partial<CreateEventDTO> & { projectkey?: string },
+  ): Promise<ApiResponse<EventDTO>> {
     const event = mockData.events.find((item) => item.id === code);
 
     if (!event) {
@@ -63,6 +71,7 @@ export class EventMockService implements EventServiceI {
       ...(update.title ? { title: update.title } : {}),
       ...(update.project ? { projectkey: update.project } : update.projectkey ? { projectkey: update.projectkey } : {}),
       ...(update.date ? { date: new Date(update.date).toISOString() } : {}),
+      ...(update.category ? { category: update.category } : {}),
     });
 
     return createMockResponse(event, `/events/${code}`);

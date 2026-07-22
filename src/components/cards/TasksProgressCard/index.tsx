@@ -18,7 +18,7 @@ export function TasksProgressCard({ stats }: TasksProgressCardProps) {
         <Title>Progresso das tarefas</Title>
       </Header>
       <Cards>
-        <Card>
+        <Card $backgroundColor={Palette.blue_50} $borderColor={Palette.blue}>
           <Title className="tskr-title">INICIADAS</Title>
           <Title className="tskr-title">{stats.started}</Title>
         </Card>

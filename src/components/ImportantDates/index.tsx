@@ -1,70 +1,131 @@
 import { DateTime } from "luxon"
-import type { EventDTO } from "../../service/types/events/event.dto"
-import { Subtitle } from "../base/Subtitle"
-import { Text } from "../base/Text"
-import { Margin } from "../misc/Margin"
-import { Scroller } from "../misc/Scroller"
-import { Container, Day, Event, Month, Name } from "./style"
-import { formatNumber } from "../../utils/formatNumber"
-// import { useEffect, useState } from "react"
+import type { EventCategory, EventDTO } from "@/service/types/events/event.dto"
+import type { ProjectDTO } from "@/service/types/project/project.dto"
 import { SectionTitle } from "../base/SectionTitle"
-import { ItalicTitle } from "../base/ItalicTitle"
+import { EventCard } from "../cards/EventCard"
+import {
+  Container,
+  DateInfo,
+  DateLabel,
+  EmptyDescription,
+  EmptyState,
+  EmptyTitle,
+  EventCount,
+  EventList,
+  EventsScroller,
+  Group,
+  GroupDivider,
+  GroupHeader,
+  Groups,
+} from "./style"
 
 interface ImportantDatesProps {
   events: EventDTO[]
+  projects: Pick<ProjectDTO, "id" | "title">[]
 }
 
-// type DateType = {
-//   date: DateTime,
-//   events: EventDTO[]
-// }
+type GroupedEvent = {
+  dateKey: string
+  label: string
+  events: {
+    id: string
+    title: string
+    time: string
+    category: EventCategory
+    projectTitle: string
+  }[]
+}
 
-export function ImportantDates({
-  events
-}: ImportantDatesProps) {
-  // const [ dates, setDates ] = useState<DateType[]>([]);
-  
-  // useEffect(() => {
-  //   events.map(
-  //     (evt) => {
-  //       const date = DateTime.fromISO(evt.date, { zone: 'utc' });
-  //     }
-  //   )
-  // }, [])
+export function ImportantDates({ events, projects }: ImportantDatesProps) {
+  const projectTitles = new Map(projects.map((project) => [project.id, project.title]))
+  const groupedEvents = events
+    .slice()
+    .sort(
+      (a, b) =>
+        DateTime.fromISO(a.date, { zone: "utc" }).toMillis() -
+        DateTime.fromISO(b.date, { zone: "utc" }).toMillis(),
+    )
+    .reduce<GroupedEvent[]>((acc, event) => {
+      const eventDate = DateTime.fromISO(event.date, { zone: "utc" })
+      const dateKey = eventDate.toISODate() ?? event.date
+
+      const time = `${String(eventDate.hour).padStart(2, "0")}:${String(eventDate.minute).padStart(2, "0")}`
+      const label = eventDate.toFormat("LLL dd, yyyy")
+      const currentGroup = acc.find((group) => group.dateKey === dateKey)
+
+      if (currentGroup) {
+        currentGroup.events.push({
+          id: event.id,
+          title: event.title,
+          time,
+          category: event.category,
+          projectTitle: projectTitles.get(event.projectkey) ?? "Projeto não encontrado",
+        })
+
+        return acc
+      }
+
+      acc.push({
+        dateKey,
+        label,
+        events: [
+          {
+            id: event.id,
+            title: event.title,
+            time,
+            category: event.category,
+            projectTitle: projectTitles.get(event.projectkey) ?? "Projeto não encontrado",
+          },
+        ],
+      })
+
+      return acc
+    }, [])
 
   return (
-    <Container className="important-dates">
+    <Container>
       <SectionTitle>Datas importantes</SectionTitle>
 
-      <Scroller className="vertical">
-        {events.length === 0
-          ? <ItalicTitle>Nenhum evento encontrado</ItalicTitle>
-          :
-          events.map((event) =>{
-            const eventDate = DateTime.fromISO(event.date, { zone: 'utc' }).setLocale('pt-BR');
+      <EventsScroller>
+        <Groups>
+          {groupedEvents.length > 0 ? (
+            groupedEvents.map((group, groupIndex) => (
+              <Group key={group.dateKey}>
+                {groupIndex > 0 ? <GroupDivider /> : null}
 
-            const sameDateEvents = events.filter(evt => DateTime.fromISO(evt.date, { zone: 'utc' }).hasSame(eventDate, 'day'));
+                <GroupHeader>
+                  <DateInfo>
+                    <DateLabel>{group.label}</DateLabel>
+                    <EventCount>
+                      {group.events.length} evento
+                      {group.events.length > 1 ? "s" : ""}
+                    </EventCount>
+                  </DateInfo>
+                </GroupHeader>
 
-            return <Margin key={event.id} bottom="20px">
-              <Month id="month">
-                <Subtitle>{eventDate.day} de {eventDate.monthShort} de {eventDate.year}</Subtitle>
-                {
-                  sameDateEvents
-                  .map(
-                    (evt) => {
-                    const date = DateTime.fromISO(evt.date, { zone: 'utc' });
-                    return <Event key={evt.id} id="event">
-                      <Day id="day">
-                        <Text>{formatNumber(date.hour)}:{formatNumber(date.minute)}</Text>
-                      </Day>
-                      <Name>{evt.title}</Name>
-                    </Event>}
-                  )
-                }
-              </Month>
-            </Margin>}
+                <EventList>
+                  {group.events.map((event) => (
+                    <EventCard
+                      key={event.id}
+                      title={event.title}
+                      time={event.time}
+                      category={event.category}
+                      projectTitle={event.projectTitle}
+                    />
+                  ))}
+                </EventList>
+              </Group>
+            ))
+          ) : (
+            <EmptyState>
+              <EmptyTitle>Sem datas importantes</EmptyTitle>
+              <EmptyDescription>
+                Quando houver eventos, eles aparecerão aqui.
+              </EmptyDescription>
+            </EmptyState>
           )}
-      </Scroller>
+        </Groups>
+      </EventsScroller>
     </Container>
   )
 }

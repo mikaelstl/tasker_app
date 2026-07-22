@@ -53,7 +53,7 @@ export function MemberContent({ username }: MemberContentProps) {
           <ItalicTitle>Nenhuma tarefa encontrada</ItalicTitle>
         )}
       </Categories>
-      <ImportantDates events={data.events} />
+      <ImportantDates events={data.events} projects={data.projects} />
     </>
   );
 }

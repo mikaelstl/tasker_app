@@ -3,7 +3,7 @@ import type { CurrentAccountDTO } from "../types/account/current-account.dto";
 import type { AuthDTO } from "../types/auth/auth.dto";
 import type { AffiliationDTO } from "../types/affiliation/affiliation.dto";
 import type { CommentDTO } from "../types/comment/comment.dto";
-import type { EventDTO } from "../types/events/event.dto";
+import { EventCategory, type EventDTO } from "../types/events/event.dto";
 import type { MemberStatDTO } from "../types/member/member-stat.dto";
 import type { ProjectMember } from "../types/member/member.dto";
 import type { OrganizationDTO } from "../types/organization/organization.dto";
@@ -12,7 +12,6 @@ import type { ApiResponse } from "../types/response/response";
 import type { TaskDTO } from "../types/task/task.dto";
 import type { UserDTO } from "../types/user/user.dto";
 
-import { MemberRole } from "../types/member/role.dto";
 import { TaskPriority } from "../types/task/priority.dto";
 import { TaskStage } from "../types/task/stage.dto";
 import { OrgRole } from "../../utils/enums/OrgRole";
@@ -193,10 +192,10 @@ export function createMockComment(data: Partial<CommentDTO> = {}): CommentDTO {
 export function createMockEvent(data: Partial<EventDTO> = {}): EventDTO {
   return {
     id: data.id ?? "evt-000",
-    title: data.title ?? "Evento mock",
+    title: data.title ?? "Reunião de alinhamento",
     projectkey: data.projectkey ?? "pro-000",
     date: data.date ?? baseDate.toISOString(),
-    category: data.category ?? "MEETING",
+    category: data.category ?? EventCategory.MEETING,
     created_at: data.created_at ?? baseDate.toISOString(),
     updated_at: data.updated_at ?? baseDate.toISOString(),
   };
@@ -351,7 +350,40 @@ const auditLogTemplates: Array<(context: AuditLogContext) => string> = [
   ({ taskCode, assignee }) => `Atribuiu a tarefa ${taskCode} para ${assignee}`,
 ];
 
-const eventCategories = ["RELEASE", "MEETING", "REVIEW", "PLANNING", "TESTS", "LAUNCH"] as const;
+const eventCategories = Object.values(EventCategory);
+
+const eventTitles: Record<EventCategory, string[]> = {
+  [EventCategory.RELEASE]: [
+    "Release do módulo de cadastro",
+    "Release do módulo de relatórios",
+    "Publicação da versão estável",
+  ],
+  [EventCategory.MEETING]: [
+    "Reunião de alinhamento",
+    "Reunião de vendas",
+    "Reunião com stakeholders",
+  ],
+  [EventCategory.REVIEW]: [
+    "Revisão do módulo de usuários",
+    "Revisão da sprint",
+    "Revisão dos critérios de aceite",
+  ],
+  [EventCategory.PLANNING]: [
+    "Planejamento geral",
+    "Planejamento da próxima sprint",
+    "Planejamento trimestral",
+  ],
+  [EventCategory.TESTS]: [
+    "Testes do fluxo de cadastro",
+    "Validação dos testes de integração",
+    "Testes de regressão",
+  ],
+  [EventCategory.LAUNCH]: [
+    "Lançamento da versão 1",
+    "Lançamento do novo portal",
+    "Apresentação da nova versão",
+  ],
+};
 
 const accountRecords = userSeeds.map((seed, index) =>
   createMockAccount({
@@ -546,17 +578,20 @@ const comments = projects.flatMap((project, projectIndex) => {
 });
 
 const events = projects.flatMap((project, projectIndex) =>
-  Array.from({ length: 2 }).map((_, eventIndex) =>
-    createMockEvent({
+  Array.from({ length: 2 }).map((_, eventIndex) => {
+    const category = eventCategories[(projectIndex + eventIndex) % eventCategories.length];
+    const categoryTitles = eventTitles[category];
+
+    return createMockEvent({
       id: createMockId("event"),
-      title: `${eventCategories[(projectIndex + eventIndex) % eventCategories.length]} - ${project.title}`,
+      title: categoryTitles[(projectIndex + eventIndex) % categoryTitles.length],
       date: isoAt(520 + projectIndex * 8 + eventIndex * 6),
       projectkey: project.id,
-      category: eventCategories[(projectIndex + eventIndex) % eventCategories.length],
+      category,
       created_at: isoAt(520 + projectIndex * 8 + eventIndex * 6),
       updated_at: isoAt(520 + projectIndex * 8 + eventIndex * 6),
-    }),
-  ),
+    });
+  }),
 );
 
 const memberStats: MemberStatDTO[] = members.map((member) => {

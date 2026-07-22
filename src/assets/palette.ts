@@ -31,6 +31,15 @@ const Palette = {
   yellow: '#FCAF62',
   yellow_25: 'rgba(252, 175, 98, 0.25)',
   yellow_50: 'rgba(252, 175, 98, 0.50)',
+
+  purple: '#A78BFA',
+  purple_25: 'rgba(167, 139, 250, 0.25)',
+
+  pink: '#F472B6',
+  pink_25: 'rgba(244, 114, 182, 0.25)',
+
+  orange: '#F97316',
+  orange_25: 'rgba(249, 115, 22, 0.25)',
 }
 
 export default Palette;

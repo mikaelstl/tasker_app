@@ -28,6 +28,7 @@ interface ManagerDashboardData {
   deadlines: Deadline[];
   membersStats: MemberStatDTO[];
   events: EventDTO[];
+  projects: ProjectDTO[];
 }
 
 const initialData: ManagerDashboardData = {
@@ -35,6 +36,7 @@ const initialData: ManagerDashboardData = {
   deadlines: [],
   membersStats: [],
   events: [],
+  projects: [],
 };
 
 function getErrorMessage(error: unknown): string {
@@ -160,6 +162,7 @@ export function useManagerDashboard(orgId?: string) {
         deadlines: getDeadlines(projects),
         membersStats: projectsData.flatMap((project) => project.membersStats),
         events: projectsData.flatMap((project) => project.events),
+        projects,
       };
 
       if (currentRequest === requestId.current) setData(nextData);

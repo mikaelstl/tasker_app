@@ -1,4 +1,5 @@
 import type { TaskStage } from "../task/stage.dto";
+import type { EventCategory } from "../events/event.dto";
 
 export enum ProjectHealthStatus {
   SAFE='SAFE',
@@ -103,7 +104,7 @@ export type ProjectStats = {
     id: string;
     title: string;
     date: Date;
-    category: string;
+    category: EventCategory;
   }>;
 };
 

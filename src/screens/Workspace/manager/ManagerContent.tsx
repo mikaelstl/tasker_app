@@ -68,7 +68,7 @@ export function ManagerContent({ username }: ManagerContentProps) {
           )}
         </Items>
       </Main>
-      <ImportantDates events={data.events} />
+      <ImportantDates events={data.events} projects={data.projects} />
     </>
   );
 }

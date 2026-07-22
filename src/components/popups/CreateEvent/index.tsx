@@ -12,19 +12,23 @@ import { ContentHeader } from "../../base/ContentHeader";
 import { DeleteBtn } from "../../buttons/DeleteBtn";
 import { Text } from "../../base/Text";
 import { useServices } from "../../../hooks/useServices";
+import { SelectInput } from "../../base/SelectInput";
+import { EventCategory } from "../../../service/types/events/event.dto";
 
 export function CreateEventPopup(props: PopupProps) {
   const { EventService } = useServices();
-  const { info, error } = useToast();
+  const { info, error: showError } = useToast();
 
   const { id } = useParams();
 
   const [eventName, setEventName] = useState<string>('');
   const [date, setDate] = useState<string>('');
+  const [category, setCategory] = useState<EventCategory>(EventCategory.MEETING);
 
   const handleClose = () => {
     setDate('');
     setEventName('');
+    setCategory(EventCategory.MEETING);
     props.closePopup();
   }
 
@@ -35,15 +39,16 @@ export function CreateEventPopup(props: PopupProps) {
       title: eventName,
       date: new Date(date),
       project: id!,
+      category,
     }
 
     try {
       const response = await EventService.create(event);
       info(response.message as string);
       props.closePopup();
-    } catch (error) {
-      console.error(error);
-      error('Não foi possível criar o evento');
+    } catch (requestError) {
+      console.error(requestError);
+      showError('Não foi possível criar o evento');
     }
   }
 
@@ -70,6 +75,12 @@ export function CreateEventPopup(props: PopupProps) {
             label="Data"
             value={date}
             onChange={(value) => setDate(value)}
+          />
+          <SelectInput
+            label="Categoria"
+            value={category}
+            type={EventCategory}
+            onChange={setCategory}
           />
         </Form>
       </Card>

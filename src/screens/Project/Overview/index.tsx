@@ -182,7 +182,7 @@ export function Overview() {
           <MessageField send={sendComment} />
         </Comments>
       </Content>
-      <ImportantDates events={events} />
+      <ImportantDates events={events} projects={[project]} />
     </Container>
   )
 }

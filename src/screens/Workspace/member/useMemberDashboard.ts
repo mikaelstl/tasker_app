@@ -3,6 +3,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useServices } from "@/hooks/useServices";
 import type { EventDTO } from "@/service/types/events/event.dto";
 import type { ProjectMember } from "@/service/types/member/member.dto";
+import type { ProjectDTO } from "@/service/types/project/project.dto";
 import type { ApiError } from "@/service/types/response/error";
 import { TaskStage } from "@/service/types/task/stage.dto";
 import type { TaskDTO } from "@/service/types/task/task.dto";
@@ -10,11 +11,13 @@ import type { TaskDTO } from "@/service/types/task/task.dto";
 interface MemberDashboardData {
   tasks: TaskDTO[];
   events: EventDTO[];
+  projects: ProjectDTO[];
 }
 
 const initialData: MemberDashboardData = {
   tasks: [],
   events: [],
+  projects: [],
 };
 
 export interface MemberTaskCategories {
@@ -91,7 +94,7 @@ export function useMemberDashboard(orgId?: string) {
           .flatMap((member) => [member.id, member.userkey]);
 
         if (membershipKeys.length === 0) {
-          return { tasks: [], events: [] };
+          return { tasks: [], events: [], project: null };
         }
 
         return {
@@ -99,11 +102,13 @@ export function useMemberDashboard(orgId?: string) {
             task.owner === username || membershipKeys.includes(task.owner)
           )),
           events: events.data,
+          project,
         };
       }));
       const nextData: MemberDashboardData = {
         tasks: projectData.flatMap((project) => project.tasks),
         events: projectData.flatMap((project) => project.events),
+        projects: projectData.flatMap(({ project }) => project ? [project] : []),
       };
 
       if (currentRequest === requestId.current) setData(nextData);
