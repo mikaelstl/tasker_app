@@ -54,7 +54,7 @@ function App() {
                   <Route path="calendar" element={<Events />} />
                   <Route path="stats" element={<Stats />} />
                   <Route path="edit" element={<EditProject />} />
-                  <Route path="task/:id" element={<TaskOverview />} />
+                  <Route path="task/:code" element={<TaskOverview />} />
                 </Route>
               </Route>
             </Route>

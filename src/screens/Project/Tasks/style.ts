@@ -17,14 +17,14 @@ const Header = styled.div`
 
 const Content = styled.div`
   display: flex;
-  justify-content: space-around;
   gap: 12px;
   
   padding: 10px;
   
   height: 100%;
 
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
 `;
 
 interface StepProps {
@@ -42,7 +42,9 @@ const Step = styled.div<StepProps>`
   
   border-top: 3px solid ${props => props.color ?? Palette.gray};
   
-  height: 100%; width: 100%;
+  height: 100%;
+  min-width: 260px;
+  flex: 1 0 260px;
 `;
 
 export {

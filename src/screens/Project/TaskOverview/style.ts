@@ -79,6 +79,19 @@ const Tag = styled.div`
   flex-direction: column;
 `;
 
+const Actions = styled.div`
+  grid-area: tskr-button;
+  display: flex;
+  gap: 8px;
+`;
+
+const EditForm = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 720px;
+`;
+
 export {
   Container,
   Comments,
@@ -86,5 +99,7 @@ export {
   Description,
   Tags,
   Tag,
-  Links
+  Links,
+  Actions,
+  EditForm,
 }

@@ -2,6 +2,7 @@ import type { ApiResponse } from "@/service/types/response/response";
 import type { AffiliationDTO } from "../../types/affiliation/affiliation.dto";
 import type { UserOrganizationSummaryDTO } from "../../types/affiliation/summary.dto";
 import type { AffiliationInviteDTO } from "../../types/affiliation/invite.dto";
+import type { DefineAffiliationDTO } from "../../types/affiliation/define.dto";
 
 import { ApiClient } from "@/service/api";
 
@@ -11,8 +12,8 @@ export interface APIMessage {
 
 export interface AffiliationServiceI {
   list(): Promise<ApiResponse<UserOrganizationSummaryDTO[]>>;
+  create(data: DefineAffiliationDTO): Promise<ApiResponse<AffiliationDTO>>;
   participates(orgkey: string): Promise<ApiResponse<boolean>>;
-  listByOrganization(orgkey: string): Promise<ApiResponse<AffiliationDTO[]>>;
   createInvite(orgkey: string): Promise<ApiResponse<AffiliationInviteDTO>>;
   acceptInvite(token: string): Promise<ApiResponse<AffiliationDTO>>;
   delete(id: string): Promise<ApiResponse<null>>;
@@ -27,6 +28,13 @@ export class AffiliationService implements AffiliationServiceI {
     this.api = api;
   }
 
+  async create(data: DefineAffiliationDTO): Promise<ApiResponse<AffiliationDTO>> {
+    return this.api.register<DefineAffiliationDTO, AffiliationDTO>({
+      route: "/affiliations",
+      data,
+    });
+  }
+
   async list(): Promise<ApiResponse<UserOrganizationSummaryDTO[]>> {
     const response = await this.api.load<UserOrganizationSummaryDTO[], void>({
       route: "/affiliations",
@@ -38,14 +46,6 @@ export class AffiliationService implements AffiliationServiceI {
   async participates(orgkey: string): Promise<ApiResponse<boolean>> {
     const response = await this.api.load<boolean, void>({
       route: `/affiliations/participates/${orgkey}`,
-    });
-
-    return response;
-  }
-
-  async listByOrganization(orgkey: string): Promise<ApiResponse<AffiliationDTO[]>> {
-    const response = await this.api.load<AffiliationDTO[], void>({
-      route: `/affiliations/${orgkey}`,
     });
 
     return response;

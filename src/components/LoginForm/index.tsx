@@ -17,21 +17,19 @@ export function LoginForm({ login }: LoginFormProps) {
 
   const [email, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [submitting, setSubmitting] = useState(false);
 
   const onSubmit = async (ev: React.FormEvent) => {
     ev.preventDefault()
 
-    const data: LoginDTO = {
-      email,
-      password
-    };
+    const normalizedEmail = email.trim();
+    if (!normalizedEmail || !password) return;
 
-    console.log("submit");
+    const data: LoginDTO = { email: normalizedEmail, password };
 
     try {
+      setSubmitting(true);
       await login(data);
-
-      console.log("login success");
 
       const state = location.state as {
         from?: { pathname?: string; search?: string };
@@ -41,8 +39,10 @@ export function LoginForm({ login }: LoginFormProps) {
         : "/workspaces";
 
       navigate(returnPath, { replace: true });
-    } catch (err) {
-      console.error(err);
+    } catch {
+      // O provider já apresenta a mensagem normalizada do backend.
+    } finally {
+      setSubmitting(false);
     }
   }
 
@@ -53,7 +53,7 @@ export function LoginForm({ login }: LoginFormProps) {
         <Inputs className="tskr-form-inputs">
           <TextInput
             icon={<UserIcon width={24} />}
-            placeholder="Usuário"
+            placeholder="E-mail"
             value={email}
             onChange={(value) => setUsername(value)}
           />
@@ -65,7 +65,9 @@ export function LoginForm({ login }: LoginFormProps) {
             onChange={(value) => setPassword(value)}
           />
         </Inputs>
-        <SubmitButton type="submit">Entrar</SubmitButton>
+        <SubmitButton type="submit" disabled={submitting || !email.trim() || !password}>
+          {submitting ? "Entrando..." : "Entrar"}
+        </SubmitButton>
       </Form>
       <CreateAccount />
     </Container>

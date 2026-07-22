@@ -3,15 +3,19 @@ import { Text } from "../../base/Text";
 import { Button } from "../Button";
 
 interface DeleteButtonProps {
-  onClick?: () => void
+  onClick?: () => void;
+  label?: string;
+  type?: "button" | "submit" | "reset";
 }
 
 export function DeleteBtn({
-  onClick
+  onClick,
+  label = "Cancelar",
+  type = "button",
 }: DeleteButtonProps) {
   return (
-    <Button onClick={onClick} color={Palette.red}>
-      <Text>Cancelar</Text>
+    <Button type={type} onClick={onClick} color={Palette.red}>
+      <Text>{label}</Text>
     </Button>
   )
 }

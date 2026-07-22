@@ -37,7 +37,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const validationPromiseRef = useRef<Promise<boolean> | null>(null);
   const validationDisabledRef = useRef(false);
 
-  const login = async (data: LoginDTO) => {
+  const login = async (data: LoginDTO): Promise<void> => {
     try {
       const response = await AccountService.login(data);
 
@@ -49,20 +49,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       validationDisabledRef.current = false;
       setUser(acc);
       setToken(auth.access_token);
+      setAuthenticating(false);
     } catch (error: unknown) {
       const { errors } = error as ApiError;
 
-      console.log(error);
+      if (errors?.length) {
+        errors.forEach((err) => notifications[err.level](err.message));
+      } else {
+        notifications.error("Não foi possível entrar. Tente novamente.");
+      }
 
-      errors?.forEach(
-        err => {
-          console.warn(err);
-
-          notifications[err.level](err.message);
-        }
-      );
+      throw error;
     }
-  }
+  };
 
   const clearAuthentication = useCallback(() => {
     clearOrg();
@@ -97,7 +96,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const storedToken = localStorage.getItem(STORAGE_KEYS.auth.token);
 
-    if (!storedToken) {
+    if (!storedToken || !readStoredUser()) {
+      clearAuthentication();
       setAuthenticating(false);
       return Promise.resolve(false);
     }
@@ -130,7 +130,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     validationPromiseRef.current = validation;
     return validation;
-  }, [AccountService, notifications, redirectToLogin]);
+  }, [AccountService, clearAuthentication, notifications, redirectToLogin]);
 
   useEffect(() => {
     void validate();

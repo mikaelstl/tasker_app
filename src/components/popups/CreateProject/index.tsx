@@ -1,4 +1,4 @@
-import { Card, Content, Infos, Links, Overlay } from "./style";
+import { Card, Content, Infos, Overlay } from "./style";
 import { useState } from "react";
 import { CreateButton } from "../../buttons/CreateButton";
 import type { CreateProjectDTO } from "../../../service/types/project/create.dto";
@@ -9,9 +9,6 @@ import { Text } from "../../base/Text";
 import { TextInput } from "../../base/TextInput";
 import { TextAreaInput } from "../../base/TextAreaInput";
 import { CalendarInput } from "../../base/CalendarInput";
-import { SectionTitle } from "../../base/SectionTitle";
-import { PlusField } from "../../textfields/PlusField";
-import { LinkCard } from "../../cards/LinkCard";
 import { useToast } from "@/hooks/useToast";
 import { useServices } from "../../../hooks/useServices";
 import { useOrganization } from "@/hooks/useOrganization";
@@ -26,27 +23,7 @@ export function CreateProjectPopup(props: PopupProps) {
   const [projectName, setProjectName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [dueDate, setDueDate] = useState<string>('');
-  const [links, setLinks] = useState<string[]>([]);
-
-  const addLink = (newLink: string) => {
-    if (links.find(
-      link => link === newLink
-    )) {
-      notifications.warning('Link already added');
-      return;
-    }
-
-    const newLinks = [...links, newLink];
-    setLinks(newLinks);
-  }
-
-  const removeLink = (value: string) => {
-    setLinks(
-      links.filter(
-        link => link !== value
-      )
-    )
-  }
+  const [submitting, setSubmitting] = useState(false);
 
   const handleClose = () => {
     setDescription('');
@@ -55,7 +32,7 @@ export function CreateProjectPopup(props: PopupProps) {
     props.closePopup();
   }
 
-  const onSubmit = async (ev: React.MouseEvent) => {
+  const onSubmit = async (ev: React.FormEvent) => {
     ev.preventDefault();
 
     if (!org?.orgkey) {
@@ -63,15 +40,28 @@ export function CreateProjectPopup(props: PopupProps) {
       return;
     }
 
-    const project: CreateProjectDTO = {
-      title: projectName,
-      description,
-      deadline: new Date(dueDate).toISOString(),
+    if (!projectName.trim() || !description.trim() || !dueDate) {
+      notifications.validation("Preencha nome, descrição e prazo.");
+      return;
     }
 
+    const parsedDeadline = new Date(dueDate);
+    if (Number.isNaN(parsedDeadline.getTime())) {
+      notifications.validation("Informe um prazo válido.");
+      return;
+    }
+
+    const project: CreateProjectDTO = {
+      title: projectName.trim(),
+      description: description.trim(),
+      deadline: parsedDeadline.toISOString(),
+    };
+
     try {
-      await ProjectService.create(project);
-      props.closePopup();
+      setSubmitting(true);
+      const response = await ProjectService.create(project);
+      notifications.info(response.message || "Projeto criado com sucesso.");
+      handleClose();
     } catch (error) {
       const { errors } = error as ApiError;
 
@@ -83,6 +73,8 @@ export function CreateProjectPopup(props: PopupProps) {
       errors.forEach((item) => {
         notifications[item.level](item.message);
       });
+    } finally {
+      setSubmitting(false);
     }
   }
 
@@ -90,15 +82,13 @@ export function CreateProjectPopup(props: PopupProps) {
 
   return (
     <Overlay className="tskr-popup-overlay">
-      <Card className="tskr-popup-create-project">
+      <Card as="form" className="tskr-popup-create-project" onSubmit={onSubmit}>
         <ContentHeader
           title="Criar projeto"
         >
           <DeleteBtn onClick={handleClose} />
-          <CreateButton type="submit"
-            onClick={onSubmit}
-          >
-            <Text>Criar</Text>
+          <CreateButton type="submit" disabled={submitting}>
+            <Text>{submitting ? "Criando..." : "Criar"}</Text>
           </CreateButton>
         </ContentHeader>
         <Content>
@@ -119,18 +109,6 @@ export function CreateProjectPopup(props: PopupProps) {
               onChange={(value) => setDueDate(value)}
             />
           </Infos>
-          <Links>
-            <SectionTitle>Links</SectionTitle>
-            <PlusField add={addLink}/>
-            {
-              links.map(
-                link => <LinkCard 
-                          link={link}
-                          remove={() => removeLink(link)}  
-                        />
-              )
-            }
-          </Links>
         </Content>
       </Card>
     </Overlay>

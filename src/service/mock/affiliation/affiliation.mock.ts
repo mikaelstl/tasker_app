@@ -3,6 +3,7 @@ import type { AffiliationDTO } from "../../types/affiliation/affiliation.dto";
 import type { UserOrganizationSummaryDTO } from "../../types/affiliation/summary.dto";
 import type { AffiliationInviteDTO } from "../../types/affiliation/invite.dto";
 import { OrgRole } from "@/utils/enums/OrgRole";
+import type { DefineAffiliationDTO } from "../../types/affiliation/define.dto";
 
 import { mockData, createMockAffiliation, createMockId, createMockResponse } from "../data";
 import type { AffiliationServiceI, APIMessage } from "../../modules/affiliation/affiliation.service";
@@ -103,6 +104,23 @@ function deleteInvite(token: string): void {
 restoreInvites();
 
 export class AffiliationMockService implements AffiliationServiceI {
+  async create(data: DefineAffiliationDTO): Promise<ApiResponse<AffiliationDTO>> {
+    const orgkey = requireOwnerRequest("/affiliations");
+    if (data.orgkey !== orgkey) {
+      throw createMockRequestError("/affiliations", 403, "A organização informada difere da organização ativa.");
+    }
+    const affiliation = createMockAffiliation({
+      id: createMockId("affiliation"),
+      orgkey,
+      userkey: data.userkey,
+      role: data.role ?? OrgRole.MEMBER,
+      user: mockData.users.find((item) => item.username === data.userkey),
+      org: mockData.organizations.find((item) => item.id === orgkey),
+    });
+    mockData.affiliations.push(affiliation);
+    return createMockResponse(affiliation, "/affiliations", "Afiliação criada.", 201);
+  }
+
   async list(): Promise<ApiResponse<UserOrganizationSummaryDTO[]>> {
     const currentAccount = requireMockCurrentAccount("/affiliations");
     const summary = buildSummary(currentAccount.username);
@@ -139,16 +157,6 @@ export class AffiliationMockService implements AffiliationServiceI {
         "O usuário não participa da organização.",
       );
     }
-  }
-
-  async listByOrganization(orgkey: string): Promise<ApiResponse<AffiliationDTO[]>> {
-    requireMockOrgRequest(`/affiliations/${orgkey}`, mockData.affiliations);
-
-    const affiliations = mockData.affiliations.filter(
-      (affiliation) => affiliation.orgkey === orgkey,
-    );
-
-    return createMockResponse(affiliations, `/affiliations/${orgkey}`);
   }
 
   async createInvite(orgkey: string): Promise<ApiResponse<AffiliationInviteDTO>> {

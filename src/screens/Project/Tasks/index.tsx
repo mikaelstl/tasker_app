@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Title } from "../../../components/base/Title";
 import { CreateButton } from "../../../components/buttons/CreateButton";
 import { TaskCard } from "../../../components/cards/TaskCard";
@@ -7,7 +7,7 @@ import { Scroller } from "../../../components/misc/Scroller";
 import { SearchField } from "../../../components/textfields/SearchField";
 import { Container, Content, Step } from "./style";
 import { CreateTaskPopup } from "../../../components/popups/CreateTask";
-import type { TaskDTO } from "../../../service/types/task/task.dto";
+import type { TaskWithOwnerDTO } from "../../../service/types/task/task.dto";
 import type { ApiError } from "../../../service/types/response/error";
 import { TaskStage } from "../../../service/types/task/stage.dto";
 import Palette from "../../../assets/palette";
@@ -25,6 +25,7 @@ export function Tasks() {
   const { TaskService } = useServices();
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [search, setSearch] = useState("");
   const handleOpenPopup = () => {
     setIsPopupOpen(true);
   };
@@ -32,8 +33,8 @@ export function Tasks() {
     setIsPopupOpen(false);
   };
 
-  const [tasks, setTasks] = useState<TaskDTO[]>([]);
-  const loadTasks = async () => {
+  const [tasks, setTasks] = useState<TaskWithOwnerDTO[]>([]);
+  const loadTasks = useCallback(async () => {
     try {
       if (!id) return;
       const response = await TaskService.list(id);
@@ -47,13 +48,18 @@ export function Tasks() {
         }
       )
 
-      navigate('../../')
+      navigate("/home/projects", { replace: true });
     }
-  }
+  }, [TaskService, id, navigate, notifications]);
 
   useEffect(() => {
     void loadTasks();
-  }, [TaskService, isPopupOpen, id]);
+  }, [isPopupOpen, loadTasks]);
+
+  const normalizedSearch = search.trim().toLocaleLowerCase("pt-BR");
+  const filteredTasks = tasks.filter((task) => !normalizedSearch
+    || task.name.toLocaleLowerCase("pt-BR").includes(normalizedSearch)
+    || task.code.toLocaleLowerCase("pt-BR").includes(normalizedSearch));
 
   return (
     <Container className="tasks">
@@ -68,24 +74,28 @@ export function Tasks() {
         </CreateButton>
       </ContentHeader>
       <Margin margin="0px 20px">
-        <SearchField filter sort />
+        <SearchField
+          value={search}
+          onChange={setSearch}
+          placeholder="Pesquisar tarefas por nome ou código"
+        />
       </Margin>
       <Content id="tasks-steps">
         <Step className="tasks-step">
           <Title>PENDENTES</Title>
           <Scroller className="vertical">
             {
-              tasks
+              filteredTasks
                 .filter(task => task.stage === TaskStage.PENDING)
                 .map((task) =>
-                  <Margin bottom="12px">
+                  <Margin key={task.id} bottom="12px">
                     <TaskCard
-                      key={task.id}
                       code={task.code}
                       title={task.name}
                       owner={task.ownerkey}
                       deadline={task.deadline}
                       priority={task.priority}
+                      onClick={() => navigate(`../task/${encodeURIComponent(task.code)}`)}
                     />
                   </Margin>
                 )
@@ -96,17 +106,38 @@ export function Tasks() {
           <Title>INICIADAS</Title>
           <Scroller className="vertical">
             {
-              tasks
-                .filter(task => task.stage === TaskStage.IN_PROGRESS)
+              filteredTasks
+                .filter(task => task.stage === TaskStage.STARTED)
                 .map((task) =>
-                  <Margin bottom="12px">
+                  <Margin key={task.id} bottom="12px">
                     <TaskCard
-                      key={task.id}
                       code={task.code}
                       title={task.name}
                       owner={task.ownerkey}
                       deadline={task.deadline}
                       priority={task.priority}
+                      onClick={() => navigate(`../task/${encodeURIComponent(task.code)}`)}
+                    />
+                  </Margin>
+                )
+            }
+          </Scroller>
+        </Step>
+        <Step className="tasks-step" color={Palette.lightBlue}>
+          <Title>EM ANDAMENTO</Title>
+          <Scroller className="vertical">
+            {
+              filteredTasks
+                .filter(task => task.stage === TaskStage.IN_PROGRESS)
+                .map((task) =>
+                  <Margin key={task.id} bottom="12px">
+                    <TaskCard
+                      code={task.code}
+                      title={task.name}
+                      owner={task.ownerkey}
+                      deadline={task.deadline}
+                      priority={task.priority}
+                      onClick={() => navigate(`../task/${encodeURIComponent(task.code)}`)}
                     />
                   </Margin>
                 )
@@ -117,17 +148,17 @@ export function Tasks() {
           <Title>EM REVISÃO</Title>
           <Scroller className="vertical">
             {
-              tasks
+              filteredTasks
                 .filter(task => task.stage === TaskStage.REVIEW)
                 .map((task) =>
-                  <Margin bottom="12px">
+                  <Margin key={task.id} bottom="12px">
                     <TaskCard
-                      key={task.id}
                       code={task.code}
                       title={task.name}
                       owner={task.ownerkey}
                       deadline={task.deadline}
                       priority={task.priority}
+                      onClick={() => navigate(`../task/${encodeURIComponent(task.code)}`)}
                     />
                   </Margin>
                 )
@@ -138,17 +169,17 @@ export function Tasks() {
           <Title>CONCLUÍDAS</Title>
           <Scroller className="vertical">
             {
-              tasks
+              filteredTasks
                 .filter(task => task.stage === TaskStage.DONE)
                 .map((task) =>
-                  <Margin bottom="12px">
+                  <Margin key={task.id} bottom="12px">
                     <TaskCard
-                      key={task.id}
                       code={task.code}
                       title={task.name}
                       owner={task.ownerkey}
                       deadline={task.deadline}
                       priority={task.priority}
+                      onClick={() => navigate(`../task/${encodeURIComponent(task.code)}`)}
                     />
                   </Margin>
                 )
@@ -159,17 +190,17 @@ export function Tasks() {
           <Title>ATRASADAS</Title>
           <Scroller className="vertical">
             {
-              tasks
+              filteredTasks
                 .filter(task => task.delayed)
                 .map((task) =>
-                  <Margin bottom="12px">
+                  <Margin key={task.id} bottom="12px">
                     <TaskCard
-                      key={task.id}
                       code={task.code}
                       title={task.name}
                       owner={task.ownerkey}
                       deadline={task.deadline}
                       priority={task.priority}
+                      onClick={() => navigate(`../task/${encodeURIComponent(task.code)}`)}
                     />
                   </Margin>
                 )

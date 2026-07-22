@@ -2,7 +2,6 @@ import { ResponsiveLine } from '@nivo/line'
 import styled from 'styled-components'
 import Palette from '../../../../assets/palette';
 import type { MemberPerformance } from '..';
-import { useEffect } from 'react';
 
 const Container = styled.div`
   height: 225px;
@@ -18,10 +17,6 @@ export function LineChart({
   lineColor,
   values
 }: LineChartProps) {
-  useEffect(() =>{
-    console.log(values);
-  },[])
-
   return (
     <Container className='tskr-line-chart'>
       <ResponsiveLine
@@ -46,7 +41,6 @@ export function LineChart({
           tickPadding: 8,
           tickRotation: 0,
           legend: "",
-          tickValues: ["week 1", "week 2", "week 3", "week 4", "week 5", "week 6", "week 7", "week 8"],
           legendOffset: 36,
         }}
         axisLeft={{

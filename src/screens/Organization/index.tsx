@@ -77,17 +77,16 @@ export function Organization() {
       setLoading(true);
 
       try {
-        const [organizationsResponse, membersResponse] = await Promise.all([
-          AffiliationService.list(),
-          AffiliationService.listByOrganization(org.orgkey),
-        ]);
+        const organizationsResponse = await AffiliationService.list();
         const currentOrganization = organizationsResponse.data.find(
           (item) => item.orgkey === org.orgkey,
         ) ?? null;
 
         if (active) {
           setOrganization(currentOrganization);
-          setMembers(membersResponse.data);
+          // O backend não publica uma rota para listar as afiliações de uma
+          // organização. Não inventamos GET /affiliations/:orgkey aqui.
+          setMembers([]);
         }
       } catch (error) {
         notifyError(error, "Não foi possível carregar a organização.", notifications);
@@ -205,7 +204,7 @@ export function Organization() {
           <HeaderStats aria-label="Resumo da organização">
             <HeaderStat>
               <UserGroupIcon />
-              <Subtitle>{members.length} membros</Subtitle>
+              <Subtitle>{organization.members} membros</Subtitle>
             </HeaderStat>
             <HeaderStat>
               <FolderOpenIcon />
@@ -261,7 +260,9 @@ export function Organization() {
               </RoleGroup>
             ))
           ) : (
-            <EmptyMessage>Esta organização ainda não possui participantes.</EmptyMessage>
+            <EmptyMessage>
+              O resumo informa {organization.members} participante(s), mas o backend ainda não expõe a listagem de afiliações da organização.
+            </EmptyMessage>
           )
         ) : (
           <EmptyMessage>Não foi possível encontrar a organização selecionada.</EmptyMessage>

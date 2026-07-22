@@ -9,6 +9,8 @@ import type { ApiResponse } from "@/service/types/response/response";
 
 export interface AccountServiceI {
   register(data: CreateAccountDTO): Promise<ApiResponse<AccountDTO>>;
+  apiStatus(): Promise<ApiResponse<{ activated: boolean }>>;
+  authStatus(): Promise<ApiResponse<null>>;
   login(data: LoginDTO): Promise<ApiResponse<AuthDTO>>;
   validate(): Promise<ApiResponse<boolean>>;
   delete(id: string): Promise<ApiResponse<null>>;
@@ -20,6 +22,14 @@ export class AccountService implements AccountServiceI {
 
   constructor(api: ApiClient) {
     this.api = api;
+  }
+
+  async apiStatus(): Promise<ApiResponse<{ activated: boolean }>> {
+    return this.api.load<{ activated: boolean }, void>({ route: "/status" });
+  }
+
+  async authStatus(): Promise<ApiResponse<null>> {
+    return this.api.load<null, void>({ route: "/auth" });
   }
 
   async register(data: CreateAccountDTO): Promise<ApiResponse<AccountDTO>> {

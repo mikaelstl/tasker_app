@@ -5,7 +5,12 @@ import { Subtitle } from "../../../components/base/Subtitle";
 import { Bold } from "../../../components/base/Bold";
 import { Container, Header } from "../../base/style";
 
-export function DeadlineWidget() {
+interface DeadlineWidgetProps {
+  dueDate: string;
+  daysLeft: number;
+}
+
+export function DeadlineWidget({ dueDate, daysLeft }: DeadlineWidgetProps) {
   return (
     <Container>
       <Header>
@@ -13,11 +18,11 @@ export function DeadlineWidget() {
       </Header>
       <Date>
         <SectionTitle>
-          00 mm yyyy
+          {new Intl.DateTimeFormat("pt-BR", { dateStyle: "medium" }).format(new globalThis.Date(dueDate))}
         </SectionTitle>
       </Date>
       <DaysTile>
-        <Subtitle><Bold>00</Bold> dias restantes</Subtitle>
+        <Subtitle><Bold>{Math.abs(daysLeft)}</Bold> {daysLeft < 0 ? "dias em atraso" : "dias restantes"}</Subtitle>
       </DaysTile>
     </Container>
   )

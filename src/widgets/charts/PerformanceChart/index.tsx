@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Palette from "../../../assets/palette";
+import type { MemberPerformance as MemberPerformanceDTO } from "../../../service/types/stats/stats.types";
 import { Title } from "../../../components/base/Title";
 import { Container, Content, Header } from "../../base/style";
 import { LineChart } from "./chart";
@@ -21,7 +22,7 @@ const SelectUserInput = ({
       >
         {
           data.map(
-            (user) => <Option value={user.id}>{user.id}</Option>
+            (user) => <Option key={user.id} value={user.id}>{user.id}</Option>
           )
         }
       </Select>
@@ -35,45 +36,19 @@ export type MemberPerformance = {
   data: any[]
 }
 
-const data: MemberPerformance[] = [
-  {
-    id: 'mikaelstl',
-    color: Palette.green,
-    data: [
-      { x: 'week 0', y: NaN },
-      { x: 'week 1', y: 2.5 },
-      { x: 'week 2', y: 3 },
-      { x: 'week 3', y: 2 },
-      { x: 'week 4', y: 3.2 },
-      { x: 'week 5', y: 4.5 },
-      { x: 'week 6', y: 3.5 },
-      { x: 'week 7', y: 4.2 },
-      { x: 'week 8', y: NaN },
-    ],
-  },{
-    id: 'siegfried',
-    color: Palette.yellow,
-    data: [
-      { x: "week 0", y: NaN },
-      { x: "week 1", y: 2.5 },
-      { x: "week 2", y: 1.8 },
-      { x: "week 3", y: 2.2 },
-      { x: "week 4", y: 3.2 },
-      { x: "week 5", y: 3.6 },
-      { x: "week 6", y: 2.8 },
-      { x: "week 7", y: 1.2 },
-      { x: "week 8", y: 2.3 },
-    ],
-  }
-]
-
-export function PerformanceChart() {
-  const [ user, setUser ] = useState<any>(data[0]);
+export function PerformanceChart({ performance }: { performance: MemberPerformanceDTO[] }) {
+  const data: MemberPerformance[] = performance.map((item, index) => ({
+    id: item.user.username,
+    color: [Palette.green, Palette.yellow, Palette.blue, Palette.red][index % 4],
+    data: item.months.map((month) => ({ x: month.month, y: month.averageHours })),
+  }));
+  const [selectedId, setSelectedId] = useState(data[0]?.id ?? "");
+  const user = data.find((item) => item.id === selectedId) ?? data[0];
   const handleSelect = (username: string) => {
-    const selected = data.find((user) => user.id === username);
-
-    setUser(selected);
+    setSelectedId(username);
   }
+
+  if (!user) return null;
 
   return (
     <Container className="tskr-performance-chart">

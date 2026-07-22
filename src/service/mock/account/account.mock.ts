@@ -7,9 +7,17 @@ import type { ApiResponse } from "@/service/types/response/response";
 
 import { mockData, createMockAccount, createMockAuth, createMockCurrentAccount, createMockId, createMockResponse } from "../data";
 import type { AccountServiceI } from "../../modules/account/account.service";
-import { readMockRequestContext } from "../request-context";
+import { createMockRequestError, readMockRequestContext } from "../request-context";
 
 export class AccountMockService implements AccountServiceI {
+  async apiStatus(): Promise<ApiResponse<{ activated: boolean }>> {
+    return createMockResponse({ activated: true }, "/status", "API disponível.");
+  }
+
+  async authStatus(): Promise<ApiResponse<null>> {
+    return createMockResponse(null, "/auth", "Autenticação disponível.");
+  }
+
   async register(data: CreateAccountDTO): Promise<ApiResponse<AccountDTO>> {
     const account = createMockAccount({
       id: createMockId("account"),
@@ -26,13 +34,13 @@ export class AccountMockService implements AccountServiceI {
     const account = mockData.accounts.find((item) => item.email === data.email && item.password === data.password);
 
     if (!account) {
-      return createMockResponse(mockData.auth, "/auth/login", "Conta não encontrada", 404, true);
+      throw createMockRequestError("/auth/login", 401, "E-mail ou senha inválidos.");
     }
 
     const user = mockData.users.find((item) => item.accountkey === account.id);
 
     if (!user) {
-      return createMockResponse(mockData.auth, "/auth/login", "Usuário não encontrado", 404, true);
+      throw createMockRequestError("/auth/login", 404, "Usuário não encontrado.");
     }
 
     const auth = createMockAuth({

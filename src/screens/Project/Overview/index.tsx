@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Text } from "../../../components/base/Text";
 import { Title } from "../../../components/base/Title";
 import { CommentCard } from "../../../components/cards/CommentCard";
@@ -13,7 +13,6 @@ import { DateTime } from "luxon";
 import type { TaskDTO } from "../../../service/types/task/task.dto";
 import { ItalicTitle } from "../../../components/base/ItalicTitle";
 import { ProjectStageBadge } from "../../../maps/project-stage";
-import type { EventDTO } from "../../../service/types/events/event.dto";
 import { MessageField } from "../../../components/textfields/MessageField";
 import { useAuth } from "../../../hooks/useAuth";
 import type { CommentDTO } from "../../../service/types/comment/comment.dto";
@@ -27,89 +26,34 @@ export function Overview() {
   const navigate = useNavigate();
   const notifications = useToast();
 
-  const { ProjectService, TaskService, EventService, CommentService } = useServices();
+  const { ProjectService, TaskService, CommentService } = useServices();
 
   const { user } = useAuth();
 
   const { id } = useParams();
 
   const [project, setProject] = useState<ProjectDTO | null>(null);
-  const loadProject = async () => {
-    try {
-      if (!id) return;
-      const response = await ProjectService.find(id);
-      setProject(response.data);
-    } catch (error) {
-      const { errors } = error as ApiError;
-
-      errors?.forEach(
-        err => {
-          notifications[err.level](err.message);
-        }
-      )
-
-      navigate('..')
-    }
-  }
-
   const [tasks, setTasks] = useState<TaskDTO[]>([]);
-  const loadTasks = async () => {
-    try {
-      if (!id) return;
-      const response = await TaskService.list(id);
-      setTasks(response.data);
-    } catch (error) {
-      const { errors } = error as ApiError;
-
-      errors?.forEach(
-        err => {
-          notifications[err.level](err.message);
-        }
-      )
-
-      navigate('../../')
-    }
-  }
-
-  const [events, setEvents] = useState<EventDTO[]>([]);
-  const loadEvents = async () => {
-    try {
-      if (!id) return;
-      const response = await EventService.list({ projectkey: id });
-      setEvents(response.data);
-    } catch (error) {
-      const { errors } = error as ApiError;
-
-      errors?.forEach(
-        err => {
-          notifications[err.level](err.message);
-        }
-      )
-
-      navigate('../../')
-    }
-  }
-
   const [comments, setComments] = useState<CommentDTO[]>([]);
-  const loadComments = async () => {
+  const showError = useCallback((error: unknown, fallback: string) => {
+    const apiError = error as ApiError;
+    if (!apiError.errors?.length) {
+      notifications.error(fallback);
+      return;
+    }
+    apiError.errors.forEach((item) => notifications[item.level](item.message));
+  }, [notifications]);
+
+  const loadComments = useCallback(async () => {
     try {
       if (!id) return;
       const response = await CommentService.list({ projectkey: id });
-      const data = response.data;
-
-      setComments(data);
+      setComments(response.data);
     } catch (error) {
-      const { errors } = error as ApiError;
-
-      errors?.forEach(
-        err => {
-          notifications[err.level](err.message);
-        }
-      )
-
-      navigate('../../')
+      showError(error, "Não foi possível carregar a atividade do projeto.");
     }
-  }
+  }, [CommentService, id, showError]);
+
   const sendComment = async (message: string) => {
     try {
       if (!id || !user) return;
@@ -124,24 +68,31 @@ export function Overview() {
 
       await loadComments();
     } catch (error) {
-      const { errors } = error as ApiError;
-
-      errors?.forEach(
-        err => {
-          notifications[err.level](err.message);
-        }
-      )
-
-      navigate('../../')
+      showError(error, "Não foi possível criar o comentário.");
     }
   }
 
   useEffect(() => {
-    void loadProject();
-    void loadTasks();
-    void loadEvents();
+    if (!id) return;
+    let active = true;
+
+    void ProjectService.find(id).then(({ data }) => {
+      if (active) setProject(data);
+    }).catch((error) => {
+      if (!active) return;
+      showError(error, "Não foi possível carregar o projeto.");
+      navigate("/home/projects", { replace: true });
+    });
+
+    void TaskService.list(id).then(({ data }) => {
+      if (active) setTasks(data);
+    }).catch((error) => {
+      if (active) showError(error, "Não foi possível carregar as tarefas do projeto.");
+    });
+
     void loadComments();
-  }, [id]);
+    return () => { active = false; };
+  }, [ProjectService, TaskService, id, loadComments, navigate, showError]);
 
   if (project === null) return <><Text>Carregando...</Text></>;
 
@@ -150,7 +101,10 @@ export function Overview() {
       <Content className="tskr-proj-content">
         <ProjectInfo>
           <SectionTitle>{project?.title}</SectionTitle>
-          <Subtitle>Iniciado em: --:-- Prazo: 00 de mm de aaaa</Subtitle>
+          <Subtitle>
+            Iniciado em: {project.started_at ? new Date(project.started_at).toLocaleString("pt-BR") : "não iniciado"}
+            {" · "}Prazo: {new Date(project.deadline).toLocaleString("pt-BR")}
+          </Subtitle>
           {ProjectStageBadge[project.stage]}
           <EditButton type="button" onClick={() => navigate('../edit')} />
           <Description>
@@ -182,7 +136,7 @@ export function Overview() {
           <MessageField send={sendComment} />
         </Comments>
       </Content>
-      <ImportantDates events={events} projects={[project]} />
+      <ImportantDates events={[]} projects={[project]} />
     </Container>
   )
 }

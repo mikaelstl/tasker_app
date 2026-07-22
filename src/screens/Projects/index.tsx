@@ -3,7 +3,6 @@ import { CreateButton } from "../../components/buttons/CreateButton/index.tsx";
 import { SearchField } from "../../components/textfields/SearchField/index.tsx";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ProjectStage, type ProjectDTO } from "../../service/types/project/project.dto.ts";
-import { useAuth } from "../../hooks/useAuth.ts";
 import { CreateProjectPopup } from "../../components/popups/CreateProject/index.tsx";
 import { ContentHeader } from "../../components/base/ContentHeader/index.tsx";
 import { Text } from "../../components/base/Text/index.ts";
@@ -28,7 +27,6 @@ export function Projects() {
   const { ProjectService } = useServices();
   const notifications = useToast();
 
-  const { user } = useAuth();
   const { org } = useOrganization();
 
   const [projects, setProjects] = useState<ProjectDTO[]>([]);
@@ -42,7 +40,7 @@ export function Projects() {
   };
 
   const loadProjects = useCallback(async () => {
-    if (!org?.orgkey || !org.role || !user?.username) {
+    if (!org?.orgkey) {
       setProjects([]);
       return;
     }
@@ -58,7 +56,7 @@ export function Projects() {
         notifications[item.level](item.message);
       });
     }
-  }, [ProjectService, notifications, org?.orgkey, org?.role, user?.username]);
+  }, [ProjectService, notifications, org?.orgkey]);
 
   useEffect(() => {
     void loadProjects();
@@ -117,8 +115,9 @@ export function Projects() {
           : <></>
         }
         <Items className="vertical">
-          {
-            filteredProjects.map((project) => <ProjectCard
+          {filteredProjects.length === 0
+            ? <Text>Nenhum projeto encontrado.</Text>
+            : filteredProjects.map((project) => <ProjectCard
               key={project.id}
               id={project.id}
               title={project.title}
@@ -126,8 +125,7 @@ export function Projects() {
               stage={project.stage}
               deadline={project.deadline}
               members={[]}
-            />)
-          }
+            />)}
         </Items>
       </Content>
     </Container>

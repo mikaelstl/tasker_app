@@ -14,6 +14,7 @@ interface TaskCardProps {
   owner: string;
   deadline: string;
   className?: string;
+  onClick?: () => void;
 }
 
 export function TaskCard({
@@ -23,9 +24,10 @@ export function TaskCard({
   priority,
   owner,
   deadline,
+  onClick,
 }: TaskCardProps) {
   return (
-    <Card className="tskr-task-card">
+    <Card className="tskr-task-card" onClick={onClick}>
       <CardHeader>
         <HeaderContainer>
           <TitleContainer>

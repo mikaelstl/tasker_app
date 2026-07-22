@@ -6,16 +6,19 @@ import axios, {
 import type { ApiError } from "../types/response/error";
 import type { ApiResponse } from "../types/response/response";
 import { STORAGE_KEYS, clearSessionStorage } from "@/config/storage";
+import dotenv from "@/config/dotenv";
 
 export class ApiClient {
   private api: AxiosInstance;
 
-  private get path(): string { return "http://localhost:3000"}
-
   constructor() {
+    const configuredTimeout = Number(dotenv.REQUEST_TIMEOUT);
+
     this.api = axios.create({
-      baseURL: this.path,
-      timeout: 5000,
+      baseURL: dotenv.API_BASE_URL || "http://localhost:3000",
+      timeout: Number.isFinite(configuredTimeout) && configuredTimeout > 0
+        ? configuredTimeout
+        : 10_000,
       headers: {
         "Content-Type": "application/json"
       }
@@ -105,9 +108,14 @@ export class ApiClient {
       (config) => {
         const token = localStorage.getItem(STORAGE_KEYS.auth.token);
         const xOrgKey = localStorage.getItem(STORAGE_KEYS.organization.orgkey);
-      
-        if (token) config.headers['Authorization'] = `Bearer ${token}`;
-        if (xOrgKey) config.headers['X-Org-Key'] = xOrgKey;
+        const request = this.requestIdentity(config.url, config.method);
+
+        if (token && !request.isPublic) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
+        if (xOrgKey && !request.omitsOrganization) {
+          config.headers["x-org-key"] = xOrgKey;
+        }
 
         return config;
       },
@@ -130,7 +138,7 @@ export class ApiClient {
     }
 
     if (
-      ["ECONNREFUSED", "ENOTFOUND", "ETIMEDOUT", "ERR_NETWORK"].includes(error.code ?? "")
+      ["ECONNABORTED", "ECONNREFUSED", "ENOTFOUND", "ETIMEDOUT", "ERR_NETWORK"].includes(error.code ?? "")
       && !error.response
     ) {
       console.warn("🚫 Falha de rede ou CORS bloqueado.");
@@ -146,24 +154,57 @@ export class ApiClient {
       } satisfies ApiError);
     }
 
+    const request = this.requestIdentity(error.config?.url, error.config?.method);
+
     if (error.response?.status === 401) {
-      if (redirectOnUnauthorized) {
+      if (redirectOnUnauthorized && !request.handlesUnauthorizedLocally) {
         clearSessionStorage();
         window.location.replace("/login");
       }
-
-      return Promise.reject({
-        status: 401,
-        errors: [{
-          level: "error",
-          message: this.responseMessage(error.response.data),
-        }],
-        timestamp: new Date().toISOString(),
-        path: "/",
-      } satisfies ApiError);
     }
 
-    return Promise.reject(error.response?.data ?? error);
+    return Promise.reject(this.normalizeApiError(
+      error.response?.data,
+      error.response?.status ?? 500,
+      error.config?.url ?? "/",
+    ));
+  }
+
+  private normalizeApiError(data: unknown, status: number, path: string): ApiError {
+    if (
+      typeof data === "object"
+      && data !== null
+      && "errors" in data
+      && Array.isArray(data.errors)
+    ) {
+      return data as unknown as ApiError;
+    }
+
+    return {
+      status,
+      errors: [{
+        level: status >= 500 ? "critical" : status === 422 || status === 400 ? "validation" : "error",
+        message: this.responseMessage(data),
+      }],
+      timestamp: new Date().toISOString(),
+      path,
+    };
+  }
+
+  private requestIdentity(url = "", method = "get") {
+    const path = url.split("?")[0].replace(/\/$/, "");
+    const verb = method.toLowerCase();
+    const isPublic = (verb === "get" && (path === "/status" || path === "/auth"))
+      || (verb === "post" && (path === "/auth/login" || path === "/accounts/register"));
+    const omitsOrganization = isPublic
+      || path === "/auth/validate"
+      || (verb === "post" && path === "/org");
+
+    return {
+      isPublic,
+      omitsOrganization,
+      handlesUnauthorizedLocally: path === "/auth/login" || path === "/auth/validate",
+    };
   }
 
   private responseMessage(data: unknown): string {
@@ -194,7 +235,7 @@ export class ApiClient {
       return data.message;
     }
 
-    return "Não autorizado.";
+    return "Não foi possível concluir a solicitação.";
   }
 
   private downloadFilename(
