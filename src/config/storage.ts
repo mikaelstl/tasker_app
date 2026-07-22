@@ -10,6 +10,8 @@ export const STORAGE_KEYS = {
   },
 } as const;
 
+export const AUTH_SESSION_EXPIRED_EVENT = "tasker:auth-session-expired";
+
 export function clearAuthStorage(): void {
   localStorage.removeItem(STORAGE_KEYS.auth.user);
   localStorage.removeItem(STORAGE_KEYS.auth.token);
@@ -24,4 +26,9 @@ export function clearOrganizationStorage(): void {
 export function clearSessionStorage(): void {
   clearAuthStorage();
   clearOrganizationStorage();
+}
+
+export function expireAuthSession(): void {
+  clearSessionStorage();
+  window.dispatchEvent(new Event(AUTH_SESSION_EXPIRED_EVENT));
 }

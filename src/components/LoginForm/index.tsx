@@ -4,7 +4,7 @@ import { Container, Form, SubmitButton, Inputs } from "../misc/Form/style";
 import { CreateAccount } from "./CreateAccount";
 import type { LoginDTO } from "../../service/types/auth/login.dto";
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { SectionTitle } from "../base/SectionTitle";
 
 interface LoginFormProps {
@@ -13,7 +13,6 @@ interface LoginFormProps {
 
 export function LoginForm({ login }: LoginFormProps) {
   const navigate = useNavigate();
-  const location = useLocation();
 
   const [email, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -23,7 +22,6 @@ export function LoginForm({ login }: LoginFormProps) {
     ev.preventDefault()
 
     const normalizedEmail = email.trim();
-    if (!normalizedEmail || !password) return;
 
     const data: LoginDTO = { email: normalizedEmail, password };
 
@@ -31,16 +29,9 @@ export function LoginForm({ login }: LoginFormProps) {
       setSubmitting(true);
       await login(data);
 
-      const state = location.state as {
-        from?: { pathname?: string; search?: string };
-      } | null;
-      const returnPath = state?.from?.pathname
-        ? `${state.from.pathname}${state.from.search ?? ""}`
-        : "/workspaces";
-
-      navigate(returnPath, { replace: true });
+      navigate("/workspaces");
     } catch {
-      // O provider já apresenta a mensagem normalizada do backend.
+      // O erro da requisição já é apresentado pelo interceptor da API.
     } finally {
       setSubmitting(false);
     }
@@ -49,7 +40,7 @@ export function LoginForm({ login }: LoginFormProps) {
   return (
     <Container className="tskr-login-form">
       <SectionTitle>ENTRAR</SectionTitle>
-      <Form  as="form" onSubmit={onSubmit}>
+      <Form as="form" onSubmit={onSubmit}>
         <Inputs className="tskr-form-inputs">
           <TextInput
             icon={<UserIcon width={24} />}
@@ -65,7 +56,7 @@ export function LoginForm({ login }: LoginFormProps) {
             onChange={(value) => setPassword(value)}
           />
         </Inputs>
-        <SubmitButton type="submit" disabled={submitting || !email.trim() || !password}>
+        <SubmitButton type="submit" disabled={submitting}>
           {submitting ? "Entrando..." : "Entrar"}
         </SubmitButton>
       </Form>

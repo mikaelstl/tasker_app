@@ -7,7 +7,11 @@ import type { CurrentAccountDTO } from "../../service/types/account/current-acco
 import { AuthContext } from "../../context/AuthContext";
 import { useServices } from "../../hooks/useServices";
 import { useOrganization } from "@/hooks/useOrganization";
-import { STORAGE_KEYS, clearAuthStorage } from "@/config/storage";
+import {
+  AUTH_SESSION_EXPIRED_EVENT,
+  STORAGE_KEYS,
+  clearAuthStorage,
+} from "@/config/storage";
 
 function readStoredUser(): CurrentAccountDTO | null {
   const storedUser = localStorage.getItem(STORAGE_KEYS.auth.user);
@@ -70,19 +74,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     clearAuthStorage();
   }, [clearOrg]);
 
-  const redirectToLogin = useCallback(() => {
+  const invalidateAuthentication = useCallback(() => {
     validationDisabledRef.current = true;
     clearAuthentication();
     setAuthenticating(false);
-
-    if (window.location.pathname !== "/login") {
-      window.location.replace("/login");
-    }
   }, [clearAuthentication]);
 
   const logout = () => {
-    validationDisabledRef.current = true;
-    clearAuthentication();
+    invalidateAuthentication();
   };
 
   const validate = useCallback((): Promise<boolean> => {
@@ -108,7 +107,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         if (!res?.data) {
           notifications.warning("Sessão inválida ou expirada");
-          redirectToLogin();
+          invalidateAuthentication();
           return false;
         }
 
@@ -121,7 +120,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           notifications[e.level](e.message);
         });
 
-        redirectToLogin();
+        invalidateAuthentication();
         return false;
       } finally {
         validationPromiseRef.current = null;
@@ -130,7 +129,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     validationPromiseRef.current = validation;
     return validation;
-  }, [AccountService, clearAuthentication, notifications, redirectToLogin]);
+  }, [AccountService, clearAuthentication, invalidateAuthentication, notifications]);
+
+  useEffect(() => {
+    window.addEventListener(AUTH_SESSION_EXPIRED_EVENT, invalidateAuthentication);
+
+    return () => {
+      window.removeEventListener(AUTH_SESSION_EXPIRED_EVENT, invalidateAuthentication);
+    };
+  }, [invalidateAuthentication]);
 
   useEffect(() => {
     void validate();

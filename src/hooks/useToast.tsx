@@ -47,12 +47,22 @@ const validationOptions: ToastOptions = {
   style: { border: `1px solid ${Palette.lightBlue}` },
 };
 
-const notifications = {
-  info: (message: string) => toast.info(message, infoOptions),
-  warning: (message: string) => toast.warn(message, warningOptions),
-  error: (message: string) => toast.error(message, errorOptions),
-  critical: (message: string) => toast.warning(message, criticalOptions),
-  validation: (message: string) => toast.info(message, validationOptions),
+function optionsWithId(
+  message: string,
+  options: ToastOptions,
+): ToastOptions {
+  return {
+    ...options,
+    toastId: `tasker:${message}`,
+  };
+}
+
+export const notifications = {
+  info: (message: string) => toast.info(message, optionsWithId(message, infoOptions)),
+  warning: (message: string) => toast.warn(message, optionsWithId(message, warningOptions)),
+  error: (message: string) => toast.error(message, optionsWithId(message, errorOptions)),
+  critical: (message: string) => toast.error(message, optionsWithId(message, criticalOptions)),
+  validation: (message: string) => toast.info(message, optionsWithId(message, validationOptions)),
 };
 
 export type ToastNotifications = typeof notifications;

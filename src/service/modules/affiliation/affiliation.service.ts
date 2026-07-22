@@ -36,7 +36,7 @@ export class AffiliationService implements AffiliationServiceI {
   }
 
   async list(): Promise<ApiResponse<UserOrganizationSummaryDTO[]>> {
-    const response = await this.api.load<UserOrganizationSummaryDTO[], void>({
+    const response = await this.api.load<UserOrganizationSummaryDTO[], null>({
       route: "/affiliations",
     });
 

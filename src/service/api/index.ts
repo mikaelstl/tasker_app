@@ -5,8 +5,17 @@ import axios, {
 } from "axios";
 import type { ApiError } from "@/service/types/response/error";
 import type { ApiResponse } from "@/service/types/response/response";
-import { STORAGE_KEYS, clearSessionStorage } from "@/config/storage";
+import { STORAGE_KEYS, expireAuthSession } from "@/config/storage";
 import dotenv from "@/config/dotenv";
+import { notifications, type ToastLevel } from "@/hooks/useToast";
+
+const TOAST_LEVELS: ToastLevel[] = [
+  "info",
+  "warning",
+  "error",
+  "critical",
+  "validation",
+];
 
 export class ApiClient {
   private api: AxiosInstance;
@@ -132,9 +141,12 @@ export class ApiClient {
     );
   }
 
-  private rejectApiError(error: unknown, redirectOnUnauthorized: boolean): Promise<never> {
+  private rejectApiError(error: unknown, expireSessionOnUnauthorized: boolean): Promise<never> {
     if (!axios.isAxiosError(error)) {
-      return Promise.reject(error);
+      const apiError = this.normalizeApiError(error, 500, "/");
+      this.notifyError(apiError);
+
+      return Promise.reject(apiError);
     }
 
     if (
@@ -143,7 +155,7 @@ export class ApiClient {
     ) {
       console.warn("🚫 Falha de rede ou CORS bloqueado.");
 
-      return Promise.reject({
+      const apiError = {
         status: 500,
         errors: [{
           level: "critical",
@@ -151,23 +163,40 @@ export class ApiClient {
         }],
         timestamp: new Date().toISOString(),
         path: "/",
-      } satisfies ApiError);
+      } satisfies ApiError;
+
+      this.notifyError(apiError);
+      return Promise.reject(apiError);
     }
 
     const request = this.requestIdentity(error.config?.url, error.config?.method);
-
-    if (error.response?.status === 401) {
-      if (redirectOnUnauthorized && !request.handlesUnauthorizedLocally) {
-        clearSessionStorage();
-        window.location.replace("/login");
-      }
-    }
-
-    return Promise.reject(this.normalizeApiError(
+    const apiError = this.normalizeApiError(
       error.response?.data,
       error.response?.status ?? 500,
       error.config?.url ?? "/",
-    ));
+    );
+
+    this.notifyError(apiError);
+
+    if (error.response?.status === 401) {
+      if (expireSessionOnUnauthorized && !request.handlesUnauthorizedLocally) {
+        expireAuthSession();
+      }
+    }
+
+    return Promise.reject(apiError);
+  }
+
+  private notifyError(error: ApiError): void {
+    if (!error.errors?.length) {
+      notifications.error("Não foi possível concluir a solicitação.");
+      return;
+    }
+
+    error.errors.forEach((item) => {
+      const level = TOAST_LEVELS.includes(item.level) ? item.level : "error";
+      notifications[level](item.message || "Não foi possível concluir a solicitação.");
+    });
   }
 
   private normalizeApiError(data: unknown, status: number, path: string): ApiError {
@@ -203,7 +232,7 @@ export class ApiClient {
     return {
       isPublic,
       omitsOrganization,
-      handlesUnauthorizedLocally: path === "/auth/login" || path === "/auth/validate",
+      handlesUnauthorizedLocally: path === "/auth/login",
     };
   }
 
