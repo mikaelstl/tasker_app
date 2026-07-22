@@ -29,6 +29,15 @@ interface ManagerDashboardData {
   membersStats: MemberStatDTO[];
   events: EventDTO[];
   projects: ProjectDTO[];
+  projectData: ManagerProjectData[];
+}
+
+interface ManagerProjectData {
+  project: ProjectDTO;
+  stats: ManagerStats;
+  deadlines: Deadline[];
+  membersStats: MemberStatDTO[];
+  events: EventDTO[];
 }
 
 const initialData: ManagerDashboardData = {
@@ -37,6 +46,7 @@ const initialData: ManagerDashboardData = {
   membersStats: [],
   events: [],
   projects: [],
+  projectData: [],
 };
 
 function getErrorMessage(error: unknown): string {
@@ -93,9 +103,8 @@ function getMemberStats(
     return {
       username,
       project: project.title,
-      started: memberTasks.filter((task) => (
-        task.stage === TaskStage.IN_PROGRESS || task.stage === TaskStage.REVIEW
-      )).length,
+      started: memberTasks.filter((task) => task.stage === TaskStage.IN_PROGRESS).length,
+      review: memberTasks.filter((task) => task.stage === TaskStage.REVIEW).length,
       done: memberTasks.filter((task) => task.stage === TaskStage.DONE).length,
       overdue: memberTasks.filter((task) => (
         task.stage !== TaskStage.DONE && new Date(task.due_date).getTime() < now
@@ -107,7 +116,6 @@ function getMemberStats(
 export function useManagerDashboard(orgId?: string) {
   const { user } = useAuth();
   const {
-    AffiliationService,
     ProjectService,
     TaskService,
     MemberService,
@@ -133,16 +141,10 @@ export function useManagerDashboard(orgId?: string) {
     setError(null);
 
     try {
-      const [projectsResponse, affiliationsResponse] = await Promise.all([
-        ProjectService.list(),
-        AffiliationService.listByOrganization(orgId),
-      ]);
-      const manager = affiliationsResponse.data.find(
-        (affiliation) => affiliation.userkey === username,
+      const projectsResponse = await ProjectService.list();
+      const projects = projectsResponse.data.filter(
+        (project) => project.managerkey === username,
       );
-      const projects = projectsResponse.data.filter((project) => (
-        project.managerkey === manager?.id || project.managerkey === username
-      ));
       const projectsData = await Promise.all(projects.map(async (project) => {
         const [tasks, members, events] = await Promise.all([
           TaskService.list(project.id),
@@ -151,7 +153,10 @@ export function useManagerDashboard(orgId?: string) {
         ]);
 
         return {
+          project,
           tasks: tasks.data,
+          stats: getStats(tasks.data),
+          deadlines: getDeadlines([project]),
           membersStats: getMemberStats(project, members.data, tasks.data),
           events: events.data,
         };
@@ -163,6 +168,13 @@ export function useManagerDashboard(orgId?: string) {
         membersStats: projectsData.flatMap((project) => project.membersStats),
         events: projectsData.flatMap((project) => project.events),
         projects,
+        projectData: projectsData.map(({ project, stats, deadlines, membersStats, events }) => ({
+          project,
+          stats,
+          deadlines,
+          membersStats,
+          events,
+        })),
       };
 
       if (currentRequest === requestId.current) setData(nextData);
@@ -174,7 +186,6 @@ export function useManagerDashboard(orgId?: string) {
       if (currentRequest === requestId.current) setLoading(false);
     }
   }, [
-    AffiliationService,
     EventService,
     MemberService,
     ProjectService,

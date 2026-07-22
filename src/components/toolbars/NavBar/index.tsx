@@ -6,7 +6,7 @@ import { useLocation, useMatch, useNavigate } from "react-router-dom"
 import { useAuth } from "../../../hooks/useAuth"
 import { FolderOpenIcon } from "@heroicons/react/20/solid"
 import { useEffect, useState } from "react"
-import { CalendarIcon, ChartBarIcon, ClipboardIcon, UserIcon } from "@heroicons/react/24/solid"
+import { ArrowsRightLeftIcon, CalendarIcon, ChartBarIcon, ClipboardIcon, UserIcon } from "@heroicons/react/24/solid"
 import { useOrganization } from "../../../hooks/useOrganization"
 
 interface ProjectNavAccordionProps {
@@ -165,7 +165,7 @@ export function NavBar() {
       {projectId ? <ProjectNavAccordion isOpen projectId={projectId} /> : null}
       <Actions className="tskr-nav-actions">
         <NavItem className="tskr-nav-item" onClick={onChangeWorkspace}>
-          <WindowIcon width="18" />
+          <ArrowsRightLeftIcon width="18" />
           Trocar workspace
         </NavItem>
         {/* <NavItem className="tskr-nav-item" $activated>

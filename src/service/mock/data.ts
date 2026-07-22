@@ -601,7 +601,8 @@ const memberStats: MemberStatDTO[] = members.map((member) => {
   return {
     username: member.user?.userkey ?? affiliations.find((affiliation) => affiliation.id === member.userkey)?.userkey ?? member.userkey,
     project: project?.title ?? member.projectkey,
-    started: memberTasks.filter((task) => task.stage === TaskStage.IN_PROGRESS || task.stage === TaskStage.REVIEW).length,
+    started: memberTasks.filter((task) => task.stage === TaskStage.IN_PROGRESS).length,
+    review: memberTasks.filter((task) => task.stage === TaskStage.REVIEW).length,
     done: memberTasks.filter((task) => task.stage === TaskStage.DONE).length,
     overdue: memberTasks.filter((task) => task.stage !== TaskStage.DONE && new Date(task.due_date).getTime() < baseDate.getTime()).length,
   };

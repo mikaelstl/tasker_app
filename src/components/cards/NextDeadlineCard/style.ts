@@ -5,7 +5,6 @@ const Container = styled.div`
   width: max-content;
 
   padding: 12px;
-  border: 1px solid ${Palette.details};
   border-radius: 6px;
 `;
 

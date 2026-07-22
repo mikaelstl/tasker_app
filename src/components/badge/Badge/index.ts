@@ -22,7 +22,7 @@ export const Badge = styled.span<BadgeProps>`
   border-radius: 9999px;
 
   width: fit-content;
-  height: fit-content;
+  height: min-content;
 
   background-color: ${props => props.bg ?? Palette.gray_25};
   /* color: ${props => props.text ?? Palette.white}; */

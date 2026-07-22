@@ -14,7 +14,7 @@ interface EventCardProps {
   title: string
   time: string
   category: EventCategory
-  projectTitle: string
+  projectTitle?: string
 }
 
 interface EventCategoryIcon {
@@ -62,7 +62,9 @@ export function EventCard({ title, time, category, projectTitle }: EventCardProp
 
   return (
     <Card className="tskr-event-card">
-      <ProjectTitle title={projectTitle}>{projectTitle}</ProjectTitle>
+      {projectTitle ? (
+        <ProjectTitle title={projectTitle}>{projectTitle}</ProjectTitle>
+      ) : null}
 
       <Details>
         <Icon

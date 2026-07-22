@@ -42,9 +42,35 @@ const Card = styled.div<CardProps>`
 
 const Cards = styled.div`
   display: flex;
+  flex-direction: column;
   gap: 4px;
 
   width: 100%;
+`;
+
+interface StageInfosProps {
+  $color: string;
+}
+
+const StageInfos = styled.div<StageInfosProps>`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding-left: 8px;
+
+  color: ${({ $color }) => $color};
+
+  svg {
+    flex: 0 0 20px;
+    width: 20px;
+    height: 20px;
+    stroke-width: 2;
+  }
+
+  .tskr-title {
+    padding-left: 0;
+  }
 `;
 
 const SelectProjId = styled.div`
@@ -80,6 +106,7 @@ export {
   Header,
   Card,
   Cards,
+  StageInfos,
   Select,
   SelectProjId,
   Option

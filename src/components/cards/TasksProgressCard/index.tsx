@@ -1,5 +1,11 @@
+import {
+  CheckCircleIcon,
+  ClockIcon,
+  EyeIcon,
+  ExclamationTriangleIcon,
+} from "@heroicons/react/24/outline";
 import { Title } from "../../base/Title";
-import { Card, Cards, Container, Header } from "./style";
+import { Card, Cards, Container, Header, StageInfos } from "./style";
 import Palette from "../../../assets/palette";
 
 interface TasksProgressCardProps {
@@ -17,21 +23,33 @@ export function TasksProgressCard({ stats }: TasksProgressCardProps) {
       <Header>
         <Title>Progresso das tarefas</Title>
       </Header>
-      <Cards>
-        <Card $backgroundColor={Palette.blue_50} $borderColor={Palette.blue}>
-          <Title className="tskr-title">INICIADAS</Title>
+      <Cards className="tskr-tasks-stages-amount-infos">
+        <Card className="tskr-started-amount" $backgroundColor={Palette.blue_50} $borderColor={Palette.blue}>
+          <StageInfos className="tskr-tasks-stage-amount-infos" $color={Palette.lightBlue}>
+            <ClockIcon aria-hidden="true" />
+            <Title className="tskr-title">INICIADAS</Title>
+          </StageInfos>
           <Title className="tskr-title">{stats.started}</Title>
         </Card>
-        <Card $backgroundColor={Palette.green_50} $borderColor={Palette.green}>
-          <Title className="tskr-title">CONCLUÍDAS</Title>
+        <Card className="tskr-done-amount" $backgroundColor={Palette.green_50} $borderColor={Palette.green}>
+          <StageInfos className="tskr-tasks-stage-amount-infos" $color={Palette.green}>
+            <CheckCircleIcon aria-hidden="true" />
+            <Title className="tskr-title">CONCLUÍDAS</Title>
+          </StageInfos>
           <Title className="tskr-title">{stats.done}</Title>
         </Card>
-        <Card $backgroundColor={Palette.yellow_50} $borderColor={Palette.yellow}>
-          <Title className="tskr-title">EM REVISÃO</Title>
+        <Card className="tskr-review-amount" $backgroundColor={Palette.yellow_50} $borderColor={Palette.yellow}>
+          <StageInfos className="tskr-tasks-stage-amount-infos" $color={Palette.yellow}>
+            <EyeIcon aria-hidden="true" />
+            <Title className="tskr-title">EM REVISÃO</Title>
+          </StageInfos>
           <Title className="tskr-title">{stats.review}</Title>
         </Card>
-        <Card $backgroundColor={Palette.red_50} $borderColor={Palette.red}>
-          <Title className="tskr-title">ATRASADAS</Title>
+        <Card className="tskr-atrasadas-amount" $backgroundColor={Palette.red_50} $borderColor={Palette.red}>
+          <StageInfos className="tskr-tasks-stage-amount-infos" $color={Palette.red}>
+            <ExclamationTriangleIcon aria-hidden="true" />
+            <Title className="tskr-title">ATRASADAS</Title>
+          </StageInfos>
           <Title className="tskr-title">{stats.overdue}</Title>
         </Card>
       </Cards>
