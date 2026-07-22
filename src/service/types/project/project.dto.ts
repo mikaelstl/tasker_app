@@ -1,11 +1,11 @@
-import type { ProjectMember } from "../member/member.dto";
+import type { MemberRecordDTO } from "../member/member.dto";
 
 export enum ProjectStage {
-  OVERDUE = 'OVERDUE',
   STARTED = 'STARTED',
-  REVIEW = 'REVIEW',
   PENDING = 'PENDING',
-  DONE = 'DONE',
+  IN_PROGRESS = 'IN_PROGRESS',
+  PAUSED = 'PAUSED',
+  COMPLETED = 'COMPLETED',
 }
 
 export interface ProjectDTO {
@@ -14,9 +14,11 @@ export interface ProjectDTO {
   readonly description: string;
   readonly orgkey: string;
   readonly managerkey: string | null;
-  readonly due_date: string;
+  readonly deadline: string;
+  readonly started_at: string | null;
+  readonly done_at: string | null;
+  readonly delayed: boolean;
   readonly stage: ProjectStage;
-  readonly members?: ProjectMember[];
   readonly created_at: string;
   readonly updated_at: string;
 
@@ -25,4 +27,8 @@ export interface ProjectDTO {
   // checkpoints: Checkpoint[];
 
   // comments: Comment[];
+}
+
+export interface ProjectWithMembersDTO extends ProjectDTO {
+  readonly members: MemberRecordDTO[];
 }

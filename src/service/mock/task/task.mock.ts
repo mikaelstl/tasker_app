@@ -1,15 +1,15 @@
 import type { ApiResponse } from "@/service/types/response/response";
 import type { CreateTaskDTO } from "../../types/task/create.dto";
-import type { TaskDTO } from "../../types/task/task.dto";
+import type { TaskDTO, TaskWithOwnerDTO } from "../../types/task/task.dto";
 import type { TaskQueryDTO } from "../../types/task/query.dto";
 import type { EditTaskDTO } from "../../types/task/edit.dto";
 import { TaskStage } from "../../types/task/stage.dto";
 
-import { mockData, createMockId, createMockResponse, createMockTask } from "../data";
+import { mockData, createMockId, createMockProjectMember, createMockResponse, createMockTask } from "../data";
 import type { TaskServiceI } from "../../modules/task/task.service";
 
 function matchesTaskQuery(task: TaskDTO, projectkey: string, queries?: TaskQueryDTO): boolean {
-  if (task.project !== projectkey) {
+  if (task.projectkey !== projectkey) {
     return false;
   }
 
@@ -25,11 +25,11 @@ function matchesTaskQuery(task: TaskDTO, projectkey: string, queries?: TaskQuery
     return false;
   }
 
-  if (queries.projectkey && task.project !== queries.projectkey) {
+  if (queries.projectkey && task.projectkey !== queries.projectkey) {
     return false;
   }
 
-  if (queries.ownerkey && task.owner !== queries.ownerkey) {
+  if (queries.ownerkey && task.ownerkey !== queries.ownerkey) {
     return false;
   }
 
@@ -41,11 +41,23 @@ function matchesTaskQuery(task: TaskDTO, projectkey: string, queries?: TaskQuery
     return false;
   }
 
-  if (queries.due_date && new Date(task.due_date).getTime() !== queries.due_date.getTime()) {
+  if (queries.deadline && new Date(task.deadline).getTime() !== new Date(queries.deadline).getTime()) {
+    return false;
+  }
+
+  if (queries.delayed !== undefined && task.delayed !== queries.delayed) {
     return false;
   }
 
   return true;
+}
+
+function withOwner(task: TaskDTO): TaskWithOwnerDTO {
+  return {
+    ...task,
+    owner: mockData.members.find((member) => member.id === task.ownerkey)
+      ?? createMockProjectMember({ id: task.ownerkey }),
+  };
 }
 
 export class TaskMockService implements TaskServiceI {
@@ -55,10 +67,10 @@ export class TaskMockService implements TaskServiceI {
       code: `TSK-${String(mockData.tasks.length + 1).padStart(4, "0")}`,
       name: data.name,
       description: data.description,
-      project: data.project,
-      owner: data.owner,
+      projectkey: data.project,
+      ownerkey: data.owner,
       priority: data.priority,
-      due_date: data.due_date.toISOString(),
+      deadline: data.deadline,
       stage: TaskStage.PENDING,
     });
 
@@ -67,36 +79,36 @@ export class TaskMockService implements TaskServiceI {
     return createMockResponse(task, "/tasks");
   }
 
-  async list(projectkey: string, queries?: TaskQueryDTO): Promise<ApiResponse<TaskDTO[]>> {
-    const tasks = mockData.tasks.filter((task) => matchesTaskQuery(task, projectkey, queries));
+  async list(projectkey: string, queries?: TaskQueryDTO): Promise<ApiResponse<TaskWithOwnerDTO[]>> {
+    const tasks = mockData.tasks
+      .filter((task) => matchesTaskQuery(task, projectkey, queries))
+      .map(withOwner);
 
     return createMockResponse(tasks, `/tasks/${projectkey}`);
   }
 
-  async find(code: string): Promise<ApiResponse<TaskDTO>> {
-    const task = mockData.tasks.find((item) => item.code === code);
+  async find(projectkey: string, code: string): Promise<ApiResponse<TaskWithOwnerDTO>> {
+    const task = mockData.tasks.find((item) => item.projectkey === projectkey && item.code === code);
 
-    return createMockResponse(task ?? createMockTask(), `/tasks/${code}`, task ? "OK" : "Tarefa não encontrada", task ? 200 : 404, !task);
+    return createMockResponse(withOwner(task ?? createMockTask()), `/tasks/${projectkey}/${code}`, task ? "OK" : "Tarefa não encontrada", task ? 200 : 404, !task);
   }
 
-  async update(code: string, update: EditTaskDTO): Promise<ApiResponse<TaskDTO>> {
-    const task = mockData.tasks.find((item) => item.code === code);
+  async update(projectkey: string, code: string, update: EditTaskDTO): Promise<ApiResponse<TaskDTO>> {
+    const task = mockData.tasks.find((item) => item.projectkey === projectkey && item.code === code);
 
     if (!task) {
-      return createMockResponse(createMockTask(), `/tasks/${code}`, "Tarefa não encontrada", 404, true);
+      return createMockResponse(createMockTask(), `/tasks/${projectkey}/${code}`, "Tarefa não encontrada", 404, true);
     }
 
     Object.assign(task, {
       ...(update.name ? { name: update.name } : {}),
       ...(update.description ? { description: update.description } : {}),
-      ...(update.project ? { project: update.project } : {}),
-      ...(update.owner ? { owner: update.owner } : {}),
       ...(update.priority ? { priority: update.priority } : {}),
       ...(update.stage ? { stage: update.stage } : {}),
-      ...(update.due_date ? { due_date: update.due_date.toISOString() } : {}),
+      ...(update.deadline ? { deadline: update.deadline } : {}),
     });
 
-    return createMockResponse(task, `/tasks/${code}`);
+    return createMockResponse(task, `/tasks/${projectkey}/${code}`);
   }
 
   async delete(id: string): Promise<ApiResponse<TaskDTO>> {

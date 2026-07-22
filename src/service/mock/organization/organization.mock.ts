@@ -20,8 +20,8 @@ export class OrganizationMockService implements OrganizationServiceI {
       id: createMockId("org"),
       name: data.name,
       ownerkey: currentAccount.username,
-      created_at: new Date(),
-      updated_at: new Date(),
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     });
 
     mockData.organizations.push(organization);

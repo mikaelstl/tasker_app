@@ -10,7 +10,6 @@ import { TextInput } from "../../base/TextInput";
 import { TextAreaInput } from "../../base/TextAreaInput";
 import { CalendarInput } from "../../base/CalendarInput";
 import { SectionTitle } from "../../base/SectionTitle";
-import { SelectMember } from "../../misc/SelectMember";
 import { PlusField } from "../../textfields/PlusField";
 import { LinkCard } from "../../cards/LinkCard";
 import { useToast } from "@/hooks/useToast";
@@ -67,8 +66,7 @@ export function CreateProjectPopup(props: PopupProps) {
     const project: CreateProjectDTO = {
       title: projectName,
       description,
-      due_date: new Date(dueDate),
-      orgkey: org.orgkey,
+      deadline: new Date(dueDate).toISOString(),
     }
 
     try {
@@ -121,14 +119,6 @@ export function CreateProjectPopup(props: PopupProps) {
               onChange={(value) => setDueDate(value)}
             />
           </Infos>
-          <SelectMember
-            label="Gestor"
-            data={[{
-              id: '648c864f',
-              name: 'mikael',
-              username: 'mikaelst',
-            }]}
-          />
           <Links>
             <SectionTitle>Links</SectionTitle>
             <PlusField add={addLink}/>

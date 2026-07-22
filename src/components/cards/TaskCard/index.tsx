@@ -12,7 +12,7 @@ interface TaskCardProps {
   description?: string;
   priority: TaskPriority;
   owner: string;
-  due_date: string;
+  deadline: string;
   className?: string;
 }
 
@@ -22,7 +22,7 @@ export function TaskCard({
   description,
   priority,
   owner,
-  due_date,
+  deadline,
 }: TaskCardProps) {
   return (
     <Card className="tskr-task-card">
@@ -50,7 +50,7 @@ export function TaskCard({
 
       <CardFooter>
         <User username={owner} />
-        <DateBadge date={DateTime.fromISO(due_date)} />
+        <DateBadge date={DateTime.fromISO(deadline)} />
       </CardFooter>
     </Card>
   );

@@ -7,7 +7,6 @@ import { TextAreaInput } from "../../../components/base/TextAreaInput";
 import { TextInput } from "../../../components/base/TextInput";
 import { CreateButton } from "../../../components/buttons/CreateButton";
 import { DeleteBtn } from "../../../components/buttons/DeleteBtn";
-import { SelectMember } from "../../../components/misc/SelectMember";
 import { Infos, Links } from "../../../components/popups/CreateProject/style";
 import { PlusField } from "../../../components/textfields/PlusField";
 import { AdvancedSettings, Container, Content, MembersArea } from "./style";
@@ -73,14 +72,6 @@ export function EditProject() {
             onChange={() => { }}
           />
         </Infos>
-        <SelectMember
-          label="Gestor"
-          data={[{
-            id: '648c864f',
-            name: 'mikael',
-            username: 'mikaelst',
-          }]}
-        />
         <MembersArea>
           <SectionTitle>Membros</SectionTitle>
           <User username="mikaelst"/>

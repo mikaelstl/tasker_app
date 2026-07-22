@@ -1,6 +1,6 @@
 import type { ApiResponse } from "@/service/types/response/response";
 import type { CreateProjectDTO } from "../../types/project/create.dto";
-import type { ProjectDTO, ProjectStage } from "../../types/project/project.dto";
+import type { ProjectDTO, ProjectStage, ProjectWithMembersDTO } from "../../types/project/project.dto";
 import type { ProjectQueryDTO } from "../../types/project/project.query.dto";
 import type { GenerateStatsReportDTO } from "../../types/stats/generate-stats-report.dto";
 import type { ProjectStatsQueryDTO } from "../../types/stats/project-stats-query.dto";
@@ -14,14 +14,14 @@ import { ApiClient } from "@/service/api";
 export interface EditProjectDTO {
   readonly title?: string;
   readonly description?: string;
-  readonly due_date?: Date;
+  readonly deadline?: string;
   readonly stage?: ProjectStage;
 }
 
 export interface ProjectServiceI {
   list(params?: ProjectQueryDTO): Promise<ApiResponse<ProjectDTO[]>>;
   create(data: CreateProjectDTO): Promise<ApiResponse<ProjectDTO>>;
-  find(id: string): Promise<ApiResponse<ProjectDTO>>;
+  find(id: string): Promise<ApiResponse<ProjectWithMembersDTO>>;
   update(id: string, data: EditProjectDTO): Promise<ApiResponse<ProjectDTO>>;
   delete(id: string): Promise<ApiResponse<ProjectDTO>>;
   stats(id: string, params?: ProjectStatsQueryDTO): Promise<ApiResponse<ProjectStats>>;
@@ -58,8 +58,8 @@ export class ProjectService implements ProjectServiceI {
     return response;
   }
 
-  async find(id: string): Promise<ApiResponse<ProjectDTO>> {
-    const response = await this.api.load<ProjectDTO, void>({
+  async find(id: string): Promise<ApiResponse<ProjectWithMembersDTO>> {
+    const response = await this.api.load<ProjectWithMembersDTO, void>({
       route: `/project/${id}`,
     });
 
@@ -100,7 +100,7 @@ export class ProjectService implements ProjectServiceI {
     data?: GenerateStatsReportDTO,
   ): Promise<void> {
     await this.api.download<GenerateStatsReportDTO>({
-      route: `/project/${id}/stats/reports`,
+      route: `/project/${id}/stats/report`,
       data,
       fallbackFilename: `relatorio-projeto-${id}.pdf`,
     });

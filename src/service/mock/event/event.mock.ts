@@ -19,7 +19,7 @@ function matchesEventQuery(event: EventDTO, queries: EventQueryDTO): boolean {
     return false;
   }
 
-  if (queries.date && new Date(event.date).getTime() !== queries.date.getTime()) {
+  if (queries.date && new Date(event.date).getTime() !== new Date(queries.date).getTime()) {
     return false;
   }
 
@@ -36,7 +36,7 @@ export class EventMockService implements EventServiceI {
       id: createMockId("event"),
       title: data.title,
       projectkey: data.project,
-      date: data.date.toISOString(),
+      date: data.date,
       category: data.category,
     });
 

@@ -8,5 +8,6 @@ export interface TaskQueryDTO {
   readonly ownerkey?: string;
   readonly stage?: TaskStage;
   readonly priority?: TaskPriority;
-  readonly due_date?: Date;
+  readonly deadline?: string;
+  readonly delayed?: boolean;
 }

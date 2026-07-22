@@ -81,8 +81,10 @@ export function Tasks() {
                   <Margin bottom="12px">
                     <TaskCard
                       key={task.id}
+                      code={task.code}
                       title={task.name}
-                      due_date={task.due_date}
+                      owner={task.ownerkey}
+                      deadline={task.deadline}
                       priority={task.priority}
                     />
                   </Margin>
@@ -100,8 +102,10 @@ export function Tasks() {
                   <Margin bottom="12px">
                     <TaskCard
                       key={task.id}
+                      code={task.code}
                       title={task.name}
-                      due_date={task.due_date}
+                      owner={task.ownerkey}
+                      deadline={task.deadline}
                       priority={task.priority}
                     />
                   </Margin>
@@ -119,8 +123,10 @@ export function Tasks() {
                   <Margin bottom="12px">
                     <TaskCard
                       key={task.id}
+                      code={task.code}
                       title={task.name}
-                      due_date={task.due_date}
+                      owner={task.ownerkey}
+                      deadline={task.deadline}
                       priority={task.priority}
                     />
                   </Margin>
@@ -138,8 +144,10 @@ export function Tasks() {
                   <Margin bottom="12px">
                     <TaskCard
                       key={task.id}
+                      code={task.code}
                       title={task.name}
-                      due_date={task.due_date}
+                      owner={task.ownerkey}
+                      deadline={task.deadline}
                       priority={task.priority}
                     />
                   </Margin>
@@ -152,13 +160,15 @@ export function Tasks() {
           <Scroller className="vertical">
             {
               tasks
-                .filter(task => task.stage === TaskStage.DONE)
+                .filter(task => task.delayed)
                 .map((task) =>
                   <Margin bottom="12px">
                     <TaskCard
                       key={task.id}
+                      code={task.code}
                       title={task.name}
-                      due_date={task.due_date}
+                      owner={task.ownerkey}
+                      deadline={task.deadline}
                       priority={task.priority}
                     />
                   </Margin>

@@ -6,6 +6,7 @@ interface CreateButtonProps {
   children: React.ReactNode | string;
   onClick?: (evt: React.MouseEvent) => void;
   disabled?: boolean;
+  form?: string;
 }
 
 export function CreateButton(props: CreateButtonProps) {
@@ -15,6 +16,7 @@ export function CreateButton(props: CreateButtonProps) {
       className="tskr-create-btn"
       onClick={props.onClick}
       disabled={props.disabled}
+      form={props.form}
     >
       {props.children}
     </Button>

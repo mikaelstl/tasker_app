@@ -1,6 +1,6 @@
 import type { ApiResponse } from "@/service/types/response/response";
 import type { CreateTaskDTO } from "../../types/task/create.dto";
-import type { TaskDTO } from "../../types/task/task.dto";
+import type { TaskDTO, TaskWithOwnerDTO } from "../../types/task/task.dto";
 import type { TaskQueryDTO } from "../../types/task/query.dto";
 import type { EditTaskDTO } from "../../types/task/edit.dto";
 
@@ -8,9 +8,9 @@ import { ApiClient } from "@/service/api";
 
 export interface TaskServiceI {
   create(data: CreateTaskDTO): Promise<ApiResponse<TaskDTO>>;
-  list(projectkey: string, queries?: TaskQueryDTO): Promise<ApiResponse<TaskDTO[]>>;
-  find(code: string): Promise<ApiResponse<TaskDTO>>;
-  update(code: string, update: EditTaskDTO): Promise<ApiResponse<TaskDTO>>;
+  list(projectkey: string, queries?: TaskQueryDTO): Promise<ApiResponse<TaskWithOwnerDTO[]>>;
+  find(projectkey: string, code: string): Promise<ApiResponse<TaskWithOwnerDTO>>;
+  update(projectkey: string, code: string, update: EditTaskDTO): Promise<ApiResponse<TaskDTO>>;
   delete(id: string): Promise<ApiResponse<TaskDTO>>;
 }
 
@@ -30,8 +30,8 @@ export class TaskService implements TaskServiceI {
     return response;
   }
 
-  async list(projectkey: string, queries?: TaskQueryDTO): Promise<ApiResponse<TaskDTO[]>> {
-    const response = await this.api.load<TaskDTO[], TaskQueryDTO>({
+  async list(projectkey: string, queries?: TaskQueryDTO): Promise<ApiResponse<TaskWithOwnerDTO[]>> {
+    const response = await this.api.load<TaskWithOwnerDTO[], TaskQueryDTO>({
       route: `/tasks/${projectkey}`,
       params: queries,
     });
@@ -39,17 +39,17 @@ export class TaskService implements TaskServiceI {
     return response;
   }
 
-  async find(code: string): Promise<ApiResponse<TaskDTO>> {
-    const response = await this.api.load<TaskDTO, void>({
-      route: `/tasks/${code}`,
+  async find(projectkey: string, code: string): Promise<ApiResponse<TaskWithOwnerDTO>> {
+    const response = await this.api.load<TaskWithOwnerDTO, void>({
+      route: `/tasks/${projectkey}/${code}`,
     });
 
     return response;
   }
 
-  async update(code: string, update: EditTaskDTO): Promise<ApiResponse<TaskDTO>> {
+  async update(projectkey: string, code: string, update: EditTaskDTO): Promise<ApiResponse<TaskDTO>> {
     const response = await this.api.update<EditTaskDTO, TaskDTO>({
-      route: `/tasks/${code}`,
+      route: `/tasks/${projectkey}/${code}`,
       data: update,
     });
 

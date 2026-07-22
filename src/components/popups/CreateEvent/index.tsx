@@ -37,7 +37,7 @@ export function CreateEventPopup(props: PopupProps) {
 
     const event: CreateEventDTO = {
       title: eventName,
-      date: new Date(date),
+      date: new Date(date).toISOString(),
       project: id!,
       category,
     }

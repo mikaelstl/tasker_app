@@ -1,6 +1,5 @@
 import { LogoIcon } from "../../images/LogoIcon";
 import Icon from "../../../assets/icons/favicon.svg";
-import { BellIcon } from "@heroicons/react/24/solid";
 import { Title } from "../../base/Title";
 import { Container, Logo, UserInfos } from "./style";
 import { Avatar } from "../../misc/Avatar";

@@ -12,7 +12,6 @@ import { useOrganization } from "../../hooks/useOrganization";
 import { Separator } from "@/components/LoginForm/CreateAccount/style";
 import { Divider } from "@/components/base/Divider";
 import { Text } from "@/components/base/Text";
-import { Button } from "@/components/buttons/Button";
 
 // VIRAR TELA PROPRIA
 

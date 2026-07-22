@@ -3,6 +3,7 @@ import type { CreateProjectDTO } from "../../types/project/create.dto";
 import {
   ProjectStage,
   type ProjectDTO,
+  type ProjectWithMembersDTO,
 } from "../../types/project/project.dto";
 import type { ProjectQueryDTO } from "../../types/project/project.query.dto";
 import type { EditProjectDTO, ProjectServiceI } from "../../modules/project/project.service";
@@ -42,11 +43,19 @@ function matchesProjectQuery(project: ProjectDTO, params?: ProjectQueryDTO): boo
     return false;
   }
 
+  if (params.managerkey && project.managerkey !== params.managerkey) {
+    return false;
+  }
+
   if (params.stage && project.stage !== params.stage) {
     return false;
   }
 
-  if (params.due_date && new Date(project.due_date).getTime() !== params.due_date.getTime()) {
+  if (params.deadline && new Date(project.deadline).getTime() !== new Date(params.deadline).getTime()) {
+    return false;
+  }
+
+  if (params.delayed !== undefined && project.delayed !== params.delayed) {
     return false;
   }
 
@@ -75,15 +84,13 @@ export class ProjectMockService implements ProjectServiceI {
         }
 
         if (affiliation?.role === OrgRole.MANAGER) {
-          return project.managerkey === currentAccount.username;
+          return project.managerkey === affiliation.id
+            || project.members?.some((member) => member.userkey === affiliation.id) === true;
         }
 
-        return project.members?.some(
-          (member) =>
-            member.userkey === currentAccount.username ||
-            member.user?.userkey === currentAccount.username ||
-            member.user?.user?.username === currentAccount.username,
-        ) ?? false;
+        return affiliation
+          ? project.members.some((member) => member.userkey === affiliation.id)
+          : false;
       },
     );
 
@@ -107,20 +114,12 @@ export class ProjectMockService implements ProjectServiceI {
       );
     }
 
-    if (data.orgkey !== orgkey) {
-      throw createMockRequestError(
-        "/project",
-        403,
-        "O projeto deve pertencer à organização acessada.",
-      );
-    }
-
     const project = createMockProject({
       id: createMockId("project"),
       title: data.title,
       description: data.description,
-      orgkey: data.orgkey,
-      due_date: data.due_date.toISOString(),
+      orgkey,
+      deadline: data.deadline,
     });
 
     mockData.projects.push(project);
@@ -128,11 +127,16 @@ export class ProjectMockService implements ProjectServiceI {
     return createMockResponse(project, "/project");
   }
 
-  async find(id: string): Promise<ApiResponse<ProjectDTO>> {
+  async find(id: string): Promise<ApiResponse<ProjectWithMembersDTO>> {
     const { orgkey } = requireMockOrgRequest(`/project/${id}`, mockData.affiliations);
     const project = mockData.projects.find((item) => item.id === id && item.orgkey === orgkey);
 
-    return createMockResponse(project ?? createMockProject(), `/project/${id}`, project ? "OK" : "Projeto não encontrado", project ? 200 : 404, !project);
+    const data: ProjectWithMembersDTO = {
+      ...(project ?? createMockProject()),
+      members: mockData.members.filter((member) => member.projectkey === id),
+    };
+
+    return createMockResponse(data, `/project/${id}`, project ? "OK" : "Projeto não encontrado", project ? 200 : 404, !project);
   }
 
   async update(id: string, data: EditProjectDTO): Promise<ApiResponse<ProjectDTO>> {
@@ -147,7 +151,7 @@ export class ProjectMockService implements ProjectServiceI {
       ...project,
       ...(data.title ? { title: data.title } : {}),
       ...(data.description ? { description: data.description } : {}),
-      ...(data.due_date ? { due_date: data.due_date.toISOString() } : {}),
+      ...(data.deadline ? { deadline: data.deadline } : {}),
       ...(data.stage ? { stage: data.stage as ProjectStage } : {}),
     };
 
@@ -163,7 +167,7 @@ export class ProjectMockService implements ProjectServiceI {
 
     if (index >= 0) {
       mockData.projects.splice(index, 1);
-      const remainingTasks = mockData.tasks.filter((item) => item.project !== id);
+      const remainingTasks = mockData.tasks.filter((item) => item.projectkey !== id);
       const remainingComments = mockData.comments.filter((item) => item.projectkey !== id);
       const remainingEvents = mockData.events.filter((item) => item.projectkey !== id);
       const remainingMembers = mockData.members.filter((item) => item.projectkey !== id);
@@ -185,26 +189,26 @@ export class ProjectMockService implements ProjectServiceI {
   ): Promise<ApiResponse<ProjectStats>> {
     const project = mockData.projects.find((item) => item.id === id);
     const cutoffAt = params?.cutoffAt ? new Date(params.cutoffAt) : new Date();
-    const tasks = mockData.tasks.filter((task) => task.project === id);
+    const tasks = mockData.tasks.filter((task) => task.projectkey === id);
     const doneTasks = tasks.filter((task) => task.stage === TaskStage.DONE).length;
     const reviewTasks = tasks.filter((task) => task.stage === TaskStage.REVIEW).length;
     const startedTasks = tasks.filter((task) => task.stage === TaskStage.IN_PROGRESS).length;
     const delayedTasks = tasks.filter(
-      (task) => task.stage !== TaskStage.DONE && new Date(task.due_date) < cutoffAt,
+      (task) => task.stage !== TaskStage.DONE && new Date(task.deadline) < cutoffAt,
     ).length;
-    const deadline = new Date(project?.due_date ?? cutoffAt);
+    const deadline = new Date(project?.deadline ?? cutoffAt);
     const stats: ProjectStats = {
-      generatedAt: new Date(),
-      cutoffAt,
+      generatedAt: new Date().toISOString(),
+      cutoffAt: cutoffAt.toISOString(),
       period: null,
       project: {
         id: project?.id ?? id,
         title: project?.title ?? "Projeto não encontrado",
         stage: project?.stage ?? "PENDING",
-        startedAt: project ? new Date(project.created_at) : null,
-        doneAt: null,
-        deadline,
-        delayed: deadline < cutoffAt && project?.stage !== ProjectStage.DONE,
+        startedAt: project?.started_at ?? null,
+        doneAt: project?.done_at ?? null,
+        deadline: deadline.toISOString(),
+        delayed: deadline < cutoffAt && project?.stage !== ProjectStage.COMPLETED,
         organization: project?.orgkey ?? "",
         manager: project?.managerkey ?? null,
       },
@@ -218,7 +222,7 @@ export class ProjectMockService implements ProjectServiceI {
         progress: tasks.length === 0 ? 0 : Number(((doneTasks / tasks.length) * 100).toFixed(2)),
       },
       deadline: {
-        dueDate: deadline,
+        dueDate: deadline.toISOString(),
         daysLeft: Math.ceil((deadline.getTime() - cutoffAt.getTime()) / 86_400_000),
       },
       health: {
@@ -237,7 +241,7 @@ export class ProjectMockService implements ProjectServiceI {
         .map((event) => ({
           id: event.id,
           title: event.title,
-          date: new Date(event.date),
+          date: event.date,
           category: event.category,
         })),
     };
@@ -263,7 +267,7 @@ export class ProjectMockService implements ProjectServiceI {
       cutoff_at: data.cutoffAt ?? now,
       period_type: data.periodType ?? StatsPeriodType.WEEK,
       snapshotkey: null,
-      file_url: data.fileUrl ?? null,
+      file_url: null,
       payload_json: null,
       created_at: now,
       updated_at: now,

@@ -14,8 +14,8 @@ export enum StatsPeriodType {
 };
 
 export type StatsPeriod = {
-  start: Date;
-  end: Date;
+  start: string;
+  end: string;
 };
 
 export type StatsUser = {
@@ -31,9 +31,9 @@ export type StatsTask = {
   stage: TaskStage;
   delayed: boolean;
   spentMinutes: number;
-  deadline: Date;
-  startedAt: Date | null;
-  doneAt: Date | null;
+  deadline: string;
+  startedAt: string | null;
+  doneAt: string | null;
 };
 
 export type MemberPerformance = {
@@ -64,16 +64,16 @@ export type MemberStats = {
 };
 
 export type ProjectStats = {
-  generatedAt: Date;
-  cutoffAt: Date;
+  generatedAt: string;
+  cutoffAt: string;
   period: StatsPeriod | null;
   project: {
     id: string;
     title: string;
     stage: string;
-    startedAt: Date | null;
-    doneAt: Date | null;
-    deadline: Date;
+    startedAt: string | null;
+    doneAt: string | null;
+    deadline: string;
     delayed: boolean;
     organization: string;
     manager: string | null;
@@ -88,14 +88,14 @@ export type ProjectStats = {
     progress: number;
   };
   deadline: {
-    dueDate: Date;
+    dueDate: string;
     daysLeft: number;
   };
   health: {
     status: ProjectHealthStatus;
     score: number;
     reason: string;
-    projectedDeliveryAt: Date | null;
+    projectedDeliveryAt: string | null;
   };
   performancePerMember: MemberPerformance[];
   productivity: MemberProductivity[];
@@ -103,7 +103,7 @@ export type ProjectStats = {
   events: Array<{
     id: string;
     title: string;
-    date: Date;
+    date: string;
     category: EventCategory;
   }>;
 };
@@ -162,7 +162,7 @@ export type ProjectStatsReport = {
 export type RecordTaskWorkLogInput = {
   taskkey: string;
   memberkey: string;
-  loggedAt?: Date;
+  loggedAt?: string;
   note?: string;
   source?: string;
 };
@@ -170,13 +170,13 @@ export type RecordTaskWorkLogInput = {
 export type GenerateSnapshotInput = {
   projectkey: string;
   periodType: StatsPeriodType;
-  cutoffAt?: Date;
+  cutoffAt?: string;
 };
 
 export type GenerateReportInput = {
   projectkey: string;
   periodType: StatsPeriodType;
-  cutoffAt?: Date;
+  cutoffAt?: string;
 };
 
 export type GeneratedProjectReport = {
@@ -189,8 +189,8 @@ export type StatsTaskRecord = {
   code: string;
   name: string;
   stage: TaskStage;
-  deadline: Date;
+  deadline: string;
   ownerkey: string;
-  started_at: Date | null;
-  done_at: Date | null;
+  started_at: string | null;
+  done_at: string | null;
 };

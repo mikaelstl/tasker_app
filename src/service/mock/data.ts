@@ -21,7 +21,7 @@ type MockDataShape = {
   users: UserDTO[];
   organizations: OrganizationDTO[];
   affiliations: AffiliationDTO[];
-  projects: ProjectDTO[];
+  projects: MockProject[];
   members: ProjectMember[];
   tasks: TaskDTO[];
   comments: CommentDTO[];
@@ -30,6 +30,8 @@ type MockDataShape = {
   currentAccount: CurrentAccountDTO;
   auth: AuthDTO;
 };
+
+type MockProject = ProjectDTO & { members: ProjectMember[] };
 
 type EntityCounterKey =
   | "account"
@@ -75,14 +77,13 @@ export function createMockResponse<T>(
   path: string,
   message = "OK",
   status = 200,
-  error = false,
+  _error = false,
 ): ApiResponse<T> {
   return {
     status,
     message,
     data,
     path,
-    error,
     timestamp: new Date().toISOString(),
   };
 }
@@ -116,8 +117,8 @@ export function createMockOrganization(data: Partial<OrganizationDTO> = {}): Org
     owner: data.owner,
     projects: data.projects ?? [],
     members: data.members ?? [],
-    created_at: data.created_at ?? new Date(baseDate),
-    updated_at: data.updated_at ?? new Date(baseDate),
+    created_at: data.created_at ?? baseDate.toISOString(),
+    updated_at: data.updated_at ?? baseDate.toISOString(),
   };
 }
 
@@ -134,13 +135,16 @@ export function createMockAffiliation(data: Partial<AffiliationDTO> = {}): Affil
   };
 }
 
-export function createMockProject(data: Partial<ProjectDTO> = {}): ProjectDTO {
+export function createMockProject(data: Partial<MockProject> = {}): MockProject {
   return {
     id: data.id ?? "pro-000",
     title: data.title ?? "Projeto Mock",
     description: data.description ?? "Descricao do projeto mock",
     orgkey: data.orgkey ?? "org-000",
-    due_date: data.due_date ?? baseDate.toISOString(),
+    deadline: data.deadline ?? baseDate.toISOString(),
+    started_at: data.started_at ?? null,
+    done_at: data.done_at ?? null,
+    delayed: data.delayed ?? false,
     stage: data.stage ?? ProjectStage.PENDING,
     managerkey: data.managerkey ?? null,
     members: data.members ?? [],
@@ -167,11 +171,14 @@ export function createMockTask(data: Partial<TaskDTO> = {}): TaskDTO {
     code: data.code ?? "TSK-0000",
     name: data.name ?? "Tarefa Mock",
     description: data.description ?? "Descricao da tarefa mock",
-    project: data.project ?? "pro-000",
-    owner: data.owner ?? "mem-000",
+    projectkey: data.projectkey ?? "pro-000",
+    ownerkey: data.ownerkey ?? "mem-000",
     stage: data.stage ?? TaskStage.PENDING,
     priority: data.priority ?? TaskPriority.MEDIUM,
-    due_date: data.due_date ?? baseDate.toISOString(),
+    deadline: data.deadline ?? baseDate.toISOString(),
+    started_at: data.started_at ?? null,
+    done_at: data.done_at ?? null,
+    delayed: data.delayed ?? false,
     created_at: data.created_at ?? baseDate.toISOString(),
     updated_at: data.updated_at ?? baseDate.toISOString(),
   };
@@ -414,8 +421,8 @@ const organizations = organizationSeeds.map((seed, index) =>
     name: seed.name,
     ownerkey: seed.ownerUsername,
     owner: usersByUsername.get(seed.ownerUsername),
-    created_at: new Date(dateAt(index * 20)),
-    updated_at: new Date(dateAt(index * 20)),
+    created_at: dateAt(index * 20),
+    updated_at: dateAt(index * 20),
   }),
 );
 
@@ -457,10 +464,10 @@ const projects = organizations.flatMap((organization, orgIndex) => {
       title: `${organization.name} - ${template.title}`,
       description: template.description,
       orgkey: organization.id,
-      managerkey: managerAffiliation?.userkey ?? null,
-      due_date: dateAt(30 + orgIndex * 12 + projectIndex * 4),
+      managerkey: managerAffiliation?.id ?? null,
+      deadline: dateAt(30 + orgIndex * 12 + projectIndex * 4),
       stage:
-        [ProjectStage.STARTED, ProjectStage.REVIEW, ProjectStage.PENDING, ProjectStage.DONE, ProjectStage.OVERDUE][
+        [ProjectStage.STARTED, ProjectStage.IN_PROGRESS, ProjectStage.PENDING, ProjectStage.COMPLETED, ProjectStage.PAUSED][
           (orgIndex + projectIndex) % 5
         ],
       created_at: isoAt(orgIndex * 100 + projectIndex * 10),
@@ -529,11 +536,11 @@ for (const [orgIndex, organization] of organizations.entries()) {
         code: `TSK-${String(tasks.length + 1).padStart(4, "0")}`,
         name: `${taskTemplates[taskIndex % taskTemplates.length]} - ${project.title}`,
         description: `${taskTemplates[taskIndex % taskTemplates.length]} para ${project.title}.`,
-        project: project.id,
-        owner: owner.id,
+        projectkey: project.id,
+        ownerkey: owner.id,
         stage: stageOrder[(taskIndex + projectIndex) % stageOrder.length],
         priority: priorityOrder[(taskIndex + orgIndex) % priorityOrder.length],
-        due_date: dateAt(30 + orgIndex * 12 + projectIndex * 4 - (7 - taskIndex)),
+        deadline: dateAt(30 + orgIndex * 12 + projectIndex * 4 - (7 - taskIndex)),
         created_at: isoAt(orgIndex * 220 + projectIndex * 20 + taskIndex * 2),
         updated_at: isoAt(orgIndex * 220 + projectIndex * 20 + taskIndex * 2),
       });
@@ -542,14 +549,14 @@ for (const [orgIndex, organization] of organizations.entries()) {
     tasks.push(...projectTasks);
 
     projectMembers.forEach((member) => {
-      Object.assign(member, { tasks: projectTasks.filter((task) => task.owner === member.id) });
+      Object.assign(member, { tasks: projectTasks.filter((task) => task.ownerkey === member.id) });
     });
   });
 }
 
 const comments = projects.flatMap((project, projectIndex) => {
   const projectMembers = projectMembersByProject.get(project.id) ?? [];
-  const projectTasks = tasks.filter((task) => task.project === project.id);
+  const projectTasks = tasks.filter((task) => task.projectkey === project.id);
   const authors = projectMembers
     .map((member) => affiliations.find((affiliation) => affiliation.id === member.userkey)?.userkey)
     .filter((username): username is string => Boolean(username))
@@ -595,7 +602,7 @@ const events = projects.flatMap((project, projectIndex) =>
 );
 
 const memberStats: MemberStatDTO[] = members.map((member) => {
-  const memberTasks = tasks.filter((task) => task.owner === member.id);
+  const memberTasks = tasks.filter((task) => task.ownerkey === member.id);
   const project = projects.find((item) => item.id === member.projectkey);
 
   return {
@@ -604,7 +611,7 @@ const memberStats: MemberStatDTO[] = members.map((member) => {
     started: memberTasks.filter((task) => task.stage === TaskStage.IN_PROGRESS).length,
     review: memberTasks.filter((task) => task.stage === TaskStage.REVIEW).length,
     done: memberTasks.filter((task) => task.stage === TaskStage.DONE).length,
-    overdue: memberTasks.filter((task) => task.stage !== TaskStage.DONE && new Date(task.due_date).getTime() < baseDate.getTime()).length,
+    overdue: memberTasks.filter((task) => task.stage !== TaskStage.DONE && new Date(task.deadline).getTime() < baseDate.getTime()).length,
   };
 });
 

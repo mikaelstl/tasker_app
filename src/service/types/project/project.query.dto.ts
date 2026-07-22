@@ -5,6 +5,8 @@ export interface ProjectQueryDTO {
   readonly title?: string;
   readonly description?: string;
   readonly orgkey?: string;
-  readonly due_date?: Date;
+  readonly managerkey?: string;
+  readonly deadline?: string;
   readonly stage?: ProjectStage;
+  readonly delayed?: boolean;
 }

@@ -14,18 +14,18 @@ import { useToast } from "@/hooks/useToast";
 import { ContentHeader } from "../../base/ContentHeader";
 import { Text } from "../../base/Text";
 import { DeleteBtn } from "../../buttons/DeleteBtn";
-import type { UserDTO } from "../../../service/types/user/user.dto";
+import type { SelectMemberOption } from "../../misc/SelectMember";
 import { useServices } from "../../../hooks/useServices";
 
 export function CreateTaskPopup(props: PopupProps) {
-  const { TaskService } = useServices();
+  const { MemberService, TaskService } = useServices();
   const { info, error } = useToast();
 
   // const navigate = useNavigate();
 
   const { id } = useParams();
 
-  const [members, setMembers] = useState<UserDTO[]>([]);
+  const [members, setMembers] = useState<SelectMemberOption[]>([]);
   const [taskName, setTaskName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [dueDate, setDueDate] = useState<string>('');
@@ -46,7 +46,7 @@ export function CreateTaskPopup(props: PopupProps) {
       name: taskName,
       description: description,
       project: id!,
-      due_date: new Date(dueDate),
+      deadline: new Date(dueDate).toISOString(),
       owner: owner,
       priority: priority
     }
@@ -58,28 +58,25 @@ export function CreateTaskPopup(props: PopupProps) {
       info('Tarefa criada com sucesso');
       setPriority(TaskPriority.LOW)
       props.closePopup();
-    } catch (error) {
-      console.error(error);
+    } catch (requestError) {
+      console.error(requestError);
       error('Não foi possível criar a tarefa');
     }
   }
 
   useEffect(() => {
-    setOwner('mikaelst')
-    setMembers([{
-      id: '648c864f',
-      name: 'mikael',
-      username: 'mikaelst',
-    }, {
-      id: '38b45656',
-      name: 'jubiscleiton',
-      username: 'jubscltn',
-    }, {
-      id: '2d715ef9',
-      name: 'aristovaldo',
-      username: 'valdo.ari',
-    }]);
-  }, []);
+    if (!props.showPopup || !id) return;
+
+    void MemberService.list(id).then(({ data }) => {
+      setMembers(data.map((member) => ({
+        id: member.id,
+        username: member.user?.user?.username ?? member.user?.userkey ?? member.userkey,
+      })));
+    }).catch(() => {
+      setMembers([]);
+      setOwner('');
+    });
+  }, [MemberService, id, props.showPopup]);
 
   if (!props.showPopup) return null;
 
@@ -90,11 +87,12 @@ export function CreateTaskPopup(props: PopupProps) {
           title="Criar nova tarefa"
         >
           <DeleteBtn onClick={handleClose} />
-          <CreateButton type="submit">
+          <CreateButton type="submit" form="create-task-form">
             <Text>Criar tarefa</Text>
           </CreateButton>
         </ContentHeader>
         <Form
+          id="create-task-form"
           className="tskr-create-task-form"
           onSubmit={onSubmit}
         >
@@ -117,6 +115,7 @@ export function CreateTaskPopup(props: PopupProps) {
         <SelectMember
           label="Responsável"
           data={members}
+          onChange={setOwner}
         />
       </Card>
     </Overlay>

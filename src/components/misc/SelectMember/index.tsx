@@ -1,25 +1,30 @@
 import { Container, Wrapper, Selected, Options, Option, Field } from "./style";
 import { useEffect, useState } from "react";
 import { User } from "../User";
-import type { UserDTO } from "../../../service/types/user/user.dto";
 import { Label } from "../../base/Label";
+
+export interface SelectMemberOption {
+  id: string;
+  username: string;
+}
 
 interface SelectMemberProps {
   label: string;
-  data: UserDTO[];
+  data: SelectMemberOption[];
   onChange?: (value: string) => void
 }
 
 export function SelectMember({
   label,
   data,
-  // onChange
+  onChange,
 }: SelectMemberProps) {
   // const owner = data.find((user) => user.role === MemberRole.OWNER);
 
-  const [selected, setSelected] = useState<UserDTO>(data[0]);
-  const handleSelect = (opt: UserDTO) => {
+  const [selected, setSelected] = useState<SelectMemberOption | undefined>(data[0]);
+  const handleSelect = (opt: SelectMemberOption) => {
     setSelected(opt);
+    onChange?.(opt.id);
     handleShowContent();
   }
   
@@ -36,12 +41,10 @@ export function SelectMember({
   const options = data.filter((user) => user.username.includes(query));
 
   useEffect(() => {
-    /* if (data.length === 1 && owner) {
-      setHasOnlyOwner(true);
-      setSelected([owner]);
-      onChange!(owner.id);
-    } */
-  }, []);
+    const first = data[0];
+    setSelected(first);
+    if (first) onChange?.(first.id);
+  }, [data, onChange]);
 
   const Card = () => {
     return (
@@ -54,7 +57,7 @@ export function SelectMember({
                 placeholder="Pesquisar..."
                 onChange={(evt) => setQuery(evt.target.value)}
               />
-            : <User username={selected.username}/>}
+            : selected ? <User username={selected.username}/> : <span>Nenhum membro</span>}
         </Selected>
         {
           showContent && (

@@ -17,15 +17,15 @@ import { OrgRole } from "@/utils/enums/OrgRole.ts";
 type StageFilter = ProjectStage | "ALL";
 
 const stageLabels: Record<ProjectStage, string> = {
-  [ProjectStage.OVERDUE]: "Atrasado",
-  [ProjectStage.STARTED]: "Em andamento",
-  [ProjectStage.REVIEW]: "Em revisão",
+  [ProjectStage.STARTED]: "Iniciado",
   [ProjectStage.PENDING]: "Pendente",
-  [ProjectStage.DONE]: "Concluído",
+  [ProjectStage.IN_PROGRESS]: "Em andamento",
+  [ProjectStage.PAUSED]: "Pausado",
+  [ProjectStage.COMPLETED]: "Concluído",
 };
 
 export function Projects() {
-  const { MemberService, ProjectService } = useServices();
+  const { ProjectService } = useServices();
   const notifications = useToast();
 
   const { user } = useAuth();
@@ -48,50 +48,9 @@ export function Projects() {
     }
 
     try {
-      const response = await ProjectService.list({
-        orgkey: org.orgkey,
-      });
+      const response = await ProjectService.list();
 
-      const organizationProjects = response.data.filter(
-        (project) => project.orgkey === org.orgkey,
-      );
-
-      if (org.role === OrgRole.OWNER) {
-        setProjects(organizationProjects);
-        return;
-      }
-
-      if (org.role === OrgRole.MANAGER) {
-        setProjects(organizationProjects.filter(
-          (project) => project.managerkey === user.username,
-        ));
-        return;
-      }
-
-      const projectsWithMembers = await Promise.all(
-        organizationProjects.map(async (project) => {
-          if (project.members) {
-            return project;
-          }
-
-          const membersResponse = await MemberService.list(project.id);
-
-          return {
-            ...project,
-            members: membersResponse.data,
-          };
-        }),
-      );
-      const memberProjects = projectsWithMembers.filter((project) =>
-        project.members?.some(
-          (member) =>
-            member.userkey === user.username ||
-            member.user?.userkey === user.username ||
-            member.user?.user?.username === user.username,
-        ),
-      );
-
-      setProjects(memberProjects);
+      setProjects(response.data);
     } catch (error) {
       const { errors } = error as ApiError;
 
@@ -99,7 +58,7 @@ export function Projects() {
         notifications[item.level](item.message);
       });
     }
-  }, [MemberService, ProjectService, notifications, org?.orgkey, org?.role, user?.username]);
+  }, [ProjectService, notifications, org?.orgkey, org?.role, user?.username]);
 
   useEffect(() => {
     void loadProjects();
@@ -165,8 +124,8 @@ export function Projects() {
               title={project.title}
               description={project.description}
               stage={project.stage}
-              deadline={project.due_date}
-              members={project.members ?? []}
+              deadline={project.deadline}
+              members={[]}
             />)
           }
         </Items>

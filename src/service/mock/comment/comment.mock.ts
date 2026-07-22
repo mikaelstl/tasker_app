@@ -23,7 +23,7 @@ function matchesCommentQuery(comment: CommentDTO, queries: CommentQueryDTO): boo
     return false;
   }
 
-  if (queries.date && new Date(comment.date).getTime() !== queries.date.getTime()) {
+  if (queries.date && new Date(comment.date).getTime() !== new Date(queries.date).getTime()) {
     return false;
   }
 
@@ -35,7 +35,7 @@ export class CommentMockService implements CommentServiceI {
     const comment = createMockComment({
       id: createMockId("comment"),
       content: data.content,
-      date: data.date.toISOString(),
+      date: data.date,
       ownerkey: data.ownerkey,
       projectkey: data.projectkey,
     });

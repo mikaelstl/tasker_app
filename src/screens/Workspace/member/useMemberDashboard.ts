@@ -45,16 +45,16 @@ function categorizeTasks(tasks: TaskDTO[]): MemberTaskCategories {
 
   return {
     today: tasks.filter((task) => {
-      const dueDate = new Date(task.due_date);
+      const dueDate = new Date(task.deadline);
       return dueDate.toDateString() === now.toDateString();
     }),
     thisWeek: tasks.filter((task) => {
-      const dueDate = new Date(task.due_date);
+      const dueDate = new Date(task.deadline);
       return dueDate >= now && dueDate <= endOfWeek;
     }),
     pending: tasks.filter((task) => task.stage === TaskStage.PENDING),
     overdue: tasks.filter((task) => (
-      task.stage !== TaskStage.DONE && new Date(task.due_date) < now
+      task.delayed
     )),
   };
 }
@@ -99,7 +99,7 @@ export function useMemberDashboard(orgId?: string) {
 
         return {
           tasks: tasks.data.filter((task) => (
-            task.owner === username || membershipKeys.includes(task.owner)
+            membershipKeys.includes(task.ownerkey)
           )),
           events: events.data,
           project,

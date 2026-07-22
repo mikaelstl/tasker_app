@@ -55,27 +55,25 @@ function getErrorMessage(error: unknown): string {
 }
 
 function getStats(tasks: TaskDTO[]): ManagerStats {
-  const now = Date.now();
-
   return {
     started: tasks.filter((task) => task.stage === TaskStage.IN_PROGRESS).length,
     done: tasks.filter((task) => task.stage === TaskStage.DONE).length,
     review: tasks.filter((task) => task.stage === TaskStage.REVIEW).length,
     overdue: tasks.filter((task) => (
-      task.stage !== TaskStage.DONE && new Date(task.due_date).getTime() < now
+      task.delayed
     )).length,
   };
 }
 
 function getDeadlines(projects: ProjectDTO[]): Deadline[] {
   return projects
-    .filter((project) => project.stage !== ProjectStage.DONE)
+    .filter((project) => project.stage !== ProjectStage.COMPLETED)
     .map((project) => ({
       projectkey: project.id,
       title: project.title,
-      dueDate: project.due_date,
+      dueDate: project.deadline,
       daysRemaining: Math.ceil(
-        (new Date(project.due_date).getTime() - Date.now()) / 86_400_000,
+        (new Date(project.deadline).getTime() - Date.now()) / 86_400_000,
       ),
     }))
     .sort((left, right) => left.daysRemaining - right.daysRemaining);
@@ -90,14 +88,10 @@ function getMemberStats(
   members: ProjectMember[],
   tasks: TaskDTO[],
 ): MemberStatDTO[] {
-  const now = Date.now();
-
   return members.map((member) => {
     const username = getMemberUsername(member);
     const memberTasks = tasks.filter((task) => (
-      task.owner === member.id
-      || task.owner === member.userkey
-      || task.owner === username
+      task.ownerkey === member.id
     ));
 
     return {
@@ -107,7 +101,7 @@ function getMemberStats(
       review: memberTasks.filter((task) => task.stage === TaskStage.REVIEW).length,
       done: memberTasks.filter((task) => task.stage === TaskStage.DONE).length,
       overdue: memberTasks.filter((task) => (
-        task.stage !== TaskStage.DONE && new Date(task.due_date).getTime() < now
+        task.delayed
       )).length,
     };
   });
@@ -142,9 +136,7 @@ export function useManagerDashboard(orgId?: string) {
 
     try {
       const projectsResponse = await ProjectService.list();
-      const projects = projectsResponse.data.filter(
-        (project) => project.managerkey === username,
-      );
+      const projects = projectsResponse.data;
       const projectsData = await Promise.all(projects.map(async (project) => {
         const [tasks, members, events] = await Promise.all([
           TaskService.list(project.id),

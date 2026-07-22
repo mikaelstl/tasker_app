@@ -1,12 +1,15 @@
 import type { AffiliationDTO } from "../affiliation/affiliation.dto";
 import type { TaskDTO } from "../task/task.dto";
 
-export interface ProjectMember {
+export interface MemberRecordDTO {
   readonly id: string;
   readonly projectkey: string;
   readonly userkey: string;
-  readonly user?: AffiliationDTO;
-  readonly tasks: TaskDTO[];
   readonly created_at: string;
   readonly updated_at: string;
+}
+
+export interface ProjectMember extends MemberRecordDTO {
+  readonly user?: AffiliationDTO;
+  readonly tasks: TaskDTO[];
 }

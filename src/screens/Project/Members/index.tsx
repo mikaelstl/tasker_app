@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 import type { ProjectMember } from "../../../service/types/member/member.dto";
 import type { ApiError } from "../../../service/types/response/error";
 import { useToast } from "@/hooks/useToast";
-import { MemberRole } from "../../../service/types/member/role.dto";
 import { TaskStage } from "../../../service/types/task/stage.dto";
 import { ContentHeader } from "../../../components/base/ContentHeader";
 import { CreateButton } from "../../../components/buttons/CreateButton";
@@ -20,7 +19,6 @@ export function Members() {
   const { id } = useParams();
   const { MemberService } = useServices();
 
-  const [ owner, setOwner ] = useState<ProjectMember | undefined>(undefined);
   const [members, setMembers] = useState<ProjectMember[]>([]);
   const loadMembers = async () => {
     try {
@@ -28,8 +26,7 @@ export function Members() {
       const response = await MemberService.list(id);
       const data: ProjectMember[] = response.data;
 
-      setOwner(data.find(member => member.role === MemberRole.OWNER));
-      setMembers(data.filter(member => member.role !== MemberRole.OWNER));
+      setMembers(data);
     } catch (error) {
       const { errors } = error as ApiError;
 
@@ -62,10 +59,8 @@ export function Members() {
         <SearchField filter sort />
         <MembersArea>
           <Scroller className='vertical'>
-            { owner ? <MemberTile type="owner" username={owner.userkey} tasks={{ done: owner.tasks.filter(tsk => tsk.stage === TaskStage.DONE).length, total: owner.tasks.length }} /> : <></> }
             {
               members
-                .filter(member => member.role !== MemberRole.OWNER)
                 .map((member) => <MemberTile key={member.id} username={member.userkey} type="member" tasks={{ done: member.tasks.filter(tsk => tsk.stage === TaskStage.DONE).length, total: member.tasks.length }} />)
             }
           </Scroller>

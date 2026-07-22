@@ -117,7 +117,7 @@ export function Overview() {
         content: message,
         projectkey: id,
         ownerkey: user.username,
-        date: new Date()
+        date: new Date().toISOString()
       });
 
       notifications.info(response.message);

@@ -170,6 +170,24 @@ export class ApiClient {
     if (
       typeof data === "object"
       && data !== null
+      && "errors" in data
+      && Array.isArray(data.errors)
+    ) {
+      const firstError = data.errors[0];
+
+      if (
+        typeof firstError === "object"
+        && firstError !== null
+        && "message" in firstError
+        && typeof firstError.message === "string"
+      ) {
+        return firstError.message;
+      }
+    }
+
+    if (
+      typeof data === "object"
+      && data !== null
       && "message" in data
       && typeof data.message === "string"
     ) {

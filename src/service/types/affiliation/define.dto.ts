@@ -1,4 +1,4 @@
-import { OrgRole } from "generated/prisma"
+import type { OrgRole } from "../../../utils/enums/OrgRole";
 
 export interface DefineAffiliationDTO {
   orgkey: string

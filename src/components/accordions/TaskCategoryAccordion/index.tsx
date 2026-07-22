@@ -39,9 +39,11 @@ export function TaskCategoryAccordion(props: { visible?: boolean, title: string,
                   {
                     props.tasks.map(task => <TaskCard
                                               key={task.id}
+                                              code={task.code}
                                               title={task.name}
+                                              owner={task.ownerkey}
                                               priority={task.priority}
-                                              due_date={task.due_date}
+                                              deadline={task.deadline}
                                             />)
                   }
                 </Scroller>

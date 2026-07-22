@@ -1,6 +1,5 @@
 import { ActiveProjectsCard } from "@/components/cards/ActiveProjectsCard";
 import { DeadlineAlertsCard } from "@/components/cards/DeadlineAlertsCard";
-import { ShortcutsCard } from "@/components/cards/ShortcutsCard";
 import { ItalicTitle } from "@/components/base/ItalicTitle";
 import { SectionTitle } from "@/components/base/SectionTitle";
 import { Text } from "@/components/base/Text";
@@ -65,8 +64,8 @@ export function OrganizerContent({ username }: OrganizerContentProps) {
                     title={project.title}
                     description={project.description}
                     stage={project.stage}
-                    deadline={project.due_date}
-                    members={project.members ?? []}
+                    deadline={project.deadline}
+                    members={project.members}
                   />
                 </Margin>
               ))}

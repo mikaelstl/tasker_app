@@ -12,6 +12,6 @@ export interface OrganizationDTO {
   readonly projects?:          ProjectDTO[];
   readonly members?:           AffiliationDTO[];
 
-  readonly created_at:         Date;
-  readonly updated_at:         Date;
+  readonly created_at:         string;
+  readonly updated_at:         string;
 }
