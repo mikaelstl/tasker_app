@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { LoginDTO } from "../../service/types/auth/login.dto";
 import type { ApiError } from "../../service/types/response/error";
 import type { AuthDTO } from "../../service/types/auth/auth.dto";
@@ -7,6 +7,20 @@ import type { CurrentAccountDTO } from "../../service/types/account/current-acco
 import { AuthContext } from "../../context/AuthContext";
 import { useServices } from "../../hooks/useServices";
 import { useOrganization } from "@/hooks/useOrganization";
+import { STORAGE_KEYS, clearAuthStorage } from "@/config/storage";
+
+function readStoredUser(): CurrentAccountDTO | null {
+  const storedUser = localStorage.getItem(STORAGE_KEYS.auth.user);
+
+  if (!storedUser) return null;
+
+  try {
+    return JSON.parse(storedUser) as CurrentAccountDTO;
+  } catch {
+    localStorage.removeItem(STORAGE_KEYS.auth.user);
+    return null;
+  }
+}
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { AccountService } = useServices();
@@ -14,19 +28,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const { clearOrg } = useOrganization();
 
-  const [user, setUser] = useState<CurrentAccountDTO | null>(null);
-  const [token, setToken] = useState<string | null>(null);
+  const [user, setUser] = useState<CurrentAccountDTO | null>(() => readStoredUser());
+  const [token, setToken] = useState<string | null>(
+    () => localStorage.getItem(STORAGE_KEYS.auth.token),
+  );
 
   const [authenticating, setAuthenticating] = useState<boolean>(true);
-
-  useEffect(() => {
-    const existingUser = localStorage.getItem('user');
-    const existingToken = localStorage.getItem('token');
-    if (existingUser && existingToken) {
-      setUser(JSON.parse(existingUser));
-      setToken(existingToken);
-    }
-  }, []);
+  const validationPromiseRef = useRef<Promise<boolean> | null>(null);
+  const validationDisabledRef = useRef(false);
 
   const login = async (data: LoginDTO) => {
     try {
@@ -35,10 +44,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const auth = response.data as AuthDTO;
       const acc: CurrentAccountDTO = AccountService.buildCurrentAccount(auth);
 
-      console.log(acc);
-
-      localStorage.setItem('user', JSON.stringify(acc));
-      localStorage.setItem('token', auth.access_token);
+      localStorage.setItem(STORAGE_KEYS.auth.user, JSON.stringify(acc));
+      localStorage.setItem(STORAGE_KEYS.auth.token, auth.access_token);
+      validationDisabledRef.current = false;
       setUser(acc);
       setToken(auth.access_token);
     } catch (error: unknown) {
@@ -53,35 +61,59 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           notifications[err.level](err.message);
         }
       );
-
-      throw error;
     }
   }
 
-  const logout = () => {
+  const clearAuthentication = useCallback(() => {
     clearOrg();
     setUser(null);
     setToken(null);
-    localStorage.clear();
-  }
+    clearAuthStorage();
+  }, [clearOrg]);
 
-  const validate = async (): Promise<boolean> => {
-    const tk = localStorage.getItem('token');
+  const redirectToLogin = useCallback(() => {
+    validationDisabledRef.current = true;
+    clearAuthentication();
+    setAuthenticating(false);
 
-    if (tk) {
+    if (window.location.pathname !== "/login") {
+      window.location.replace("/login");
+    }
+  }, [clearAuthentication]);
+
+  const logout = () => {
+    validationDisabledRef.current = true;
+    clearAuthentication();
+  };
+
+  const validate = useCallback((): Promise<boolean> => {
+    if (validationDisabledRef.current) {
+      return Promise.resolve(false);
+    }
+
+    if (validationPromiseRef.current) {
+      return validationPromiseRef.current;
+    }
+
+    const storedToken = localStorage.getItem(STORAGE_KEYS.auth.token);
+
+    if (!storedToken) {
+      setAuthenticating(false);
+      return Promise.resolve(false);
+    }
+
+    const validation = (async () => {
       try {
         const res = await AccountService.validate();
 
-        console.log("RESPONSE FROM '/auth/validate' >>>>>>");
-        console.log(res);
-
-        if (!res) {
-          notifications.warning('Unknown error');
+        if (!res?.data) {
+          notifications.warning("Sessão inválida ou expirada");
+          redirectToLogin();
           return false;
         }
 
         setAuthenticating(false);
-        return res.data;
+        return true;
       } catch (error) {
         const err = error as ApiError;
 
@@ -89,18 +121,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           notifications[e.level](e.message);
         });
 
-        setAuthenticating(false);
+        redirectToLogin();
         return false;
+      } finally {
+        validationPromiseRef.current = null;
       }
-    } else {
-      setAuthenticating(false);
-      return false;
-    }
-  };
+    })();
+
+    validationPromiseRef.current = validation;
+    return validation;
+  }, [AccountService, notifications, redirectToLogin]);
 
   useEffect(() => {
-    validate();
-  }, [user, token])
+    void validate();
+  }, [validate]);
 
   return (
     <AuthContext.Provider value={{ 

@@ -9,11 +9,17 @@ import {
   type CreateAccountFormData,
 } from "@/components/CreateAccountForm";
 import { useToast } from "@/hooks/useToast";
+import { useNavigate } from "react-router-dom";
 
 export function Register() {
-  const { AccountService, UserService } = useServices();
+  const navigate = useNavigate();
+
   const { login } = useAuth();
+
+  const { AccountService, UserService } = useServices();
+  
   const { info, warning, error, critical, validation } = useToast();
+
   const notifications = { info, warning, error, critical, validation };
 
   const handleRegister = async (data: CreateAccountFormData) => {
@@ -42,6 +48,8 @@ export function Register() {
       });
 
       info("Conta criada com sucesso.");
+      
+      navigate("/workspaces");
     } catch (caughtError: unknown) {
       const errors = (caughtError as Partial<ApiError>).errors;
 

@@ -5,6 +5,7 @@ import axios, {
 } from "axios";
 import type { ApiError } from "../types/response/error";
 import type { ApiResponse } from "../types/response/response";
+import { STORAGE_KEYS, clearSessionStorage } from "@/config/storage";
 
 export class ApiClient {
   private api: AxiosInstance;
@@ -102,8 +103,8 @@ export class ApiClient {
     // APPLYNG TOKEN INTO REQUEST
     this.api.interceptors.request.use(
       (config) => {
-        const token = localStorage.getItem('tasker.api.token');
-        const xOrgKey = localStorage.getItem('tasker.api.org');
+        const token = localStorage.getItem(STORAGE_KEYS.auth.token);
+        const xOrgKey = localStorage.getItem(STORAGE_KEYS.organization.orgkey);
       
         if (token) config.headers['Authorization'] = `Bearer ${token}`;
         if (xOrgKey) config.headers['X-Org-Key'] = xOrgKey;
@@ -147,8 +148,8 @@ export class ApiClient {
 
     if (error.response?.status === 401) {
       if (redirectOnUnauthorized) {
-        localStorage.removeItem("tasker.api.token");
-        window.location.href = "/login";
+        clearSessionStorage();
+        window.location.replace("/login");
       }
 
       return Promise.reject({

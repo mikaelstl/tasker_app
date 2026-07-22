@@ -19,7 +19,9 @@ interface CreateAccountFormProps {
   createAccount: (data: CreateAccountFormData) => Promise<void>;
 }
 
-export function CreateAccountForm(props: CreateAccountFormProps) {
+export function CreateAccountForm({
+  createAccount
+}: CreateAccountFormProps) {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [name, setName] = useState<string>("");
@@ -35,7 +37,7 @@ export function CreateAccountForm(props: CreateAccountFormProps) {
       password,
     };
 
-    await props.createAccount(data);
+    await createAccount(data);
   };
 
   return (

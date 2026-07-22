@@ -1,11 +1,7 @@
 import type { CurrentAccountDTO } from "../types/account/current-account.dto";
 import type { AffiliationDTO } from "../types/affiliation/affiliation.dto";
 import type { ApiError } from "../types/response/error";
-
-const CURRENT_ACCOUNT_STORAGE_KEY = "user";
-const AUTH_TOKEN_STORAGE_KEY = "token";
-const ORG_KEY_STORAGE_KEY = "tasker.api.orgkey";
-const LEGACY_ORG_STORAGE_KEY = "tasker.api.org";
+import { STORAGE_KEYS } from "@/config/storage";
 
 export interface MockRequestHeaders {
   readonly Authorization?: string;
@@ -28,7 +24,7 @@ function storageItem(key: string): string | null {
 }
 
 function readCurrentAccount(): CurrentAccountDTO | null {
-  const storedUser = storageItem(CURRENT_ACCOUNT_STORAGE_KEY);
+  const storedUser = storageItem(STORAGE_KEYS.auth.user);
 
   if (!storedUser) {
     return null;
@@ -53,13 +49,13 @@ function readCurrentAccount(): CurrentAccountDTO | null {
 }
 
 function readOrgKey(): string | null {
-  const orgkey = storageItem(ORG_KEY_STORAGE_KEY);
+  const orgkey = storageItem(STORAGE_KEYS.organization.orgkey);
 
   if (orgkey) {
     return orgkey;
   }
 
-  const storedOrg = storageItem(LEGACY_ORG_STORAGE_KEY);
+  const storedOrg = storageItem(STORAGE_KEYS.organization.current);
 
   if (!storedOrg) {
     return null;
@@ -78,7 +74,7 @@ function readOrgKey(): string | null {
 
 export function readMockRequestContext(): MockRequestContext {
   const currentAccount = readCurrentAccount();
-  const token = storageItem(AUTH_TOKEN_STORAGE_KEY);
+  const token = storageItem(STORAGE_KEYS.auth.token);
   const orgkey = readOrgKey();
 
   return {

@@ -18,7 +18,7 @@ export function LoginForm({ login }: LoginFormProps) {
   const [email, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
-  const onSubmit = async (ev: React.MouseEvent) => {
+  const onSubmit = async (ev: React.FormEvent) => {
     ev.preventDefault()
 
     const data: LoginDTO = {
@@ -49,7 +49,7 @@ export function LoginForm({ login }: LoginFormProps) {
   return (
     <Container className="tskr-login-form">
       <SectionTitle>ENTRAR</SectionTitle>
-      <Form>
+      <Form  as="form" onSubmit={onSubmit}>
         <Inputs className="tskr-form-inputs">
           <TextInput
             icon={<UserIcon width={24} />}
@@ -65,7 +65,7 @@ export function LoginForm({ login }: LoginFormProps) {
             onChange={(value) => setPassword(value)}
           />
         </Inputs>
-        <SubmitButton onClick={onSubmit}>Entrar</SubmitButton>
+        <SubmitButton type="submit">Entrar</SubmitButton>
       </Form>
       <CreateAccount />
     </Container>

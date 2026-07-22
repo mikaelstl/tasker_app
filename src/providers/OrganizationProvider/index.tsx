@@ -1,15 +1,12 @@
 import { OrganizationContext } from "@/context/OrganizationContext";
 import type { CurrentOrg } from "@/service/types/organization/current.dto";
 import type { OrgRole } from "@/utils/enums/OrgRole";
-import { useState } from "react";
-
-const ORG_KEY_STORAGE = "tasker.api.orgkey";
-const ORG_ROLE_STORAGE = "tasker.api.orgrole";
-const ORG_STORAGE = "tasker.api.org";
+import { useCallback, useMemo, useState } from "react";
+import { STORAGE_KEYS, clearOrganizationStorage } from "@/config/storage";
 
 function readStoredOrg(): CurrentOrg | null {
-  const orgkey = localStorage.getItem(ORG_KEY_STORAGE);
-  const role = localStorage.getItem(ORG_ROLE_STORAGE) as OrgRole | null;
+  const orgkey = localStorage.getItem(STORAGE_KEYS.organization.orgkey);
+  const role = localStorage.getItem(STORAGE_KEYS.organization.role) as OrgRole | null;
 
   if (orgkey && role) {
     return {
@@ -18,11 +15,11 @@ function readStoredOrg(): CurrentOrg | null {
     };
   }
 
-  const legacyOrg = localStorage.getItem(ORG_STORAGE);
-  if (!legacyOrg) return null;
+  const storedOrg = localStorage.getItem(STORAGE_KEYS.organization.current);
+  if (!storedOrg) return null;
 
   try {
-    const parsed = JSON.parse(legacyOrg) as Partial<CurrentOrg>;
+    const parsed = JSON.parse(storedOrg) as Partial<CurrentOrg>;
 
     if (!parsed.orgkey || !parsed.role) return null;
 
@@ -38,43 +35,43 @@ function readStoredOrg(): CurrentOrg | null {
 export function OrganizationProvider({ children }: { children: React.ReactNode }) {
   const [org, setOrgState] = useState<CurrentOrg | null>(() => readStoredOrg());
 
-  const persistOrg = (nextOrg: CurrentOrg | null) => {
+  const persistOrg = useCallback((nextOrg: CurrentOrg | null) => {
     setOrgState(nextOrg);
 
     if (!nextOrg) {
-      localStorage.removeItem(ORG_KEY_STORAGE);
-      localStorage.removeItem(ORG_ROLE_STORAGE);
-      localStorage.removeItem(ORG_STORAGE);
+      clearOrganizationStorage();
       return;
     }
 
-    localStorage.setItem(ORG_KEY_STORAGE, nextOrg.orgkey);
-    localStorage.setItem(ORG_ROLE_STORAGE, nextOrg.role);
-    localStorage.setItem(ORG_STORAGE, JSON.stringify(nextOrg));
-  };
+    localStorage.setItem(STORAGE_KEYS.organization.orgkey, nextOrg.orgkey);
+    localStorage.setItem(STORAGE_KEYS.organization.role, nextOrg.role);
+    localStorage.setItem(STORAGE_KEYS.organization.current, JSON.stringify(nextOrg));
+  }, []);
 
-  const setOrg = (nextOrgkey: string, role: OrgRole) => {
+  const setOrg = useCallback((nextOrgkey: string, role: OrgRole) => {
     persistOrg({
       orgkey: nextOrgkey,
       role
     });
-  };
+  }, [persistOrg]);
 
-  const clearOrg = () => {
+  const clearOrg = useCallback(() => {
     persistOrg(null);
-  };
+  }, [persistOrg]);
 
-  const hasOrg = () => Boolean(org?.orgkey);
+  const hasOrg = useCallback(() => Boolean(org?.orgkey), [org?.orgkey]);
+
+  const value = useMemo(() => ({
+    org,
+    setOrg,
+    defineOrg: setOrg,
+    clearOrg,
+    hasOrg,
+  }), [clearOrg, hasOrg, org, setOrg]);
 
   return (
     <OrganizationContext.Provider
-      value={{
-        org,
-        setOrg,
-        defineOrg: setOrg,
-        clearOrg,
-        hasOrg
-      }}
+      value={value}
     >
       {children}
     </OrganizationContext.Provider>

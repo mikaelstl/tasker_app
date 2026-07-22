@@ -41,7 +41,7 @@ export class AccountService implements AccountServiceI {
   }
 
   async validate(): Promise<ApiResponse<boolean>> {
-    const response = await this.api.load<boolean, void>({ route: "/auth/validate" });
+    const response = await this.api.load<boolean, void>({ route: "/auth/validate" });    
 
     return response;
   }

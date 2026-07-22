@@ -32,7 +32,7 @@ export function ChoseWorkspace() {
 
       if (data.length === 0) {
         notifications.warning("Você não participa nem possui organizações. Crie uma organização para continuar.");
-        navigate('/register');
+        navigate('/org/register');
         return;
       }
 
