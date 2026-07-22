@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useServices } from "@/hooks/useServices";
-import type { CommentDTO } from "@/service/types/comment/comment.dto";
+import type { AuditLogDTO } from "@/service/types/audit-log/audit-log.dto";
 import type { ProjectMember } from "@/service/types/member/member.dto";
 import { ProjectStage, type ProjectDTO } from "@/service/types/project/project.dto";
 import type { ApiError } from "@/service/types/response/error";
@@ -21,7 +21,7 @@ interface Deadline {
 
 interface OrganizerDashboardData {
   projects: Array<ProjectDTO & { members: ProjectMember[] }>;
-  updates: CommentDTO[];
+  updates: AuditLogDTO[];
   projectSummary: ProjectSummary;
   deadlineAlerts: Deadline[];
 }
@@ -70,10 +70,14 @@ function getDeadlineAlerts(projects: ProjectDTO[]): Deadline[] {
 }
 
 export function useOrganizerDashboard(orgId?: string) {
-  const { ProjectService, CommentService, MemberService } = useServices();
+  const { ProjectService, AuditLogService, MemberService } = useServices();
   const requestId = useRef(0);
+  const loadedOrgId = useRef<string | undefined>(undefined);
+  const pagination = useRef({ page: 0, totalPages: 0 });
   const [data, setData] = useState<OrganizerDashboardData>(initialData);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [updatesError, setUpdatesError] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const loadDashboard = useCallback(async () => {
@@ -81,49 +85,93 @@ export function useOrganizerDashboard(orgId?: string) {
 
     if (!orgId) {
       setData(initialData);
+      loadedOrgId.current = undefined;
+      pagination.current = { page: 0, totalPages: 0 };
       setError(null);
+      setUpdatesError(null);
       setLoading(false);
       return;
     }
 
+    setData(initialData);
+    pagination.current = { page: 0, totalPages: 0 };
     setLoading(true);
+    setLoadingMore(false);
     setError(null);
+    setUpdatesError(null);
 
     try {
-      const listedProjects = (await ProjectService.list()).data;
-      const projectsData = await Promise.all(listedProjects.map(async (project) => {
-        const [comments, members] = await Promise.all([
-          CommentService.list({ projectkey: project.id }),
-          MemberService.list(project.id),
-        ]);
-
-        return {
-          project: { ...project, members: members.data },
-          comments: comments.data,
-        };
+      const [listedProjects, listedAuditLogs] = await Promise.all([
+        ProjectService.list(),
+        AuditLogService.list(orgId, { page: 1, limit: 20 }),
+      ]);
+      const projects = await Promise.all(listedProjects.data.map(async (project) => {
+        const members = await MemberService.list(project.id);
+        return { ...project, members: members.data };
       }));
-      const projects = projectsData.map((item) => item.project);
-      const updates = projectsData
-        .flatMap((item) => item.comments)
-        .sort((left, right) => (
-          new Date(right.date).getTime() - new Date(left.date).getTime()
-        ));
       const nextData: OrganizerDashboardData = {
         projects,
-        updates,
+        updates: listedAuditLogs.data.items,
         projectSummary: summarizeProjects(projects),
         deadlineAlerts: getDeadlineAlerts(projects),
       };
 
-      if (currentRequest === requestId.current) setData(nextData);
+      if (currentRequest === requestId.current) {
+        loadedOrgId.current = orgId;
+        pagination.current = {
+          page: listedAuditLogs.data.page,
+          totalPages: listedAuditLogs.data.totalPages,
+        };
+        setData(nextData);
+      }
     } catch (requestError) {
       if (currentRequest === requestId.current) {
+        loadedOrgId.current = orgId;
         setError(getErrorMessage(requestError));
       }
     } finally {
       if (currentRequest === requestId.current) setLoading(false);
     }
-  }, [CommentService, MemberService, ProjectService, orgId]);
+  }, [AuditLogService, MemberService, ProjectService, orgId]);
+
+  const loadMoreUpdates = useCallback(async () => {
+    if (
+      !orgId
+      || loadingMore
+      || pagination.current.page >= pagination.current.totalPages
+    ) return;
+
+    const currentRequest = requestId.current;
+    const nextPage = pagination.current.page + 1;
+    setLoadingMore(true);
+    setUpdatesError(null);
+
+    try {
+      const response = await AuditLogService.list(orgId, { page: nextPage, limit: 20 });
+
+      if (currentRequest !== requestId.current) return;
+
+      pagination.current = {
+        page: response.data.page,
+        totalPages: response.data.totalPages,
+      };
+      setData((current) => {
+        const byId = new Map(
+          [...current.updates, ...response.data.items].map((log) => [log.id, log]),
+        );
+        const updates = [...byId.values()].sort(
+          (left, right) => Date.parse(right.created_at) - Date.parse(left.created_at),
+        );
+        return { ...current, updates };
+      });
+    } catch (requestError) {
+      if (currentRequest === requestId.current) {
+        setUpdatesError(getErrorMessage(requestError));
+      }
+    } finally {
+      if (currentRequest === requestId.current) setLoadingMore(false);
+    }
+  }, [AuditLogService, loadingMore, orgId]);
 
   useEffect(() => {
     void loadDashboard();
@@ -132,5 +180,17 @@ export function useOrganizerDashboard(orgId?: string) {
     };
   }, [loadDashboard]);
 
-  return { loading, error, data, loadDashboard };
+  const belongsToCurrentOrganization = loadedOrgId.current === orgId;
+
+  return {
+    loading: loading || !belongsToCurrentOrganization,
+    error,
+    data: belongsToCurrentOrganization ? data : initialData,
+    loadDashboard,
+    loadingMore,
+    updatesError,
+    loadMoreUpdates,
+    hasMoreUpdates: belongsToCurrentOrganization
+      && pagination.current.page < pagination.current.totalPages,
+  };
 }

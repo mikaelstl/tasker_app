@@ -1,12 +1,14 @@
 import type { ApiResponse } from "@/service/types/response/response";
 import type { OrganizationCreateDTO } from "../../types/organization/create.dto";
 import type { OrganizationDTO } from "../../types/organization/organization.dto";
+import type { OrganizationSummaryDTO } from "@/service/types/organization/summary.dto";
 
 import { ApiClient } from "@/service/api";
 
 export interface OrganizationServiceI {
   create(data: OrganizationCreateDTO): Promise<ApiResponse<OrganizationDTO>>;
   delete(id: string): Promise<ApiResponse<OrganizationDTO>>;
+  summary(id: string): Promise<ApiResponse<OrganizationSummaryDTO>>;
 }
 
 export class OrganizationService implements OrganizationServiceI {
@@ -28,6 +30,14 @@ export class OrganizationService implements OrganizationServiceI {
   async delete(id: string): Promise<ApiResponse<OrganizationDTO>> {
     const response = await this.api.remove<OrganizationDTO>({
       route: `/org/del/${encodeURIComponent(id)}`,
+    });
+
+    return response;
+  }
+
+  async summary(id: string): Promise<ApiResponse<OrganizationSummaryDTO>> {
+    const response = await this.api.load<OrganizationSummaryDTO, null>({
+      route: `/org/${id}/summary`,
     });
 
     return response;

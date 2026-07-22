@@ -22,7 +22,16 @@ interface OrganizerContentProps {
 export function OrganizerContent({ username }: OrganizerContentProps) {
   const navigate = useNavigate();
   const { org } = useOrganization();
-  const { loading, error, data, loadDashboard } = useOrganizerDashboard(org?.orgkey);
+  const {
+    loading,
+    error,
+    data,
+    loadDashboard,
+    loadingMore,
+    updatesError,
+    loadMoreUpdates,
+    hasMoreUpdates,
+  } = useOrganizerDashboard(org?.orgkey);
 
   if (loading) {
     return (
@@ -79,7 +88,13 @@ export function OrganizerContent({ username }: OrganizerContentProps) {
           )}
         </Items>
       </Main>
-      <Updates updates={data.updates} />
+      <Updates
+        updates={data.updates}
+        hasMore={hasMoreUpdates}
+        loadingMore={loadingMore}
+        error={updatesError}
+        onLoadMore={() => void loadMoreUpdates()}
+      />
     </>
   );
 }

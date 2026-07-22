@@ -21,7 +21,24 @@ const Timeline = styled(Scroller)`
   padding-right: 4px;
 `;
 
+const Actions = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 0 20px;
+`;
+
+const Status = styled.p`
+  margin: 0;
+  color: ${Palette.red};
+  font-size: 13px;
+  text-align: center;
+`;
+
 export {
+  Actions,
   Container,
+  Status,
   Timeline,
 }

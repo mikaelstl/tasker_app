@@ -3,7 +3,11 @@ import {
   Card,
   Content,
   Description,
+  Detail,
+  DetailField,
+  Details,
   Header,
+  ResourceBadge,
   TrackerDot,
   TimelineMarker,
   UpdateDate,
@@ -11,17 +15,31 @@ import {
 import { User } from "@/components/misc/User";
 
 interface UpdateCardDTO {
-  readonly content: string;
+  readonly actorName: string;
+  readonly actorUsername: string | null;
+  readonly actorPhotoUrl: string | null;
+  readonly isSystem: boolean;
+  readonly message: string;
+  readonly resourceLabel: string;
   readonly date: DateTime;
-  readonly owner: string;
+  readonly details: Array<{
+    field: string;
+    oldValue: string;
+    newValue: string;
+  }>;
   readonly hasPrevious?: boolean;
   readonly hasNext?: boolean;
 }
 
 export function UpdateCard({
-  content,
+  actorName,
+  actorUsername,
+  actorPhotoUrl,
+  isSystem,
+  message,
+  resourceLabel,
   date,
-  owner,
+  details,
   hasPrevious = false,
   hasNext = false,
 }: UpdateCardDTO) {
@@ -39,12 +57,28 @@ export function UpdateCard({
 
       <Content>
         <Header>
-          <User username={owner}/>
+          <User
+            actorName={actorName}
+            actorUsername={actorUsername}
+            actorPhotoUrl={actorPhotoUrl}
+            isSystem={isSystem}
+          />
           <UpdateDate as="time" dateTime={date.toISO() ?? undefined}>
-            {localizedDate.toFormat("dd LLL • HH:mm")}
+            {date.isValid ? localizedDate.toFormat("dd LLL • HH:mm") : "Data indisponível"}
           </UpdateDate>
         </Header>
-        <Description>{content}</Description>
+        <Description>{message}</Description>
+        <ResourceBadge>{resourceLabel}</ResourceBadge>
+        {details.length > 0 && (
+          <Details>
+            {details.map((detail) => (
+              <Detail key={detail.field}>
+                <DetailField>{detail.field}</DetailField>
+                <span>{detail.oldValue} → {detail.newValue}</span>
+              </Detail>
+            ))}
+          </Details>
+        )}
       </Content>
     </Card>
   )

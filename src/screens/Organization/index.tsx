@@ -30,6 +30,7 @@ import {
 import { Subtitle } from "@/components/base/Subtitle";
 import { DeleteBtn } from "@/components/buttons/DeleteBtn";
 import { useNavigate } from "react-router-dom";
+import type { OrganizationSummaryDTO } from "@/service/types/organization/summary.dto";
 
 const ROLE_ORDER = [OrgRole.OWNER, OrgRole.MANAGER, OrgRole.MEMBER] as const;
 
@@ -59,7 +60,8 @@ export function Organization() {
   const { org, clearOrg } = useOrganization();
   const { AffiliationService, OrganizationService } = useServices();
   const notifications = useToast();
-  const [organization, setOrganization] = useState<UserOrganizationSummaryDTO | null>(null);
+  
+  const [organization, setOrganization] = useState<OrganizationSummaryDTO | null>(null);
   const [members, setMembers] = useState<AffiliationDTO[]>([]);
   const [loading, setLoading] = useState(true);
   const [busyMemberId, setBusyMemberId] = useState<string | null>(null);
@@ -87,16 +89,15 @@ export function Organization() {
       setLoading(true);
 
       try {
-        const organizationsResponse = await AffiliationService.list();
-        const currentOrganization = organizationsResponse.data.find(
-          (item) => item.orgkey === org.orgkey,
-        ) ?? null;
+        const membersResponse = await AffiliationService.listByOrganization(org.orgkey);
 
+        const organizationResponse = await OrganizationService.summary(org.orgkey);
+        
         if (active) {
-          setOrganization(currentOrganization);
+          setOrganization(organizationResponse.data);
           // O backend não publica uma rota para listar as afiliações de uma
           // organização. Não inventamos GET /affiliations/:orgkey aqui.
-          setMembers([]);
+          setMembers(membersResponse.data);
         }
       } catch (error) {
         notifyError(error, "Não foi possível carregar a organização.", notifications);
@@ -112,7 +113,7 @@ export function Organization() {
     return () => {
       active = false;
     };
-  }, [AffiliationService, notifications, org?.orgkey]);
+  }, [AffiliationService, OrganizationService, notifications, org?.orgkey]);
 
   const membersByRole = useMemo(() => (
     ROLE_ORDER.map((role) => ({

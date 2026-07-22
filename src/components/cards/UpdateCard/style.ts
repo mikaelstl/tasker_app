@@ -90,11 +90,48 @@ const Description = styled(Text)`
   overflow-wrap: anywhere;
 `;
 
+const ResourceBadge = styled.span`
+  align-self: flex-start;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: ${Palette.purple_25};
+  color: ${Palette.purple};
+  font-size: 11px;
+  text-transform: capitalize;
+`;
+
+const Details = styled.dl`
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin: 0;
+  padding-top: 8px;
+  border-top: 1px solid ${Palette.details};
+`;
+
+const Detail = styled.div`
+  display: grid;
+  grid-template-columns: minmax(72px, auto) minmax(0, 1fr);
+  gap: 8px;
+  color: ${Palette.white_50};
+  font-size: 11px;
+  overflow-wrap: anywhere;
+`;
+
+const DetailField = styled.dt`
+  color: ${Palette.white};
+  font-weight: 600;
+`;
+
 export {
   Card,
   Content,
   Description,
+  Detail,
+  DetailField,
+  Details,
   Header,
+  ResourceBadge,
   TrackerDot,
   TimelineMarker,
   UpdateDate,

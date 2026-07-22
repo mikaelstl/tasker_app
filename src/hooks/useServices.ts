@@ -15,7 +15,8 @@ export function useServices() {
     AffiliationService,
     CommentService,
     EventService,
-    MemberService
+    MemberService,
+    AuditLogService
   } = ctx;
 
   return {
@@ -27,6 +28,7 @@ export function useServices() {
     AffiliationService,
     CommentService,
     EventService,
-    MemberService
+    MemberService,
+    AuditLogService
   };
 }

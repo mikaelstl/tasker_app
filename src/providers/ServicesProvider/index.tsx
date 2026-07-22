@@ -10,6 +10,7 @@ import { OrganizationService } from "@/service/modules/organization/organization
 import { ProjectService } from "@/service/modules/project/project.service";
 import { TaskService } from "@/service/modules/task/task.service";
 import { UserService } from "@/service/modules/user/user.service";
+import { AuditLogService } from "@/service/modules/audit-log/audit-log.service";
 import { AccountMockService } from "@/service/mock/account/account.mock";
 import { AffiliationMockService } from "@/service/mock/affiliation/affiliation.mock";
 import { CommentMockService } from "@/service/mock/comment/comment.mock";
@@ -19,6 +20,7 @@ import { OrganizationMockService } from "@/service/mock/organization/organizatio
 import { ProjectMockService } from "@/service/mock/project/project.mock";
 import { TaskMockService } from "@/service/mock/task/task.mock";
 import { UserMockService } from "@/service/mock/user/user.mock";
+import { AuditLogMockService } from "@/service/mock/audit-log/audit-log.mock";
 import { useMemo } from "react";
 
 export function ServicesProvider({ children }: { children: React.ReactNode }) {
@@ -35,6 +37,7 @@ export function ServicesProvider({ children }: { children: React.ReactNode }) {
       CommentService: new CommentService(api),
       EventService: new EventService(api),
       MemberService: new MemberService(api),
+      AuditLogService: new AuditLogService(api),
     }
   }, [api]);
 
@@ -49,6 +52,7 @@ export function ServicesProvider({ children }: { children: React.ReactNode }) {
       CommentService: new CommentMockService(),
       EventService: new EventMockService(),
       MemberService: new MemberMockService(),
+      AuditLogService: new AuditLogMockService(),
     };
   }, []);
 

@@ -12,6 +12,7 @@ export interface APIMessage {
 
 export interface AffiliationServiceI {
   list(): Promise<ApiResponse<UserOrganizationSummaryDTO[]>>;
+  listByOrganization(orgkey: string): Promise<ApiResponse<AffiliationDTO[]>>;
   create(data: DefineAffiliationDTO): Promise<ApiResponse<AffiliationDTO>>;
   participates(orgkey: string): Promise<ApiResponse<boolean>>;
   createInvite(orgkey: string): Promise<ApiResponse<AffiliationInviteDTO>>;
@@ -38,6 +39,14 @@ export class AffiliationService implements AffiliationServiceI {
   async list(): Promise<ApiResponse<UserOrganizationSummaryDTO[]>> {
     const response = await this.api.load<UserOrganizationSummaryDTO[], null>({
       route: "/affiliations",
+    });
+
+    return response;
+  }
+
+  async listByOrganization(orgkey: string): Promise<ApiResponse<AffiliationDTO[]>> {
+    const response = await this.api.load<AffiliationDTO[], null>({
+      route: `/affiliations/${orgkey}`,
     });
 
     return response;

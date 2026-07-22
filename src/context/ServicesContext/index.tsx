@@ -8,6 +8,7 @@ import type { AffiliationServiceI } from "@/service/modules/affiliation/affiliat
 import type { CommentServiceI } from "@/service/modules/comment/comment.service";
 import type { EventServiceI } from "@/service/modules/event/event.service";
 import type { MemberServiceI } from "@/service/modules/member/member.service";
+import type { AuditLogServiceI } from "@/service/modules/audit-log/audit-log.service";
 
 interface ServicesContextInterface {
   AccountService: AccountServiceI;
@@ -19,6 +20,7 @@ interface ServicesContextInterface {
   CommentService: CommentServiceI;
   EventService: EventServiceI;
   MemberService: MemberServiceI;
+  AuditLogService: AuditLogServiceI;
 }
 
 export const ServicesContext = createContext<ServicesContextInterface | undefined>(undefined);

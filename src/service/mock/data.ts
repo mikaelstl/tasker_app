@@ -1,4 +1,5 @@
 import type { AccountDTO } from "../types/account/account.dto";
+import type { AuditLogDTO, AuditLogChanges } from "../types/audit-log/audit-log.dto";
 import type { CurrentAccountDTO } from "../types/account/current-account.dto";
 import type { AuthDTO } from "../types/auth/auth.dto";
 import type { AffiliationDTO } from "../types/affiliation/affiliation.dto";
@@ -27,6 +28,7 @@ type MockDataShape = {
   comments: CommentDTO[];
   events: EventDTO[];
   memberStats: MemberStatDTO[];
+  auditLogs: AuditLogDTO[];
   currentAccount: CurrentAccountDTO;
   auth: AuthDTO;
 };
@@ -42,7 +44,8 @@ type EntityCounterKey =
   | "member"
   | "task"
   | "comment"
-  | "event";
+  | "event"
+  | "auditLog";
 
 const counters: Record<EntityCounterKey, number> = {
   account: 1,
@@ -54,6 +57,7 @@ const counters: Record<EntityCounterKey, number> = {
   task: 1,
   comment: 1,
   event: 1,
+  auditLog: 1,
 };
 
 const baseDate = new Date("2026-07-14T10:00:00.000Z");
@@ -205,6 +209,27 @@ export function createMockEvent(data: Partial<EventDTO> = {}): EventDTO {
     category: data.category ?? EventCategory.MEETING,
     created_at: data.created_at ?? baseDate.toISOString(),
     updated_at: data.updated_at ?? baseDate.toISOString(),
+  };
+}
+
+export function createMockAuditLog(data: Partial<AuditLogDTO> = {}): AuditLogDTO {
+  return {
+    id: data.id ?? "aud-000",
+    orgkey: data.orgkey ?? "org-000",
+    actorkey: data.actorkey !== undefined ? data.actorkey : "usuario.mock",
+    actorType: data.actorType ?? "USER",
+    action: data.action ?? "UPDATE",
+    resource: data.resource ?? "TASKS",
+    resourcekey: data.resourcekey !== undefined ? data.resourcekey : "tsk-000",
+    changes: data.changes ?? {},
+    created_at: data.created_at ?? "2026-07-21T18:00:00.000Z",
+    actor: data.actor !== undefined
+      ? data.actor
+      : {
+          username: "usuario.mock",
+          name: "Usuário Mock",
+          photo: null,
+        },
   };
 }
 
@@ -601,6 +626,87 @@ const events = projects.flatMap((project, projectIndex) =>
   }),
 );
 
+const auditLogs = organizations.flatMap((organization, orgIndex) => {
+  const orgProjects = projectsByOrg.get(organization.id) ?? [];
+  const orgAffiliations = affiliationsByOrg.get(organization.id) ?? [];
+
+  return Array.from({ length: 26 }, (_, logIndex) => {
+    const project = orgProjects[logIndex % orgProjects.length];
+    const projectTasks = tasks.filter((task) => task.projectkey === project.id);
+    const task = projectTasks[logIndex % projectTasks.length];
+    const affiliation = orgAffiliations[logIndex % orgAffiliations.length];
+    const user = usersByUsername.get(affiliation.userkey);
+    const variant = logIndex % 8;
+    let action: AuditLogDTO["action"] = "UPDATE";
+    let resource: AuditLogDTO["resource"] = "TASKS";
+    let resourcekey: string | null = task.id;
+    let changes: AuditLogChanges = {};
+
+    if (variant === 0) {
+      action = "CREATE";
+      resource = "PROJECTS";
+      resourcekey = project.id;
+      changes = { title: { oldValue: null, newValue: project.title } };
+    } else if (variant === 1) {
+      changes = {
+        name: { oldValue: task.name, newValue: `${task.name} revisada` },
+        estimate: { oldValue: 3, newValue: 5 },
+        labels: { oldValue: ["frontend"], newValue: ["frontend", "prioridade"] },
+        metadata: { oldValue: { reviewed: false }, newValue: { reviewed: true } },
+      };
+    } else if (variant === 2) {
+      action = "DELETE";
+      resource = "EVENTS";
+      resourcekey = events.find((event) => event.projectkey === project.id)?.id ?? null;
+      changes = { title: { oldValue: "Reunião de alinhamento", newValue: null } };
+    } else if (variant === 3) {
+      action = "ADD";
+      resource = "MEMBERS";
+      resourcekey = project.id;
+      changes = { userkey: { oldValue: null, newValue: affiliation.userkey } };
+    } else if (variant === 4) {
+      action = "REMOVE";
+      resource = "MEMBERS";
+      resourcekey = project.id;
+      changes = { userkey: { oldValue: affiliation.userkey, newValue: null } };
+    } else if (variant === 5) {
+      action = "COMMENT";
+      resource = "COMMENTS";
+      resourcekey = comments.find((comment) => comment.projectkey === project.id)?.id ?? null;
+    } else if (variant === 6) {
+      action = "STATUS_CHANGE";
+      changes = { stage: { oldValue: "PENDING", newValue: "IN_PROGRESS" } };
+    } else {
+      action = "SYSTEM_UPDATE";
+      changes = { delayed: { oldValue: false, newValue: true } };
+    }
+
+    const isSystem = action === "SYSTEM_UPDATE";
+    const isRemovedActor = logIndex === 10;
+
+    return createMockAuditLog({
+      id: createMockId("auditLog"),
+      orgkey: organization.id,
+      actorkey: isSystem || isRemovedActor ? null : affiliation.userkey,
+      actorType: isSystem ? "SYSTEM" : "USER",
+      action,
+      resource,
+      resourcekey,
+      changes,
+      created_at: isoAt(900 + orgIndex * 200 + ((logIndex * 11) % 26) * 9),
+      actor: isSystem || isRemovedActor || !user
+        ? null
+        : {
+            username: user.username,
+            name: user.name,
+            photo: logIndex === 0
+              ? { url: `https://i.pravatar.cc/80?u=${encodeURIComponent(user.username)}` }
+              : null,
+          },
+    });
+  });
+});
+
 const memberStats: MemberStatDTO[] = members.map((member) => {
   const memberTasks = tasks.filter((task) => task.ownerkey === member.id);
   const project = projects.find((item) => item.id === member.projectkey);
@@ -636,6 +742,7 @@ export const mockData: MockDataShape = {
   comments,
   events,
   memberStats,
+  auditLogs,
   currentAccount: createMockCurrentAccount({
     id: currentAccount.id,
     username: currentUser.username,
