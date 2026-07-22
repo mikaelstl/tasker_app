@@ -35,6 +35,8 @@ export function Overview() {
   const [project, setProject] = useState<ProjectDTO | null>(null);
   const [tasks, setTasks] = useState<TaskDTO[]>([]);
   const [comments, setComments] = useState<CommentDTO[]>([]);
+  const [busyCommentId, setBusyCommentId] = useState<string | null>(null);
+  const [inspectedCommentId, setInspectedCommentId] = useState<string | null>(null);
   const showError = useCallback((error: unknown, fallback: string) => {
     const apiError = error as ApiError;
     if (!apiError.errors?.length) {
@@ -69,8 +71,39 @@ export function Overview() {
       await loadComments();
     } catch (error) {
       showError(error, "Não foi possível criar o comentário.");
+      throw error;
     }
   }
+
+  const inspectComment = async (commentId: string) => {
+    setBusyCommentId(commentId);
+    try {
+      const response = await CommentService.find(commentId);
+      setComments((current) => current.map((comment) => (
+        comment.id === commentId ? response.data : comment
+      )));
+      setInspectedCommentId(commentId);
+    } catch (error) {
+      showError(error, "Não foi possível consultar o comentário.");
+    } finally {
+      setBusyCommentId(null);
+    }
+  };
+
+  const deleteComment = async (comment: CommentDTO) => {
+    if (!window.confirm("Excluir este comentário?")) return;
+    setBusyCommentId(comment.id);
+    try {
+      await CommentService.delete(comment.id);
+      setComments((current) => current.filter((item) => item.id !== comment.id));
+      if (inspectedCommentId === comment.id) setInspectedCommentId(null);
+      notifications.info("Comentário excluído.");
+    } catch (error) {
+      showError(error, "Não foi possível excluir o comentário.");
+    } finally {
+      setBusyCommentId(null);
+    }
+  };
 
   useEffect(() => {
     if (!id) return;
@@ -125,9 +158,16 @@ export function Overview() {
                 {
                   comments.map((comment) => <CommentCard
                     key={comment.id}
+                    id={comment.id}
                     content={comment.content}
                     date={DateTime.fromISO(comment.date, { zone: 'utc' })}
                     owner={comment.ownerkey}
+                    createdAt={comment.created_at}
+                    updatedAt={comment.updated_at}
+                    expanded={inspectedCommentId === comment.id}
+                    disabled={busyCommentId === comment.id}
+                    onInspect={() => void inspectComment(comment.id)}
+                    onDelete={() => void deleteComment(comment)}
                   />)
                 }
               </Scroller>

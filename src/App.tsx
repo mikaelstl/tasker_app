@@ -20,6 +20,7 @@ import { Organization } from "./screens/Organization"
 import { AcceptInvite } from "./screens/AcceptInvite"
 import { CreateOrg } from "./screens/CreateOrg"
 import { ProtectedRoute } from "./routes/ProtectedRoute"
+import { Profile } from "./screens/Profile"
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
                 <Route path="workspace" element={<Workspace />} />
                 <Route path="projects" element={<Projects />} />
                 <Route path="organization" element={<Organization />} />
+                <Route path="profile" element={<Profile />} />
 
                 <Route path="project/:id" element={<Project />}>
                   <Route index element={<Navigate to="overview" replace />} />

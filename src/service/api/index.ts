@@ -3,8 +3,8 @@ import axios, {
   type AxiosRequestConfig,
   type AxiosResponse,
 } from "axios";
-import type { ApiError } from "../types/response/error";
-import type { ApiResponse } from "../types/response/response";
+import type { ApiError } from "@/service/types/response/error";
+import type { ApiResponse } from "@/service/types/response/response";
 import { STORAGE_KEYS, clearSessionStorage } from "@/config/storage";
 import dotenv from "@/config/dotenv";
 

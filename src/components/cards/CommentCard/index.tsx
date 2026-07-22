@@ -1,21 +1,41 @@
 import { DateTime } from "luxon";
+import { EyeIcon, TrashIcon } from "@heroicons/react/16/solid";
 import { Subtitle } from "../../base/Subtitle";
 import { Text } from "../../base/Text";
 import { Avatar } from "../../misc/Avatar";
-import { Card, Line, Texts } from "./style";
+import { Actions, ActionButton, Card, Details, Line, Texts } from "./style";
 import { Title } from "../../base/Title";
 
-interface CommentCardDTO {
-  readonly content:     string;
-  readonly date:        DateTime;
-  readonly owner:    string;
+interface CommentCardProps {
+  readonly id: string;
+  readonly content: string;
+  readonly date: DateTime;
+  readonly owner: string;
+  readonly createdAt: string;
+  readonly updatedAt: string;
+  readonly expanded?: boolean;
+  readonly disabled?: boolean;
+  readonly onInspect?: () => void;
+  readonly onDelete?: () => void;
 }
 
+const formatDateTime = (value: string) => new Intl.DateTimeFormat("pt-BR", {
+  dateStyle: "short",
+  timeStyle: "short",
+}).format(new Date(value));
+
 export function CommentCard({
+  id,
   content,
   date,
   owner,
-}: CommentCardDTO) {
+  createdAt,
+  updatedAt,
+  expanded = false,
+  disabled = false,
+  onInspect,
+  onDelete,
+}: CommentCardProps) {
   return (
     <Card className="comment-card">
       <Avatar size="medium" image=""/>
@@ -23,8 +43,28 @@ export function CommentCard({
         <Title>{owner}</Title>
         <Text>{content}</Text>
       </Texts>
+      <Actions>
+        {onInspect ? (
+          <ActionButton type="button" onClick={onInspect} disabled={disabled} title="Consultar comentário">
+            <EyeIcon />
+          </ActionButton>
+        ) : null}
+        {onDelete ? (
+          <ActionButton type="button" onClick={onDelete} disabled={disabled} $danger title="Excluir comentário">
+            <TrashIcon />
+          </ActionButton>
+        ) : null}
+      </Actions>
       <Line/>
-      <Subtitle className="tskr-subtitle">{date.day} {date.setLocale("pt-BR").monthShort}, {date.hour}:{date.minute}</Subtitle>
+      <Subtitle className="tskr-subtitle">
+        {date.setLocale("pt-BR").toFormat("dd LLL, HH:mm")}
+      </Subtitle>
+      {expanded ? (
+        <Details>
+          <Subtitle>ID: {id}</Subtitle>
+          <Subtitle>Criado em {formatDateTime(createdAt)} · atualizado em {formatDateTime(updatedAt)}</Subtitle>
+        </Details>
+      ) : null}
     </Card>
-  )
+  );
 }

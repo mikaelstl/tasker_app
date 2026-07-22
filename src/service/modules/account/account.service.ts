@@ -13,7 +13,7 @@ export interface AccountServiceI {
   authStatus(): Promise<ApiResponse<null>>;
   login(data: LoginDTO): Promise<ApiResponse<AuthDTO>>;
   validate(): Promise<ApiResponse<boolean>>;
-  delete(id: string): Promise<ApiResponse<null>>;
+  delete(email: string): Promise<ApiResponse<null>>;
   buildCurrentAccount(auth: AuthDTO): CurrentAccountDTO;
 }
 
@@ -56,8 +56,10 @@ export class AccountService implements AccountServiceI {
     return response;
   }
 
-  async delete(id: string): Promise<ApiResponse<null>> {
-    const response = await this.api.remove<null>({route: `/accounts/del/${id}`});
+  async delete(email: string): Promise<ApiResponse<null>> {
+    const response = await this.api.remove<null>({
+      route: `/accounts/del/${encodeURIComponent(email)}`,
+    });
 
     return response;
   }

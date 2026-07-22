@@ -39,7 +39,7 @@ export class CommentService implements CommentServiceI {
 
   async find(id: string): Promise<ApiResponse<CommentDTO>> {
     const response = await this.api.load<CommentDTO, void>({
-      route: `/comments/${id}`,
+      route: `/comments/${encodeURIComponent(id)}`,
     });
 
     return response;
@@ -47,7 +47,7 @@ export class CommentService implements CommentServiceI {
 
   async delete(id: string): Promise<ApiResponse<CommentDTO>> {
     const response = await this.api.remove<CommentDTO>({
-      route: `/comments/del/${id}`,
+      route: `/comments/del/${encodeURIComponent(id)}`,
     });
 
     return response;

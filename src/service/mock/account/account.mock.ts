@@ -70,14 +70,14 @@ export class AccountMockService implements AccountServiceI {
     return createMockResponse(isValid, "/auth/validate");
   }
 
-  async delete(id: string): Promise<ApiResponse<null>> {
-    const index = mockData.accounts.findIndex((item) => item.id === id);
+  async delete(email: string): Promise<ApiResponse<null>> {
+    const index = mockData.accounts.findIndex((item) => item.email === email);
 
     if (index >= 0) {
       mockData.accounts.splice(index, 1);
     }
 
-    return createMockResponse(null, `/accounts/del/${id}`);
+    return createMockResponse(null, `/accounts/del/${email}`);
   }
 
   buildCurrentAccount(auth: AuthDTO): CurrentAccountDTO {

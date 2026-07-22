@@ -27,7 +27,7 @@ export class OrganizationService implements OrganizationServiceI {
 
   async delete(id: string): Promise<ApiResponse<OrganizationDTO>> {
     const response = await this.api.remove<OrganizationDTO>({
-      route: `/org/del/${id}`,
+      route: `/org/del/${encodeURIComponent(id)}`,
     });
 
     return response;

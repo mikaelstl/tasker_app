@@ -45,7 +45,7 @@ export class AffiliationService implements AffiliationServiceI {
 
   async participates(orgkey: string): Promise<ApiResponse<boolean>> {
     const response = await this.api.load<boolean, void>({
-      route: `/affiliations/participates/${orgkey}`,
+      route: `/affiliations/participates/${encodeURIComponent(orgkey)}`,
     });
 
     return response;
@@ -70,7 +70,7 @@ export class AffiliationService implements AffiliationServiceI {
 
   async delete(id: string): Promise<ApiResponse<null>> {
     const response = await this.api.remove<null>({
-      route: `/affiliations/remove/${id}`,
+      route: `/affiliations/remove/${encodeURIComponent(id)}`,
     });
 
     return response;
@@ -78,7 +78,7 @@ export class AffiliationService implements AffiliationServiceI {
 
   async promote(id: string): Promise<ApiResponse<AffiliationDTO | APIMessage>> {
     const response = await this.api.change<void, AffiliationDTO | APIMessage>({
-      route: `/affiliations/promote/${id}`,
+      route: `/affiliations/promote/${encodeURIComponent(id)}`,
     });
 
     return response;
@@ -86,7 +86,7 @@ export class AffiliationService implements AffiliationServiceI {
 
   async demote(id: string): Promise<ApiResponse<AffiliationDTO | APIMessage>> {
     const response = await this.api.change<void, AffiliationDTO | APIMessage>({
-      route: `/affiliations/demote/${id}`,
+      route: `/affiliations/demote/${encodeURIComponent(id)}`,
     });
 
     return response;

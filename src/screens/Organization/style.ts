@@ -89,10 +89,54 @@ const EmptyMessage = styled.p`
   font-size: 14px;
 `;
 
+const AddMemberForm = styled.form`
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) minmax(150px, 220px) auto;
+  align-items: end;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid ${Palette.details};
+  border-radius: 10px;
+  background: ${Palette.items};
+
+  @media (max-width: 760px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+const FormControl = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+
+  label {
+    color: ${Palette.gray};
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  input, select {
+    min-height: 40px;
+    padding: 8px 10px;
+    border: 1px solid ${Palette.details};
+    border-radius: 6px;
+    color: ${Palette.white};
+    background: ${Palette.content};
+  }
+`;
+
+const FormActions = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 export {
   Container,
   Content,
+  AddMemberForm,
   EmptyMessage,
+  FormActions,
+  FormControl,
   GroupCount,
   GroupHeader,
   GroupTitle,

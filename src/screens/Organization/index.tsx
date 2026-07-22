@@ -13,9 +13,12 @@ import type { ApiError } from "@/service/types/response/error";
 import { OrgRole } from "@/utils/enums/OrgRole";
 import { FolderOpenIcon, UserGroupIcon, UserPlusIcon } from "@heroicons/react/16/solid";
 import {
+  AddMemberForm,
   Container,
   Content,
   EmptyMessage,
+  FormActions,
+  FormControl,
   GroupCount,
   GroupHeader,
   GroupTitle,
@@ -25,6 +28,8 @@ import {
   RoleGroup,
 } from "./style";
 import { Subtitle } from "@/components/base/Subtitle";
+import { DeleteBtn } from "@/components/buttons/DeleteBtn";
+import { useNavigate } from "react-router-dom";
 
 const ROLE_ORDER = [OrgRole.OWNER, OrgRole.MANAGER, OrgRole.MEMBER] as const;
 
@@ -50,8 +55,9 @@ function notifyError(
 }
 
 export function Organization() {
-  const { org } = useOrganization();
-  const { AffiliationService } = useServices();
+  const navigate = useNavigate();
+  const { org, clearOrg } = useOrganization();
+  const { AffiliationService, OrganizationService } = useServices();
   const notifications = useToast();
   const [organization, setOrganization] = useState<UserOrganizationSummaryDTO | null>(null);
   const [members, setMembers] = useState<AffiliationDTO[]>([]);
@@ -60,6 +66,10 @@ export function Organization() {
   const [creatingInvite, setCreatingInvite] = useState(false);
   const [inviteLink, setInviteLink] = useState<string | null>(null);
   const [inviteModalOpen, setInviteModalOpen] = useState(false);
+  const [username, setUsername] = useState("");
+  const [newMemberRole, setNewMemberRole] = useState(OrgRole.MEMBER);
+  const [addingMember, setAddingMember] = useState(false);
+  const [deletingOrganization, setDeletingOrganization] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -102,7 +112,7 @@ export function Organization() {
     return () => {
       active = false;
     };
-  }, [AffiliationService, org?.orgkey]);
+  }, [AffiliationService, notifications, org?.orgkey]);
 
   const membersByRole = useMemo(() => (
     ROLE_ORDER.map((role) => ({
@@ -112,6 +122,54 @@ export function Organization() {
   ), [members]);
 
   const isOwner = org?.role === OrgRole.OWNER;
+
+  const addMember = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const userkey = username.trim();
+    if (!org?.orgkey || !userkey) {
+      notifications.validation("Informe o username do participante.");
+      return;
+    }
+
+    setAddingMember(true);
+    try {
+      const response = await AffiliationService.create({
+        orgkey: org.orgkey,
+        userkey,
+        role: newMemberRole,
+      });
+      setMembers((current) => (
+        current.some((member) => member.id === response.data.id)
+          ? current
+          : [...current, response.data]
+      ));
+      setOrganization((current) => current ? { ...current, members: current.members + 1 } : current);
+      setUsername("");
+      setNewMemberRole(OrgRole.MEMBER);
+      notifications.info("Participante adicionado à organização.");
+    } catch (error) {
+      notifyError(error, "Não foi possível criar a afiliação.", notifications);
+    } finally {
+      setAddingMember(false);
+    }
+  };
+
+  const deleteOrganization = async () => {
+    if (!org?.orgkey || !organization) return;
+    if (!window.confirm(`Excluir definitivamente a organização ${organization.name}?`)) return;
+
+    setDeletingOrganization(true);
+    try {
+      await OrganizationService.delete(org.orgkey);
+      clearOrg();
+      notifications.info("Organização excluída.");
+      navigate("/workspaces", { replace: true });
+    } catch (error) {
+      notifyError(error, "Não foi possível excluir a organização.", notifications);
+    } finally {
+      setDeletingOrganization(false);
+    }
+  };
 
   const changeMemberRole = async (
     member: AffiliationDTO,
@@ -218,8 +276,53 @@ export function Organization() {
             <Text>Convidar membro</Text>
           </CreateButton>
         )}
+        {organization && (
+          <DeleteBtn
+            label={deletingOrganization ? "Excluindo..." : "Excluir organização"}
+            disabled={deletingOrganization}
+            onClick={() => void deleteOrganization()}
+          />
+        )}
       </ContentHeader>
       <Content>
+        {organization && (
+          <>
+          <AddMemberForm onSubmit={addMember}>
+            <FormControl>
+              <label htmlFor="affiliation-username">Username</label>
+              <input
+                id="affiliation-username"
+                value={username}
+                placeholder="ex.: ana"
+                onChange={(event) => setUsername(event.target.value)}
+                disabled={addingMember}
+              />
+            </FormControl>
+            <FormControl>
+              <label htmlFor="affiliation-role">Papel inicial</label>
+              <select
+                id="affiliation-role"
+                value={newMemberRole}
+                onChange={(event) => setNewMemberRole(event.target.value as OrgRole)}
+                disabled={addingMember}
+              >
+                <option value={OrgRole.MEMBER}>Membro</option>
+                <option value={OrgRole.MANAGER}>Gestor</option>
+                <option value={OrgRole.OWNER}>Proprietário</option>
+              </select>
+            </FormControl>
+            <FormActions>
+              <CreateButton type="submit" disabled={addingMember || !username.trim()}>
+                <UserPlusIcon width={16} />
+                <Text>{addingMember ? "Adicionando..." : "Adicionar participante"}</Text>
+              </CreateButton>
+            </FormActions>
+          </AddMemberForm>
+          <EmptyMessage>
+            O backend não oferece listagem completa de afiliações; novos participantes aparecem nesta sessão a partir da resposta do POST.
+          </EmptyMessage>
+          </>
+        )}
         {loading ? (
           <EmptyMessage>Carregando organização...</EmptyMessage>
         ) : organization ? (

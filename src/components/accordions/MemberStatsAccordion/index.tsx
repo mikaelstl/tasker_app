@@ -7,10 +7,13 @@ import { User } from "../../misc/User";
 import { Button, Container, Content, Header, Indicator, Indicators, Leading, StatDetail, Task } from "./style";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
 import { formatNumber } from "@/utils/formatNumber";
+import type { StatsTask } from "../../../service/types/stats/stats.types";
 
 interface MemberStatsAccordionProps {
   project?: string;
   username: string;
+  name?: string;
+  tasksDetails?: StatsTask[];
   tasks?: {
     started: number,
     review: number,
@@ -22,7 +25,9 @@ interface MemberStatsAccordionProps {
 export function MemberStatsAccordion({
   project,
   username,
-  tasks
+  name,
+  tasks,
+  tasksDetails = [],
 }: MemberStatsAccordionProps) {
   const [visible, setVisible] = useState(false);
 
@@ -50,7 +55,7 @@ export function MemberStatsAccordion({
     ) : null}
     <Header>
       <Leading>
-        <User username={username} />
+        <User username={name ? `${name} (@${username})` : username} />
       </Leading>
       <Indicators>
         <Indicator>
@@ -77,9 +82,9 @@ export function MemberStatsAccordion({
     {
       visible
         ? <Content>
-          <PerformanceTile />
-          <PerformanceTile />
-          <PerformanceTile />
+          {tasksDetails.length > 0
+            ? tasksDetails.map((task) => <PerformanceTile key={task.id} task={task} />)
+            : <Subtitle>Nenhuma tarefa atribuída.</Subtitle>}
         </Content>
         : <></>
     }
@@ -87,14 +92,19 @@ export function MemberStatsAccordion({
   )
 }
 
-const PerformanceTile = () => {
+const formatDuration = (minutes: number) => {
+  const safeMinutes = Math.max(0, Math.round(minutes));
+  return `${Math.floor(safeMinutes / 60)}h ${String(safeMinutes % 60).padStart(2, "0")}m`;
+};
+
+const PerformanceTile = ({ task }: { task: StatsTask }) => {
   return (
     <StatDetail className="tskr-performance-tile">
       <Task className="tskr-task-infos">
-        <Subtitle>TSK-000</Subtitle>
-        <Title>Título da tarefa</Title>
+        <Subtitle>{task.code} · {task.stage}{task.delayed ? " · ATRASADA" : ""}</Subtitle>
+        <Title>{task.name}</Title>
       </Task>
-      <Title>00h 00m</Title>
+      <Title>{formatDuration(task.spentMinutes)}</Title>
     </StatDetail>
   )
 }

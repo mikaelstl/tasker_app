@@ -53,7 +53,7 @@ export class UserService implements UserServiceI {
 
   async delete(username: string): Promise<ApiResponse<UserDTO>> {
     const response = await this.api.remove<UserDTO>({
-      route: `/users/del/${username}`,
+      route: `/users/del/${encodeURIComponent(username)}`,
     });
 
     return response;

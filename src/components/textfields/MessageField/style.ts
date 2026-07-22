@@ -43,6 +43,11 @@ const Button = styled.button`
   background: none;
 
   font-weight: 600;
+
+  &:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+  }
 `;
 
 export {

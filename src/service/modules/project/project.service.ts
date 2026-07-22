@@ -11,6 +11,8 @@ import type {
 
 import { ApiClient } from "@/service/api";
 
+const projectStatsRoute = (id: string) => `/project/${encodeURIComponent(id)}/stats`;
+
 export interface EditProjectDTO {
   readonly title?: string;
   readonly description?: string;
@@ -88,7 +90,7 @@ export class ProjectService implements ProjectServiceI {
     params?: ProjectStatsQueryDTO,
   ): Promise<ApiResponse<ProjectStats>> {
     const response = await this.api.load<ProjectStats, ProjectStatsQueryDTO>({
-      route: `/project/${id}/stats`,
+      route: projectStatsRoute(id),
       params,
     });
 
@@ -100,7 +102,7 @@ export class ProjectService implements ProjectServiceI {
     data?: GenerateStatsReportDTO,
   ): Promise<void> {
     await this.api.download<GenerateStatsReportDTO>({
-      route: `/project/${id}/stats/report`,
+      route: `${projectStatsRoute(id)}/report`,
       data,
       fallbackFilename: `relatorio-projeto-${id}.pdf`,
     });
@@ -108,7 +110,7 @@ export class ProjectService implements ProjectServiceI {
 
   async listReports(id: string): Promise<ApiResponse<ProjectStatsReport[]>> {
     const response = await this.api.load<ProjectStatsReport[], void>({
-      route: `/project/${id}/stats/reports`,
+      route: `${projectStatsRoute(id)}/reports`,
     });
 
     return response;
@@ -119,7 +121,7 @@ export class ProjectService implements ProjectServiceI {
     reportkey: string,
   ): Promise<ApiResponse<ProjectStatsReport>> {
     const response = await this.api.load<ProjectStatsReport, void>({
-      route: `/project/${id}/stats/reports/${reportkey}`,
+      route: `${projectStatsRoute(id)}/reports/${encodeURIComponent(reportkey)}`,
     });
 
     return response;
