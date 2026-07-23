@@ -1,6 +1,6 @@
 import type { ApiResponse } from "@/service/types/response/response";
 import type { CreateUserDTO } from "../../types/user/create.dto";
-import type { UserDTO } from "../../types/user/user.dto";
+import type { UserDTO, UserProfileDTO } from "../../types/user/user.dto";
 
 import { ApiClient } from "@/service/api";
 
@@ -15,7 +15,7 @@ export interface UserServiceI {
   create(data: CreateUserDTO): Promise<ApiResponse<UserDTO>>;
   list(): Promise<ApiResponse<UserDTO[]>>;
   find(params: UserQueryDTO): Promise<ApiResponse<UserDTO>>;
-  delete(username: string): Promise<ApiResponse<UserDTO>>;
+  me(): Promise<ApiResponse<UserProfileDTO>>;
 }
 
 export class UserService implements UserServiceI {
@@ -51,9 +51,9 @@ export class UserService implements UserServiceI {
     return response;
   }
 
-  async delete(username: string): Promise<ApiResponse<UserDTO>> {
-    const response = await this.api.remove<UserDTO>({
-      route: `/users/del/${encodeURIComponent(username)}`,
+  async me(): Promise<ApiResponse<UserProfileDTO>> {
+    const response = await this.api.load<UserProfileDTO, void>({
+      route: "/users/me",
     });
 
     return response;

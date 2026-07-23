@@ -227,6 +227,9 @@ export class ApiClient {
       || (verb === "post" && (path === "/auth/login" || path === "/accounts/register"));
     const omitsOrganization = isPublic
       || path === "/auth/validate"
+      || path === "/users/me"
+      || path === "/accounts/me"
+      || (verb === "get" && path === "/affiliations")
       || (verb === "post" && path === "/org");
 
     return {

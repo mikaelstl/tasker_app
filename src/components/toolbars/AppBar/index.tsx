@@ -9,7 +9,7 @@ export function AppBar() {
   const navigate = useNavigate();
   
   const goToProfile = () => {
-    navigate('/home/profile')
+    navigate('/me/profile')
   }
 
   return (

@@ -21,6 +21,7 @@ import { AcceptInvite } from "./screens/AcceptInvite"
 import { CreateOrg } from "./screens/CreateOrg"
 import { ProtectedRoute } from "./routes/ProtectedRoute"
 import { Profile } from "./screens/Profile"
+import { EditProfile } from "./screens/Profile/Edit"
 
 function App() {
   return (
@@ -38,6 +39,9 @@ function App() {
             <Route path="/workspaces" element={<ChoseWorkspace />} />
             <Route path="/invite/:token" element={<AcceptInvite/>}/>
 
+            <Route path="/me/profile" element={<Profile />}/>
+            <Route path="/me/profile/edit" element={<EditProfile />}/>
+
             <Route element={<ProtectedRoute />}>
               <Route path="/home" element={<Home />}>
                 <Route index element={<Navigate to="workspace" replace />} />
@@ -45,7 +49,6 @@ function App() {
                 <Route path="workspace" element={<Workspace />} />
                 <Route path="projects" element={<Projects />} />
                 <Route path="organization" element={<Organization />} />
-                <Route path="profile" element={<Profile />} />
 
                 <Route path="project/:id" element={<Project />}>
                   <Route index element={<Navigate to="overview" replace />} />

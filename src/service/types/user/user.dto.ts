@@ -6,3 +6,9 @@ export type UserDTO = {
   readonly created_at: string;
   readonly updated_at: string;
 }
+
+export type UserProfileDTO = {
+  readonly name: string;
+  readonly username: string;
+  readonly email: string;
+}

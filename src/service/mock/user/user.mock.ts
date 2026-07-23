@@ -1,9 +1,10 @@
 import type { ApiResponse } from "@/service/types/response/response";
 import type { CreateUserDTO } from "../../types/user/create.dto";
-import type { UserDTO } from "../../types/user/user.dto";
+import type { UserDTO, UserProfileDTO } from "../../types/user/user.dto";
 
 import { mockData, createMockId, createMockResponse, createMockUser } from "../data";
 import type { UserServiceI } from "../../modules/user/user.service";
+import { createMockRequestError, requireMockCurrentAccount } from "../request-context";
 
 export interface UserQueryDTO {
   readonly id?: string;
@@ -54,14 +55,19 @@ export class UserMockService implements UserServiceI {
     return createMockResponse(user ?? createMockUser(), "/users", user ? "OK" : "Usuário não encontrado", user ? 200 : 404, !user);
   }
 
-  async delete(username: string): Promise<ApiResponse<UserDTO>> {
-    const index = mockData.users.findIndex((item) => item.username === username);
-    const user = index >= 0 ? mockData.users[index] : createMockUser();
+  async me(): Promise<ApiResponse<UserProfileDTO>> {
+    const currentAccount = requireMockCurrentAccount("/users/me");
+    const account = mockData.accounts.find((item) => item.id === currentAccount.id);
+    const user = mockData.users.find((item) => item.accountkey === currentAccount.id);
 
-    if (index >= 0) {
-      mockData.users.splice(index, 1);
+    if (!account || !user) {
+      throw createMockRequestError("/users/me", 404, "Usuário não encontrado.");
     }
 
-    return createMockResponse(user, `/users/del/${username}`);
+    return createMockResponse({
+      name: user.name,
+      username: user.username,
+      email: account.email,
+    }, "/users/me");
   }
 }

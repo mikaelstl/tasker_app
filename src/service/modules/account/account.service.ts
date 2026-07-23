@@ -3,6 +3,8 @@ import type { LoginDTO } from "../../types/auth/login.dto";
 import type { AccountDTO } from "../../types/account/account.dto";
 import type { CreateAccountDTO } from "../../types/account/create.dto";
 import type { CurrentAccountDTO } from "../../types/account/current-account.dto";
+import type { EditAccountDTO } from "../../types/account/edit.dto";
+import type { AccountIdentityDTO } from "../../types/account/identity.dto";
 
 import { ApiClient } from "@/service/api";
 import type { ApiResponse } from "@/service/types/response/response";
@@ -13,7 +15,8 @@ export interface AccountServiceI {
   authStatus(): Promise<ApiResponse<null>>;
   login(data: LoginDTO): Promise<ApiResponse<AuthDTO>>;
   validate(): Promise<ApiResponse<boolean>>;
-  delete(email: string): Promise<ApiResponse<null>>;
+  edit(data: EditAccountDTO): Promise<ApiResponse<AccountIdentityDTO>>;
+  delete(): Promise<ApiResponse<null>>;
   buildCurrentAccount(auth: AuthDTO): CurrentAccountDTO;
 }
 
@@ -56,9 +59,16 @@ export class AccountService implements AccountServiceI {
     return response;
   }
 
-  async delete(email: string): Promise<ApiResponse<null>> {
+  async edit(data: EditAccountDTO): Promise<ApiResponse<AccountIdentityDTO>> {
+    return this.api.change<EditAccountDTO, AccountIdentityDTO>({
+      route: "/accounts/me",
+      data,
+    });
+  }
+
+  async delete(): Promise<ApiResponse<null>> {
     const response = await this.api.remove<null>({
-      route: `/accounts/del/${encodeURIComponent(email)}`,
+      route: "/accounts/me",
     });
 
     return response;
