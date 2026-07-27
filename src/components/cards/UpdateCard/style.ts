@@ -1,16 +1,14 @@
 import styled from "styled-components";
 import Palette from "../../../assets/palette";
-import { Subtitle } from "../../base/Subtitle";
-import { Text } from "../../base/Text";
 
 const Card = styled.div`
   display: grid;
-  grid-template-columns: 10px minmax(0, 1fr);
-  column-gap: 12px;
+  grid-template-columns: 12px minmax(0, 1fr);
+  column-gap: 10px;
 
   width: 100%;
-  min-height: 96px;
-  padding-bottom: 16px;
+  min-height: 128px;
+  padding-bottom: 14px;
 
   position: relative;
 `;
@@ -26,96 +24,134 @@ const TimelineMarker = styled.div<{
   &::after {
     content: "";
     position: absolute;
-    left: 4px;
-    width: 2px;
+    left: 5px;
+    width: 1px;
     background-color: ${Palette.details};
   }
 
   &::before {
     display: ${({ $hasPrevious }) => $hasPrevious ? "block" : "none"};
     top: 0;
-    bottom: calc(50% + 5px);
+    height: 11px;
   }
 
   &::after {
     display: ${({ $hasNext }) => $hasNext ? "block" : "none"};
-    top: calc(50% + 5px);
-    bottom: -16px;
+    top: 23px;
+    bottom: -14px;
   }
 `;
 
 const TrackerDot = styled.span`
   position: absolute;
   z-index: 1;
-  top: 50%;
-  left: 0;
-  width: 10px;
-  height: 10px;
+  top: 11px;
+  left: 1px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
-  background-color: ${Palette.details};
-  transform: translateY(-50%);
+  background-color: ${Palette.lightBlue};
+  box-shadow: 0 0 0 3px ${Palette.tool_bars};
 `;
 
 const Content = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 
   min-width: 0;
-  padding: 12px 14px;
+  padding: 14px 16px 16px;
 
   border: 1px solid ${Palette.details};
-  border-radius: 10px;
-  background-color: ${Palette.content};
+  border-radius: 14px;
+  background-color: ${Palette.items};
+  box-shadow: 0 2px 8px ${Palette.gray_25};
 `;
 
 const Header = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
 `;
 
-const UpdateDate = styled(Subtitle)`
-  flex-shrink: 0;
+const UpdateDate = styled.span`
+  min-width: 0;
+  color: ${Palette.white_50};
   font-size: 12px;
   font-weight: 500;
-  white-space: nowrap;
+  line-height: 1.35;
 `;
 
-const Description = styled(Text)`
-  font-size: 14px;
-  color: ${Palette.white_50};
-  line-height: 1.45;
+const Description = styled.h3`
+  margin: 0;
+  color: ${Palette.white};
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.4;
   overflow-wrap: anywhere;
 `;
 
 const ResourceBadge = styled.span`
-  align-self: flex-start;
-  padding: 3px 8px;
+  flex: 0 0 auto;
+  max-width: 45%;
+  padding: 4px 10px;
   border-radius: 999px;
-  background: ${Palette.purple_25};
-  color: ${Palette.purple};
+  background: ${Palette.lightBlue_50};
+  color: ${Palette.white};
   font-size: 11px;
+  font-weight: 600;
+  line-height: 1.2;
   text-transform: capitalize;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`;
+
+const ActorDetails = styled.div`
+  min-width: 0;
+  padding-top: 2px;
+
+  .tskr-user {
+    max-width: 100%;
+  }
 `;
 
 const Details = styled.dl`
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 16px;
   margin: 0;
-  padding-top: 8px;
+  padding-top: 10px;
   border-top: 1px solid ${Palette.details};
+
+  @media (max-width: 560px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
 `;
 
 const Detail = styled.div`
   display: grid;
-  grid-template-columns: minmax(72px, auto) minmax(0, 1fr);
-  gap: 8px;
+  grid-template-columns: 16px minmax(0, 1fr);
+  gap: 2px 7px;
+  align-items: start;
   color: ${Palette.white_50};
-  font-size: 11px;
+  font-size: 12px;
+  line-height: 1.4;
   overflow-wrap: anywhere;
+`;
+
+const DetailIcon = styled.span`
+  grid-row: 1 / span 2;
+  color: ${Palette.white_50};
+
+  svg {
+    display: block;
+    width: 15px;
+    height: 15px;
+    margin-top: 1px;
+    stroke-width: 1.8;
+  }
 `;
 
 const DetailField = styled.dt`
@@ -123,12 +159,25 @@ const DetailField = styled.dt`
   font-weight: 600;
 `;
 
+const DetailValue = styled.dd`
+  margin: 0;
+  min-width: 0;
+  color: ${Palette.white_50};
+
+  span {
+    color: ${Palette.lightBlue};
+  }
+`;
+
 export {
+  ActorDetails,
   Card,
   Content,
   Description,
   Detail,
   DetailField,
+  DetailIcon,
+  DetailValue,
   Details,
   Header,
   ResourceBadge,

@@ -1,10 +1,13 @@
 import { DateTime } from "luxon";
 import {
+  ActorDetails,
   Card,
   Content,
   Description,
   Detail,
   DetailField,
+  DetailIcon,
+  DetailValue,
   Details,
   Header,
   ResourceBadge,
@@ -13,6 +16,7 @@ import {
   UpdateDate,
 } from "./style";
 import { User } from "@/components/misc/User";
+import { ArrowsRightLeftIcon } from "@heroicons/react/24/outline";
 
 interface UpdateCardDTO {
   readonly actorName: string;
@@ -57,29 +61,41 @@ export function UpdateCard({
 
       <Content>
         <Header>
+          <UpdateDate as="time" dateTime={date.toISO() ?? undefined}>
+            {date.isValid
+              ? localizedDate.toFormat("dd/MM/yyyy, HH:mm:ss")
+              : "Data indisponível"}
+          </UpdateDate>
+          <ResourceBadge>{resourceLabel}</ResourceBadge>
+        </Header>
+
+        <Description>{message}</Description>
+
+        <ActorDetails>
           <User
             actorName={actorName}
             actorUsername={actorUsername}
             actorPhotoUrl={actorPhotoUrl}
             isSystem={isSystem}
           />
-          <UpdateDate as="time" dateTime={date.toISO() ?? undefined}>
-            {date.isValid ? localizedDate.toFormat("dd LLL • HH:mm") : "Data indisponível"}
-          </UpdateDate>
-        </Header>
-        <Description>{message}</Description>
-        <ResourceBadge>{resourceLabel}</ResourceBadge>
+        </ActorDetails>
+
         {details.length > 0 && (
           <Details>
             {details.map((detail) => (
               <Detail key={detail.field}>
+                <DetailIcon aria-hidden="true">
+                  <ArrowsRightLeftIcon />
+                </DetailIcon>
                 <DetailField>{detail.field}</DetailField>
-                <span>{detail.oldValue} → {detail.newValue}</span>
+                <DetailValue>
+                  {detail.oldValue} <span aria-hidden="true">→</span> {detail.newValue}
+                </DetailValue>
               </Detail>
             ))}
           </Details>
         )}
       </Content>
     </Card>
-  )
+  );
 }
