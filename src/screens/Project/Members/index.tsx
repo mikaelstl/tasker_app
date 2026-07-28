@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
-import { XMarkIcon } from "@heroicons/react/16/solid";
+import { PlusIcon, TrashIcon, XMarkIcon } from "@heroicons/react/16/solid";
 import { useNavigate, useParams } from "react-router-dom";
 import { ContentHeader } from "../../../components/base/ContentHeader";
 import { CreateButton } from "../../../components/buttons/CreateButton";
 import { Text } from "../../../components/base/Text";
 import { Scroller } from "../../../components/misc/Scroller";
+import { User } from "../../../components/misc/User";
 import { SearchField } from "../../../components/textfields/SearchField";
 import { MemberStatTile } from "../../../components/tiles/MemberStatTile";
 import { useOrganization } from "../../../hooks/useOrganization";
@@ -21,8 +22,11 @@ import {
   Container,
   Content,
   EmptyState,
+  MemberActionButton,
   MemberActions,
   MemberCard,
+  MemberRowCard,
+  MemberRowInfo,
   MembersArea,
   ModalCloseButton,
   ModalContent,
@@ -99,9 +103,10 @@ interface MemberModalProps {
   projectTitle: string;
   members: AffiliationDTO[];
   projectMembers: ProjectMember[];
-  addingMemberId: string | null;
+  pendingMemberId: string | null;
   onClose: () => void;
   onAddMember: (member: AffiliationDTO) => void;
+  onRemoveMember: (member: ProjectMember) => void;
 }
 
 function MembersModal({
@@ -110,9 +115,10 @@ function MembersModal({
   projectTitle,
   members,
   projectMembers,
-  addingMemberId,
+  pendingMemberId,
   onClose,
   onAddMember,
+  onRemoveMember,
 }: MemberModalProps) {
   useEffect(() => {
     if (!open) return;
@@ -140,14 +146,14 @@ function MembersModal({
         onMouseDown={(event) => event.stopPropagation()}
       >
         <ModalHeader>
-          <ModalTitle id="project-members-modal-title">Adicionar membros</ModalTitle>
+          <ModalTitle id="project-members-modal-title">Editar membros</ModalTitle>
           <ModalCloseButton type="button" onClick={onClose} aria-label="Fechar modal">
             <XMarkIcon />
           </ModalCloseButton>
         </ModalHeader>
 
         <ModalDescription>
-          Selecione um membro da organização para adicioná-lo ao projeto {projectTitle || "selecionado"}.
+          Adicione ou remova membros da organização no projeto {projectTitle || "selecionado"}.
         </ModalDescription>
 
         <ModalContent>
@@ -158,42 +164,43 @@ function MembersModal({
               {members.map((member) => {
                 const projectMember = projectMembers.find((item) => item.userkey === member.id);
                 const isAlreadyAdded = projectMemberIds.has(member.id);
-                const counts = projectMember ? getTaskCounts(projectMember.tasks) : {
-                  started: 0,
-                  review: 0,
-                  done: 0,
-                  overdue: 0,
-                };
-                const statsTasks = projectMember ? toStatsTasks(projectMember.tasks) : [];
 
                 return (
-                  <MemberCard key={member.id}>
-                    <MemberStatTile
-                      username={getAffiliationUsername(member)}
-                      name={getAffiliationName(member)}
-                      project={projectTitle}
-                      started={counts.started}
-                      review={counts.review}
-                      done={counts.done}
-                      overdue={counts.overdue}
-                      tasks={statsTasks}
-                    />
+                  <MemberRowCard key={member.id} $active={isAlreadyAdded}>
+                    <MemberRowInfo>
+                      <User
+                        username={getAffiliationUsername(member)}
+                        actorName={getAffiliationName(member)}
+                        actorUsername={getAffiliationUsername(member)}
+                      />
+                    </MemberRowInfo>
                     <MemberActions>
-                      <CreateButton
+                      <MemberActionButton
                         type="button"
-                        onClick={() => onAddMember(member)}
-                        disabled={isAlreadyAdded || addingMemberId === member.id}
+                        onClick={() => {
+                          if (isAlreadyAdded && projectMember) {
+                            onRemoveMember(projectMember);
+                            return;
+                          }
+
+                          onAddMember(member);
+                        }}
+                        disabled={pendingMemberId === member.id}
+                        $danger={isAlreadyAdded}
+                        $loading={pendingMemberId === member.id}
+                        title={isAlreadyAdded ? "Remover do projeto" : "Adicionar ao projeto"}
+                        aria-label={isAlreadyAdded
+                          ? `Remover ${getAffiliationName(member)} do projeto`
+                          : `Adicionar ${getAffiliationName(member)} ao projeto`}
                       >
-                        <Text>
-                          {isAlreadyAdded
-                            ? "Já está no projeto"
-                            : addingMemberId === member.id
-                              ? "Adicionando..."
-                              : "Adicionar ao projeto"}
-                        </Text>
-                      </CreateButton>
+                        {isAlreadyAdded ? (
+                          <TrashIcon />
+                        ) : (
+                          <PlusIcon />
+                        )}
+                      </MemberActionButton>
                     </MemberActions>
-                  </MemberCard>
+                  </MemberRowCard>
                 );
               })}
             </Scroller>
@@ -221,7 +228,7 @@ export function Members() {
   const [loadingAffiliations, setLoadingAffiliations] = useState(true);
   const [search, setSearch] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
-  const [addingMemberId, setAddingMemberId] = useState<string | null>(null);
+  const [pendingMemberId, setPendingMemberId] = useState<string | null>(null);
 
   const loading = loadingProject || loadingMembers || loadingAffiliations;
   const projectTitle = project?.title ?? "";
@@ -365,7 +372,7 @@ export function Members() {
       return;
     }
 
-    setAddingMemberId(member.id);
+    setPendingMemberId(member.id);
 
     try {
       const response = await MemberService.create({
@@ -378,7 +385,24 @@ export function Members() {
     } catch (error) {
       reportApiError(error, "Não foi possível adicionar o membro ao projeto.", notifications);
     } finally {
-      setAddingMemberId(null);
+      setPendingMemberId(null);
+    }
+  };
+
+  const removeProjectMember = async (member: ProjectMember) => {
+    if (!id) return;
+
+    setPendingMemberId(member.userkey);
+
+    try {
+      await MemberService.delete(member.id);
+
+      setMembers((current) => current.filter((item) => item.id !== member.id));
+      notifications.info("Membro removido do projeto.");
+    } catch (error) {
+      reportApiError(error, "Não foi possível remover o membro do projeto.", notifications);
+    } finally {
+      setPendingMemberId(null);
     }
   };
 
@@ -386,7 +410,7 @@ export function Members() {
     <Container className="tskr-proj-members">
       <ContentHeader title="Membros do projeto">
         <CreateButton type="button" onClick={() => setModalOpen(true)} disabled={loading}>
-          <Text>Adicionar Membros</Text>
+          <Text>Editar Membros</Text>
         </CreateButton>
       </ContentHeader>
 
@@ -434,9 +458,10 @@ export function Members() {
         projectTitle={projectTitle}
         members={filteredOrganizationMembers}
         projectMembers={members}
-        addingMemberId={addingMemberId}
+        pendingMemberId={pendingMemberId}
         onClose={() => setModalOpen(false)}
         onAddMember={addProjectMember}
+        onRemoveMember={removeProjectMember}
       />
     </Container>
   );

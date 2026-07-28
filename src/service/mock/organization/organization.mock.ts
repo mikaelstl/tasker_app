@@ -1,6 +1,7 @@
 import type { ApiResponse } from "@/service/types/response/response";
 import type { OrganizationCreateDTO } from "../../types/organization/create.dto";
 import type { OrganizationDTO } from "../../types/organization/organization.dto";
+import type { OrganizationSummaryDTO } from "@/service/types/organization/summary.dto";
 
 import {
   mockData,
@@ -51,5 +52,22 @@ export class OrganizationMockService implements OrganizationServiceI {
     }
 
     return createMockResponse(organization, `/org/del/${id}`);
+  }
+
+  async summary(id: string): Promise<ApiResponse<OrganizationSummaryDTO>> {
+    const organization = mockData.organizations.find((item) => item.id === id);
+    const summary: OrganizationSummaryDTO = {
+      name: organization?.name ?? createMockOrganization({ id }).name,
+      projects: mockData.projects.filter((project) => project.orgkey === id).length,
+      members: mockData.affiliations.filter((affiliation) => affiliation.orgkey === id).length,
+    };
+
+    return createMockResponse(
+      summary,
+      `/org/${id}/summary`,
+      organization ? "OK" : "Organização não encontrada",
+      organization ? 200 : 404,
+      !organization,
+    );
   }
 }

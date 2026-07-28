@@ -1,7 +1,11 @@
 import type { ApiResponse } from "@/service/types/response/response";
 import type { AffiliationDTO } from "../../types/affiliation/affiliation.dto";
 import type { UserOrganizationSummaryDTO } from "../../types/affiliation/summary.dto";
-import type { AffiliationInviteDTO } from "../../types/affiliation/invite.dto";
+import type {
+  OrganizationInviteCreateResponse,
+  OrganizationInvitePreviewResponse,
+  OrganizationInviteTokenDTO,
+} from "../../types/affiliation/invite.dto";
 import type { DefineAffiliationDTO } from "../../types/affiliation/define.dto";
 
 import { ApiClient } from "@/service/api";
@@ -15,8 +19,10 @@ export interface AffiliationServiceI {
   listByOrganization(orgkey: string): Promise<ApiResponse<AffiliationDTO[]>>;
   create(data: DefineAffiliationDTO): Promise<ApiResponse<AffiliationDTO>>;
   participates(orgkey: string): Promise<ApiResponse<boolean>>;
-  createInvite(orgkey: string): Promise<ApiResponse<AffiliationInviteDTO>>;
+  createInvite(orgkey: string): Promise<ApiResponse<OrganizationInviteCreateResponse>>;
+  previewInvite(token: string): Promise<ApiResponse<OrganizationInvitePreviewResponse>>;
   acceptInvite(token: string): Promise<ApiResponse<AffiliationDTO>>;
+  rejectInvite(token: string): Promise<ApiResponse<null>>;
   delete(id: string): Promise<ApiResponse<null>>;
   promote(id: string): Promise<ApiResponse<AffiliationDTO | APIMessage>>;
   demote(id: string): Promise<ApiResponse<AffiliationDTO | APIMessage>>;
@@ -60,18 +66,37 @@ export class AffiliationService implements AffiliationServiceI {
     return response;
   }
 
-  async createInvite(orgkey: string): Promise<ApiResponse<AffiliationInviteDTO>> {
-    const response = await this.api.register<{ orgkey: string }, AffiliationInviteDTO>({
-      route: "/affiliations/invites",
+  async createInvite(orgkey: string): Promise<ApiResponse<OrganizationInviteCreateResponse>> {
+    const response = await this.api.register<{ orgkey: string }, OrganizationInviteCreateResponse>({
+      route: "/org/invites",
       data: { orgkey },
     });
 
     return response;
   }
 
+  async previewInvite(token: string): Promise<ApiResponse<OrganizationInvitePreviewResponse>> {
+    const response = await this.api.register<OrganizationInviteTokenDTO, OrganizationInvitePreviewResponse>({
+      route: "/org/invites/preview",
+      data: { token },
+    });
+
+    return response;
+  }
+
   async acceptInvite(token: string): Promise<ApiResponse<AffiliationDTO>> {
-    const response = await this.api.register<void, AffiliationDTO>({
-      route: `/affiliations/invites/${token}/accept`,
+    const response = await this.api.register<OrganizationInviteTokenDTO, AffiliationDTO>({
+      route: "/org/invites/accept",
+      data: { token },
+    });
+
+    return response;
+  }
+
+  async rejectInvite(token: string): Promise<ApiResponse<null>> {
+    const response = await this.api.register<OrganizationInviteTokenDTO, null>({
+      route: "/org/invites/reject",
+      data: { token },
     });
 
     return response;

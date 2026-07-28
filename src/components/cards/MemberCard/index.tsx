@@ -1,10 +1,8 @@
-import { Avatar } from "@/components/misc/Avatar";
 import { RoleBadge } from "@/maps/role-badge";
 import type { OrgRole } from "@/utils/enums/OrgRole";
-import { Subtitle } from "@/components/base/Subtitle";
-import { Text } from "@/components/base/Text";
 import { ArrowDownIcon, ArrowUpIcon, TrashIcon } from "@heroicons/react/16/solid";
-import { Actions, ActionButton, Card, Identity } from "./style";
+import { Actions, ActionButton, Card } from "./style";
+import { User } from "@/components/misc/User";
 
 interface MemberCardProps {
   name: string;
@@ -27,11 +25,11 @@ export function MemberCard({
 }: MemberCardProps) {
   return (
     <Card>
-      <Avatar image="" size="medium" />
-      <Identity>
-        <Text>{name}</Text>
-        <Subtitle>@{username}</Subtitle>
-      </Identity>
+      <User
+        username={username}
+        actorName={name}
+        actorUsername={username}
+      />
       {RoleBadge[role]}
       {(onPromote || onDemote || onRemove) && (
         <Actions>

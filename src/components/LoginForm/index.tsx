@@ -6,6 +6,7 @@ import type { LoginDTO } from "../../service/types/auth/login.dto";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { SectionTitle } from "../base/SectionTitle";
+import { readPendingInviteToken } from "@/config/invite";
 
 interface LoginFormProps {
   login: (data: LoginDTO) => Promise<void>
@@ -28,6 +29,13 @@ export function LoginForm({ login }: LoginFormProps) {
     try {
       setSubmitting(true);
       await login(data);
+
+      const pendingInviteToken = readPendingInviteToken();
+
+      if (pendingInviteToken) {
+        navigate(`/org/join/${encodeURIComponent(pendingInviteToken)}`, { replace: true });
+        return;
+      }
 
       navigate("/workspaces");
     } catch {

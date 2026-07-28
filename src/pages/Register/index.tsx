@@ -10,6 +10,7 @@ import {
 } from "@/components/CreateAccountForm";
 import { useToast } from "@/hooks/useToast";
 import { useNavigate } from "react-router-dom";
+import { readPendingInviteToken } from "@/config/invite";
 
 export function Register() {
   const navigate = useNavigate();
@@ -48,7 +49,14 @@ export function Register() {
       });
 
       info("Conta criada com sucesso.");
-      
+
+      const pendingInviteToken = readPendingInviteToken();
+
+      if (pendingInviteToken) {
+        navigate(`/org/join/${encodeURIComponent(pendingInviteToken)}`, { replace: true });
+        return;
+      }
+
       navigate("/workspaces");
     } catch (caughtError: unknown) {
       const errors = (caughtError as Partial<ApiError>).errors;

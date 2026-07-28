@@ -32,12 +32,13 @@ function App() {
 
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/org/join/:token" element={<AcceptInvite />} />
+          <Route path="/invite/:token" element={<AcceptInvite />} />
 
           <Route element={<PrivateRoute />}>
             <Route path="/org/register" element={<CreateOrg />} />
 
             <Route path="/workspaces" element={<ChoseWorkspace />} />
-            <Route path="/invite/:token" element={<AcceptInvite/>}/>
 
             <Route path="/me/profile" element={<Profile />}/>
             <Route path="/me/profile/edit" element={<EditProfile />}/>

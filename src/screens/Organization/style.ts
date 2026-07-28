@@ -130,6 +130,89 @@ const FormActions = styled.div`
   align-items: center;
 `;
 
+const DeleteOverlay = styled.div`
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+
+  background-color: rgba(0, 0, 0, 0.65);
+`;
+
+const DeleteDialog = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+
+  width: min(520px, 100%);
+  padding: 24px;
+  border: 1px solid ${Palette.details};
+  border-radius: 12px;
+
+  background-color: ${Palette.content};
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.4);
+`;
+
+const DeleteDialogHeader = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
+
+const DeleteDialogTitle = styled.h2`
+  margin: 0;
+  color: ${Palette.white};
+  font-size: 20px;
+  font-weight: 600;
+`;
+
+const DeleteDialogMessage = styled.p`
+  margin: 0;
+  color: ${Palette.white_50};
+  font-size: 14px;
+  line-height: 1.5;
+`;
+
+const DeleteDialogActions = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+`;
+
+const DeleteDialogButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 40px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 8px;
+
+  cursor: pointer;
+  color: ${Palette.white};
+  font-size: 14px;
+  font-weight: 600;
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+`;
+
+const DeleteDialogSecondaryButton = styled(DeleteDialogButton)`
+  border: 1px solid ${Palette.details};
+  background-color: ${Palette.items};
+`;
+
+const DeleteDialogPrimaryButton = styled(DeleteDialogButton)`
+  background-color: ${Palette.red};
+`;
+
 export {
   Container,
   Content,
@@ -144,4 +227,13 @@ export {
   HeaderStats,
   MemberGrid,
   RoleGroup,
+  DeleteDialog,
+  DeleteDialogActions,
+  DeleteDialogButton,
+  DeleteDialogPrimaryButton,
+  DeleteDialogSecondaryButton,
+  DeleteDialogHeader,
+  DeleteDialogMessage,
+  DeleteDialogTitle,
+  DeleteOverlay,
 };

@@ -1,7 +1,10 @@
 import type { ApiResponse } from "@/service/types/response/response";
 import type { AffiliationDTO } from "../../types/affiliation/affiliation.dto";
 import type { UserOrganizationSummaryDTO } from "../../types/affiliation/summary.dto";
-import type { AffiliationInviteDTO } from "../../types/affiliation/invite.dto";
+import type {
+  OrganizationInviteCreateResponse,
+  OrganizationInvitePreviewResponse,
+} from "../../types/affiliation/invite.dto";
 import { OrgRole } from "@/utils/enums/OrgRole";
 import type { DefineAffiliationDTO } from "../../types/affiliation/define.dto";
 
@@ -76,14 +79,18 @@ function buildSummary(username: string): UserOrganizationSummaryDTO[] {
     return userAffiliations;
 }
 
+type StoredInvite = OrganizationInviteCreateResponse & {
+  readonly orgkey: string;
+};
+
 const INVITES_STORAGE_KEY = "tasker.mock.affiliation-invites";
-const invites = new Map<string, AffiliationInviteDTO>();
+const invites = new Map<string, StoredInvite>();
 
 function restoreInvites(): void {
   if (typeof localStorage === "undefined") return;
 
   try {
-    const stored = JSON.parse(localStorage.getItem(INVITES_STORAGE_KEY) ?? "[]") as AffiliationInviteDTO[];
+    const stored = JSON.parse(localStorage.getItem(INVITES_STORAGE_KEY) ?? "[]") as StoredInvite[];
     stored.forEach((invite) => invites.set(invite.token, invite));
   } catch {
     localStorage.removeItem(INVITES_STORAGE_KEY);
@@ -168,37 +175,81 @@ export class AffiliationMockService implements AffiliationServiceI {
     }
   }
 
-  async createInvite(orgkey: string): Promise<ApiResponse<AffiliationInviteDTO>> {
-    const selectedOrgkey = requireOwnerRequest("/affiliations/invites");
+  async createInvite(orgkey: string): Promise<ApiResponse<OrganizationInviteCreateResponse>> {
+    const selectedOrgkey = requireOwnerRequest("/org/invites");
 
     if (selectedOrgkey !== orgkey) {
       throw createMockRequestError(
-        "/affiliations/invites",
+        "/org/invites",
         403,
         "A organização do convite difere da organização selecionada.",
       );
     }
 
     const token = crypto.randomUUID();
-    const invite: AffiliationInviteDTO = {
+    const invite: StoredInvite = {
+      id: createMockId("invite"),
       token,
       orgkey,
-      expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
     };
 
     invites.set(token, invite);
     persistInvites();
 
-    return createMockResponse(invite, "/affiliations/invites", "Convite criado", 201);
+    return createMockResponse(
+      {
+        id: invite.id,
+        token: invite.token,
+        expiresAt: invite.expiresAt,
+      },
+      "/org/invites",
+      "Convite criado",
+      201,
+    );
+  }
+
+  async previewInvite(token: string): Promise<ApiResponse<OrganizationInvitePreviewResponse>> {
+    const path = "/org/invites/preview";
+    const invite = invites.get(token);
+    const organization = invite
+      ? mockData.organizations.find((item) => item.id === invite.orgkey)
+      : undefined;
+
+    if (!invite || new Date(invite.expiresAt).getTime() < Date.now()) {
+      return createMockResponse(
+        {
+          valid: false,
+          expiresAt: invite?.expiresAt ?? new Date(0).toISOString(),
+          organization: {
+            id: organization?.id ?? "",
+            name: organization?.name ?? "",
+          },
+        },
+        path,
+      );
+    }
+
+    return createMockResponse(
+      {
+        valid: true,
+        expiresAt: invite.expiresAt,
+        organization: {
+          id: organization?.id ?? invite.orgkey,
+          name: organization?.name ?? "",
+        },
+      },
+      path,
+    );
   }
 
   async acceptInvite(token: string): Promise<ApiResponse<AffiliationDTO>> {
-    const path = `/affiliations/invites/${token}/accept`;
+    const path = "/org/invites/accept";
     const currentAccount = requireMockCurrentAccount(path);
     const invite = invites.get(token);
 
-    if (!invite || new Date(invite.expires_at).getTime() < Date.now()) {
-      throw createMockRequestError(path, 404, "Convite inválido ou expirado.");
+    if (!invite || new Date(invite.expiresAt).getTime() < Date.now()) {
+      throw createMockRequestError(path, 410, "Convite inválido ou expirado.");
     }
 
     const existingAffiliation = mockData.affiliations.find(
@@ -208,7 +259,7 @@ export class AffiliationMockService implements AffiliationServiceI {
 
     if (existingAffiliation) {
       deleteInvite(token);
-      return createMockResponse(existingAffiliation, path, "Você já participa desta organização");
+      throw createMockRequestError(path, 409, "Você já participa desta organização.");
     }
 
     const user = mockData.users.find(
@@ -233,6 +284,29 @@ export class AffiliationMockService implements AffiliationServiceI {
     deleteInvite(token);
 
     return createMockResponse(affiliation, path, "Convite aceito", 201);
+  }
+
+  async rejectInvite(token: string): Promise<ApiResponse<null>> {
+    const path = "/org/invites/reject";
+    const currentAccount = requireMockCurrentAccount(path);
+    const invite = invites.get(token);
+
+    if (!invite || new Date(invite.expiresAt).getTime() < Date.now()) {
+      throw createMockRequestError(path, 410, "Convite inválido ou expirado.");
+    }
+
+    const isMember = mockData.affiliations.some(
+      (affiliation) => affiliation.orgkey === invite.orgkey
+        && affiliation.userkey === currentAccount.username,
+    );
+
+    if (isMember) {
+      deleteInvite(token);
+      return createMockResponse(null, path, "Convite já resolvido.");
+    }
+
+    deleteInvite(token);
+    return createMockResponse(null, path, "Convite rejeitado.");
   }
 
   async delete(id: string): Promise<ApiResponse<null>> {

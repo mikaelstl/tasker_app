@@ -224,12 +224,15 @@ export class ApiClient {
     const path = url.split("?")[0].replace(/\/$/, "");
     const verb = method.toLowerCase();
     const isPublic = (verb === "get" && (path === "/status" || path === "/auth"))
-      || (verb === "post" && (path === "/auth/login" || path === "/accounts/register"));
+      || (verb === "post" && (path === "/auth/login" || path === "/accounts/register"))
+      || (verb === "post" && path === "/org/invites/preview");
     const omitsOrganization = isPublic
       || path === "/auth/validate"
       || path === "/users/me"
       || path === "/accounts/me"
       || (verb === "get" && path === "/affiliations")
+      || (verb === "post" && path === "/org/invites/preview")
+      || (verb === "post" && (path === "/org/invites/accept" || path === "/org/invites/reject"))
       || (verb === "post" && path === "/org");
 
     return {

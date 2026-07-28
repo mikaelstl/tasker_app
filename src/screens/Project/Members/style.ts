@@ -118,9 +118,58 @@ const MemberCard = styled.div`
   gap: 10px;
 `
 
+const MemberRowCard = styled.div<{ $active?: boolean }>`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  padding: 14px 16px;
+  border: 1px solid ${Palette.details};
+  border-radius: 12px;
+  background-color: ${({ $active }) => $active ? Palette.tool_bars : Palette.items};
+`
+
+const MemberRowInfo = styled.div`
+  min-width: 0;
+  flex: 1 1 auto;
+`
+
 const MemberActions = styled.div`
   display: flex;
   justify-content: flex-end;
+`
+
+const MemberActionButton = styled.button<{ $danger?: boolean; $loading?: boolean }>`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid ${Palette.details};
+  border-radius: 10px;
+
+  background-color: ${Palette.transparent};
+  color: ${({ $danger }) => $danger ? Palette.red : Palette.white_50};
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    border-color: ${({ $danger }) => $danger ? Palette.red : Palette.lightBlue};
+    color: ${({ $danger }) => $danger ? Palette.red : Palette.lightBlue};
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  svg {
+    width: 18px;
+    height: 18px;
+    opacity: ${({ $loading }) => $loading ? 0.65 : 1};
+  }
 `
 
 export {
@@ -136,5 +185,8 @@ export {
   ModalDescription,
   ModalContent,
   MemberCard,
+  MemberRowCard,
+  MemberRowInfo,
   MemberActions,
+  MemberActionButton,
 }
