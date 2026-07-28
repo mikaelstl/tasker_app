@@ -18,6 +18,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useToast } from "@/hooks/useToast";
 import { useServices } from "../../../hooks/useServices";
 
+function normalizeSearchTerm(value: string) {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLocaleLowerCase("pt-BR")
+    .trim();
+}
+
 export function Tasks() {
   const navigate = useNavigate();
   const notifications = useToast();
@@ -56,10 +64,15 @@ export function Tasks() {
     void loadTasks();
   }, [isPopupOpen, loadTasks]);
 
-  const normalizedSearch = search.trim().toLocaleLowerCase("pt-BR");
-  const filteredTasks = tasks.filter((task) => !normalizedSearch
-    || task.name.toLocaleLowerCase("pt-BR").includes(normalizedSearch)
-    || task.code.toLocaleLowerCase("pt-BR").includes(normalizedSearch));
+  const normalizedSearch = normalizeSearchTerm(search);
+  const filteredTasks = tasks.filter((task) => {
+    if (!normalizedSearch) return true;
+
+    const name = normalizeSearchTerm(task.name);
+    const code = normalizeSearchTerm(task.code);
+
+    return name.includes(normalizedSearch) || code.includes(normalizedSearch);
+  });
 
   return (
     <Container className="tasks">

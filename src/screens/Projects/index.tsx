@@ -23,6 +23,14 @@ const stageLabels: Record<ProjectStage, string> = {
   [ProjectStage.COMPLETED]: "Concluído",
 };
 
+function normalizeSearchTerm(value: string) {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLocaleLowerCase("pt-BR")
+    .trim();
+}
+
 export function Projects() {
   const { ProjectService } = useServices();
   const notifications = useToast();
@@ -63,12 +71,14 @@ export function Projects() {
   }, [isPopupOpen, loadProjects]);
 
   const filteredProjects = useMemo(() => {
-    const normalizedSearch = search.trim().toLocaleLowerCase("pt-BR");
+    const normalizedSearch = normalizeSearchTerm(search);
 
     return projects.filter((project) => {
-      const matchesSearch = !normalizedSearch || project.title
-        .toLocaleLowerCase("pt-BR")
-        .includes(normalizedSearch);
+      const title = normalizeSearchTerm(project.title);
+      const description = normalizeSearchTerm(project.description ?? "");
+      const matchesSearch = !normalizedSearch
+        || title.includes(normalizedSearch)
+        || description.includes(normalizedSearch);
       const matchesStage = stageFilter === "ALL" || project.stage === stageFilter;
 
       return matchesSearch && matchesStage;
@@ -96,7 +106,7 @@ export function Projects() {
           onFilter={() => setShowStageFilter((current) => !current)}
           value={search}
           onChange={setSearch}
-          placeholder="Pesquisar projetos por título"
+          placeholder="Pesquisar projetos por título ou descrição"
         />
         {showStageFilter
           ? <StageFilterControl htmlFor="project-stage-filter">

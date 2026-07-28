@@ -97,6 +97,14 @@ function getAffiliationUsername(member: AffiliationDTO) {
   return member.user?.username ?? member.userkey;
 }
 
+function normalizeSearchTerm(value: string) {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLocaleLowerCase("pt-BR")
+    .trim();
+}
+
 interface MemberModalProps {
   open: boolean;
   loading: boolean;
@@ -342,14 +350,14 @@ export function Members() {
     };
   }, [AffiliationService, navigate, notifications, org?.orgkey]);
 
-  const searchValue = search.trim().toLowerCase();
+  const searchValue = normalizeSearchTerm(search);
 
   const filteredProjectMembers = useMemo(() => (
     members.filter((member) => {
       if (!searchValue) return true;
 
-      const name = getProjectMemberName(member).toLowerCase();
-      const username = getProjectMemberUsername(member).toLowerCase();
+      const name = normalizeSearchTerm(getProjectMemberName(member));
+      const username = normalizeSearchTerm(getProjectMemberUsername(member));
       return name.includes(searchValue) || username.includes(searchValue);
     })
   ), [members, searchValue]);
@@ -358,8 +366,8 @@ export function Members() {
     affiliations.filter((member) => {
       if (!searchValue) return true;
 
-      const name = getAffiliationName(member).toLowerCase();
-      const username = getAffiliationUsername(member).toLowerCase();
+      const name = normalizeSearchTerm(getAffiliationName(member));
+      const username = normalizeSearchTerm(getAffiliationUsername(member));
       return name.includes(searchValue) || username.includes(searchValue);
     })
   ), [affiliations, searchValue]);
@@ -418,7 +426,7 @@ export function Members() {
         <SearchField
           value={search}
           onChange={setSearch}
-          placeholder="Pesquisar membro"
+          placeholder="Pesquisar membro por nome ou usuário"
         />
 
         <MembersArea>
