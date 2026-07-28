@@ -1,6 +1,9 @@
 import styled from "styled-components";
 import Palette from "../../../assets/palette";
+import { Badge } from "../../badge/Badge";
 import { Subtitle } from "../../base/Subtitle";
+import { Title } from "../../base/Title";
+import { User } from "../../misc/User";
 
 const Container = styled.div`
   display: flex;
@@ -42,11 +45,33 @@ const ProjectTitle = styled.p`
   overflow: hidden;
 
   color: ${Palette.gray};
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
   line-height: 1.25;
   text-overflow: ellipsis;
   white-space: nowrap;
+`;
+
+const MemberTitle = styled(Title)`
+  font-size: 18px;
+`;
+
+const MemberSubtitle = styled(Subtitle)`
+  font-size: 14px;
+`;
+
+const MemberBadge = styled(Badge)`
+  font-size: 14px;
+`;
+
+const MemberUser = styled(User)`
+  & > div:last-child {
+    font-size: 13px;
+  }
+
+  & > div:last-child strong {
+    font-size: 15px;
+  }
 `;
 
 const Indicator = styled.div`
@@ -56,9 +81,8 @@ const Indicator = styled.div`
   gap: 6px;
   min-width: 64px;
 
-  ${Subtitle} {
+  ${MemberSubtitle} {
     color: ${Palette.gray};
-    font-size: 12px;
     white-space: nowrap;
   }
 `;
@@ -150,6 +174,10 @@ export {
   Leading,
   Header,
   ProjectTitle,
+  MemberTitle,
+  MemberSubtitle,
+  MemberBadge,
+  MemberUser,
   Indicators,
   Button,
   Content,

@@ -16,15 +16,10 @@ const Card = styled.div`
 
   transition:
     border-color 150ms ease,
-    box-shadow 150ms ease,
     background-color 150ms ease;
 
   &:hover {
     border-color: ${Palette.blue};
-
-    box-shadow:
-      0 1px 2px ${Palette.gray_25},
-      0 2px 6px ${Palette.gray_25};
   }
 
   overflow: hidden;

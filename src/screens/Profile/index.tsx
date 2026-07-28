@@ -6,7 +6,6 @@ import { Text } from "@/components/base/Text";
 import { Title } from "@/components/base/Title";
 import { CreateButton } from "@/components/buttons/CreateButton";
 import { DeleteBtn } from "@/components/buttons/DeleteBtn";
-import { RoleBadge } from "@/maps/role-badge";
 import { useAuth } from "@/hooks/useAuth";
 import { useServices } from "@/hooks/useServices";
 import { useToast, type ToastNotifications } from "@/hooks/useToast";
@@ -19,12 +18,15 @@ import {
   DangerCard,
   EmptyState,
   Identity,
+  IdentityAvatar,
+  IdentityEmail,
+  IdentityHandle,
+  IdentityInfo,
+  IdentityName,
   OrganizationList,
-  OrganizationMeta,
-  OrganizationRow,
   Section,
-  Value,
 } from "./style";
+import { OrganizationCard } from "@/components/cards/OrganizationCard";
 
 function notifyError(error: unknown, fallback: string, notifications: ToastNotifications) {
   const apiError = error as ApiError;
@@ -44,6 +46,12 @@ export function Profile() {
   const [organizations, setOrganizations] = useState<UserOrganizationSummaryDTO[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false);
+
+  const displayName = profile?.name?.trim() || "—";
+  const displayUsername = profile?.username?.trim() || "—";
+  const displayEmail = profile?.email?.trim() || "—";
+  const avatarLabel = displayName !== "—" ? displayName : displayUsername;
+  const avatarInitial = avatarLabel !== "—" ? avatarLabel[0]?.toUpperCase() : "?";
 
   const loadProfile = useCallback(async () => {
     setLoading(true);
@@ -98,12 +106,12 @@ export function Profile() {
             <EmptyState>Carregando perfil...</EmptyState>
           ) : (
             <Identity>
-              <Subtitle>Nome</Subtitle>
-              <Value>{profile?.name || "—"}</Value>
-              <Subtitle>Usuário</Subtitle>
-              <Value>@{profile?.username || "—"}</Value>
-              <Subtitle>E-mail</Subtitle>
-              <Value>{profile?.email || "—"}</Value>
+              <IdentityAvatar aria-hidden="true">{avatarInitial}</IdentityAvatar>
+              <IdentityInfo>
+                <IdentityHandle>@{displayUsername}</IdentityHandle>
+                <IdentityName>{displayName}</IdentityName>
+                <IdentityEmail>{displayEmail}</IdentityEmail>
+              </IdentityInfo>
             </Identity>
           )}
         </Section>
@@ -118,17 +126,9 @@ export function Profile() {
           ) : (
             <OrganizationList>
               {organizations.map((organization) => (
-                <OrganizationRow key={organization.orgkey}>
-                  <div>
-                    <Title>{organization.name}</Title>
-                    <OrganizationMeta>
-                      {organization.members} {organization.members === 1 ? "membro" : "membros"}
-                      <span aria-hidden="true">•</span>
-                      {organization.projects} {organization.projects === 1 ? "projeto" : "projetos"}
-                    </OrganizationMeta>
-                  </div>
-                  {RoleBadge[organization.role]}
-                </OrganizationRow>
+                <OrganizationCard
+                  {...organization}
+                />
               ))}
             </OrganizationList>
           )}

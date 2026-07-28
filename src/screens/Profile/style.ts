@@ -13,7 +13,7 @@ const Content = styled.div`
   display: flex;
   flex-direction: column;
   gap: 28px;
-  width: min(100%, 920px);
+  width: fit-content;
   margin: 0 auto;
   padding: 28px 24px 48px;
   overflow-y: auto;
@@ -26,64 +26,73 @@ const Section = styled.section`
 `;
 
 const Identity = styled.section`
-  display: grid;
-  grid-template-columns: minmax(120px, 180px) 1fr;
-  gap: 12px 20px;
-  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 24px;
   border: 1px solid ${Palette.details};
   border-radius: 12px;
   background: ${Palette.items};
 
   @media (max-width: 560px) {
-    grid-template-columns: 1fr;
-    gap: 5px;
-
-    p:nth-of-type(even) {
-      margin-bottom: 10px;
-    }
+    align-items: flex-start;
+    gap: 16px;
+    padding: 20px;
   }
 `;
 
-const Value = styled.p`
+const IdentityAvatar = styled.div`
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 88px;
+  height: 88px;
+  border: 1px solid ${Palette.details};
+  border-radius: 18px;
+  background:
+    linear-gradient(145deg, ${Palette.content}, ${Palette.items});
   color: ${Palette.white};
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+`;
+
+const IdentityInfo = styled.div`
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 4px;
+`;
+
+const IdentityHandle = styled.p`
+  color: ${Palette.lightBlue};
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.2;
+`;
+
+const IdentityName = styled.h2`
+  margin: 0;
+  color: ${Palette.white};
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+`;
+
+const IdentityEmail = styled.p`
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.3;
+  opacity: 0.82;
   overflow-wrap: anywhere;
 `;
 
 const OrganizationList = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 12px;
-`;
-
-const OrganizationRow = styled.article`
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 18px;
-  border: 1px solid ${Palette.details};
-  border-radius: 12px;
-  background: ${Palette.items};
-
-  > div:first-child {
-    display: flex;
-    min-width: 0;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  h2 {
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-`;
-
-const OrganizationMeta = styled.p`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  color: ${Palette.gray};
-  font-size: 14px;
 `;
 
 const EmptyState = styled.div`
@@ -164,11 +173,13 @@ export {
   Field,
   Form,
   Hint,
+  IdentityAvatar,
+  IdentityEmail,
+  IdentityHandle,
+  IdentityInfo,
+  IdentityName,
   Identity,
   Input,
   OrganizationList,
-  OrganizationMeta,
-  OrganizationRow,
   Section,
-  Value,
 };

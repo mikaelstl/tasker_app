@@ -1,10 +1,6 @@
 import { useEffect, useState } from "react";
 import Palette from "../../../assets/palette";
-import { Badge } from "../../badge/Badge";
-import { Subtitle } from "../../base/Subtitle";
-import { Title } from "../../base/Title";
-import { User } from "../../misc/User";
-import { Button, Container, Content, Header, Indicator, Indicators, Leading, StatDetail, Task } from "./style";
+import { Button, Container, Content, Header, Indicator, Indicators, Leading, MemberBadge, MemberSubtitle, MemberTitle, MemberUser, StatDetail, Task } from "./style";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
 import { formatNumber } from "@/utils/formatNumber";
 import type { StatsTask } from "../../../service/types/stats/stats.types";
@@ -51,28 +47,28 @@ export function MemberStatsAccordion({
     onClick={handleVisible}
   >
     {project ? (
-      <Subtitle className="tskr-memberstat-project-title">{project}</Subtitle>
+      <MemberSubtitle className="tskr-memberstat-project-title">{project}</MemberSubtitle>
     ) : null}
     <Header>
       <Leading>
-        <User username={name ? `${name} (@${username})` : username} />
+        <MemberUser username={name ? `${name} (@${username})` : username} />
       </Leading>
       <Indicators>
         <Indicator>
-          <Subtitle>Iniciadas</Subtitle>
-          <Badge bg={Palette.lightBlue_50} text={Palette.lightBlue}>{formatNumber(tasks?.started ?? 0, 2)}</Badge>
+          <MemberSubtitle>Iniciadas</MemberSubtitle>
+          <MemberBadge bg={Palette.lightBlue_50} text={Palette.lightBlue}>{formatNumber(tasks?.started ?? 0, 2)}</MemberBadge>
         </Indicator>
         <Indicator>
-          <Subtitle>Concluídas</Subtitle>
-          <Badge bg={Palette.green_25} text={Palette.green}>{formatNumber(tasks?.done ?? 0, 2)}</Badge>
+          <MemberSubtitle>Concluídas</MemberSubtitle>
+          <MemberBadge bg={Palette.green_25} text={Palette.green}>{formatNumber(tasks?.done ?? 0, 2)}</MemberBadge>
         </Indicator>
         <Indicator>
-          <Subtitle>Revisão</Subtitle>
-          <Badge bg={Palette.yellow_25} text={Palette.yellow}>{formatNumber(tasks?.review ?? 0, 2)}</Badge>
+          <MemberSubtitle>Revisão</MemberSubtitle>
+          <MemberBadge bg={Palette.yellow_25} text={Palette.yellow}>{formatNumber(tasks?.review ?? 0, 2)}</MemberBadge>
         </Indicator>
         <Indicator>
-          <Subtitle>Atrasadas</Subtitle>
-          <Badge bg={Palette.red_25} text={Palette.red}>{formatNumber(tasks?.delayed ?? 0, 2)}</Badge>
+          <MemberSubtitle>Atrasadas</MemberSubtitle>
+          <MemberBadge bg={Palette.red_25} text={Palette.red}>{formatNumber(tasks?.delayed ?? 0, 2)}</MemberBadge>
         </Indicator>
       </Indicators>
       <Button type="button" onClick={handleVisible}>
@@ -84,7 +80,7 @@ export function MemberStatsAccordion({
         ? <Content>
           {tasksDetails.length > 0
             ? tasksDetails.map((task) => <PerformanceTile key={task.id} task={task} />)
-            : <Subtitle>Nenhuma tarefa atribuída.</Subtitle>}
+            : <MemberSubtitle>Nenhuma tarefa atribuída.</MemberSubtitle>}
         </Content>
         : <></>
     }
@@ -101,10 +97,10 @@ const PerformanceTile = ({ task }: { task: StatsTask }) => {
   return (
     <StatDetail className="tskr-performance-tile">
       <Task className="tskr-task-infos">
-        <Subtitle>{task.code} · {task.stage}{task.delayed ? " · ATRASADA" : ""}</Subtitle>
-        <Title>{task.name}</Title>
+        <MemberSubtitle>{task.code} · {task.stage}{task.delayed ? " · ATRASADA" : ""}</MemberSubtitle>
+        <MemberTitle>{task.name}</MemberTitle>
       </Task>
-      <Title>{formatDuration(task.spentMinutes)}</Title>
+      <MemberTitle>{formatDuration(task.spentMinutes)}</MemberTitle>
     </StatDetail>
   )
 }

@@ -39,7 +39,7 @@ export function EditProfile() {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  // const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -74,16 +74,16 @@ export function EditProfile() {
       notifications.validation("Nome, usuário e e-mail são obrigatórios.");
       return;
     }
-    if (password && !/^(?=.*\d)(?=.*[@$#]).{8,20}$/.test(password)) {
-      notifications.validation("A senha deve ter de 8 a 20 caracteres, um número e um caractere @, $ ou #.");
-      return;
-    }
+    // if (password && !/^(?=.*\d)(?=.*[@$#]).{8,20}$/.test(password)) {
+    //   notifications.validation("A senha deve ter de 8 a 20 caracteres, um número e um caractere @, $ ou #.");
+    //   return;
+    // }
 
     const changes = {
       ...(normalizedName !== initialName ? { name: normalizedName } : {}),
       ...(normalizedUsername !== initialUsername ? { username: normalizedUsername } : {}),
       ...(normalizedEmail !== initialEmail ? { email: normalizedEmail } : {}),
-      ...(password ? { password } : {}),
+      // ...(password ? { password } : {}),
     };
 
     if (Object.keys(changes).length === 0) {
@@ -158,7 +158,7 @@ export function EditProfile() {
                   autoComplete="email"
                 />
               </Field>
-              <Field>
+              {/* <Field>
                 Nova senha
                 <Input
                   name="password"
@@ -169,7 +169,7 @@ export function EditProfile() {
                   placeholder="Deixe em branco para manter a senha atual"
                 />
                 <Hint>Use de 8 a 20 caracteres, incluindo um número e um caractere @, $ ou #.</Hint>
-              </Field>
+              </Field> */}
               <Hint>
                 Alterar usuário ou e-mail encerra a sessão para que um novo token seja emitido.
               </Hint>

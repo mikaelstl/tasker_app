@@ -12,6 +12,7 @@ import { useServices } from "../../../hooks/useServices";
 import { useToast } from "@/hooks/useToast";
 import type { AffiliationDTO } from "../../../service/types/affiliation/affiliation.dto";
 import type { ProjectMember } from "../../../service/types/member/member.dto";
+import type { ProjectDTO } from "../../../service/types/project/project.dto";
 import type { StatsTask } from "../../../service/types/stats/stats.types";
 import { TaskStage } from "../../../service/types/task/stage.dto";
 import type { TaskDTO } from "../../../service/types/task/task.dto";
@@ -212,37 +213,76 @@ export function Members() {
   const { org } = useOrganization();
   const { AffiliationService, MemberService, ProjectService } = useServices();
 
-  const [projectTitle, setProjectTitle] = useState("");
-  const [projectMembers, setProjectMembers] = useState<ProjectMember[]>([]);
-  const [organizationMembers, setOrganizationMembers] = useState<AffiliationDTO[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [project, setProject] = useState<ProjectDTO | null>(null);
+  const [members, setMembers] = useState<ProjectMember[]>([]);
+  const [affiliations, setAffiliations] = useState<AffiliationDTO[]>([]);
+  const [loadingProject, setLoadingProject] = useState(true);
+  const [loadingMembers, setLoadingMembers] = useState(true);
+  const [loadingAffiliations, setLoadingAffiliations] = useState(true);
   const [search, setSearch] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [addingMemberId, setAddingMemberId] = useState<string | null>(null);
+
+  const loading = loadingProject || loadingMembers || loadingAffiliations;
+  const projectTitle = project?.title ?? "";
+  const projectMemberIds = useMemo(
+    () => new Set(members.map((member) => member.userkey)),
+    [members],
+  );
+
+  useEffect(() => {
+    if (!id || !org?.orgkey) {
+      navigate("..");
+    }
+  }, [id, navigate, org?.orgkey]);
+
+  useEffect(() => {
+    let active = true;
+
+    const loadProject = async () => {
+      if (!id) return;
+
+      setLoadingProject(true);
+
+      try {
+        const response = await ProjectService.find(id);
+
+        if (!active) return;
+
+        setProject(response.data);
+      } catch (error) {
+        if (!active) return;
+
+        reportApiError(error, "Não foi possível carregar o projeto.", notifications);
+        navigate("..");
+      } finally {
+        if (active) {
+          setLoadingProject(false);
+        }
+      }
+    };
+
+    void loadProject();
+
+    return () => {
+      active = false;
+    };
+  }, [ProjectService, id, navigate, notifications]);
 
   useEffect(() => {
     let active = true;
 
     const loadMembers = async () => {
-      if (!id || !org?.orgkey) {
-        navigate("..");
-        return;
-      }
+      if (!id) return;
 
-      setLoading(true);
+      setLoadingMembers(true);
 
       try {
-        const [projectResponse, projectMembersResponse, organizationResponse] = await Promise.all([
-          ProjectService.find(id),
-          MemberService.list(id),
-          AffiliationService.listByOrganization(org.orgkey),
-        ]);
+        const response = await MemberService.list(id);
 
         if (!active) return;
 
-        setProjectTitle(projectResponse.data.title);
-        setProjectMembers(projectMembersResponse.data);
-        setOrganizationMembers(organizationResponse.data);
+        setMembers(response.data);
       } catch (error) {
         if (!active) return;
 
@@ -250,7 +290,7 @@ export function Members() {
         navigate("..");
       } finally {
         if (active) {
-          setLoading(false);
+          setLoadingMembers(false);
         }
       }
     };
@@ -260,42 +300,67 @@ export function Members() {
     return () => {
       active = false;
     };
-  }, [
-    AffiliationService,
-    MemberService,
-    ProjectService,
-    id,
-    navigate,
-    notifications,
-    org?.orgkey,
-  ]);
+  }, [MemberService, id, navigate, notifications]);
+
+  useEffect(() => {
+    let active = true;
+
+    const loadAffiliations = async () => {
+      if (!org?.orgkey) return;
+
+      setLoadingAffiliations(true);
+
+      try {
+        const response = await AffiliationService.listByOrganization(org.orgkey);
+
+        if (!active) return;
+
+        setAffiliations(response.data);
+      } catch (error) {
+        if (!active) return;
+
+        reportApiError(error, "Não foi possível carregar os membros da organização.", notifications);
+        navigate("..");
+      } finally {
+        if (active) {
+          setLoadingAffiliations(false);
+        }
+      }
+    };
+
+    void loadAffiliations();
+
+    return () => {
+      active = false;
+    };
+  }, [AffiliationService, navigate, notifications, org?.orgkey]);
 
   const searchValue = search.trim().toLowerCase();
 
   const filteredProjectMembers = useMemo(() => (
-    projectMembers.filter((member) => {
+    members.filter((member) => {
       if (!searchValue) return true;
 
       const name = getProjectMemberName(member).toLowerCase();
       const username = getProjectMemberUsername(member).toLowerCase();
       return name.includes(searchValue) || username.includes(searchValue);
     })
-  ), [projectMembers, searchValue]);
+  ), [members, searchValue]);
 
   const filteredOrganizationMembers = useMemo(() => (
-    organizationMembers.filter((member) => {
+    affiliations.filter((member) => {
       if (!searchValue) return true;
 
       const name = getAffiliationName(member).toLowerCase();
       const username = getAffiliationUsername(member).toLowerCase();
       return name.includes(searchValue) || username.includes(searchValue);
     })
-  ), [organizationMembers, searchValue]);
+  ), [affiliations, searchValue]);
 
   const addProjectMember = async (member: AffiliationDTO) => {
     if (!id) return;
 
-    if (projectMembers.some((item) => item.userkey === member.id)) {
+    if (projectMemberIds.has(member.id)) {
       notifications.info("Esse membro já está no projeto.");
       return;
     }
@@ -308,7 +373,7 @@ export function Members() {
         user: member.id,
       });
 
-      setProjectMembers((current) => [...current, response.data]);
+      setMembers((current) => [...current, response.data]);
       notifications.info("Membro adicionado ao projeto.");
     } catch (error) {
       reportApiError(error, "Não foi possível adicionar o membro ao projeto.", notifications);
@@ -368,7 +433,7 @@ export function Members() {
         loading={loading}
         projectTitle={projectTitle}
         members={filteredOrganizationMembers}
-        projectMembers={projectMembers}
+        projectMembers={members}
         addingMemberId={addingMemberId}
         onClose={() => setModalOpen(false)}
         onAddMember={addProjectMember}

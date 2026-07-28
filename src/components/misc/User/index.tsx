@@ -10,6 +10,7 @@ interface UserProps {
   actorUsername?: string | null;
   actorPhotoUrl?: string | null;
   isSystem?: boolean;
+  className?: string;
 }
 
 export function User({
@@ -19,11 +20,12 @@ export function User({
   actorUsername = null,
   actorPhotoUrl = null,
   isSystem = false,
+  className,
 }: UserProps) {
   const displayName = actorName ?? username ?? "Usuário removido";
 
   return (
-    <Actor className="tskr-user">
+    <Actor className={`tskr-user${className ? ` ${className}` : ""}`}>
       {isSystem
         ? <ComputerDesktopIcon width={24} fill={Palette.gray} aria-hidden="true" />
         : <Avatar online={online} size="small" image={actorPhotoUrl ?? ""} />}

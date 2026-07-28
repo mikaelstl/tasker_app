@@ -128,6 +128,15 @@ export class AffiliationMockService implements AffiliationServiceI {
     return createMockResponse(summary, "/affiliations");
   }
 
+  async listByOrganization(orgkey: string): Promise<ApiResponse<AffiliationDTO[]>> {
+    const path = `/affiliations/${orgkey}`;
+    const affiliations = mockData.affiliations.filter(
+      (affiliation) => affiliation.orgkey === orgkey,
+    );
+
+    return createMockResponse(affiliations, path);
+  }
+
   async participates(orgkey: string): Promise<ApiResponse<boolean>> {
     const path = `/affiliations/participates/${orgkey}`;
     const currentAccount = requireMockCurrentAccount(path);
