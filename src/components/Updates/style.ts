@@ -18,6 +18,7 @@ const Container = styled.div`
 `;
 
 const Timeline = styled(Scroller)`
+  gap: 18px;
   padding-right: 4px;
 `;
 

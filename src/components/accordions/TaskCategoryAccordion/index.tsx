@@ -35,7 +35,7 @@ export function TaskCategoryAccordion(props: { visible?: boolean, title: string,
           <Tasks>
             {
               props.tasks.length !== 0
-                ? <Scroller className="horizontal">
+                ? <Scroller className="horizontal" gap={12}>
                   {
                     props.tasks.map(task => <TaskCard
                                               key={task.id}

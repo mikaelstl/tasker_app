@@ -2,7 +2,8 @@ import Palette from "@/assets/palette";
 import styled from "styled-components";
 
 const Card = styled.div`
-  min-width: 48rem;
+  width: 320px;
+  max-width: 100%;
 
   cursor: pointer;
 
@@ -30,8 +31,7 @@ const Card = styled.div`
 `;
 
 const CardHeader = styled.div`
-  padding: 1.5rem;
-  padding-bottom: 0.75rem;
+  padding: 0.75rem;
 `;
 
 const HeaderContainer = styled.div`
@@ -116,7 +116,7 @@ const CardFooter = styled.div`
   align-items: center;
   justify-content: space-between;
 
-  padding: 1rem 1.5rem 1.5rem;
+  padding: 0.75rem;
 
   border-top: 1px solid ${Palette.details};
 `;

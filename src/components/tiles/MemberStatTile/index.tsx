@@ -44,7 +44,6 @@ export interface MemberStatTileProps {
 const stageLabels: Record<StatsTask["stage"], string> = {
   STARTED: "Iniciada",
   PENDING: "Pendente",
-  IN_PROGRESS: "Em andamento",
   REVIEW: "Em revisão",
   DONE: "Concluída",
 };
@@ -80,7 +79,6 @@ const getStatusColors = (task: StatsTask) => {
       return { background: Palette.green_25, color: Palette.green };
     case "REVIEW":
       return { background: Palette.yellow_25, color: Palette.yellow };
-    case "IN_PROGRESS":
     case "STARTED":
       return { background: Palette.lightBlue_50, color: Palette.lightBlue };
     default:

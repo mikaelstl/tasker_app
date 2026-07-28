@@ -16,15 +16,14 @@ const Header = styled.div`
 `;
 
 const Content = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
   gap: 12px;
   
   padding: 10px;
   
   height: 100%;
-
-  overflow-x: auto;
-  overflow-y: hidden;
+  width: 100%;
 `;
 
 interface StepProps {
@@ -43,8 +42,6 @@ const Step = styled.div<StepProps>`
   border-top: 3px solid ${props => props.color ?? Palette.gray};
   
   height: 100%;
-  min-width: 260px;
-  flex: 1 0 260px;
 `;
 
 export {

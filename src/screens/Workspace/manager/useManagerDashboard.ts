@@ -56,7 +56,7 @@ function getErrorMessage(error: unknown): string {
 
 function getStats(tasks: TaskDTO[]): ManagerStats {
   return {
-    started: tasks.filter((task) => task.stage === TaskStage.IN_PROGRESS).length,
+    started: tasks.filter((task) => task.stage === TaskStage.STARTED).length,
     done: tasks.filter((task) => task.stage === TaskStage.DONE).length,
     review: tasks.filter((task) => task.stage === TaskStage.REVIEW).length,
     overdue: tasks.filter((task) => (
@@ -97,7 +97,7 @@ function getMemberStats(
     return {
       username,
       project: project.title,
-      started: memberTasks.filter((task) => task.stage === TaskStage.IN_PROGRESS).length,
+      started: memberTasks.filter((task) => task.stage === TaskStage.STARTED).length,
       review: memberTasks.filter((task) => task.stage === TaskStage.REVIEW).length,
       done: memberTasks.filter((task) => task.stage === TaskStage.DONE).length,
       overdue: memberTasks.filter((task) => (

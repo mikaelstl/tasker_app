@@ -3,6 +3,7 @@ import Palette from "../../../assets/palette";
 
 const Container = styled.div`
   height: 100%;
+  min-height: 0;
   overflow: hidden;
   
   display: flex;
@@ -13,17 +14,18 @@ const Content = styled.div`
   flex-direction: column;
   gap: 20px;
 
-  overflow: hidden;
-
   width: 100%;
+  min-height: 0;
+  overflow: hidden;
 `;
 
 const Comments = styled.div`
   display: flex;
   flex: 1;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 10px;
+  min-height: 0;
   
   overflow: hidden;
   
@@ -32,9 +34,10 @@ const Comments = styled.div`
   padding: 0px 20px;
   padding-bottom: 20px;
 
-  #cards {
-    overflow: auto;
-    overflow: overlay;
+  > .vertical {
+    flex: 1;
+    min-height: 0;
+    height: auto;
   }
 `;
 

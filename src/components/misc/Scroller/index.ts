@@ -13,16 +13,13 @@ const Scroller = styled.div.withConfig({
   &.horizontal {
     width: 100%;
     flex-direction: row;
-    overflow-x: auto;
-    overflow-x: overlay;
+    overflow-x: scroll;
   }
 
   &.vertical {
-    height: 100%;
-    
+    height: 100%; 
     flex-direction: column;
-    overflow-y: auto;
-    overflow-y: overlay;
+    overflow-y: scroll;
   }
 `;
 

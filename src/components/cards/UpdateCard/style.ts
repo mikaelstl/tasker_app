@@ -8,7 +8,6 @@ const Card = styled.div`
 
   width: 100%;
   min-height: 128px;
-  padding-bottom: 14px;
 
   position: relative;
 `;
@@ -38,7 +37,7 @@ const TimelineMarker = styled.div<{
   &::after {
     display: ${({ $hasNext }) => $hasNext ? "block" : "none"};
     top: 23px;
-    bottom: -14px;
+    bottom: -18px;
   }
 `;
 
@@ -65,7 +64,7 @@ const Content = styled.div`
   border: 1px solid ${Palette.details};
   border-radius: 14px;
   background-color: ${Palette.items};
-  box-shadow: 0 2px 8px ${Palette.gray_25};
+  box-shadow: none;
 `;
 
 const Header = styled.div`

@@ -553,7 +553,7 @@ for (const [orgIndex, organization] of organizations.entries()) {
 
     const projectTasks = Array.from({ length: 8 }).map((_, taskIndex) => {
       const owner = projectMembers[taskIndex % projectMembers.length];
-      const stageOrder = [TaskStage.PENDING, TaskStage.IN_PROGRESS, TaskStage.REVIEW, TaskStage.DONE];
+      const stageOrder = [TaskStage.PENDING, TaskStage.STARTED, TaskStage.REVIEW, TaskStage.DONE];
       const priorityOrder = [TaskPriority.LOW, TaskPriority.MEDIUM, TaskPriority.HIGH, TaskPriority.EXTREME];
 
       return createMockTask({
@@ -675,7 +675,7 @@ const auditLogs = organizations.flatMap((organization, orgIndex) => {
       resourcekey = comments.find((comment) => comment.projectkey === project.id)?.id ?? null;
     } else if (variant === 6) {
       action = "STATUS_CHANGE";
-      changes = { stage: { oldValue: "PENDING", newValue: "IN_PROGRESS" } };
+      changes = { stage: { oldValue: "PENDING", newValue: "STARTED" } };
     } else {
       action = "SYSTEM_UPDATE";
       changes = { delayed: { oldValue: false, newValue: true } };
@@ -714,7 +714,7 @@ const memberStats: MemberStatDTO[] = members.map((member) => {
   return {
     username: member.user?.userkey ?? affiliations.find((affiliation) => affiliation.id === member.userkey)?.userkey ?? member.userkey,
     project: project?.title ?? member.projectkey,
-    started: memberTasks.filter((task) => task.stage === TaskStage.IN_PROGRESS).length,
+    started: memberTasks.filter((task) => task.stage === TaskStage.STARTED).length,
     review: memberTasks.filter((task) => task.stage === TaskStage.REVIEW).length,
     done: memberTasks.filter((task) => task.stage === TaskStage.DONE).length,
     overdue: memberTasks.filter((task) => task.stage !== TaskStage.DONE && new Date(task.deadline).getTime() < baseDate.getTime()).length,

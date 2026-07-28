@@ -192,7 +192,7 @@ export class ProjectMockService implements ProjectServiceI {
     const tasks = mockData.tasks.filter((task) => task.projectkey === id);
     const doneTasks = tasks.filter((task) => task.stage === TaskStage.DONE).length;
     const reviewTasks = tasks.filter((task) => task.stage === TaskStage.REVIEW).length;
-    const startedTasks = tasks.filter((task) => task.stage === TaskStage.IN_PROGRESS).length;
+    const startedTasks = tasks.filter((task) => task.stage === TaskStage.STARTED).length;
     const delayedTasks = tasks.filter(
       (task) => task.stage !== TaskStage.DONE && new Date(task.deadline) < cutoffAt,
     ).length;

@@ -56,7 +56,6 @@ const actionLabels: Record<string, string> = {
 const taskStageLabels: Record<string, string> = {
   STARTED: "Iniciada",
   PENDING: "Pendente",
-  IN_PROGRESS: "Em andamento",
   REVIEW: "Em revisão",
   DONE: "Concluída",
   COMPLETED: "Concluída",

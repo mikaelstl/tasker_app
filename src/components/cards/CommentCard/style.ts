@@ -2,44 +2,86 @@ import styled from "styled-components";
 import Palette from "../../../assets/palette";
 
 const Card = styled.article`
-  display: grid;
-  grid-template-areas:
-    "tskr-avatar tskr-comment-data tskr-comment-actions"
-    "tskr-comment-line tskr-subtitle tskr-comment-actions"
-    ". tskr-comment-details tskr-comment-details";
-  grid-template-columns: min-content minmax(0, 1fr) min-content;
-  grid-template-rows: min-content auto auto;
-  gap: 4px 12px;
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
   width: 100%;
-  min-height: 100px;
-  padding: 12px;
+  padding: 2px 0;
+  box-shadow: none;
   border: 1px solid ${Palette.details};
-  border-radius: 6px;
+  border-radius: 18px;
+  background: ${Palette.tool_bars};
   position: relative;
 `;
 
 const Texts = styled.div`
-  grid-area: tskr-comment-data;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: 5px;
+  gap: 0;
   min-width: 0;
-
-  p { overflow-wrap: anywhere; }
+  flex: 1;
 `;
 
-const Line = styled.div`
-  grid-area: tskr-comment-line;
-  height: 100%;
-  border-left: 3px solid ${Palette.items};
-  justify-self: center;
+const Bubble = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+  padding: 14px 16px;
+  border-radius: 18px 18px 18px 6px;
+  background: ${Palette.items};
+  border: 1px solid ${Palette.details};
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: -7px;
+    bottom: 18px;
+    width: 12px;
+    height: 12px;
+    background: ${Palette.items};
+    border-left: 1px solid ${Palette.details};
+    border-bottom: 1px solid ${Palette.details};
+    transform: rotate(45deg);
+  }
+`;
+
+const BubbleHeader = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+
+  h2, h3, p {
+    margin: 0;
+  }
+`;
+
+const Meta = styled.span`
+  display: inline-flex;
+  align-items: center;
+  margin-top: 4px;
+  color: ${Palette.gray};
+  font-size: 11px;
+  font-weight: 500;
+`;
+
+const BubbleContent = styled.div`
+  min-width: 0;
+
+  p {
+    overflow-wrap: anywhere;
+    line-height: 1.55;
+  }
 `;
 
 const Actions = styled.div`
-  grid-area: tskr-comment-actions;
   display: flex;
   gap: 6px;
+  flex-shrink: 0;
 `;
 
 const ActionButton = styled.button<{ $danger?: boolean }>`
@@ -57,13 +99,11 @@ const ActionButton = styled.button<{ $danger?: boolean }>`
 `;
 
 const Details = styled.div`
-  grid-area: tskr-comment-details;
   display: flex;
   flex-direction: column;
   gap: 4px;
-  margin-top: 8px;
-  padding-top: 8px;
+  padding-top: 2px;
   border-top: 1px solid ${Palette.details};
 `;
 
-export { Actions, ActionButton, Card, Details, Line, Texts };
+export { Actions, ActionButton, Bubble, BubbleContent, BubbleHeader, Card, Details, Meta, Texts };

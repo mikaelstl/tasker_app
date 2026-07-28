@@ -123,27 +123,6 @@ export function Tasks() {
             }
           </Scroller>
         </Step>
-        <Step className="tasks-step" color={Palette.lightBlue}>
-          <Title>EM ANDAMENTO</Title>
-          <Scroller className="vertical">
-            {
-              filteredTasks
-                .filter(task => task.stage === TaskStage.IN_PROGRESS)
-                .map((task) =>
-                  <Margin key={task.id} bottom="12px">
-                    <TaskCard
-                      code={task.code}
-                      title={task.name}
-                      owner={task.ownerkey}
-                      deadline={task.deadline}
-                      priority={task.priority}
-                      onClick={() => navigate(`../task/${encodeURIComponent(task.code)}`)}
-                    />
-                  </Margin>
-                )
-            }
-          </Scroller>
-        </Step>
         <Step className="tasks-step" color={Palette.yellow}>
           <Title>EM REVISÃO</Title>
           <Scroller className="vertical">
