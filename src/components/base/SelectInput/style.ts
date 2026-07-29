@@ -3,42 +3,49 @@ import Palette from "../../../assets/palette";
 
 const Container = styled.div`
   width: 100%;
-
   display: flex;
   flex-direction: column;
-  gap: 8px;
-
-  padding: 10px 14px;
-  
-  border-radius: 4px;
-
-  font-weight: 500;
+  gap: 10px;
 `;
 
 const Select = styled.select`
-  width: fit-content;
-
-  text-align: center;
-
+  width: 100%;
+  height: 44px;
+  padding: 0 14px;
+  color: ${Palette.white};
+  background: ${Palette.items};
+  border: 1px solid ${Palette.details};
+  border-radius: 12px;
   font-size: 14px;
-  font-weight: 700;
-  color: white;
+  outline: none;
 
-  padding: 8px;
+  &:focus {
+    border-color: ${Palette.blue};
+    box-shadow: 0 0 0 2px rgba(74, 103, 229, 0.18);
+  }
 
-  border: none;
-  border-radius: 50px;
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
 `;
 
 const Option = styled.option`
-  width: 100%;
+  color: ${Palette.white};
+  background: ${Palette.tool_bars};
+`;
 
-  background-color: ${Palette.content};
-  border-bottom: ${Palette.gray};
+const Label = styled.label`
+  color: ${Palette.white_50};
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 `;
 
 export {
   Container,
+  Label,
   Select,
   Option
 }

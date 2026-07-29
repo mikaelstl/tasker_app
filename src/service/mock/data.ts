@@ -8,7 +8,7 @@ import { EventCategory, type EventDTO } from "../types/events/event.dto";
 import type { MemberStatDTO } from "../types/member/member-stat.dto";
 import type { ProjectMember } from "../types/member/member.dto";
 import type { OrganizationDTO } from "../types/organization/organization.dto";
-import { ProjectStage, type ProjectWithMembersDTO } from "../types/project/project.dto";
+import { ProjectStage, type ProjectDTO, type ProjectWithMembersDTO } from "../types/project/project.dto";
 import type { ApiResponse } from "../types/response/response";
 import type { TaskDTO } from "../types/task/task.dto";
 import type { UserDTO } from "../types/user/user.dto";

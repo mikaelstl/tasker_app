@@ -14,7 +14,7 @@ const Container = styled.div`
   align-items: end;
 
   background-color: ${Palette.red_50};
-  border: 3px solid ${Palette.red};
+  border: 1px solid ${Palette.red};
   padding: 18px 12px;
   border-radius: 6px;
 

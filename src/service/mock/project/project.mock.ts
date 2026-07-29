@@ -153,6 +153,7 @@ export class ProjectMockService implements ProjectServiceI {
       ...(data.description ? { description: data.description } : {}),
       ...(data.deadline ? { deadline: data.deadline } : {}),
       ...(data.stage ? { stage: data.stage as ProjectStage } : {}),
+      ...(data.managerkey !== undefined ? { managerkey: data.managerkey } : {}),
     };
 
     Object.assign(project, nextProject);

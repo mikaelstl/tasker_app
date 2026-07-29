@@ -30,8 +30,8 @@ import { Title } from "../../../components/base/Title";
 import { ProjectHealthWidget } from "../../../widgets/cards/ProjectHealthWidget";
 import { PerformanceChart } from "../../../widgets/charts/PerformanceChart";
 import { ProdutivityChart } from "../../../widgets/charts/ProdutivityChart";
-import { MemberStatsAccordion } from "../../../components/accordions/MemberStatsAccordion";
 import { EventCard } from "../../../components/cards/EventCard";
+import { MemberStatTile } from "../../../components/tiles/MemberStatTile";
 import { useServices } from "../../../hooks/useServices";
 import { useToast, type ToastNotifications } from "../../../hooks/useToast";
 import type { ApiError } from "../../../service/types/response/error";
@@ -234,17 +234,17 @@ export function Stats() {
           <Title>Membros</Title>
           <div>
             {stats.members.length === 0 ? <Text>Nenhum membro com estatísticas.</Text> : stats.members.map((member) => (
-              <MemberStatsAccordion
+              <MemberStatTile
                 key={member.memberId}
+                project={stats.project.title}
                 username={member.user.username}
                 name={member.user.name}
-                tasksDetails={member.tasks}
-                tasks={{
-                  started: member.startedTasks,
-                  review: member.reviewTasks,
-                  delayed: member.delayedTasks,
-                  done: member.completedTasks,
-                }}
+                photoUrl={member.user.photoUrl}
+                started={member.startedTasks}
+                done={member.completedTasks}
+                overdue={member.delayedTasks}
+                review={member.reviewTasks}
+                tasks={member.tasks}
               />
             ))}
           </div>

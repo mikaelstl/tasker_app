@@ -79,7 +79,9 @@ export function MemberStatsAccordion({
       visible
         ? <Content>
           {tasksDetails.length > 0
-            ? tasksDetails.map((task) => <PerformanceTile key={task.id} task={task} />)
+            ? tasksDetails.map((task) => (
+              <PerformanceTile key={`${task.code}-${task.deadline}`} task={task} />
+            ))
             : <MemberSubtitle>Nenhuma tarefa atribuída.</MemberSubtitle>}
         </Content>
         : <></>

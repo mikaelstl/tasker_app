@@ -18,6 +18,7 @@ export interface EditProjectDTO {
   readonly description?: string;
   readonly deadline?: string;
   readonly stage?: ProjectStage;
+  readonly managerkey?: string | null;
 }
 
 export interface ProjectServiceI {

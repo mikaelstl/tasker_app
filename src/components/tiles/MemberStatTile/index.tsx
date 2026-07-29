@@ -173,7 +173,7 @@ export function MemberStatTile({
                 const colors = getStatusColors(task);
 
                 return (
-                  <TaskRow role="row" key={task.id}>
+                  <TaskRow role="row" key={`${task.code}-${task.deadline}`}>
                     <TaskInfo role="cell">
                       <TaskMeta>{task.code}</TaskMeta>
                       <TaskName>{task.name}</TaskName>

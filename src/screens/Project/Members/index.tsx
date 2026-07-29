@@ -1,41 +1,28 @@
 import { useEffect, useMemo, useState } from "react";
-import { PlusIcon, TrashIcon, XMarkIcon } from "@heroicons/react/16/solid";
 import { useNavigate, useParams } from "react-router-dom";
-import { ContentHeader } from "../../../components/base/ContentHeader";
-import { CreateButton } from "../../../components/buttons/CreateButton";
-import { Text } from "../../../components/base/Text";
-import { Scroller } from "../../../components/misc/Scroller";
-import { User } from "../../../components/misc/User";
-import { SearchField } from "../../../components/textfields/SearchField";
-import { MemberStatTile } from "../../../components/tiles/MemberStatTile";
-import { useOrganization } from "../../../hooks/useOrganization";
-import { useServices } from "../../../hooks/useServices";
+import { ContentHeader } from "@/components/base/ContentHeader";
+import { CreateButton } from "@/components/buttons/CreateButton";
+import { Text } from "@/components/base/Text";
+import { Scroller } from "@/components/misc/Scroller";
+import { SearchField } from "@/components/textfields/SearchField";
+import { MemberStatTile } from "@/components/tiles/MemberStatTile";
+import { useOrganization } from "@/hooks/useOrganization";
+import { useServices } from "@/hooks/useServices";
 import { useToast, type ToastNotifications } from "@/hooks/useToast";
-import type { AffiliationDTO } from "../../../service/types/affiliation/affiliation.dto";
-import type { ProjectMember } from "../../../service/types/member/member.dto";
-import type { ProjectDTO } from "../../../service/types/project/project.dto";
-import type { StatsTask } from "../../../service/types/stats/stats.types";
-import { TaskStage } from "../../../service/types/task/stage.dto";
-import type { TaskDTO } from "../../../service/types/task/task.dto";
-import type { ApiError } from "../../../service/types/response/error";
+import type { AffiliationDTO } from "@/service/types/affiliation/affiliation.dto";
+import type { ProjectMember } from "@/service/types/member/member.dto";
+import type { ProjectDTO } from "@/service/types/project/project.dto";
+import type { StatsTask } from "@/service/types/stats/stats.types";
+import { TaskStage } from "@/service/types/task/stage.dto";
+import type { TaskDTO } from "@/service/types/task/task.dto";
+import type { ApiError } from "@/service/types/response/error";
 import {
   Container,
   Content,
   EmptyState,
-  MemberActionButton,
-  MemberActions,
-  MemberCard,
-  MemberRowCard,
-  MemberRowInfo,
-  MembersArea,
-  ModalCloseButton,
-  ModalContent,
-  ModalDescription,
-  ModalDialog,
-  ModalHeader,
-  ModalOverlay,
-  ModalTitle,
+  MembersArea
 } from "./style";
+import { AddProjectMember } from "@/components/popups/AddProjectMember";
 
 function reportApiError(
   error: unknown,
@@ -56,15 +43,12 @@ function reportApiError(
 
 function toStatsTasks(tasks: TaskDTO[]): StatsTask[] {
   return tasks.map((task) => ({
-    id: task.id,
     code: task.code,
     name: task.name,
     stage: task.stage,
     delayed: task.delayed,
     spentMinutes: 0,
     deadline: task.deadline,
-    startedAt: task.started_at,
-    doneAt: task.done_at,
   }));
 }
 
@@ -105,122 +89,6 @@ function normalizeSearchTerm(value: string) {
     .trim();
 }
 
-interface MemberModalProps {
-  open: boolean;
-  loading: boolean;
-  projectTitle: string;
-  members: AffiliationDTO[];
-  projectMembers: ProjectMember[];
-  pendingMemberId: string | null;
-  onClose: () => void;
-  onAddMember: (member: AffiliationDTO) => void;
-  onRemoveMember: (member: ProjectMember) => void;
-}
-
-function MembersModal({
-  open,
-  loading,
-  projectTitle,
-  members,
-  projectMembers,
-  pendingMemberId,
-  onClose,
-  onAddMember,
-  onRemoveMember,
-}: MemberModalProps) {
-  useEffect(() => {
-    if (!open) return;
-
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        onClose();
-      }
-    };
-
-    window.addEventListener("keydown", closeOnEscape);
-    return () => window.removeEventListener("keydown", closeOnEscape);
-  }, [onClose, open]);
-
-  const projectMemberIds = new Set(projectMembers.map((member) => member.userkey));
-
-  if (!open) return null;
-
-  return (
-    <ModalOverlay onMouseDown={onClose}>
-      <ModalDialog
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="project-members-modal-title"
-        onMouseDown={(event) => event.stopPropagation()}
-      >
-        <ModalHeader>
-          <ModalTitle id="project-members-modal-title">Editar membros</ModalTitle>
-          <ModalCloseButton type="button" onClick={onClose} aria-label="Fechar modal">
-            <XMarkIcon />
-          </ModalCloseButton>
-        </ModalHeader>
-
-        <ModalDescription>
-          Adicione ou remova membros da organização no projeto {projectTitle || "selecionado"}.
-        </ModalDescription>
-
-        <ModalContent>
-          {loading ? (
-            <EmptyState>Carregando membros da organização...</EmptyState>
-          ) : members.length > 0 ? (
-            <Scroller orientation="vertical" gap={16}>
-              {members.map((member) => {
-                const projectMember = projectMembers.find((item) => item.userkey === member.id);
-                const isAlreadyAdded = projectMemberIds.has(member.id);
-
-                return (
-                  <MemberRowCard key={member.id} $active={isAlreadyAdded}>
-                    <MemberRowInfo>
-                      <User
-                        username={getAffiliationUsername(member)}
-                        actorName={getAffiliationName(member)}
-                        actorUsername={getAffiliationUsername(member)}
-                      />
-                    </MemberRowInfo>
-                    <MemberActions>
-                      <MemberActionButton
-                        type="button"
-                        onClick={() => {
-                          if (isAlreadyAdded && projectMember) {
-                            onRemoveMember(projectMember);
-                            return;
-                          }
-
-                          onAddMember(member);
-                        }}
-                        disabled={pendingMemberId === member.id}
-                        $danger={isAlreadyAdded}
-                        $loading={pendingMemberId === member.id}
-                        title={isAlreadyAdded ? "Remover do projeto" : "Adicionar ao projeto"}
-                        aria-label={isAlreadyAdded
-                          ? `Remover ${getAffiliationName(member)} do projeto`
-                          : `Adicionar ${getAffiliationName(member)} ao projeto`}
-                      >
-                        {isAlreadyAdded ? (
-                          <TrashIcon />
-                        ) : (
-                          <PlusIcon />
-                        )}
-                      </MemberActionButton>
-                    </MemberActions>
-                  </MemberRowCard>
-                );
-              })}
-            </Scroller>
-          ) : (
-            <EmptyState>Nenhum membro encontrado na organização.</EmptyState>
-          )}
-        </ModalContent>
-      </ModalDialog>
-    </ModalOverlay>
-  );
-}
-
 export function Members() {
   const navigate = useNavigate();
   const notifications = useToast();
@@ -236,7 +104,6 @@ export function Members() {
   const [loadingAffiliations, setLoadingAffiliations] = useState(true);
   const [search, setSearch] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
-  const [pendingMemberId, setPendingMemberId] = useState<string | null>(null);
 
   const loading = loadingProject || loadingMembers || loadingAffiliations;
   const projectTitle = project?.title ?? "";
@@ -372,45 +239,37 @@ export function Members() {
     })
   ), [affiliations, searchValue]);
 
-  const addProjectMember = async (member: AffiliationDTO) => {
+  const addProjectMember = async (memberkey: string) => {
     if (!id) return;
 
-    if (projectMemberIds.has(member.id)) {
+    if (projectMemberIds.has(memberkey)) {
       notifications.info("Esse membro já está no projeto.");
       return;
     }
 
-    setPendingMemberId(member.id);
-
     try {
       const response = await MemberService.create({
         project: id,
-        user: member.id,
+        user: memberkey,
       });
 
       setMembers((current) => [...current, response.data]);
       notifications.info("Membro adicionado ao projeto.");
     } catch (error) {
       reportApiError(error, "Não foi possível adicionar o membro ao projeto.", notifications);
-    } finally {
-      setPendingMemberId(null);
     }
   };
 
-  const removeProjectMember = async (member: ProjectMember) => {
+  const removeProjectMember = async (memberkey: string) => {
     if (!id) return;
 
-    setPendingMemberId(member.userkey);
-
     try {
-      await MemberService.delete(member.id);
+      await MemberService.delete(memberkey);
 
-      setMembers((current) => current.filter((item) => item.id !== member.id));
+      setMembers((current) => current.filter((item) => item.id !== memberkey));
       notifications.info("Membro removido do projeto.");
     } catch (error) {
       reportApiError(error, "Não foi possível remover o membro do projeto.", notifications);
-    } finally {
-      setPendingMemberId(null);
     }
   };
 
@@ -439,18 +298,17 @@ export function Members() {
                 const statsTasks = toStatsTasks(member.tasks);
 
                 return (
-                  <MemberCard key={member.id}>
-                    <MemberStatTile
-                      username={getProjectMemberUsername(member)}
-                      name={getProjectMemberName(member)}
-                      project={projectTitle}
-                      started={counts.started}
-                      review={counts.review}
-                      done={counts.done}
-                      overdue={counts.overdue}
-                      tasks={statsTasks}
-                    />
-                  </MemberCard>
+                  <MemberStatTile
+                    key={member.id}
+                    username={getProjectMemberUsername(member)}
+                    name={getProjectMemberName(member)}
+                    project={projectTitle}
+                    started={counts.started}
+                    review={counts.review}
+                    done={counts.done}
+                    overdue={counts.overdue}
+                    tasks={statsTasks}
+                  />
                 );
               })}
             </Scroller>
@@ -460,13 +318,12 @@ export function Members() {
         </MembersArea>
       </Content>
 
-      <MembersModal
+      <AddProjectMember
         open={modalOpen}
         loading={loading}
         projectTitle={projectTitle}
         members={filteredOrganizationMembers}
         projectMembers={members}
-        pendingMemberId={pendingMemberId}
         onClose={() => setModalOpen(false)}
         onAddMember={addProjectMember}
         onRemoveMember={removeProjectMember}

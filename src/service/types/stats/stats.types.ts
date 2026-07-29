@@ -25,15 +25,12 @@ export type StatsUser = {
 };
 
 export type StatsTask = {
-  id: string;
   code: string;
   name: string;
   stage: TaskStage;
   delayed: boolean;
   spentMinutes: number;
   deadline: string;
-  startedAt: string | null;
-  doneAt: string | null;
 };
 
 export type MemberPerformance = {

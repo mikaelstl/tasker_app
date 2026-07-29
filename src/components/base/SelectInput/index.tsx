@@ -1,13 +1,15 @@
-import { Container, Option, Select } from "./style";
+import { useId } from "react";
+import { Container, Label, Option, Select } from "./style";
 
 interface SelectInputProps {
   label: string;
   value: string;
-  type: object;
+  type: Record<string, string>;
   onChange?: (value: string) => void;
 }
 
 export function SelectInput(props: SelectInputProps) {
+  const inputId = useId();
   const options = Object.entries(props.type)
                     .map(([key, value]) => { return {
                                               key,
@@ -24,8 +26,8 @@ export function SelectInput(props: SelectInputProps) {
 
   return (
     <Container>
-      <label htmlFor="select-input">{props.label}</label>
-      <Select name="select-input"
+      <Label htmlFor={inputId}>{props.label}</Label>
+      <Select id={inputId} name={inputId}
         value={props.value}
         onChange={handleChange}
       >
