@@ -19,7 +19,7 @@ function readStoredOrg(): CurrentOrg | null {
   if (!storedOrg) return null;
 
   try {
-    const parsed = JSON.parse(storedOrg) as Partial<CurrentOrg>;
+    const parsed = JSON.parse(storedOrg) as CurrentOrg;
 
     if (!parsed.orgkey || !parsed.role) return null;
 

@@ -78,15 +78,7 @@ export type ProjectStats = {
     organization: string;
     manager: string | null;
   };
-  summary: {
-    totalTasks: number;
-    doneTasks: number;
-    openTasks: number;
-    startedTasks: number;
-    reviewTasks: number;
-    delayedTasks: number;
-    progress: number;
-  };
+  summary: ProjectStatsSummary;
   deadline: {
     dueDate: string;
     daysLeft: number;
@@ -107,6 +99,16 @@ export type ProjectStats = {
     category: EventCategory;
   }>;
 };
+
+export interface ProjectStatsSummary {
+  totalTasks: number;
+  doneTasks: number;
+  openTasks: number;
+  startedTasks: number;
+  reviewTasks: number;
+  delayedTasks: number;
+  progress: number;
+}
 
 export type ProjectStatsPeriodTask = {
   id?: string;
@@ -130,7 +132,7 @@ export type ProjectStatsPeriodSnapshot = {
   cutoff_at: string;
   performance_per_member_json: MemberPerformance[];
   productivity_json: MemberProductivity[];
-  summary_json: ProjectStats["summary"];
+  summary_json: ProjectStatsSummary;
   health_status: ProjectHealthStatus;
   health_score: number;
   created_at: string;
@@ -140,11 +142,13 @@ export type ProjectStatsPeriodSnapshot = {
 
 export type ProjectStatsReportPayload = {
   stats: ProjectStats;
-  snapshot: ProjectStatsPeriodSnapshot & {
-    periodTasks: ProjectStatsPeriodTask[];
-  };
+  snapshot: ProjectStatsReportSnapshot;
   historicalSnapshots: ProjectStatsPeriodSnapshot[];
 };
+
+export interface ProjectStatsReportSnapshot extends ProjectStatsPeriodSnapshot {
+  periodTasks: ProjectStatsPeriodTask[];
+}
 
 export type ProjectStatsReport = {
   id: string;

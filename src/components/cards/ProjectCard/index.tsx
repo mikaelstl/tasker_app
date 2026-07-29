@@ -37,7 +37,7 @@ export function ProjectCard({
       className="tskr-project-card" onClick={goToProjectPage}
     >
       <Leading>
-        {ProjectStageBadge[stage]}
+        {ProjectStageBadge(stage)}
       </Leading>
       <Content className="tskr-card-leading">
         <Title>{title}</Title>

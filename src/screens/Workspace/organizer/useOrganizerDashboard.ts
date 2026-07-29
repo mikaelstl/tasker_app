@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useServices } from "@/hooks/useServices";
 import type { AuditLogDTO } from "@/service/types/audit-log/audit-log.dto";
-import type { ProjectMember } from "@/service/types/member/member.dto";
-import { ProjectStage, type ProjectDTO } from "@/service/types/project/project.dto";
+import { ProjectStage, type ProjectDTO, type ProjectWithMembersDTO } from "@/service/types/project/project.dto";
 import type { ApiError } from "@/service/types/response/error";
 
 interface ProjectSummary {
@@ -20,7 +19,7 @@ interface Deadline {
 }
 
 interface OrganizerDashboardData {
-  projects: Array<ProjectDTO & { members: ProjectMember[] }>;
+  projects: ProjectWithMembersDTO[];
   updates: AuditLogDTO[];
   projectSummary: ProjectSummary;
   deadlineAlerts: Deadline[];
@@ -34,7 +33,7 @@ const initialData: OrganizerDashboardData = {
 };
 
 function getErrorMessage(error: unknown): string {
-  const apiError = error as Partial<ApiError>;
+  const apiError = error as ApiError;
   return apiError.errors?.[0]?.message ?? "Não foi possível carregar o dashboard.";
 }
 

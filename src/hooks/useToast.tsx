@@ -65,7 +65,13 @@ export const notifications = {
   validation: (message: string) => toast.info(message, optionsWithId(message, validationOptions)),
 };
 
-export type ToastNotifications = typeof notifications;
+export interface ToastNotifications {
+  info(message: string): void;
+  warning(message: string): void;
+  error(message: string): void;
+  critical(message: string): void;
+  validation(message: string): void;
+}
 
 export function useToast(): ToastNotifications {
   return notifications;

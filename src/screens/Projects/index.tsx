@@ -15,13 +15,17 @@ import { OrgRole } from "@/utils/enums/OrgRole.ts";
 
 type StageFilter = ProjectStage | "ALL";
 
-const stageLabels: Record<ProjectStage, string> = {
-  [ProjectStage.STARTED]: "Iniciado",
-  [ProjectStage.PENDING]: "Pendente",
-  [ProjectStage.IN_PROGRESS]: "Em andamento",
-  [ProjectStage.PAUSED]: "Pausado",
-  [ProjectStage.COMPLETED]: "Concluído",
-};
+function stageLabel(stage: ProjectStage): string {
+  switch (stage) {
+    case ProjectStage.STARTED: return "Iniciado";
+    case ProjectStage.IN_PROGRESS: return "Em andamento";
+    case ProjectStage.PAUSED: return "Pausado";
+    case ProjectStage.COMPLETED: return "Concluído";
+    case ProjectStage.PENDING:
+    default:
+      return "Pendente";
+  }
+}
 
 function normalizeSearchTerm(value: string) {
   return value
@@ -118,7 +122,7 @@ export function Projects() {
             >
               <option value="ALL">Todos</option>
               {Object.values(ProjectStage).map((stage) => (
-                <option key={stage} value={stage}>{stageLabels[stage]}</option>
+                <option key={stage} value={stage}>{stageLabel(stage)}</option>
               ))}
             </select>
           </StageFilterControl>

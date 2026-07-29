@@ -1,13 +1,13 @@
 import { Container, Option, Select } from "./style";
 
-interface SelectInputProps<T> {
+interface SelectInputProps {
   label: string;
-  value: T[keyof T];
-  type: T;
-  onChange?: (value: T[keyof T]) => void;
+  value: string;
+  type: object;
+  onChange?: (value: string) => void;
 }
 
-export function SelectInput<T extends Record<string, string>>(props: SelectInputProps<T>) {
+export function SelectInput(props: SelectInputProps) {
   const options = Object.entries(props.type)
                     .map(([key, value]) => { return {
                                               key,
@@ -19,7 +19,7 @@ export function SelectInput<T extends Record<string, string>>(props: SelectInput
   const handleChange = (ev: React.ChangeEvent<HTMLSelectElement>) => {
     const selected = ev.target.value;
 
-    props.onChange!(selected.toUpperCase() as T[keyof T]);
+    props.onChange?.(selected.toUpperCase());
   }
 
   return (

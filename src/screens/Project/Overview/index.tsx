@@ -3,7 +3,6 @@ import { Text } from "../../../components/base/Text";
 import { Title } from "../../../components/base/Title";
 import { CommentCard } from "../../../components/cards/CommentCard";
 import { ImportantDates } from "../../../components/ImportantDates";
-import { Scroller } from "../../../components/misc/Scroller";
 import { Comments, Container, Content, Description, ProjectInfo } from "./style";
 import type { ProjectDTO } from "../../../service/types/project/project.dto";
 import type { ApiError } from "../../../service/types/response/error";
@@ -35,8 +34,7 @@ export function Overview() {
   const [project, setProject] = useState<ProjectDTO | null>(null);
   const [tasks, setTasks] = useState<TaskDTO[]>([]);
   const [comments, setComments] = useState<CommentDTO[]>([]);
-  const [busyCommentId, setBusyCommentId] = useState<string | null>(null);
-  const [inspectedCommentId, setInspectedCommentId] = useState<string | null>(null);
+  
   const showError = useCallback((error: unknown, fallback: string) => {
     const apiError = error as ApiError;
     if (!apiError.errors?.length) {
@@ -52,6 +50,8 @@ export function Overview() {
       const response = await CommentService.list({ projectkey: id });
       setComments(response.data);
     } catch (error) {
+      console.log(error);
+      
       showError(error, "Não foi possível carregar a atividade do projeto.");
     }
   }, [CommentService, id, showError]);
@@ -75,35 +75,20 @@ export function Overview() {
     }
   }
 
-  const inspectComment = async (commentId: string) => {
-    setBusyCommentId(commentId);
-    try {
-      const response = await CommentService.find(commentId);
-      setComments((current) => current.map((comment) => (
-        comment.id === commentId ? response.data : comment
-      )));
-      setInspectedCommentId(commentId);
-    } catch (error) {
-      showError(error, "Não foi possível consultar o comentário.");
-    } finally {
-      setBusyCommentId(null);
-    }
-  };
-
-  const deleteComment = async (comment: CommentDTO) => {
-    if (!window.confirm("Excluir este comentário?")) return;
-    setBusyCommentId(comment.id);
-    try {
-      await CommentService.delete(comment.id);
-      setComments((current) => current.filter((item) => item.id !== comment.id));
-      if (inspectedCommentId === comment.id) setInspectedCommentId(null);
-      notifications.info("Comentário excluído.");
-    } catch (error) {
-      showError(error, "Não foi possível excluir o comentário.");
-    } finally {
-      setBusyCommentId(null);
-    }
-  };
+  // const deleteComment = async (comment: CommentDTO) => {
+  //   if (!window.confirm("Excluir este comentário?")) return;
+    
+  //   try {
+  //     await CommentService.delete(comment.id);
+  //     setComments((current) => current.filter((item) => item.id !== comment.id));
+  //     if (inspectedCommentId === comment.id) setInspectedCommentId(null);
+  //     notifications.info("Comentário excluído.");
+  //   } catch (error) {
+  //     showError(error, "Não foi possível excluir o comentário.");
+  //   } finally {
+  //     setBusyCommentId(null);
+  //   }
+  // };
 
   useEffect(() => {
     if (!id) return;
@@ -138,7 +123,7 @@ export function Overview() {
             Iniciado em: {project.started_at ? new Date(project.started_at).toLocaleString("pt-BR") : "não iniciado"}
             {" · "}Prazo: {new Date(project.deadline).toLocaleString("pt-BR")}
           </Subtitle>
-          {ProjectStageBadge[project.stage]}
+          {ProjectStageBadge(project.stage)}
           <EditButton type="button" onClick={() => navigate('../edit')} />
           <Description>
             <Subtitle>Descrição</Subtitle>
@@ -154,23 +139,17 @@ export function Overview() {
           <Title>Atividade</Title>
           {
             comments.length !== 0
-              ? <Scroller className="vertical">
-                {
-                  comments.map((comment) => <CommentCard
-                    key={comment.id}
-                    id={comment.id}
-                    content={comment.content}
-                    date={DateTime.fromISO(comment.date, { zone: 'utc' })}
-                    owner={comment.ownerkey}
-                    createdAt={comment.created_at}
-                    updatedAt={comment.updated_at}
-                    expanded={inspectedCommentId === comment.id}
-                    disabled={busyCommentId === comment.id}
-                    onInspect={() => void inspectComment(comment.id)}
-                    onDelete={() => void deleteComment(comment)}
-                  />)
-                }
-              </Scroller>
+              ? <>{
+                comments.map((comment) => <CommentCard
+                  key={comment.id}
+                  id={comment.id}
+                  content={comment.content}
+                  date={DateTime.fromISO(comment.date, { zone: 'utc' })}
+                  owner={comment.ownerkey}
+                  createdAt={comment.created_at}
+                  updatedAt={comment.updated_at}
+                />)
+              }</>
               : <ItalicTitle>Sem comentários</ItalicTitle>
           }
           <MessageField send={sendComment} />

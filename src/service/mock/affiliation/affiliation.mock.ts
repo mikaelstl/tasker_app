@@ -79,9 +79,9 @@ function buildSummary(username: string): UserOrganizationSummaryDTO[] {
     return userAffiliations;
 }
 
-type StoredInvite = OrganizationInviteCreateResponse & {
+interface StoredInvite extends OrganizationInviteCreateResponse {
   readonly orgkey: string;
-};
+}
 
 const INVITES_STORAGE_KEY = "tasker.mock.affiliation-invites";
 const invites = new Map<string, StoredInvite>();

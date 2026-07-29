@@ -8,7 +8,7 @@ export const STORAGE_KEYS = {
     role: "tasker.org.role",
     current: "tasker.org.current",
   },
-} as const;
+};
 
 export const AUTH_SESSION_EXPIRED_EVENT = "tasker:auth-session-expired";
 

@@ -2,6 +2,7 @@ import type { ApiResponse } from "@/service/types/response/response";
 import type { CreateEventDTO } from "../../types/events/event.create.dto";
 import type { EventDTO } from "../../types/events/event.dto";
 import type { EventQueryDTO } from "../../types/events/event.query.dto";
+import type { UpdateEventDTO } from "../../types/events/event.update.dto";
 
 import { mockData, createMockId, createMockResponse, createMockEvent } from "../data";
 import type { EventServiceI } from "../../modules/event/event.service";
@@ -59,7 +60,7 @@ export class EventMockService implements EventServiceI {
 
   async update(
     code: string,
-    update: Partial<CreateEventDTO> & { projectkey?: string },
+    update: UpdateEventDTO,
   ): Promise<ApiResponse<EventDTO>> {
     const event = mockData.events.find((item) => item.id === code);
 

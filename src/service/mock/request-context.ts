@@ -31,7 +31,7 @@ function readCurrentAccount(): CurrentAccountDTO | null {
   }
 
   try {
-    const account = JSON.parse(storedUser) as Partial<CurrentAccountDTO>;
+    const account = JSON.parse(storedUser) as CurrentAccountDTO;
 
     if (!account.id || !account.username || !account.email) {
       return null;

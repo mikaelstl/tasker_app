@@ -1,7 +1,17 @@
-export const auditActorTypes = ["USER", "SYSTEM"] as const;
-export type AuditActorType = (typeof auditActorTypes)[number];
+export type AuditActorType = "USER" | "SYSTEM";
+export const auditActorTypes: AuditActorType[] = ["USER", "SYSTEM"];
 
-export const auditActions = [
+export type AuditAction =
+  | "CREATE"
+  | "UPDATE"
+  | "DELETE"
+  | "ADD"
+  | "REMOVE"
+  | "COMMENT"
+  | "STATUS_CHANGE"
+  | "SYSTEM_UPDATE";
+
+export const auditActions: AuditAction[] = [
   "CREATE",
   "UPDATE",
   "DELETE",
@@ -10,10 +20,19 @@ export const auditActions = [
   "COMMENT",
   "STATUS_CHANGE",
   "SYSTEM_UPDATE",
-] as const;
-export type AuditAction = (typeof auditActions)[number];
+];
 
-export const auditResources = [
+export type AuditResource =
+  | "ORGS"
+  | "AFFILIATIONS"
+  | "PROJECTS"
+  | "MEMBERS"
+  | "TASKS"
+  | "COMMENTS"
+  | "EVENTS"
+  | "PROJECT_STATS";
+
+export const auditResources: AuditResource[] = [
   "ORGS",
   "AFFILIATIONS",
   "PROJECTS",
@@ -22,8 +41,7 @@ export const auditResources = [
   "COMMENTS",
   "EVENTS",
   "PROJECT_STATS",
-] as const;
-export type AuditResource = (typeof auditResources)[number];
+];
 
 export type AuditJsonValue =
   | string
@@ -38,7 +56,9 @@ export interface AuditLogFieldChange {
   newValue: AuditJsonValue;
 }
 
-export type AuditLogChanges = Record<string, AuditLogFieldChange>;
+export interface AuditLogChanges {
+  [field: string]: AuditLogFieldChange;
+}
 
 export interface AuditLogActorDTO {
   username: string;

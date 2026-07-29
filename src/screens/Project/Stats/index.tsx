@@ -33,7 +33,7 @@ import { ProdutivityChart } from "../../../widgets/charts/ProdutivityChart";
 import { MemberStatsAccordion } from "../../../components/accordions/MemberStatsAccordion";
 import { EventCard } from "../../../components/cards/EventCard";
 import { useServices } from "../../../hooks/useServices";
-import { useToast } from "../../../hooks/useToast";
+import { useToast, type ToastNotifications } from "../../../hooks/useToast";
 import type { ApiError } from "../../../service/types/response/error";
 import {
   StatsPeriodType,
@@ -42,7 +42,7 @@ import {
 } from "../../../service/types/stats/stats.types";
 import { ProjectStage } from "../../../service/types/project/project.dto";
 
-function notify(error: unknown, fallback: string, notifications: ReturnType<typeof useToast>) {
+function notify(error: unknown, fallback: string, notifications: ToastNotifications) {
   const apiError = error as ApiError;
   if (!apiError.errors?.length) return notifications.error(fallback);
   apiError.errors.forEach((item) => notifications[item.level](item.message));
@@ -153,7 +153,7 @@ export function Stats() {
   if (!stats) return <Container><EmptyState><Text>As estatísticas deste projeto não estão disponíveis.</Text></EmptyState></Container>;
 
   const stage = stats.project.stage as ProjectStage;
-  const badge = ProjectStageBadge[stage] ?? <Text>{stats.project.stage}</Text>;
+  const badge = ProjectStageBadge(stage);
 
   return (
     <Container className="tskr-proj-stats">

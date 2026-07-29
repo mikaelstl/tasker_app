@@ -1,6 +1,6 @@
 import axios, {
   type AxiosInstance,
-  type AxiosRequestConfig,
+  type AxiosRequestHeaders,
   type AxiosResponse,
 } from "axios";
 import type { ApiError } from "@/service/types/response/error";
@@ -48,7 +48,7 @@ export class ApiClient {
   }: {
     route: string;
     params?: Q;
-    headers?: AxiosRequestConfig["headers"];
+    headers?: AxiosRequestHeaders;
   }): Promise<ApiResponse<R>> {
     const response: ApiResponse<R> = await this.api.get(route, {
       headers: headers,

@@ -13,64 +13,66 @@ export interface AuditLogItemViewModel {
   message: string;
   resourceLabel: string;
   occurredAt: string;
-  details: Array<{
-    field: string;
-    oldValue: string;
-    newValue: string;
-  }>;
+  details: AuditLogDetailViewModel[];
 }
 
-const resourceLabels: Record<string, string> = {
-  ORGS: "organização",
-  AFFILIATIONS: "afiliação",
-  PROJECTS: "projeto",
-  MEMBERS: "membro",
-  TASKS: "tarefa",
-  COMMENTS: "comentário",
-  EVENTS: "evento",
-  PROJECT_STATS: "relatório do projeto",
-};
+export interface AuditLogDetailViewModel {
+  field: string;
+  oldValue: string;
+  newValue: string;
+}
 
-const resourceArticles: Record<string, "a" | "o"> = {
-  ORGS: "a",
-  AFFILIATIONS: "a",
-  PROJECTS: "o",
-  MEMBERS: "o",
-  TASKS: "a",
-  COMMENTS: "o",
-  EVENTS: "o",
-  PROJECT_STATS: "o",
-};
+const resourceLabels = new Map<string, string>([
+  ["ORGS", "organização"],
+  ["AFFILIATIONS", "afiliação"],
+  ["PROJECTS", "projeto"],
+  ["MEMBERS", "membro"],
+  ["TASKS", "tarefa"],
+  ["COMMENTS", "comentário"],
+  ["EVENTS", "evento"],
+  ["PROJECT_STATS", "relatório do projeto"],
+]);
 
-const actionLabels: Record<string, string> = {
-  CREATE: "criou",
-  UPDATE: "atualizou",
-  DELETE: "excluiu",
-  ADD: "adicionou",
-  REMOVE: "removeu",
-  COMMENT: "comentou em",
-  STATUS_CHANGE: "alterou o status de",
-  SYSTEM_UPDATE: "atualizou automaticamente",
-};
+const resourceArticles = new Map<string, "a" | "o">([
+  ["ORGS", "a"],
+  ["AFFILIATIONS", "a"],
+  ["PROJECTS", "o"],
+  ["MEMBERS", "o"],
+  ["TASKS", "a"],
+  ["COMMENTS", "o"],
+  ["EVENTS", "o"],
+  ["PROJECT_STATS", "o"],
+]);
 
-const taskStageLabels: Record<string, string> = {
-  STARTED: "Iniciada",
-  PENDING: "Pendente",
-  REVIEW: "Em revisão",
-  DONE: "Concluída",
-  COMPLETED: "Concluída",
-};
+const actionLabels = new Map<string, string>([
+  ["CREATE", "criou"],
+  ["UPDATE", "atualizou"],
+  ["DELETE", "excluiu"],
+  ["ADD", "adicionou"],
+  ["REMOVE", "removeu"],
+  ["COMMENT", "comentou em"],
+  ["STATUS_CHANGE", "alterou o status de"],
+  ["SYSTEM_UPDATE", "atualizou automaticamente"],
+]);
 
-const fieldLabels: Record<string, string> = {
-  title: "Título",
-  name: "Nome",
-  stage: "Status",
-  delayed: "Prazo",
-  userkey: "Usuário",
-  estimate: "Estimativa",
-  labels: "Marcadores",
-  metadata: "Metadados",
-};
+const taskStageLabels = new Map<string, string>([
+  ["STARTED", "Iniciada"],
+  ["PENDING", "Pendente"],
+  ["REVIEW", "Em revisão"],
+  ["DONE", "Concluída"],
+  ["COMPLETED", "Concluída"],
+]);
+
+const fieldLabels = new Map<string, string>([
+  ["title", "Título"],
+  ["name", "Nome"],
+  ["stage", "Status"],
+  ["delayed", "Prazo"],
+  ["userkey", "Usuário"],
+  ["estimate", "Estimativa"],
+  ["labels", "Marcadores"],
+  ["metadata", "Metadados"],
+]);
 
 function isChange(value: unknown): value is AuditLogFieldChange {
   return Boolean(
@@ -83,7 +85,7 @@ function isChange(value: unknown): value is AuditLogFieldChange {
 }
 
 function valueFrom(log: AuditLogDTO, field: string, side: "oldValue" | "newValue") {
-  const change = (log.changes as Record<string, unknown> | null)?.[field];
+  const change = log.changes[field];
   return isChange(change) ? change[side] : undefined;
 }
 
@@ -99,7 +101,7 @@ function namedResource(log: AuditLogDTO): string | null {
 function formatValue(value: AuditJsonValue | undefined, field: string): string {
   if (value === undefined || value === null) return "Não definido";
   if (field === "stage" && typeof value === "string") {
-    return taskStageLabels[value] ?? value;
+    return taskStageLabels.get(value) ?? value;
   }
   if (typeof value === "boolean") {
     if (field === "delayed") return value ? "Atrasada" : "No prazo";
@@ -115,11 +117,11 @@ function formatValue(value: AuditJsonValue | undefined, field: string): string {
 }
 
 function formatMessage(log: AuditLogDTO, resourceLabel: string): string {
-  const stage = (log.changes as Record<string, unknown> | null)?.stage;
-  const delayed = (log.changes as Record<string, unknown> | null)?.delayed;
-  const userkey = (log.changes as Record<string, unknown> | null)?.userkey;
+  const stage = log.changes.stage;
+  const delayed = log.changes.delayed;
+  const userkey = log.changes.userkey;
   const resourceName = namedResource(log);
-  const article = resourceArticles[log.resource];
+  const article = resourceArticles.get(log.resource);
   const target = article ? `${article} ${resourceLabel}` : "uma atividade";
   const statusTarget = article === "o" ? `do ${resourceLabel}` : `da ${resourceLabel}`;
 
@@ -139,14 +141,14 @@ function formatMessage(log: AuditLogDTO, resourceLabel: string): string {
     return "adicionou um comentário";
   }
 
-  const actionLabel = actionLabels[log.action] ?? "realizou uma ação em";
+  const actionLabel = actionLabels.get(log.action) ?? "realizou uma ação em";
   return `${actionLabel} ${target}${resourceName ? ` ${resourceName}` : ""}`;
 }
 
 export function formatAuditLog(log: AuditLogDTO): AuditLogItemViewModel {
-  const resourceLabel = resourceLabels[log.resource] ?? "atividade";
+  const resourceLabel = resourceLabels.get(log.resource) ?? "atividade";
   const rawChanges = log.changes && typeof log.changes === "object" && !Array.isArray(log.changes)
-    ? Object.entries(log.changes as Record<string, unknown>)
+    ? Object.entries(log.changes)
     : [];
   const isSystem = log.actorType === "SYSTEM";
 
@@ -161,7 +163,7 @@ export function formatAuditLog(log: AuditLogDTO): AuditLogItemViewModel {
     occurredAt: log.created_at,
     details: rawChanges.flatMap(([field, change]) => isChange(change)
       ? [{
-          field: fieldLabels[field] ?? field,
+          field: fieldLabels.get(field) ?? field,
           oldValue: formatValue(change.oldValue, field),
           newValue: formatValue(change.newValue, field),
         }]

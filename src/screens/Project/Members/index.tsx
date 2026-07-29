@@ -10,7 +10,7 @@ import { SearchField } from "../../../components/textfields/SearchField";
 import { MemberStatTile } from "../../../components/tiles/MemberStatTile";
 import { useOrganization } from "../../../hooks/useOrganization";
 import { useServices } from "../../../hooks/useServices";
-import { useToast } from "@/hooks/useToast";
+import { useToast, type ToastNotifications } from "@/hooks/useToast";
 import type { AffiliationDTO } from "../../../service/types/affiliation/affiliation.dto";
 import type { ProjectMember } from "../../../service/types/member/member.dto";
 import type { ProjectDTO } from "../../../service/types/project/project.dto";
@@ -40,7 +40,7 @@ import {
 function reportApiError(
   error: unknown,
   fallback: string,
-  notifications: ReturnType<typeof useToast>,
+  notifications: ToastNotifications,
 ) {
   const { errors } = error as ApiError;
 

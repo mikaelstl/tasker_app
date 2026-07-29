@@ -59,7 +59,7 @@ export function Register() {
 
       navigate("/workspaces");
     } catch (caughtError: unknown) {
-      const errors = (caughtError as Partial<ApiError>).errors;
+      const errors = (caughtError as ApiError).errors;
 
       if (!errors?.length) {
         error("Não foi possível criar a conta.");

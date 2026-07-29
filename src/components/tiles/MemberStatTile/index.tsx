@@ -41,12 +41,16 @@ export interface MemberStatTileProps {
   defaultOpen?: boolean;
 }
 
-const stageLabels: Record<StatsTask["stage"], string> = {
-  STARTED: "Iniciada",
-  PENDING: "Pendente",
-  REVIEW: "Em revisão",
-  DONE: "Concluída",
-};
+function stageLabel(task: StatsTask): string {
+  switch (task.stage) {
+    case "STARTED": return "Iniciada";
+    case "REVIEW": return "Em revisão";
+    case "DONE": return "Concluída";
+    case "PENDING":
+    default:
+      return "Pendente";
+  }
+}
 
 const formatDuration = (minutes: number) => {
   const safeMinutes = Math.max(0, Math.round(minutes));
@@ -176,7 +180,7 @@ export function MemberStatTile({
                     </TaskInfo>
                     <div role="cell">
                       <StatusBadge $background={colors.background} $color={colors.color}>
-                        {task.delayed ? "Atrasada" : stageLabels[task.stage]}
+                        {task.delayed ? "Atrasada" : stageLabel(task)}
                       </StatusBadge>
                     </div>
                     <TaskMeta role="cell"><CalendarDaysIcon /> {formatDate(task.deadline)}</TaskMeta>

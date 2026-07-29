@@ -17,11 +17,6 @@ export function Chart({
 }: BarChartProps) {
   const keys = Object.keys(data[0] || {}).filter(k => k !== 'week');
 
-  const colorMap = {
-    'done': Palette.green,
-    'overdue': Palette.red
-  }
-
   const generateTicks = (step: number) => {
     const values: number[] = [];
     const ticks: number[] = [];
@@ -50,7 +45,7 @@ export function Chart({
         padding={0.2}
         groupMode='grouped'
         layout='vertical'
-        colors={({ id }) => colorMap[id as keyof typeof colorMap]}
+        colors={({ id }) => id === "done" ? Palette.green : Palette.red}
         colorBy='id'
         borderColor={{
           from: 'color',

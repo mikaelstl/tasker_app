@@ -21,7 +21,7 @@ import {
 
 interface ImportantDatesProps {
   events: EventDTO[]
-  projects: Pick<ProjectDTO, "id" | "title">[]
+  projects: ProjectDTO[]
 }
 
 type GroupedEvent = {

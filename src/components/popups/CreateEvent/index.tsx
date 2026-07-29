@@ -80,7 +80,7 @@ export function CreateEventPopup(props: PopupProps) {
             label="Categoria"
             value={category}
             type={EventCategory}
-            onChange={setCategory}
+            onChange={(value) => setCategory(value as EventCategory)}
           />
         </Form>
       </Card>

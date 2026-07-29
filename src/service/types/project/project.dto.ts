@@ -1,4 +1,4 @@
-import type { MemberRecordDTO } from "../member/member.dto";
+import type { ProjectMember } from "../member/member.dto";
 
 export enum ProjectStage {
   STARTED = 'STARTED',
@@ -30,5 +30,5 @@ export interface ProjectDTO {
 }
 
 export interface ProjectWithMembersDTO extends ProjectDTO {
-  readonly members: MemberRecordDTO[];
+  readonly members: ProjectMember[];
 }

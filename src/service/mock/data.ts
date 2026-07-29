@@ -1,5 +1,5 @@
 import type { AccountDTO } from "../types/account/account.dto";
-import type { AuditLogDTO, AuditLogChanges } from "../types/audit-log/audit-log.dto";
+import type { AuditAction, AuditLogDTO, AuditLogChanges, AuditResource } from "../types/audit-log/audit-log.dto";
 import type { CurrentAccountDTO } from "../types/account/current-account.dto";
 import type { AuthDTO } from "../types/auth/auth.dto";
 import type { AffiliationDTO } from "../types/affiliation/affiliation.dto";
@@ -8,21 +8,36 @@ import { EventCategory, type EventDTO } from "../types/events/event.dto";
 import type { MemberStatDTO } from "../types/member/member-stat.dto";
 import type { ProjectMember } from "../types/member/member.dto";
 import type { OrganizationDTO } from "../types/organization/organization.dto";
-import { ProjectStage, type ProjectDTO } from "../types/project/project.dto";
+import { ProjectStage, type ProjectWithMembersDTO } from "../types/project/project.dto";
 import type { ApiResponse } from "../types/response/response";
 import type { TaskDTO } from "../types/task/task.dto";
 import type { UserDTO } from "../types/user/user.dto";
+import type {
+  MockAccountInputDTO,
+  MockAffiliationInputDTO,
+  MockAuditLogInputDTO,
+  MockAuthInputDTO,
+  MockCommentInputDTO,
+  MockCurrentAccountInputDTO,
+  MockEventInputDTO,
+  MockOrganizationInputDTO,
+  MockProjectInputDTO,
+  MockProjectMemberInputDTO,
+  MockTaskInputDTO,
+  MockUserInputDTO,
+  OrganizationSeedDTO,
+} from "../types/mock/mock-data.dto";
 
 import { TaskPriority } from "../types/task/priority.dto";
 import { TaskStage } from "../types/task/stage.dto";
 import { OrgRole } from "../../utils/enums/OrgRole";
 
-type MockDataShape = {
+interface MockDataShape {
   accounts: AccountDTO[];
   users: UserDTO[];
   organizations: OrganizationDTO[];
   affiliations: AffiliationDTO[];
-  projects: MockProject[];
+  projects: ProjectWithMembersDTO[];
   members: ProjectMember[];
   tasks: TaskDTO[];
   comments: CommentDTO[];
@@ -31,9 +46,7 @@ type MockDataShape = {
   auditLogs: AuditLogDTO[];
   currentAccount: CurrentAccountDTO;
   auth: AuthDTO;
-};
-
-type MockProject = ProjectDTO & { members: ProjectMember[] };
+}
 
 type EntityCounterKey =
   | "account"
@@ -47,18 +60,18 @@ type EntityCounterKey =
   | "event"
   | "auditLog";
 
-const counters: Record<EntityCounterKey, number> = {
-  account: 1,
-  user: 1,
-  org: 1,
-  affiliation: 1,
-  project: 1,
-  member: 1,
-  task: 1,
-  comment: 1,
-  event: 1,
-  auditLog: 1,
-};
+const counters = new Map<EntityCounterKey, number>([
+  ["account", 1],
+  ["user", 1],
+  ["org", 1],
+  ["affiliation", 1],
+  ["project", 1],
+  ["member", 1],
+  ["task", 1],
+  ["comment", 1],
+  ["event", 1],
+  ["auditLog", 1],
+]);
 
 const baseDate = new Date("2026-07-14T10:00:00.000Z");
 
@@ -71,8 +84,8 @@ function dateAt(daysOffset: number, hoursOffset = 0): string {
 }
 
 export function createMockId(prefix: EntityCounterKey): string {
-  const current = counters[prefix];
-  counters[prefix] += 1;
+  const current = counters.get(prefix) ?? 1;
+  counters.set(prefix, current + 1);
   return `${prefix.slice(0, 3)}-${String(current).padStart(3, "0")}`;
 }
 
@@ -92,7 +105,7 @@ export function createMockResponse<T>(
   };
 }
 
-export function createMockAccount(data: Partial<AccountDTO> = {}): AccountDTO {
+export function createMockAccount(data: MockAccountInputDTO = {}): AccountDTO {
   return {
     id: data.id ?? "acc-000",
     email: data.email ?? "conta@tasker.dev",
@@ -102,7 +115,7 @@ export function createMockAccount(data: Partial<AccountDTO> = {}): AccountDTO {
   };
 }
 
-export function createMockUser(data: Partial<UserDTO> = {}): UserDTO {
+export function createMockUser(data: MockUserInputDTO = {}): UserDTO {
   return {
     id: data.id ?? "usr-000",
     name: data.name ?? "Usuario Mock",
@@ -113,7 +126,7 @@ export function createMockUser(data: Partial<UserDTO> = {}): UserDTO {
   };
 }
 
-export function createMockOrganization(data: Partial<OrganizationDTO> = {}): OrganizationDTO {
+export function createMockOrganization(data: MockOrganizationInputDTO = {}): OrganizationDTO {
   return {
     id: data.id ?? "org-000",
     name: data.name ?? "Organizacao Mock",
@@ -126,7 +139,7 @@ export function createMockOrganization(data: Partial<OrganizationDTO> = {}): Org
   };
 }
 
-export function createMockAffiliation(data: Partial<AffiliationDTO> = {}): AffiliationDTO {
+export function createMockAffiliation(data: MockAffiliationInputDTO = {}): AffiliationDTO {
   return {
     id: data.id ?? "aff-000",
     orgkey: data.orgkey ?? "org-000",
@@ -139,7 +152,7 @@ export function createMockAffiliation(data: Partial<AffiliationDTO> = {}): Affil
   };
 }
 
-export function createMockProject(data: Partial<MockProject> = {}): MockProject {
+export function createMockProject(data: MockProjectInputDTO = {}): ProjectWithMembersDTO {
   return {
     id: data.id ?? "pro-000",
     title: data.title ?? "Projeto Mock",
@@ -157,7 +170,7 @@ export function createMockProject(data: Partial<MockProject> = {}): MockProject 
   };
 }
 
-export function createMockProjectMember(data: Partial<ProjectMember> = {}): ProjectMember {
+export function createMockProjectMember(data: MockProjectMemberInputDTO = {}): ProjectMember {
   return {
     id: data.id ?? "mem-000",
     projectkey: data.projectkey ?? "pro-000",
@@ -169,7 +182,7 @@ export function createMockProjectMember(data: Partial<ProjectMember> = {}): Proj
   };
 }
 
-export function createMockTask(data: Partial<TaskDTO> = {}): TaskDTO {
+export function createMockTask(data: MockTaskInputDTO = {}): TaskDTO {
   return {
     id: data.id ?? "tsk-000",
     code: data.code ?? "TSK-0000",
@@ -188,7 +201,7 @@ export function createMockTask(data: Partial<TaskDTO> = {}): TaskDTO {
   };
 }
 
-export function createMockComment(data: Partial<CommentDTO> = {}): CommentDTO {
+export function createMockComment(data: MockCommentInputDTO = {}): CommentDTO {
   return {
     id: data.id ?? "com-000",
     content: data.content ?? "Comentario mock",
@@ -200,7 +213,7 @@ export function createMockComment(data: Partial<CommentDTO> = {}): CommentDTO {
   };
 }
 
-export function createMockEvent(data: Partial<EventDTO> = {}): EventDTO {
+export function createMockEvent(data: MockEventInputDTO = {}): EventDTO {
   return {
     id: data.id ?? "evt-000",
     title: data.title ?? "Reunião de alinhamento",
@@ -212,7 +225,7 @@ export function createMockEvent(data: Partial<EventDTO> = {}): EventDTO {
   };
 }
 
-export function createMockAuditLog(data: Partial<AuditLogDTO> = {}): AuditLogDTO {
+export function createMockAuditLog(data: MockAuditLogInputDTO = {}): AuditLogDTO {
   return {
     id: data.id ?? "aud-000",
     orgkey: data.orgkey ?? "org-000",
@@ -233,7 +246,7 @@ export function createMockAuditLog(data: Partial<AuditLogDTO> = {}): AuditLogDTO
   };
 }
 
-export function createMockAuth(data: Partial<AuthDTO> = {}): AuthDTO {
+export function createMockAuth(data: MockAuthInputDTO = {}): AuthDTO {
   return {
     account: data.account ?? "acc-000",
     email: data.email ?? "conta@tasker.dev",
@@ -242,7 +255,7 @@ export function createMockAuth(data: Partial<AuthDTO> = {}): AuthDTO {
   };
 }
 
-export function createMockCurrentAccount(data: Partial<CurrentAccountDTO> = {}): CurrentAccountDTO {
+export function createMockCurrentAccount(data: MockCurrentAccountInputDTO = {}): CurrentAccountDTO {
   return {
     id: data.id ?? "acc-000",
     username: data.username ?? "usuario.mock",
@@ -275,14 +288,7 @@ const userSeeds = [
   { username: "tiago.ribeiro", name: "Tiago Ribeiro", password: "Senha@20" },
 ];
 
-type AffiliationSeed = Pick<UserDTO, "username"> & Pick<AffiliationDTO, "role">;
-
-interface OrganizationSeed extends Pick<OrganizationDTO, "name"> {
-  ownerUsername: UserDTO["username"];
-  affiliations: AffiliationSeed[];
-}
-
-const organizationSeeds: OrganizationSeed[] = [
+const organizationSeeds: OrganizationSeedDTO[] = [
   {
     name: "Aurora Tech",
     ownerUsername: "mikaelst",
@@ -384,38 +390,38 @@ const auditLogTemplates: Array<(context: AuditLogContext) => string> = [
 
 const eventCategories = Object.values(EventCategory);
 
-const eventTitles: Record<EventCategory, string[]> = {
-  [EventCategory.RELEASE]: [
+const eventTitles = new Map<EventCategory, string[]>([
+  [EventCategory.RELEASE, [
     "Release do módulo de cadastro",
     "Release do módulo de relatórios",
     "Publicação da versão estável",
-  ],
-  [EventCategory.MEETING]: [
+  ]],
+  [EventCategory.MEETING, [
     "Reunião de alinhamento",
     "Reunião de vendas",
     "Reunião com stakeholders",
-  ],
-  [EventCategory.REVIEW]: [
+  ]],
+  [EventCategory.REVIEW, [
     "Revisão do módulo de usuários",
     "Revisão da sprint",
     "Revisão dos critérios de aceite",
-  ],
-  [EventCategory.PLANNING]: [
+  ]],
+  [EventCategory.PLANNING, [
     "Planejamento geral",
     "Planejamento da próxima sprint",
     "Planejamento trimestral",
-  ],
-  [EventCategory.TESTS]: [
+  ]],
+  [EventCategory.TESTS, [
     "Testes do fluxo de cadastro",
     "Validação dos testes de integração",
     "Testes de regressão",
-  ],
-  [EventCategory.LAUNCH]: [
+  ]],
+  [EventCategory.LAUNCH, [
     "Lançamento da versão 1",
     "Lançamento do novo portal",
     "Apresentação da nova versão",
-  ],
-};
+  ]],
+]);
 
 const accountRecords = userSeeds.map((seed, index) =>
   createMockAccount({
@@ -438,7 +444,8 @@ const users = userSeeds.map((seed, index) =>
   }),
 );
 
-const usersByUsername = new Map(users.map((user) => [user.username, user] as const));
+const usersByUsername = new Map<string, UserDTO>();
+users.forEach((user) => usersByUsername.set(user.username, user));
 
 const organizations = organizationSeeds.map((seed, index) =>
   createMockOrganization({
@@ -612,7 +619,7 @@ const comments = projects.flatMap((project, projectIndex) => {
 const events = projects.flatMap((project, projectIndex) =>
   Array.from({ length: 2 }).map((_, eventIndex) => {
     const category = eventCategories[(projectIndex + eventIndex) % eventCategories.length];
-    const categoryTitles = eventTitles[category];
+    const categoryTitles = eventTitles.get(category) ?? [];
 
     return createMockEvent({
       id: createMockId("event"),
@@ -637,8 +644,8 @@ const auditLogs = organizations.flatMap((organization, orgIndex) => {
     const affiliation = orgAffiliations[logIndex % orgAffiliations.length];
     const user = usersByUsername.get(affiliation.userkey);
     const variant = logIndex % 8;
-    let action: AuditLogDTO["action"] = "UPDATE";
-    let resource: AuditLogDTO["resource"] = "TASKS";
+    let action: AuditAction = "UPDATE";
+    let resource: AuditResource = "TASKS";
     let resourcekey: string | null = task.id;
     let changes: AuditLogChanges = {};
 

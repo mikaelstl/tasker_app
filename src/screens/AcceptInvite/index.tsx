@@ -2,11 +2,11 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   ArrowPathIcon,
+  CalendarDaysIcon,
   ExclamationTriangleIcon,
   HomeIcon,
-  UserGroupIcon,
+  ShieldCheckIcon,
   UserPlusIcon,
-  XMarkIcon,
 } from "@heroicons/react/16/solid";
 import { DateTime } from "luxon";
 import { Logo } from "@/components/images/Logo";
@@ -14,48 +14,42 @@ import { useAuth } from "@/hooks/useAuth";
 import { useOrganization } from "@/hooks/useOrganization";
 import { useServices } from "@/hooks/useServices";
 import {
-  buildInviteUrl,
   clearPendingInviteToken,
   savePendingInviteToken,
 } from "@/config/invite";
 import type { ApiError } from "@/service/types/response/error";
 import type { OrganizationInvitePreviewResponse } from "@/service/types/affiliation/invite.dto";
 import {
-  AsideCard,
   Badge,
-  Card,
   CardActions,
-  CardBody,
-  CardFooter,
-  CardHeader,
   Container,
   Description,
   Heading,
   HelperText,
   Hero,
   IconBubble,
-  LinkButton,
-  MetaGrid,
+  InviteCard,
+  InviteContent,
   MetaItem,
   MetaLabel,
   MetaValue,
+  OrganizationName,
   PageShell,
   PrimaryButton,
   SecondaryButton,
-  SplitLayout,
   StatusNote,
 } from "./style";
 
-type InviteViewState =
-  | { kind: "loading" }
-  | { kind: "available"; token: string; organization: { id: string; name: string }; expiresAt: string }
-  | { kind: "needs-auth"; token: string; organization: { id: string; name: string }; expiresAt: string }
-  | { kind: "accepting"; token: string; organization: { id: string; name: string }; expiresAt: string }
-  | { kind: "rejecting"; token: string; organization: { id: string; name: string }; expiresAt: string }
-  | { kind: "accepted" }
-  | { kind: "rejected" }
-  | { kind: "unavailable" }
-  | { kind: "error"; message: string };
+type InviteViewStatus =
+  | "loading"
+  | "available"
+  | "needs-auth"
+  | "accepting"
+  | "rejecting"
+  | "accepted"
+  | "rejected"
+  | "unavailable"
+  | "error";
 
 function formatDateTime(value: string): string {
   const date = DateTime.fromISO(value);
@@ -92,24 +86,27 @@ export function AcceptInvite() {
   const { defineOrg } = useOrganization();
   const { AffiliationService } = useServices();
 
-  const [state, setState] = useState<InviteViewState>({ kind: "loading" });
+  const [status, setStatus] = useState<InviteViewStatus>("loading");
+  const [invite, setInvite] = useState<OrganizationInvitePreviewResponse | null>(null);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     if (!token) {
       clearPendingInviteToken();
-      setState({ kind: "unavailable" });
+      setInvite(null);
+      setStatus("unavailable");
       return;
     }
 
     if (authenticating) {
-      setState({ kind: "loading" });
+      setStatus("loading");
       return;
     }
 
     let active = true;
 
     const previewInvite = async () => {
-      setState({ kind: "loading" });
+      setStatus("loading");
 
       try {
         const response = await AffiliationService.previewInvite(token);
@@ -121,32 +118,29 @@ export function AcceptInvite() {
 
         if (!preview.valid) {
           clearPendingInviteToken();
-          setState({ kind: "unavailable" });
+          setInvite(null);
+          setStatus("unavailable");
           return;
         }
 
-        const nextState = authenticated
-          ? { kind: "available", token, organization: preview.organization, expiresAt: preview.expiresAt }
-          : { kind: "needs-auth", token, organization: preview.organization, expiresAt: preview.expiresAt };
-
-        setState(nextState);
+        setInvite(preview);
+        setStatus(authenticated ? "available" : "needs-auth");
       } catch (caughtError) {
         if (!active) {
           return;
         }
 
-        const error = caughtError as Partial<ApiError>;
+        const error = caughtError as ApiError;
 
         if ([404, 409, 410].includes(error.status ?? 0)) {
           clearPendingInviteToken();
-          setState({ kind: "unavailable" });
+          setInvite(null);
+          setStatus("unavailable");
           return;
         }
 
-        setState({
-          kind: "error",
-          message: toUnavailableMessage(error as ApiError),
-        });
+        setErrorMessage(toUnavailableMessage(error));
+        setStatus("error");
       }
     };
 
@@ -156,23 +150,6 @@ export function AcceptInvite() {
       active = false;
     };
   }, [AffiliationService, authenticated, authenticating, token]);
-
-  const inviteInfo = useMemo(() => {
-    if (
-      state.kind === "available"
-      || state.kind === "needs-auth"
-      || state.kind === "accepting"
-      || state.kind === "rejecting"
-    ) {
-      return {
-        organization: state.organization,
-        expiresAt: state.expiresAt,
-        token: state.token,
-      };
-    }
-
-    return null;
-  }, [state]);
 
   const handleAuthCta = (target: "/login" | "/register") => {
     if (!token) {
@@ -185,230 +162,196 @@ export function AcceptInvite() {
   };
 
   const finalizeAction = async (action: "accept" | "reject") => {
-    if (!inviteInfo) {
+    if (!invite || !token) {
       return;
     }
 
-    setState(
-      action === "accept"
-        ? { kind: "accepting", ...inviteInfo }
-        : { kind: "rejecting", ...inviteInfo },
-    );
+    setStatus(action === "accept" ? "accepting" : "rejecting");
 
     try {
       if (action === "accept") {
-        const response = await AffiliationService.acceptInvite(inviteInfo.token);
+        const response = await AffiliationService.acceptInvite(token);
 
         defineOrg(response.data.orgkey, response.data.role);
         await AffiliationService.list();
         clearPendingInviteToken();
-        setState({ kind: "accepted" });
+        setStatus("accepted");
         navigate("/home/organization", { replace: true });
         return;
       }
 
-      await AffiliationService.rejectInvite(inviteInfo.token);
+      await AffiliationService.rejectInvite(token);
       clearPendingInviteToken();
-      setState({ kind: "rejected" });
+      setStatus("rejected");
     } catch (caughtError) {
-      const error = caughtError as Partial<ApiError>;
+      const error = caughtError as ApiError;
 
       if (error.status === 401) {
-        setState({ kind: "needs-auth", ...inviteInfo });
+        setStatus("needs-auth");
         return;
       }
 
       if ([404, 409, 410].includes(error.status ?? 0)) {
         clearPendingInviteToken();
-        setState({ kind: "unavailable" });
+        setInvite(null);
+        setStatus("unavailable");
         return;
       }
 
-      setState({
-        kind: "error",
-        message: error.errors?.[0]?.message ?? "Não foi possível concluir a ação.",
-      });
+      setErrorMessage(error.errors?.[0]?.message ?? "Não foi possível concluir a ação.");
+      setStatus("error");
     }
   };
 
-  const previewDate = inviteInfo ? formatDateTime(inviteInfo.expiresAt) : null;
+  const previewDate = invite ? formatDateTime(invite.expiresAt) : null;
 
   return (
     <PageShell>
       <Container>
         <Hero>
-          <Logo width={168} />
-          <Heading>Convite para organização</Heading>
+          <Logo width={182} />
+          <Heading>CONVITE PARA ORGANIZAÇÃO</Heading>
           <Description>
-            Acesse o convite por link, confira a organização antes de entrar e
-            conclua o aceite somente com sua sessão autenticada.
+            Confira os detalhes abaixo para entrar na área de trabalho.
           </Description>
         </Hero>
 
-        <SplitLayout>
-          <Card>
-            <CardHeader>
-              <IconBubble>
-                <UserGroupIcon />
-              </IconBubble>
-              <div>
-                <Badge>Link de convite</Badge>
-                <Heading as="h1">
-                  {state.kind === "available" || state.kind === "needs-auth" || state.kind === "accepting" || state.kind === "rejecting"
-                    ? inviteInfo?.organization.name
-                    : state.kind === "accepted"
-                      ? "Convite aceito"
-                      : state.kind === "rejected"
-                        ? "Convite rejeitado"
-                        : "Verificando convite"}
-                </Heading>
-              </div>
-            </CardHeader>
-
-            <CardBody>
-              {(state.kind === "available" || state.kind === "needs-auth" || state.kind === "accepting" || state.kind === "rejecting") && inviteInfo && (
-                <>
-                  <Description>
-                    Este convite concede acesso como <strong>MEMBER</strong> na organização abaixo.
-                  </Description>
-
-                  <MetaGrid>
-                    <MetaItem>
-                      <MetaLabel>Organização</MetaLabel>
-                      <MetaValue>{inviteInfo.organization.name}</MetaValue>
-                    </MetaItem>
-                    <MetaItem>
-                      <MetaLabel>Expira em</MetaLabel>
-                      <MetaValue>{previewDate}</MetaValue>
-                    </MetaItem>
-                    <MetaItem>
-                      <MetaLabel>URL</MetaLabel>
-                      <MetaValue>{buildInviteUrl(inviteInfo.token)}</MetaValue>
-                    </MetaItem>
-                  </MetaGrid>
-                </>
-              )}
-
-              {state.kind === "accepted" && (
-                <StatusNote>
-                  Convite aceito. Você já pode acessar a organização.
-                </StatusNote>
-              )}
-
-              {state.kind === "rejected" && (
-                <StatusNote>
-                  Convite rejeitado. O link não pode mais ser usado nesta sessão.
-                </StatusNote>
-              )}
-
-              {state.kind === "unavailable" && (
-                <StatusNote>
-                  Este link não está mais disponível.
-                </StatusNote>
-              )}
-
-              {state.kind === "error" && (
-                <StatusNote>
-                  {state.message}
-                </StatusNote>
-              )}
-            </CardBody>
-
-            <CardFooter>
-              {state.kind === "loading" && (
-                <HelperText>
-                  Carregando dados do convite...
-                </HelperText>
-              )}
-
-              {(state.kind === "available" || state.kind === "accepting" || state.kind === "rejecting") && inviteInfo && (
-                <CardActions>
-                  <PrimaryButton
-                    type="button"
-                    onClick={() => void finalizeAction("accept")}
-                    disabled={state.kind !== "available"}
-                  >
-                    {state.kind === "accepting" ? "Aceitando..." : "Aceitar convite"}
-                  </PrimaryButton>
-                  <SecondaryButton
-                    type="button"
-                    onClick={() => void finalizeAction("reject")}
-                    disabled={state.kind !== "available"}
-                  >
-                    {state.kind === "rejecting" ? "Rejeitando..." : "Rejeitar convite"}
-                  </SecondaryButton>
-                </CardActions>
-              )}
-
-              {state.kind === "needs-auth" && (
-                <CardActions>
-                  <PrimaryButton type="button" onClick={() => handleAuthCta("/login")}>
-                    <UserPlusIcon width={16} />
-                    Entrar
-                  </PrimaryButton>
-                  <SecondaryButton type="button" onClick={() => handleAuthCta("/register")}>
-                    Criar conta
-                  </SecondaryButton>
-                </CardActions>
-              )}
-
-              {state.kind === "accepted" && (
-                <CardActions>
-                  <PrimaryButton type="button" onClick={() => navigate("/home/organization", { replace: true })}>
-                    Ir para a organização
-                  </PrimaryButton>
-                </CardActions>
-              )}
-
-              {state.kind === "rejected" && (
-                <CardActions>
-                  <PrimaryButton type="button" onClick={() => navigate("/workspaces", { replace: true })}>
-                    Voltar aos espaços
-                  </PrimaryButton>
-                </CardActions>
-              )}
-
-              {state.kind === "unavailable" && (
-                <CardActions>
-                  <PrimaryButton type="button" onClick={() => navigate("/workspaces", { replace: true })}>
-                    <HomeIcon width={16} />
-                    Ir para início
-                  </PrimaryButton>
-                </CardActions>
-              )}
-
-              {state.kind === "error" && (
-                <CardActions>
-                  <PrimaryButton type="button" onClick={() => window.location.reload()}>
-                    <ArrowPathIcon width={16} />
-                    Tentar novamente
-                  </PrimaryButton>
-                </CardActions>
-              )}
-            </CardFooter>
-          </Card>
-
-          <AsideCard>
-            <IconBubble>
-              <ExclamationTriangleIcon />
+        {invite && (
+          <InviteCard>
+            <IconBubble aria-hidden="true">
+              {invite.organization.name.trim().charAt(0).toUpperCase() || "T"}
             </IconBubble>
-            <Heading as="h2">Fluxo seguro</Heading>
-            <Description>
-              O token fica apenas nesta rota e, se você precisar autenticar,
-              ele é guardado temporariamente em `sessionStorage` até voltar ao convite.
-            </Description>
-            <HelperText>
-              Depois do aceite, a lista de organizações é atualizada e a organização ativa é definida com o vínculo recém-criado.
-            </HelperText>
-            <LinkButton
+            <InviteContent>
+              <OrganizationName>{invite.organization.name}</OrganizationName>
+              <MetaItem>
+                <CalendarDaysIcon />
+                <span>
+                  <MetaLabel>Convite válido até</MetaLabel>
+                  <MetaValue>{previewDate}</MetaValue>
+                </span>
+              </MetaItem>
+            </InviteContent>
+            <Badge>MEMBER</Badge>
+          </InviteCard>
+        )}
+
+        {status === "loading" && (
+          <StatusNote>
+            <ArrowPathIcon className="spin" />
+            <span>
+              <strong>Verificando convite</strong>
+              <HelperText>Carregando os dados da organização...</HelperText>
+            </span>
+          </StatusNote>
+        )}
+
+        {status === "accepted" && (
+          <StatusNote>
+            <ShieldCheckIcon />
+            <span>
+              <strong>Convite aceito</strong>
+              <HelperText>Você já pode acessar a organização.</HelperText>
+            </span>
+          </StatusNote>
+        )}
+
+        {status === "rejected" && (
+          <StatusNote>
+            <ExclamationTriangleIcon />
+            <span>
+              <strong>Convite rejeitado</strong>
+              <HelperText>Este convite não pode mais ser utilizado.</HelperText>
+            </span>
+          </StatusNote>
+        )}
+
+        {status === "unavailable" && (
+          <StatusNote>
+            <ExclamationTriangleIcon />
+            <span>
+              <strong>Convite indisponível</strong>
+              <HelperText>Este link expirou ou já foi utilizado.</HelperText>
+            </span>
+          </StatusNote>
+        )}
+
+        {status === "error" && (
+          <StatusNote>
+            <ExclamationTriangleIcon />
+            <span>
+              <strong>Não foi possível carregar o convite</strong>
+              <HelperText>{errorMessage}</HelperText>
+            </span>
+          </StatusNote>
+        )}
+
+        {(status === "available" || status === "accepting" || status === "rejecting") && invite && (
+          <CardActions>
+            <PrimaryButton
               type="button"
-              onClick={() => navigate("/login")}
+              onClick={() => void finalizeAction("accept")}
+              disabled={status !== "available"}
             >
-              <XMarkIcon width={16} />
-              Sair do fluxo
-            </LinkButton>
-          </AsideCard>
-        </SplitLayout>
+              {status === "accepting" ? "Aceitando..." : "Aceitar convite"}
+            </PrimaryButton>
+            <SecondaryButton
+              type="button"
+              onClick={() => void finalizeAction("reject")}
+              disabled={status !== "available"}
+            >
+              {status === "rejecting" ? "Rejeitando..." : "Recusar convite"}
+            </SecondaryButton>
+          </CardActions>
+        )}
+
+        {status === "needs-auth" && (
+          <>
+            <HelperText>Entre na sua conta para aceitar este convite.</HelperText>
+            <CardActions>
+              <PrimaryButton type="button" onClick={() => handleAuthCta("/login")}>
+                <UserPlusIcon />
+                Entrar
+              </PrimaryButton>
+              <SecondaryButton type="button" onClick={() => handleAuthCta("/register")}>
+                Criar conta
+              </SecondaryButton>
+            </CardActions>
+          </>
+        )}
+
+        {status === "accepted" && (
+          <CardActions>
+            <PrimaryButton type="button" onClick={() => navigate("/home/organization", { replace: true })}>
+              Ir para a organização
+            </PrimaryButton>
+          </CardActions>
+        )}
+
+        {status === "rejected" && (
+          <CardActions>
+            <PrimaryButton type="button" onClick={() => navigate("/workspaces", { replace: true })}>
+              Voltar aos espaços
+            </PrimaryButton>
+          </CardActions>
+        )}
+
+        {status === "unavailable" && (
+          <CardActions>
+            <PrimaryButton type="button" onClick={() => navigate("/workspaces", { replace: true })}>
+              <HomeIcon />
+              Ir para o início
+            </PrimaryButton>
+          </CardActions>
+        )}
+
+        {status === "error" && (
+          <CardActions>
+            <PrimaryButton type="button" onClick={() => window.location.reload()}>
+              <ArrowPathIcon />
+              Tentar novamente
+            </PrimaryButton>
+          </CardActions>
+        )}
       </Container>
     </PageShell>
   );

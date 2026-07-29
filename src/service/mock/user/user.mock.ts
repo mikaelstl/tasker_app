@@ -1,17 +1,11 @@
 import type { ApiResponse } from "@/service/types/response/response";
 import type { CreateUserDTO } from "../../types/user/create.dto";
+import type { UserQueryDTO } from "../../types/user/query.dto";
 import type { UserDTO, UserProfileDTO } from "../../types/user/user.dto";
 
 import { mockData, createMockId, createMockResponse, createMockUser } from "../data";
 import type { UserServiceI } from "../../modules/user/user.service";
 import { createMockRequestError, requireMockCurrentAccount } from "../request-context";
-
-export interface UserQueryDTO {
-  readonly id?: string;
-  readonly name?: string;
-  readonly username?: string;
-  readonly accountkey?: string;
-}
 
 export class UserMockService implements UserServiceI {
   async create(data: CreateUserDTO): Promise<ApiResponse<UserDTO>> {

@@ -28,7 +28,7 @@ export interface MemberTaskCategories {
 }
 
 function getErrorMessage(error: unknown): string {
-  const apiError = error as Partial<ApiError>;
+  const apiError = error as ApiError;
   return apiError.errors?.[0]?.message ?? "Não foi possível carregar o dashboard.";
 }
 

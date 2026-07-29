@@ -9,6 +9,7 @@ import {
 import { EventCategory } from "@/service/types/events/event.dto"
 import Palette from "@/assets/palette"
 import { Card, Content, Details, Icon, ProjectTitle, Time, Title } from "./style"
+import type { ElementType } from "react"
 
 interface EventCardProps {
   title: string
@@ -18,46 +19,31 @@ interface EventCardProps {
 }
 
 interface EventCategoryIcon {
-  component: typeof CalendarDaysIcon
+  component: ElementType
   color: string
   backgroundColor: string
 }
 
-const eventCategoryIcons: Record<EventCategory, EventCategoryIcon> = {
-  [EventCategory.RELEASE]: {
-    component: ArchiveBoxArrowDownIcon,
-    color: Palette.lightBlue,
-    backgroundColor: Palette.lightBlue_50,
-  },
-  [EventCategory.MEETING]: {
-    component: UserGroupIcon,
-    color: Palette.green,
-    backgroundColor: Palette.green_25,
-  },
-  [EventCategory.REVIEW]: {
-    component: ClipboardDocumentCheckIcon,
-    color: Palette.yellow,
-    backgroundColor: Palette.yellow_25,
-  },
-  [EventCategory.PLANNING]: {
-    component: CalendarDaysIcon,
-    color: Palette.purple,
-    backgroundColor: Palette.purple_25,
-  },
-  [EventCategory.TESTS]: {
-    component: BeakerIcon,
-    color: Palette.red,
-    backgroundColor: Palette.red_25,
-  },
-  [EventCategory.LAUNCH]: {
-    component: RocketLaunchIcon,
-    color: Palette.orange,
-    backgroundColor: Palette.orange_25,
-  },
+function eventCategoryIcon(category: EventCategory): EventCategoryIcon {
+  switch (category) {
+    case EventCategory.RELEASE:
+      return { component: ArchiveBoxArrowDownIcon, color: Palette.lightBlue, backgroundColor: Palette.lightBlue_50 };
+    case EventCategory.MEETING:
+      return { component: UserGroupIcon, color: Palette.green, backgroundColor: Palette.green_25 };
+    case EventCategory.REVIEW:
+      return { component: ClipboardDocumentCheckIcon, color: Palette.yellow, backgroundColor: Palette.yellow_25 };
+    case EventCategory.TESTS:
+      return { component: BeakerIcon, color: Palette.red, backgroundColor: Palette.red_25 };
+    case EventCategory.LAUNCH:
+      return { component: RocketLaunchIcon, color: Palette.orange, backgroundColor: Palette.orange_25 };
+    case EventCategory.PLANNING:
+    default:
+      return { component: CalendarDaysIcon, color: Palette.purple, backgroundColor: Palette.purple_25 };
+  }
 }
 
 export function EventCard({ title, time, category, projectTitle }: EventCardProps) {
-  const categoryIcon = eventCategoryIcons[category] ?? eventCategoryIcons[EventCategory.PLANNING]
+  const categoryIcon = eventCategoryIcon(category)
   const CategoryIcon = categoryIcon.component
 
   return (

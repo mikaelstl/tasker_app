@@ -37,13 +37,17 @@ import { useNavigate } from "react-router-dom";
 import type { OrganizationSummaryDTO } from "@/service/types/organization/summary.dto";
 import { buildInviteUrl } from "@/config/invite";
 
-const ROLE_ORDER = [OrgRole.OWNER, OrgRole.MANAGER, OrgRole.MEMBER] as const;
+const ROLE_ORDER: OrgRole[] = [OrgRole.OWNER, OrgRole.MANAGER, OrgRole.MEMBER];
 
-const ROLE_TITLES: Record<OrgRole, string> = {
-  [OrgRole.OWNER]: "Proprietário",
-  [OrgRole.MANAGER]: "Gestores",
-  [OrgRole.MEMBER]: "Membros",
-};
+function roleTitle(role: OrgRole): string {
+  switch (role) {
+    case OrgRole.OWNER: return "Proprietário";
+    case OrgRole.MANAGER: return "Gestores";
+    case OrgRole.MEMBER:
+    default:
+      return "Membros";
+  }
+}
 
 function notifyError(
   error: unknown,
@@ -278,7 +282,7 @@ export function Organization() {
               <RoleGroup key={role} aria-labelledby={`organization-role-${role}`}>
                 <GroupHeader>
                   <GroupTitle id={`organization-role-${role}`}>
-                    {ROLE_TITLES[role]}
+                    {roleTitle(role)}
                   </GroupTitle>
                   <GroupCount>{roleMembers.length}</GroupCount>
                 </GroupHeader>

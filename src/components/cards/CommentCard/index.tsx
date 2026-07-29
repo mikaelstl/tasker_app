@@ -28,7 +28,6 @@ interface CommentCardProps {
   readonly onInspect?: () => void;
   readonly onDelete?: () => void;
 }
-
 const formatDateTime = (value: string) => new Intl.DateTimeFormat("pt-BR", {
   dateStyle: "short",
   timeStyle: "short",
@@ -39,12 +38,6 @@ export function CommentCard({
   content,
   date,
   owner,
-  createdAt,
-  updatedAt,
-  expanded = false,
-  disabled = false,
-  onInspect,
-  onDelete,
 }: CommentCardProps) {
   return (
     <Card className="comment-card">
@@ -56,30 +49,11 @@ export function CommentCard({
               <Title>{owner}</Title>
               <Meta>{date.setLocale("pt-BR").toFormat("dd LLL, HH:mm")}</Meta>
             </div>
-            <Actions>
-              {onInspect ? (
-                <ActionButton type="button" onClick={onInspect} disabled={disabled} title="Consultar comentário">
-                  <EyeIcon />
-                </ActionButton>
-              ) : null}
-              {onDelete ? (
-                <ActionButton type="button" onClick={onDelete} disabled={disabled} $danger title="Excluir comentário">
-                  <TrashIcon />
-                </ActionButton>
-              ) : null}
-            </Actions>
           </BubbleHeader>
 
           <BubbleContent>
             <Text>{content}</Text>
           </BubbleContent>
-
-          {expanded ? (
-            <Details>
-              <Subtitle>ID: {id}</Subtitle>
-              <Subtitle>Criado em {formatDateTime(createdAt)} · atualizado em {formatDateTime(updatedAt)}</Subtitle>
-            </Details>
-          ) : null}
         </Bubble>
       </Texts>
     </Card>

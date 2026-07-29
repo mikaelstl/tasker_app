@@ -5,8 +5,6 @@ export enum TaskPriority {
   EXTREME = 'EXTREME',
 }
 
-export type TaskPriorityType = keyof typeof TaskPriority;
-
 export interface TaskPriorityOptionDesign {
   backgroud: string;
   details: string;

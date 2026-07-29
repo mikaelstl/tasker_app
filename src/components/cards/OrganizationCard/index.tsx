@@ -3,7 +3,6 @@ import { RoleBadge } from "@/maps/role-badge";
 import type { OrgRole } from "@/utils/enums/OrgRole";
 import { formatOrgAvatar } from "@/utils/formatOrgAvatar";
 import { Avatar, Container, Meta, MetaDivider, MetaItem, Title } from "./style";
-import { useEffect } from "react";
 
 interface OrganizatioCardProps {
   name: string;
@@ -20,24 +19,19 @@ interface OrgCardLabelProps {
 
 type OrgCardLabelType = "members" | "projects";
 
-const OrgCardLabelText: Record<OrgCardLabelType, string> = {
-  members: "membros",
-  projects: "projetos",
-};
-
 const OrgCardLabel = ({
   value,
   type,
 }: OrgCardLabelProps) => {
-  const IconTypeMap = {
-    members: <UserGroupIcon width={16} />,
-    projects: <FolderOpenIcon width={16} />,
-  };
+  const icon = type === "members"
+    ? <UserGroupIcon width={16} />
+    : <FolderOpenIcon width={16} />;
+  const label = type === "members" ? "membros" : "projetos";
 
   return (
     <MetaItem>
-      {IconTypeMap[type]}
-      <span>{String(value).padStart(2, "0")} {OrgCardLabelText[type]}</span>
+      {icon}
+      <span>{String(value).padStart(2, "0")} {label}</span>
     </MetaItem>
   );
 };
@@ -49,14 +43,13 @@ export function OrganizationCard({
   role,
   onClick,
 }: OrganizatioCardProps) {
-  useEffect(() => console.log("ROLE >>>>>> ", role), [])
   return (
     <Container type="button" onClick={onClick}>
       <Avatar>
         <span>{formatOrgAvatar(name)}</span>
       </Avatar>
       <Title>{name}</Title>
-      {RoleBadge[role]}
+      {RoleBadge(role)}
       <Meta>
         <OrgCardLabel type="members" value={members} />
         <MetaDivider />

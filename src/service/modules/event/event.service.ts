@@ -2,6 +2,7 @@ import type { ApiResponse } from "@/service/types/response/response";
 import type { CreateEventDTO } from "../../types/events/event.create.dto";
 import type { EventDTO } from "../../types/events/event.dto";
 import type { EventQueryDTO } from "../../types/events/event.query.dto";
+import type { UpdateEventDTO } from "../../types/events/event.update.dto";
 
 import { ApiClient } from "@/service/api";
 
@@ -9,7 +10,7 @@ export interface EventServiceI {
   create(data: CreateEventDTO): Promise<ApiResponse<EventDTO>>;
   list(queries: EventQueryDTO): Promise<ApiResponse<EventDTO[]>>;
   find(code: string): Promise<ApiResponse<EventDTO>>;
-  update(code: string, update: any): Promise<ApiResponse<EventDTO>>;
+  update(code: string, update: UpdateEventDTO): Promise<ApiResponse<EventDTO>>;
   delete(id: string): Promise<ApiResponse<EventDTO>>;
 }
 
@@ -46,8 +47,8 @@ export class EventService implements EventServiceI {
     return response;
   }
 
-  async update(code: string, update: any): Promise<ApiResponse<EventDTO>> {
-    const response = await this.api.update<any, EventDTO>({
+  async update(code: string, update: UpdateEventDTO): Promise<ApiResponse<EventDTO>> {
+    const response = await this.api.update<UpdateEventDTO, EventDTO>({
       route: `/events/${code}`,
       data: update,
     });

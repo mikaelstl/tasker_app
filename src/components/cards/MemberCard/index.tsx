@@ -30,7 +30,7 @@ export function MemberCard({
         actorName={name}
         actorUsername={username}
       />
-      {RoleBadge[role]}
+      {RoleBadge(role)}
       {(onPromote || onDemote || onRemove) && (
         <Actions>
           {onPromote && (

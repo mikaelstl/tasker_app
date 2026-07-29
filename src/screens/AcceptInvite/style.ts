@@ -3,99 +3,65 @@ import Palette from "@/assets/palette";
 
 const PageShell = styled.main`
   min-height: 100%;
-  background:
-    radial-gradient(circle at top left, rgba(80, 140, 238, 0.18), transparent 34%),
-    radial-gradient(circle at top right, rgba(167, 139, 250, 0.14), transparent 30%),
-    linear-gradient(180deg, #11101a 0%, ${Palette.content} 100%);
+  overflow-y: auto;
+  background: ${Palette.tool_bars};
 `;
 
 const Container = styled.section`
-  width: min(1180px, calc(100% - 32px));
+  width: min(458px, calc(100% - 40px));
+  min-height: 100vh;
   margin: 0 auto;
-  padding: 32px 0 56px;
+  padding: clamp(54px, 13vh, 118px) 0 48px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 20px;
 `;
 
 const Hero = styled.header`
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 14px;
-  margin-bottom: 28px;
-`;
+  margin-bottom: 16px;
+  text-align: center;
 
-const SplitLayout = styled.div`
-  display: grid;
-  grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.85fr);
-  gap: 18px;
-
-  @media (max-width: 920px) {
-    grid-template-columns: 1fr;
+  img {
+    height: auto;
   }
-`;
-
-const Card = styled.section`
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-
-  padding: 28px;
-  border: 1px solid rgba(80, 140, 238, 0.16);
-  border-radius: 24px;
-  background: linear-gradient(180deg, rgba(29, 27, 39, 0.98), rgba(15, 14, 20, 0.96));
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
-`;
-
-const AsideCard = styled(Card)`
-  align-self: start;
-  border-color: rgba(244, 114, 182, 0.18);
-`;
-
-const CardHeader = styled.div`
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-`;
-
-const CardBody = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-`;
-
-const CardFooter = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
 `;
 
 const Heading = styled.h1`
   margin: 0;
-  font-size: 30px;
-  line-height: 1.05;
-  letter-spacing: -0.04em;
+  font-size: 24px;
+  line-height: 1.25;
+  font-weight: 700;
   color: ${Palette.white};
+
+  @media (max-width: 420px) {
+    font-size: 21px;
+  }
 `;
 
 const Description = styled.p`
   margin: 0;
   color: ${Palette.white_50};
   font-size: 15px;
-  line-height: 1.6;
+  line-height: 1.5;
 `;
 
 const Badge = styled.span`
   display: inline-flex;
   align-items: center;
-  width: fit-content;
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: rgba(80, 140, 238, 0.15);
-  border: 1px solid rgba(80, 140, 238, 0.25);
-  color: ${Palette.lightBlue};
+  align-self: flex-start;
+  margin-left: auto;
+  padding: 3px 7px;
+  border-radius: 4px;
+  background: ${Palette.blue_50};
+  color: ${Palette.white};
   font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-bottom: 10px;
+  font-weight: 600;
 `;
 
 const IconBubble = styled.div`
@@ -103,75 +69,152 @@ const IconBubble = styled.div`
   align-items: center;
   justify-content: center;
 
-  width: 56px;
-  height: 56px;
+  width: 66px;
+  height: 66px;
   flex: 0 0 auto;
-  border-radius: 18px;
-  background: linear-gradient(180deg, rgba(80, 140, 238, 0.22), rgba(80, 140, 238, 0.08));
-  border: 1px solid rgba(80, 140, 238, 0.22);
-  color: ${Palette.lightBlue};
+  border-radius: 8px;
+  background: ${Palette.blue};
+  color: ${Palette.white};
+  font-size: 34px;
+  font-weight: 600;
 
   svg {
-    width: 28px;
-    height: 28px;
+    width: 30px;
+    height: 30px;
   }
 `;
 
-const MetaGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
+const InviteCard = styled.section`
+  min-height: 98px;
+  padding: 16px;
+  border: 1px solid ${Palette.details};
+  border-radius: 12px;
+  background: ${Palette.items};
 
-  @media (max-width: 780px) {
-    grid-template-columns: 1fr;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+
+  @media (max-width: 420px) {
+    gap: 12px;
+    padding: 13px;
+
+    ${IconBubble} {
+      width: 58px;
+      height: 58px;
+      font-size: 30px;
+    }
   }
+`;
+
+const InviteContent = styled.div`
+  min-width: 0;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 7px;
+`;
+
+const OrganizationName = styled.h2`
+  overflow: hidden;
+  margin: 0;
+  color: ${Palette.white};
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 const MetaItem = styled.div`
-  padding: 14px;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  > svg {
+    width: 14px;
+    height: 14px;
+    flex: 0 0 auto;
+    color: ${Palette.gray};
+  }
 `;
 
 const MetaLabel = styled.span`
   display: block;
-  margin-bottom: 8px;
-  color: ${Palette.white_50};
+  color: ${Palette.gray};
   font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  line-height: 1.3;
 `;
 
 const MetaValue = styled.span`
   display: block;
-  color: ${Palette.white};
-  font-size: 14px;
-  line-height: 1.45;
-  overflow-wrap: anywhere;
+  overflow: hidden;
+  color: ${Palette.white_50};
+  font-size: 13px;
+  line-height: 1.4;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 const HelperText = styled.p`
   margin: 0;
-  color: ${Palette.gray};
+  color: ${Palette.white_50};
   font-size: 13px;
-  line-height: 1.5;
+  line-height: 1.45;
+  text-align: center;
 `;
 
 const StatusNote = styled.div`
-  padding: 16px 18px;
-  border-radius: 16px;
-  background: rgba(80, 140, 238, 0.08);
-  border: 1px solid rgba(80, 140, 238, 0.16);
+  min-height: 80px;
+  padding: 16px;
+  border-radius: 12px;
+  background: ${Palette.items};
+  border: 1px solid ${Palette.details};
   color: ${Palette.white};
-  font-size: 14px;
-  line-height: 1.6;
+
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  > svg {
+    width: 26px;
+    height: 26px;
+    flex: 0 0 auto;
+    color: ${Palette.lightBlue};
+  }
+
+  > span {
+    min-width: 0;
+  }
+
+  strong {
+    display: block;
+    margin-bottom: 3px;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  ${HelperText} {
+    text-align: left;
+  }
+
+  .spin {
+    animation: spin 900ms linear infinite;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
 `;
 
 const CardActions = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 4px;
 `;
 
 const BaseButton = styled.button`
@@ -180,63 +223,64 @@ const BaseButton = styled.button`
   justify-content: center;
   gap: 8px;
 
-  min-height: 44px;
+  width: 100%;
+  min-height: 45px;
   padding: 0 16px;
-  border-radius: 14px;
+  border-radius: 999px;
   border: 1px solid transparent;
 
   color: ${Palette.white};
-  font-size: 14px;
-  font-weight: 700;
-  transition: transform 120ms ease, opacity 120ms ease, border-color 120ms ease, background-color 120ms ease;
+  font-size: 15px;
+  font-weight: 600;
+  transition: filter 120ms ease, opacity 120ms ease, border-color 120ms ease, background-color 120ms ease;
 
   &:hover:not(:disabled) {
-    transform: translateY(-1px);
+    filter: brightness(1.12);
   }
 
   &:disabled {
     opacity: 0.55;
     cursor: not-allowed;
   }
+
+  &:focus-visible {
+    outline: 2px solid ${Palette.lightBlue};
+    outline-offset: 3px;
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
 `;
 
 const PrimaryButton = styled(BaseButton)`
-  background: linear-gradient(180deg, ${Palette.lightBlue}, ${Palette.blue});
-  box-shadow: 0 18px 32px rgba(41, 68, 157, 0.28);
+  background: ${Palette.blue};
 `;
 
 const SecondaryButton = styled(BaseButton)`
-  background: rgba(255, 255, 255, 0.03);
-  border-color: rgba(255, 255, 255, 0.08);
-`;
-
-const LinkButton = styled(SecondaryButton)`
-  width: fit-content;
+  background: ${Palette.items};
+  border-color: ${Palette.details};
 `;
 
 export {
-  AsideCard,
   Badge,
   BaseButton,
-  Card,
   CardActions,
-  CardBody,
-  CardFooter,
-  CardHeader,
   Container,
   Description,
   Heading,
   HelperText,
   Hero,
   IconBubble,
-  LinkButton,
-  MetaGrid,
+  InviteCard,
+  InviteContent,
   MetaItem,
   MetaLabel,
   MetaValue,
+  OrganizationName,
   PageShell,
   PrimaryButton,
   SecondaryButton,
-  SplitLayout,
   StatusNote,
 };
