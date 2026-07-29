@@ -7,6 +7,7 @@ import type { EventDTO } from "../../../../service/types/events/event.dto";
 import { CalendarFlagCard } from "../../../cards/CalendarFlagCard";
 import { Text } from "../../../base/Text";
 import { Subtitle } from "../../../base/Subtitle";
+import { EventCard } from "@/components/cards/EventCard";
 
 interface EventAccordionProps {
   day: string,
@@ -26,18 +27,18 @@ export function EventAccordion(props: EventAccordionProps) {
 
   const isToday = (): boolean => {
     return (props.day === today.day.toString()
-            &&
-           sameMonth())
-            ||
-           (props.events.length !== 0)
-             ? true
-             : false
+      &&
+      sameMonth())
+      ||
+      (props.events.length !== 0)
+      ? true
+      : false
   }
 
   const sameMonth = (): boolean => {
     return props.month === today.monthShort
-            ? true
-            : false
+      ? true
+      : false
   }
 
   useEffect(() => {
@@ -48,7 +49,7 @@ export function EventAccordion(props: EventAccordionProps) {
     <Tag id="day">
       <Accordion id="accordion" onClick={showContent}>
         <Activated activated={isToday()}>
-          <CalendarIcon width='20'/>
+          <CalendarIcon width='20' />
           {props.day} {props.month} {props.year}
         </Activated>
         {contentOn ? <ChevronUpIcon width="22" color="blue" /> : <ChevronDownIcon width="22" color="blue" />}
@@ -57,12 +58,11 @@ export function EventAccordion(props: EventAccordionProps) {
         contentOn
           ? <Content id="tskr-accordion-content">
             {
-              props.events.map((evt) => <CalendarFlagCard type="event">
-                                          <div>
-                                            <Text>{evt.title}</Text>
-                                            <Subtitle>Descrição</Subtitle>
-                                          </div>
-                                        </CalendarFlagCard>)
+              props.events.map((evt) => <EventCard
+                                          title={evt.title}
+                                          category={evt.category}
+                                          time={evt.date}
+                                        />)
             }
           </Content>
           : <></>
