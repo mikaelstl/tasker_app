@@ -6,6 +6,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 22px;
+  min-height: 0;
 
   padding: 20px 20px 0px 20px;
 
@@ -18,10 +19,8 @@ const Container = styled.div`
 `;
 
 const EventsScroller = styled(Scroller)`
-  height: 100%;
-  flex-direction: column;
-  overflow-y: auto;
-  overflow-y: overlay;
+  flex: 1 1 auto;
+  height: auto;
   padding-right: 4px;
 `;
 

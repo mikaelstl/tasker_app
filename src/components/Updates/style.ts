@@ -6,6 +6,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 22px;
+  min-height: 0;
 
   padding: 20px 16px 0 20px;
 
@@ -18,6 +19,8 @@ const Container = styled.div`
 `;
 
 const Timeline = styled(Scroller)`
+  flex: 1 1 auto;
+  height: auto;
   gap: 18px;
   padding-right: 4px;
 `;

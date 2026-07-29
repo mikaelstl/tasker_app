@@ -29,11 +29,29 @@ import { SelectInput } from "../../../components/base/SelectInput";
 import { TaskPriority } from "../../../service/types/task/priority.dto";
 import { TaskStage } from "../../../service/types/task/stage.dto";
 import { CreateButton } from "../../../components/buttons/CreateButton";
+import { Badge } from "../../../components/badge/Badge";
+import Palette from "../../../assets/palette";
 
 const toLocalInput = (iso: string) => {
   const date = new Date(iso);
   const offset = date.getTimezoneOffset() * 60_000;
   return new Date(date.getTime() - offset).toISOString().slice(0, 16);
+};
+
+const formatDateTime = (value: string | null) => (
+  value ? new Date(value).toLocaleString("pt-BR") : "Não informado"
+);
+
+const TaskStageBadge = ({ stage }: { stage: TaskStage }) => {
+  const badges: Record<TaskStage, { label: string; color: string }> = {
+    [TaskStage.PENDING]: { label: "PENDENTE", color: Palette.gray_25 },
+    [TaskStage.STARTED]: { label: "INICIADA", color: Palette.blue_50 },
+    [TaskStage.REVIEW]: { label: "EM REVISÃO", color: Palette.yellow_25 },
+    [TaskStage.DONE]: { label: "CONCLUÍDA", color: Palette.green_25 },
+  };
+  const badge = badges[stage];
+
+  return <Badge bg={badge.color}>{badge.label}</Badge>;
 };
 
 export function TaskOverview() {
@@ -210,7 +228,7 @@ export function TaskOverview() {
         </Links>
         <SectionTitle>{task.name}</SectionTitle>
         <DateBadge date={DateTime.fromISO(task.deadline)} />
-        <Text>{task.stage}</Text>
+        <TaskStageBadge stage={task.stage} />
         <Actions>
           <EditButton type="button" onClick={() => setEditing(true)} />
           <DeleteBtn label="Excluir tarefa" onClick={() => void deleteTask()} />
@@ -241,7 +259,7 @@ export function TaskOverview() {
       <Comments className="tskr-task-activity">
         <Title>Atividade do projeto</Title>
         {comments.length !== 0 ? (
-          <Scroller className="vertical">
+          <Scroller orientation="vertical">
             {comments.map((comment) => <CommentCard
               key={comment.id}
               id={comment.id}
@@ -269,9 +287,14 @@ const TaskTag = ({ label, children }: { label: string; children: React.ReactNode
 
 const TaskTags = ({ task }: { task: TaskWithOwnerDTO }) => (
   <Tags className="tskr-task-tag">
+    <TaskTag label="Código"><Text>{task.code}</Text></TaskTag>
     <TaskTag label="Prioridade">{PriorityBadge[task.priority]}</TaskTag>
     <TaskTag label="Responsável"><User username={task.ownerkey} /></TaskTag>
-    <TaskTag label="Criada em"><Text>{new Date(task.created_at).toLocaleDateString("pt-BR")}</Text></TaskTag>
-    <TaskTag label="Última atualização"><Text>{new Date(task.updated_at).toLocaleDateString("pt-BR")}</Text></TaskTag>
+    <TaskTag label="Prazo"><Text>{formatDateTime(task.deadline)}</Text></TaskTag>
+    <TaskTag label="Iniciada em"><Text>{formatDateTime(task.started_at)}</Text></TaskTag>
+    <TaskTag label="Concluída em"><Text>{formatDateTime(task.done_at)}</Text></TaskTag>
+    <TaskTag label="Situação do prazo"><Text>{task.delayed ? "Atrasada" : "Dentro do prazo"}</Text></TaskTag>
+    <TaskTag label="Criada em"><Text>{formatDateTime(task.created_at)}</Text></TaskTag>
+    <TaskTag label="Última atualização"><Text>{formatDateTime(task.updated_at)}</Text></TaskTag>
   </Tags>
 );

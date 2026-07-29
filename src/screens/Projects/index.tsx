@@ -128,7 +128,7 @@ export function Projects() {
           </StageFilterControl>
           : <></>
         }
-        <Items className="vertical">
+        <Items orientation="vertical">
           {filteredProjects.length === 0
             ? <Text>Nenhum projeto encontrado.</Text>
             : filteredProjects.map((project) => <ProjectCard

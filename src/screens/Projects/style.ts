@@ -8,6 +8,7 @@ const Container = styled.div`
   align-items: end;
 
   gap: 20px;
+  min-height: 0;
 
   overflow: hidden;
   
@@ -19,6 +20,7 @@ const Content = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
+  min-height: 0;
   
   padding: 0px 20px;
   
@@ -28,14 +30,10 @@ const Content = styled.div`
 `;
 
 const Items = styled(Scroller)`
+  flex: 1 1 auto;
+  height: auto;
   padding: 20px 0px;
-
   gap: 12px;
-
-  &.vertical {
-    overflow-y: auto;
-    overflow-y: overlay;
-  }
 `;
 
 const StageFilterControl = styled.label`

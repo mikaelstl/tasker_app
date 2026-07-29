@@ -65,7 +65,7 @@ export function ChoseWorkspace() {
         <Logo width={182} />
         <SectionTitle>ESCOLHA UMA ÁREA DE TRABALHO</SectionTitle>
       </HeaderContainer>
-      <WorkspaceScroller className="tskr-workspaces vertical">
+      <WorkspaceScroller className="tskr-workspaces" orientation="vertical">
         {
           workspaces.map(
             workspace => (

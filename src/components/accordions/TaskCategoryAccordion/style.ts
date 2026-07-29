@@ -13,12 +13,15 @@ const Header = styled.div`
   gap: 16px;
   height: fit-content;
 
+  padding: 0px 20px;
+
   cursor: pointer;
 `;
 
 const Tasks = styled.div`
   width: 100%;
   height: fit-content;
+  overflow: hidden;
 `;
 
 export {

@@ -5,8 +5,10 @@ import { PriorityBadge } from "@/maps/priority";
 import { User } from "@/components/misc/User";
 import { DateBadge } from "@/components/badge/DateBadge";
 import { DateTime } from "luxon";
+import { useNavigate } from "react-router-dom";
 
 interface TaskCardProps {
+  projectkey: string;
   code: string;
   title: string;
   description?: string;
@@ -18,6 +20,7 @@ interface TaskCardProps {
 }
 
 export function TaskCard({
+  projectkey,
   code,
   title,
   description,
@@ -26,8 +29,30 @@ export function TaskCard({
   deadline,
   onClick,
 }: TaskCardProps) {
+  const navigate = useNavigate();
+  const openTask = () => {
+    if (onClick) {
+      onClick();
+      return;
+    }
+
+    navigate(`/home/project/${encodeURIComponent(projectkey)}/task/${encodeURIComponent(code)}`);
+  };
+
   return (
-    <Card className="tskr-task-card" onClick={onClick}>
+    <Card
+      className="tskr-task-card"
+      role="link"
+      tabIndex={0}
+      aria-label={`Abrir tarefa ${code}: ${title}`}
+      onClick={openTask}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          openTask();
+        }
+      }}
+    >
       <CardHeader>
         <HeaderContainer>
           <TitleContainer>

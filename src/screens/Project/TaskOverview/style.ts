@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import Palette from "../../../assets/palette";
+import { Scroller } from "../../../components/misc/Scroller";
 
 const Container = styled.div`
   display: grid;
@@ -32,7 +33,7 @@ const Comments = styled.div`
 
   border: 1px solid ${Palette.items};
 
-  > .vertical {
+  > ${Scroller} {
     flex: 1;
     min-height: 0;
     height: auto;
@@ -74,7 +75,8 @@ const Tags = styled.div`
   grid-area: tskr-task-tags;
 
   display: flex;
-  gap: 40px;
+  flex-wrap: wrap;
+  gap: 20px 40px;
 `;
 
 const Tag = styled.div`

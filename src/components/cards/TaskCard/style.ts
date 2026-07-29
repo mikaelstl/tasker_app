@@ -22,6 +22,11 @@ const Card = styled.div`
     border-color: ${Palette.blue};
   }
 
+  &:focus-visible {
+    outline: 2px solid ${Palette.lightBlue};
+    outline-offset: 2px;
+  }
+
   overflow: hidden;
 `;
 

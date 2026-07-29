@@ -86,7 +86,7 @@ export function ImportantDates({ events, projects }: ImportantDatesProps) {
     <Container>
       <SectionTitle>Datas importantes</SectionTitle>
 
-      <EventsScroller>
+      <EventsScroller orientation="vertical">
         <Groups>
           {groupedEvents.length > 0 ? (
             groupedEvents.map((group, groupIndex) => (

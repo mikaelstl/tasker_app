@@ -96,19 +96,19 @@ export function Tasks() {
       <Content id="tasks-steps">
         <Step className="tasks-step">
           <Title>PENDENTES</Title>
-          <Scroller className="vertical">
+          <Scroller orientation="vertical">
             {
               filteredTasks
                 .filter(task => task.stage === TaskStage.PENDING)
                 .map((task) =>
                   <Margin key={task.id} bottom="12px">
                     <TaskCard
+                      projectkey={task.projectkey}
                       code={task.code}
                       title={task.name}
                       owner={task.ownerkey}
                       deadline={task.deadline}
                       priority={task.priority}
-                      onClick={() => navigate(`../task/${encodeURIComponent(task.code)}`)}
                     />
                   </Margin>
                 )
@@ -117,19 +117,19 @@ export function Tasks() {
         </Step>
         <Step className="tasks-step" color={Palette.blue}>
           <Title>INICIADAS</Title>
-          <Scroller className="vertical">
+          <Scroller orientation="vertical">
             {
               filteredTasks
                 .filter(task => task.stage === TaskStage.STARTED)
                 .map((task) =>
                   <Margin key={task.id} bottom="12px">
                     <TaskCard
+                      projectkey={task.projectkey}
                       code={task.code}
                       title={task.name}
                       owner={task.ownerkey}
                       deadline={task.deadline}
                       priority={task.priority}
-                      onClick={() => navigate(`../task/${encodeURIComponent(task.code)}`)}
                     />
                   </Margin>
                 )
@@ -138,19 +138,19 @@ export function Tasks() {
         </Step>
         <Step className="tasks-step" color={Palette.yellow}>
           <Title>EM REVISÃO</Title>
-          <Scroller className="vertical">
+          <Scroller orientation="vertical">
             {
               filteredTasks
                 .filter(task => task.stage === TaskStage.REVIEW)
                 .map((task) =>
                   <Margin key={task.id} bottom="12px">
                     <TaskCard
+                      projectkey={task.projectkey}
                       code={task.code}
                       title={task.name}
                       owner={task.ownerkey}
                       deadline={task.deadline}
                       priority={task.priority}
-                      onClick={() => navigate(`../task/${encodeURIComponent(task.code)}`)}
                     />
                   </Margin>
                 )
@@ -159,19 +159,19 @@ export function Tasks() {
         </Step>
         <Step className="tasks-step" color={Palette.green}>
           <Title>CONCLUÍDAS</Title>
-          <Scroller className="vertical">
+          <Scroller orientation="vertical">
             {
               filteredTasks
                 .filter(task => task.stage === TaskStage.DONE)
                 .map((task) =>
                   <Margin key={task.id} bottom="12px">
                     <TaskCard
+                      projectkey={task.projectkey}
                       code={task.code}
                       title={task.name}
                       owner={task.ownerkey}
                       deadline={task.deadline}
                       priority={task.priority}
-                      onClick={() => navigate(`../task/${encodeURIComponent(task.code)}`)}
                     />
                   </Margin>
                 )
@@ -180,19 +180,19 @@ export function Tasks() {
         </Step>
         <Step className="tasks-step" color={Palette.red}>
           <Title>ATRASADAS</Title>
-          <Scroller className="vertical">
+          <Scroller orientation="vertical">
             {
               filteredTasks
                 .filter(task => task.delayed)
                 .map((task) =>
                   <Margin key={task.id} bottom="12px">
                     <TaskCard
+                      projectkey={task.projectkey}
                       code={task.code}
                       title={task.name}
                       owner={task.ownerkey}
                       deadline={task.deadline}
                       priority={task.priority}
-                      onClick={() => navigate(`../task/${encodeURIComponent(task.code)}`)}
                     />
                   </Margin>
                 )

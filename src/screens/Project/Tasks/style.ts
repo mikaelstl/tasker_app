@@ -5,8 +5,10 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+  min-height: 0;
 
   height: 100%;
+  overflow: hidden;
 `;
 
 const Header = styled.div`
@@ -17,12 +19,14 @@ const Header = styled.div`
 
 const Content = styled.div`
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  flex: 1 1 auto;
   gap: 12px;
+  min-height: 0;
   
   padding: 10px;
   
-  height: 100%;
+  height: auto;
   width: 100%;
 `;
 
@@ -34,6 +38,7 @@ const Step = styled.div<StepProps>`
   display: flex;
   flex-direction: column;
   gap: 10px;
+  min-height: 0;
   
   overflow: hidden;
   

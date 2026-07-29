@@ -20,12 +20,13 @@ import { Subtitle } from "../../../components/base/Subtitle";
 import { TaskCategoryAccordion } from "../../../components/accordions/TaskCategoryAccordion";
 import { EditButton } from "../../../components/buttons/EditBtn";
 import { useServices } from "../../../hooks/useServices";
+import type { EventDTO } from "../../../service/types/events/event.dto";
 
 export function Overview() {
   const navigate = useNavigate();
   const notifications = useToast();
 
-  const { ProjectService, TaskService, CommentService } = useServices();
+  const { ProjectService, TaskService, CommentService, EventService } = useServices();
 
   const { user } = useAuth();
 
@@ -34,6 +35,7 @@ export function Overview() {
   const [project, setProject] = useState<ProjectDTO | null>(null);
   const [tasks, setTasks] = useState<TaskDTO[]>([]);
   const [comments, setComments] = useState<CommentDTO[]>([]);
+  const [events, setEvents] = useState<EventDTO[]>([]);
   
   const showError = useCallback((error: unknown, fallback: string) => {
     const apiError = error as ApiError;
@@ -55,6 +57,16 @@ export function Overview() {
       showError(error, "Não foi possível carregar a atividade do projeto.");
     }
   }, [CommentService, id, showError]);
+
+  const loadEvents = useCallback(async () => {
+    try {
+      if (!id) return;
+      const response = await EventService.list({ projectkey: id });
+      setEvents(response.data);
+    } catch (error) {
+      showError(error, "Não foi possível carregar os eventos do projeto.");
+    }
+  }, [EventService, id, showError]);
 
   const sendComment = async (message: string) => {
     try {
@@ -109,8 +121,9 @@ export function Overview() {
     });
 
     void loadComments();
+    void loadEvents();
     return () => { active = false; };
-  }, [ProjectService, TaskService, id, loadComments, navigate, showError]);
+  }, [ProjectService, TaskService, id, loadComments, loadEvents, navigate, showError]);
 
   if (project === null) return <><Text>Carregando...</Text></>;
 
@@ -155,7 +168,7 @@ export function Overview() {
           <MessageField send={sendComment} />
         </Comments>
       </Content>
-      <ImportantDates events={[]} projects={[project]} />
+      <ImportantDates events={events} projects={[project]} />
     </Container>
   )
 }

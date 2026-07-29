@@ -6,6 +6,7 @@ const Container = styled.div`
   flex-direction: column;
   gap: 20px;
   position: relative;
+  min-height: 0;
 
   height: 100%;
 
@@ -17,6 +18,7 @@ const Content = styled.div`
   flex-direction: column;
   flex: 1 1 auto;
   gap: 20px;
+  min-height: 0;
   
   width: 100%; height: 100%;
   
@@ -26,7 +28,9 @@ const Content = styled.div`
 `;
 
 const MembersArea = styled.div`
-  height: 100%;
+  flex: 1 1 auto;
+  height: auto;
+  min-height: 0;
   overflow: hidden;
 `
 
@@ -56,6 +60,7 @@ const ModalDialog = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
+  min-height: 0;
 
   width: min(980px, 100%);
   max-height: min(90vh, 900px);
@@ -108,6 +113,7 @@ const ModalDescription = styled.p`
 const ModalContent = styled.div`
   display: flex;
   flex-direction: column;
+  flex: 1 1 auto;
   gap: 16px;
   min-height: 0;
   overflow: hidden;

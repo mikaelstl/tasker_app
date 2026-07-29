@@ -25,11 +25,6 @@ const WorkspaceScroller = styled(Scroller)`
   height: fit-content;
 
   gap: 12px;
-
-  &.vertical {
-    overflow-y: auto;
-    overflow-y: overlay;
-  }
   border: 1px solid;
 `;
 

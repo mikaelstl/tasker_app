@@ -28,7 +28,7 @@ export function Updates({
     <Container className="tskr-updates">
       <SectionTitle>Atualizações</SectionTitle>
 
-      <Timeline className="vertical" role="list">
+      <Timeline orientation="vertical" role="list">
         {items.length === 0
           ? <ItalicTitle>Nenhuma atualização encontrada</ItalicTitle>
           :

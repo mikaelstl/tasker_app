@@ -168,7 +168,7 @@ function MembersModal({
           {loading ? (
             <EmptyState>Carregando membros da organização...</EmptyState>
           ) : members.length > 0 ? (
-            <Scroller className="vertical" gap={16}>
+            <Scroller orientation="vertical" gap={16}>
               {members.map((member) => {
                 const projectMember = projectMembers.find((item) => item.userkey === member.id);
                 const isAlreadyAdded = projectMemberIds.has(member.id);
@@ -433,7 +433,7 @@ export function Members() {
           {loading ? (
             <EmptyState>Carregando membros do projeto...</EmptyState>
           ) : filteredProjectMembers.length > 0 ? (
-            <Scroller className="vertical" gap={16}>
+            <Scroller orientation="vertical" gap={16}>
               {filteredProjectMembers.map((member) => {
                 const counts = getTaskCounts(member.tasks);
                 const statsTasks = toStatsTasks(member.tasks);
