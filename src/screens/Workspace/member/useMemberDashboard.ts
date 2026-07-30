@@ -83,33 +83,33 @@ export function useMemberDashboard(orgId?: string) {
 
     try {
       const projects = (await ProjectService.list()).data;
-      const projectData = await Promise.all(projects.map(async (project) => {
-        const [tasks, events, members] = await Promise.all([
-          TaskService.list(project.id),
-          EventService.list({ projectkey: project.id }),
-          MemberService.list(project.id),
-        ]);
+      const nextData: MemberDashboardData = {
+        tasks: [],
+        events: [],
+        projects: [],
+      };
+
+      for (const project of projects) {
+        const members = await MemberService.list(project.id);
         const membershipKeys = members.data
           .filter((member) => belongsToUser(member, username))
           .flatMap((member) => [member.id, member.userkey]);
 
         if (membershipKeys.length === 0) {
-          return { tasks: [], events: [], project: null };
+          continue;
         }
 
-        return {
-          tasks: tasks.data.filter((task) => (
+        const tasks = await TaskService.list(project.id);
+        const events = await EventService.list({ projectkey: project.id });
+
+        nextData.tasks.push(
+          ...tasks.data.filter((task) => (
             membershipKeys.includes(task.ownerkey)
           )),
-          events: events.data,
-          project,
-        };
-      }));
-      const nextData: MemberDashboardData = {
-        tasks: projectData.flatMap((project) => project.tasks),
-        events: projectData.flatMap((project) => project.events),
-        projects: projectData.flatMap(({ project }) => project ? [project] : []),
-      };
+        );
+        nextData.events.push(...events.data);
+        nextData.projects.push(project);
+      }
 
       if (currentRequest === requestId.current) setData(nextData);
     } catch (requestError) {
