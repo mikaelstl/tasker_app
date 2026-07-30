@@ -137,6 +137,7 @@ export function Projects() {
               title={project.title}
               description={project.description}
               stage={project.stage}
+              managerkey={project.managerkey}
               deadline={project.deadline}
               members={[]}
             />)}

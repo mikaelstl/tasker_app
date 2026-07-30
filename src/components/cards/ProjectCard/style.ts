@@ -56,6 +56,7 @@ const Footer = styled.div`
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-wrap: wrap;
 `;
 
 const Trailing = styled.div`

@@ -73,6 +73,7 @@ export function OrganizerContent({ username }: OrganizerContentProps) {
                     title={project.title}
                     description={project.description}
                     stage={project.stage}
+                    managerkey={project.managerkey}
                     deadline={project.deadline}
                     members={project.members}
                   />

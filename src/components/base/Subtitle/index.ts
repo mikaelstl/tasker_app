@@ -5,6 +5,6 @@ export const Subtitle = styled.p`
   grid-area: tskr-subtitle;
 
   font-weight: 500;
-  size: 14px;
+  size: 12px;
   color: ${Palette.gray};
 `
