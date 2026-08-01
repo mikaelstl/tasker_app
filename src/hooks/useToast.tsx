@@ -2,7 +2,7 @@ import {
   CheckIcon,
   ExclamationCircleIcon,
   ExclamationTriangleIcon,
-} from "@heroicons/react/16/solid";
+} from "@/components/icons/heroicons";
 import { toast, type ToastOptions } from "react-toastify";
 import Palette from "@/assets/palette";
 

@@ -1,5 +1,4 @@
-import { ClockIcon } from "@heroicons/react/24/outline";
-import { ExclamationTriangleIcon } from "@heroicons/react/24/solid";
+import { ClockIcon, ExclamationTriangleIconSolid } from "@/components/icons/heroicons";
 import { DateTime } from "luxon";
 import { useNavigate } from "react-router-dom";
 import Palette from "../../../assets/palette";
@@ -57,7 +56,7 @@ export function DeadlineAlertsCard({ deadlines }: DeadlineAlertsCardProps) {
   return (
     <Container className="tskr-deadline-alerts-card">
       <Header>
-        <ExclamationTriangleIcon fill={Palette.red} width={22} />
+        <ExclamationTriangleIconSolid fill={Palette.red} width={22} />
         <Title>Alertas de prazo</Title>
       </Header>
       <Cards>

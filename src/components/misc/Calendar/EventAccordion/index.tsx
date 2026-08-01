@@ -1,5 +1,4 @@
-import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/16/solid";
-import { CalendarIcon } from "@heroicons/react/24/solid";
+import { CalendarIcon, ChevronDownIcon, ChevronUpIcon } from "@/components/icons/heroicons";
 import { DateTime } from "luxon";
 import { useEffect, useState } from "react";
 import { Accordion, Activated, Content, Tag } from "./style";

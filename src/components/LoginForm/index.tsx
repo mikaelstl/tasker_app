@@ -1,4 +1,4 @@
-import { KeyIcon, UserIcon } from "@heroicons/react/16/solid";
+import { KeyIcon, UserIcon } from "@/components/icons/heroicons";
 import { TextInput } from "../misc/Form/TextInput";
 import { Container, Form, SubmitButton, Inputs } from "../misc/Form/style";
 import { CreateAccount } from "./CreateAccount";

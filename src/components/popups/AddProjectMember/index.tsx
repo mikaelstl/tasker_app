@@ -2,7 +2,7 @@ import type { AffiliationDTO } from "@/service/types/affiliation/affiliation.dto
 import type { ProjectMember } from "@/service/types/member/member.dto";
 import { useEffect } from "react";
 import { ModalCloseButton, ModalContent, ModalDescription, ModalDialog, ModalHeader, ModalOverlay, ModalTitle } from "./style";
-import { XMarkIcon } from "@heroicons/react/16/solid";
+import { XMarkIcon } from "@/components/icons/heroicons";
 import { EmptyState } from "@/components/ImportantDates/style";
 import { Scroller } from "@/components/misc/Scroller";
 import { ProjectMemberCard } from "@/components/cards/ProjectMemberCard";

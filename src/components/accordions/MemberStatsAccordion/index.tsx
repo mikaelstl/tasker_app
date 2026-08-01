@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Palette from "../../../assets/palette";
 import { Button, Container, Content, Header, Indicator, Indicators, Leading, MemberBadge, MemberSubtitle, MemberTitle, MemberUser, StatDetail, Task } from "./style";
-import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
+import { ChevronDownIconSolid, ChevronUpIconSolid } from "@/components/icons/heroicons";
 import { formatNumber } from "@/utils/formatNumber";
 import type { StatsTask } from "../../../service/types/stats/stats.types";
 
@@ -27,7 +27,7 @@ export function MemberStatsAccordion({
 }: MemberStatsAccordionProps) {
   const [visible, setVisible] = useState(false);
 
-  const [icon, setIcon] = useState(<ChevronDownIcon width={24} />)
+  const [icon, setIcon] = useState(<ChevronDownIconSolid width={24} />)
 
   const handleVisible = () => {
     setVisible(!visible)
@@ -35,9 +35,9 @@ export function MemberStatsAccordion({
 
   useEffect(() => {
     if (visible) {
-      setIcon(<ChevronUpIcon width={24} />)
+      setIcon(<ChevronUpIconSolid width={24} />)
     } else {
-      setIcon(<ChevronDownIcon width={24} />)
+      setIcon(<ChevronDownIconSolid width={24} />)
     }
   }, [visible])
 

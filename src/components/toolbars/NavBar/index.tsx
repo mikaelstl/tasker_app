@@ -1,12 +1,12 @@
-import { ArrowLeftStartOnRectangleIcon, ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/16/solid"
-import { BuildingOffice2Icon, InboxStackIcon, WindowIcon } from "@heroicons/react/20/solid"
+import { ArrowLeftStartOnRectangleIcon, ChevronDownIcon, ChevronUpIcon } from "@/components/icons/heroicons"
+import { BuildingOffice2Icon, InboxStackIcon, WindowIcon } from "@/components/icons/heroicons"
 import Palette from "../../../assets/palette"
 import { Accordion, Actions, Container, Leading, Nav, NavItem, ProjectNav } from "./style"
 import { useLocation, useMatch, useNavigate } from "react-router-dom"
 import { useAuth } from "../../../hooks/useAuth"
-import { FolderOpenIcon } from "@heroicons/react/20/solid"
+import { FolderOpenIcon as FolderOpenIcon20 } from "@/components/icons/heroicons"
 import { useEffect, useState } from "react"
-import { ArrowsRightLeftIcon, CalendarIcon, ChartBarIcon, ClipboardIcon, UserIcon } from "@heroicons/react/24/solid"
+import { ArrowsRightLeftIcon, CalendarIcon, ChartBarIcon, ClipboardIcon, UserIcon } from "@/components/icons/heroicons"
 import { useOrganization } from "../../../hooks/useOrganization"
 
 interface ProjectNavAccordionProps {
@@ -47,7 +47,7 @@ const ProjectNavAccordion = ({
     <ProjectNav>
       <Accordion type="button" onClick={handleOpen}>
         <Leading>
-          <FolderOpenIcon width={20} />
+          <FolderOpenIcon20 width={20} />
           Projeto
         </Leading>
         {icon}

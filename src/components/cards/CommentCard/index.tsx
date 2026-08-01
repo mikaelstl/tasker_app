@@ -1,5 +1,5 @@
 import { DateTime } from "luxon";
-import { EyeIcon, TrashIcon } from "@heroicons/react/16/solid";
+import { EyeIcon, TrashIcon } from "@/components/icons/heroicons";
 import { Subtitle } from "../../base/Subtitle";
 import { Text } from "../../base/Text";
 import { Avatar } from "../../misc/Avatar";

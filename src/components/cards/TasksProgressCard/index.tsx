@@ -1,9 +1,9 @@
 import {
-  CheckCircleIcon,
+  CheckCircleIconOutline,
   ClockIcon,
-  EyeIcon,
-  ExclamationTriangleIcon,
-} from "@heroicons/react/24/outline";
+  EyeIconOutline,
+  ExclamationTriangleIconOutline,
+} from "@/components/icons/heroicons";
 import { Title } from "../../base/Title";
 import { Card, Cards, Container, Header, StageInfos } from "./style";
 import Palette from "../../../assets/palette";
@@ -33,21 +33,21 @@ export function TasksProgressCard({ stats }: TasksProgressCardProps) {
         </Card>
         <Card className="tskr-done-amount" $backgroundColor={Palette.green_50} $borderColor={Palette.green}>
           <StageInfos className="tskr-tasks-stage-amount-infos" $color={Palette.green}>
-            <CheckCircleIcon aria-hidden="true" />
+            <CheckCircleIconOutline aria-hidden="true" />
             <Title className="tskr-title">CONCLUÍDAS</Title>
           </StageInfos>
           <Title className="tskr-title">{stats.done}</Title>
         </Card>
         <Card className="tskr-review-amount" $backgroundColor={Palette.yellow_50} $borderColor={Palette.yellow}>
           <StageInfos className="tskr-tasks-stage-amount-infos" $color={Palette.yellow}>
-            <EyeIcon aria-hidden="true" />
+            <EyeIconOutline aria-hidden="true" />
             <Title className="tskr-title">EM REVISÃO</Title>
           </StageInfos>
           <Title className="tskr-title">{stats.review}</Title>
         </Card>
         <Card className="tskr-atrasadas-amount" $backgroundColor={Palette.red_50} $borderColor={Palette.red}>
           <StageInfos className="tskr-tasks-stage-amount-infos" $color={Palette.red}>
-            <ExclamationTriangleIcon aria-hidden="true" />
+            <ExclamationTriangleIconOutline aria-hidden="true" />
             <Title className="tskr-title">ATRASADAS</Title>
           </StageInfos>
           <Title className="tskr-title">{stats.overdue}</Title>

@@ -1,6 +1,6 @@
 import { Title } from "../../base/Title";
 import { Container, Date, Header, Infos } from "./style";
-import { CalendarIcon } from "@heroicons/react/24/solid";
+import { CalendarIcon } from "@/components/icons/heroicons";
 import { Subtitle } from "../../base/Subtitle";
 import { DateTime } from "luxon";
 

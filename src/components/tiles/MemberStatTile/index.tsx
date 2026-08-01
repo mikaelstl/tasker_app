@@ -1,9 +1,9 @@
 import { useId, useState } from "react";
 import {
-  CalendarDaysIcon,
-  ChevronDownIcon,
+  CalendarDaysIconOutline,
+  ChevronDownIconOutline,
   ClockIcon,
-} from "@heroicons/react/24/outline";
+} from "@/components/icons/heroicons";
 import Palette from "../../../assets/palette";
 import type { StatsTask } from "../../../service/types/stats/stats.types";
 import { User } from "../../misc/User";
@@ -148,7 +148,7 @@ export function MemberStatTile({
         </HeaderMetrics>
 
         <ToggleIcon $open={open} aria-hidden="true">
-          <ChevronDownIcon />
+            <ChevronDownIconOutline />
         </ToggleIcon>
       </Header>
 
@@ -177,7 +177,7 @@ export function MemberStatTile({
                         {task.delayed ? "Atrasada" : stageLabel(task)}
                       </StatusBadge>
                     </div>
-                    <TaskMeta role="cell"><CalendarDaysIcon /> {formatDate(task.deadline)}</TaskMeta>
+                    <TaskMeta role="cell"><CalendarDaysIconOutline /> {formatDate(task.deadline)}</TaskMeta>
                     <TaskMeta role="cell"><ClockIcon /> {formatDuration(task.spentMinutes)}</TaskMeta>
                   </TaskRow>
                 );

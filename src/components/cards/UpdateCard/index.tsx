@@ -16,7 +16,7 @@ import {
   UpdateDate,
 } from "./style";
 import { User } from "@/components/misc/User";
-import { ArrowsRightLeftIcon } from "@heroicons/react/24/outline";
+import { ArrowsRightLeftIconOutline } from "@/components/icons/heroicons";
 
 interface UpdateCardDTO {
   readonly actorName: string;
@@ -85,7 +85,7 @@ export function UpdateCard({
             {details.map((detail) => (
               <Detail key={detail.field}>
                 <DetailIcon aria-hidden="true">
-                  <ArrowsRightLeftIcon />
+                  <ArrowsRightLeftIconOutline />
                 </DetailIcon>
                 <DetailField>{detail.field}</DetailField>
                 <DetailValue>

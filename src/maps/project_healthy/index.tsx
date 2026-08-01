@@ -1,8 +1,8 @@
-import { ExclamationTriangleIcon, ShieldCheckIcon, ShieldExclamationIcon } from "@heroicons/react/24/solid";
+import { ExclamationTriangleIconSolid, ShieldCheckIconSolid, ShieldExclamationIcon } from "@/components/icons/heroicons";
 import Palette from "../../assets/palette";
 
 export const ProjectHealthIcon = {
-  'SAFE': <ShieldCheckIcon fill={Palette.green} width={22}/>,
+  'SAFE': <ShieldCheckIconSolid fill={Palette.green} width={22}/>,
   'WARNING': <ShieldExclamationIcon fill={Palette.yellow} width={22}/>,
-  'CRITICAL': <ExclamationTriangleIcon fill={Palette.red} width={22}/>,
+  'CRITICAL': <ExclamationTriangleIconSolid fill={Palette.red} width={22}/>,
 }

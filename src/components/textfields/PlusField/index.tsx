@@ -1,6 +1,6 @@
 import { Button, Container, Field } from "./style";
 import { useState } from "react";
-import { PlusIcon } from "@heroicons/react/16/solid";
+import { PlusIcon } from "@/components/icons/heroicons";
 
 interface PlusFieldProps {
   add: (value: string) => void

@@ -9,7 +9,7 @@ import type { ProjectMember } from "@/service/types/member/member.dto";
 import { ProjectStageBadge } from "@/maps/project-stage";
 import { Team } from "@/components/misc/Team";
 import { User } from "@/components/misc/User";
-import { ChevronRightIcon } from "@heroicons/react/16/solid";
+import { ChevronRightIcon } from "@/components/icons/heroicons";
 import { useServices } from "@/hooks/useServices";
 import type { ToastNotifications } from "@/hooks/useToast";
 import type { ApiError } from "@/service/types/response/error";

@@ -1,5 +1,4 @@
-import { FlagIcon } from "@heroicons/react/16/solid";
-import { ClipboardIcon } from "@heroicons/react/24/solid";
+import { ClipboardIcon, FlagIcon } from "@/components/icons/heroicons";
 import { Tag } from "./style";
 
 interface CalendarTagProps {

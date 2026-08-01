@@ -1,6 +1,6 @@
 import { User } from "@/components/misc/User";
 import { ActionButton, Actions, Card, Infos } from "./style";
-import { PlusIcon, TrashIcon } from "@heroicons/react/16/solid";
+import { PlusIcon, TrashIcon } from "@/components/icons/heroicons";
 
 interface ProjectMemberCardProps {
   id: string;

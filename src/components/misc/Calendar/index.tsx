@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { DateTime, Info, Interval } from 'luxon';
 import { Title } from "../../base/Title";
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/16/solid";
+import { ChevronLeftIcon, ChevronRightIcon } from "@/components/icons/heroicons";
 import { Active, Container, Day, Today, Weekday, Header, Weeks, Weekdays, Events } from "./style";
 import Palette from "../../../assets/palette";
 import { EventAccordion } from "./EventAccordion";

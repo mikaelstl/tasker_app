@@ -13,7 +13,7 @@ import { Greating, Infos, Items, Main, SeeMoreBtn } from "../style";
 import { useOrganizerDashboard } from "./useOrganizerDashboard";
 import { ProjectCard } from "@/components/cards/ProjectCard";
 import { useNavigate } from "react-router-dom";
-import { ChevronRightIcon } from "@heroicons/react/16/solid";
+import { ChevronRightIcon } from "@/components/icons/heroicons";
 
 interface OrganizerContentProps {
   username: string;

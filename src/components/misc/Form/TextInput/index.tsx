@@ -1,4 +1,4 @@
-import { EyeIcon, EyeSlashIcon } from "@heroicons/react/16/solid";
+import { EyeIcon, EyeSlashIcon } from "@/components/icons/heroicons";
 import { Container, Field, Input, Label, ShowPassword } from "./style";
 import { useId, useState } from "react";
 

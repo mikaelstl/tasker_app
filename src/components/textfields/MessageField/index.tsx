@@ -1,5 +1,5 @@
-import { PaperAirplaneIcon } from "../../icons/PaperAirplaneIcon";
-import { ChatBubbleOvalLeftIcon } from "@heroicons/react/24/solid";
+import { ChatBubbleOvalLeftIcon } from '@/components/icons/heroicons';
+import { PaperAirplaneIcon } from "@/components/icons/PaperAirplaneIcon";
 import { Text } from "../../base/Text";
 import { Button, Container, Field } from "./style";
 import { useState } from "react";

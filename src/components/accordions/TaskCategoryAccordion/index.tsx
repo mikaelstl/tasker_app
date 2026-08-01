@@ -1,4 +1,4 @@
-import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/16/solid";
+import { ChevronDownIcon, ChevronUpIcon } from "@/components/icons/heroicons";
 import { useEffect, useState } from "react";
 import { Accordion, Header, Tasks } from "./style";
 import { Scroller } from "../../misc/Scroller";

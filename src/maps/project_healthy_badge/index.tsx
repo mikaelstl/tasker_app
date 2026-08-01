@@ -1,11 +1,11 @@
-import { ExclamationTriangleIcon, ShieldCheckIcon, ShieldExclamationIcon } from "@heroicons/react/24/solid";
+import { ExclamationTriangleIconSolid, ShieldCheckIconSolid, ShieldExclamationIcon } from "@/components/icons/heroicons";
 import Palette from "../../assets/palette";
 import { Badge } from "../../components/badge/Badge";
 import { Title } from "../../components/base/Title";
 
 export const ProjectHealthyBadge = {
   'SAFE': <Badge bg={Palette.transparent}>
-            <ShieldCheckIcon fill={Palette.green} width={22}/>
+            <ShieldCheckIconSolid fill={Palette.green} width={22}/>
             <Title>SEGURO</Title>
           </Badge>,
   'WARNING': <Badge bg={Palette.transparent}>
@@ -13,7 +13,7 @@ export const ProjectHealthyBadge = {
               <Title>ATENÇÃO</Title>
             </Badge>,
   'CRITICAL': <Badge bg={Palette.transparent}>
-                <ExclamationTriangleIcon fill={Palette.red} width={22}/>
+              <ExclamationTriangleIconSolid fill={Palette.red} width={22}/>
                 <Title>CRÍTICO</Title>
               </Badge>,
 }

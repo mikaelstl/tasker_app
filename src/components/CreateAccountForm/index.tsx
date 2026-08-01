@@ -3,7 +3,7 @@ import {
   KeyIcon,
   TagIcon,
   UserIcon,
-} from "@heroicons/react/16/solid";
+} from "@/components/icons/heroicons";
 import { TextInput } from "../misc/Form/TextInput";
 import { Container, Form, Inputs, SubmitButton } from "../misc/Form/style";
 import { useState } from "react";

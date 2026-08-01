@@ -1,5 +1,4 @@
-import { ChevronUpIcon } from "@heroicons/react/16/solid";
-import { AdjustmentsHorizontalIcon, MagnifyingGlassIcon } from "@heroicons/react/24/solid";
+import { AdjustmentsHorizontalIcon, ChevronUpIcon, MagnifyingGlassIcon } from "@/components/icons/heroicons";
 import { Text } from "../../base/Text";
 import { Button, Container, Search } from "./style";
 

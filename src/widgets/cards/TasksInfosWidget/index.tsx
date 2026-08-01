@@ -1,9 +1,9 @@
-import { CheckIcon, } from "@heroicons/react/20/solid";
+import { CheckIcon20, } from "@/components/icons/heroicons";
 import { Text } from "../../../components/base/Text";
 import { Title } from "../../../components/base/Title";
 import { Content } from "./style";
 import Palette from "../../../assets/palette";
-import { ArrowTrendingUpIcon, ExclamationTriangleIcon } from "@heroicons/react/16/solid";
+import { ArrowTrendingUpIcon, ExclamationTriangleIcon } from "@/components/icons/heroicons";
 import { Container, Header, Tile } from "../../base/style";
 
 interface TasksInfosWidgetProps {
@@ -22,7 +22,7 @@ export function TasksInfosWidget({ total, done, started, delayed }: TasksInfosWi
       </Header>
       <Content>
         <Tile>
-          <CheckIcon width={22} fill={Palette.green} />
+          <CheckIcon20 width={22} fill={Palette.green} />
           <Title>{done}</Title>
           <Text>Concluídas</Text>
         </Tile>

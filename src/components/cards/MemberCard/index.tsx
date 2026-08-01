@@ -1,6 +1,6 @@
 import { RoleBadge } from "@/maps/role-badge";
 import type { OrgRole } from "@/utils/enums/OrgRole";
-import { ArrowDownIcon, ArrowUpIcon, TrashIcon } from "@heroicons/react/16/solid";
+import { ArrowDownIcon, ArrowUpIcon, TrashIcon } from "@/components/icons/heroicons";
 import { Actions, ActionButton, Card } from "./style";
 import { User } from "@/components/misc/User";
 

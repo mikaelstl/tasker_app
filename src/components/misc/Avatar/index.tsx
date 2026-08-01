@@ -1,4 +1,4 @@
-import { UserIcon } from "@heroicons/react/16/solid";
+import { UserIcon } from "@/components/icons/heroicons";
 import { Container, Image } from "./style.ts";
 import Palette from "../../../assets/palette.ts";
 

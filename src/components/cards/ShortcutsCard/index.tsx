@@ -1,4 +1,4 @@
-import { ArrowTrendingUpIcon, Cog6ToothIcon, PlusIcon } from "@heroicons/react/16/solid";
+import { ArrowTrendingUpIcon, Cog6ToothIcon, PlusIcon } from "@/components/icons/heroicons";
 import { Title } from "../../base/Title";
 import { Action, Actions, Container, Header } from "./style";
 

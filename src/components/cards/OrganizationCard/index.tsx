@@ -1,4 +1,4 @@
-import { FolderOpenIcon, UserGroupIcon } from "@heroicons/react/20/solid";
+import { FolderOpenIcon20, UserGroupIcon20 } from "@/components/icons/heroicons";
 import { RoleBadge } from "@/maps/role-badge";
 import type { OrgRole } from "@/utils/enums/OrgRole";
 import { formatOrgAvatar } from "@/utils/formatOrgAvatar";
@@ -24,8 +24,8 @@ const OrgCardLabel = ({
   type,
 }: OrgCardLabelProps) => {
   const icon = type === "members"
-    ? <UserGroupIcon width={16} />
-    : <FolderOpenIcon width={16} />;
+    ? <UserGroupIcon20 width={16} />
+    : <FolderOpenIcon20 width={16} />;
   const label = type === "members" ? "membros" : "projetos";
 
   return (

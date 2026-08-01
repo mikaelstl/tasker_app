@@ -7,7 +7,7 @@ import {
   HomeIcon,
   ShieldCheckIcon,
   UserPlusIcon,
-} from "@heroicons/react/16/solid";
+} from "@/components/icons/heroicons";
 import { DateTime } from "luxon";
 import { Logo } from "@/components/images/Logo";
 import { useAuth } from "@/hooks/useAuth";

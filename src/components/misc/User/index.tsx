@@ -1,6 +1,6 @@
 import Palette from "@/assets/palette";
 import { useEffect, useState } from "react";
-import { ComputerDesktopIcon } from "@heroicons/react/16/solid";
+import { ComputerDesktopIcon } from "@/components/icons/heroicons";
 import { useOrganization } from "@/hooks/useOrganization";
 import { useServices } from "@/hooks/useServices";
 import type { UserDTO } from "@/service/types/user/user.dto";

@@ -10,7 +10,7 @@ import { useToast, type ToastNotifications } from "@/hooks/useToast";
 import type { AffiliationDTO } from "@/service/types/affiliation/affiliation.dto";
 import type { ApiError } from "@/service/types/response/error";
 import { OrgRole } from "@/utils/enums/OrgRole";
-import { FolderOpenIcon, UserGroupIcon, UserPlusIcon } from "@heroicons/react/16/solid";
+import { FolderOpenIcon, UserGroupIcon, UserPlusIcon } from "@/components/icons/heroicons";
 import {
   Container,
   Content,

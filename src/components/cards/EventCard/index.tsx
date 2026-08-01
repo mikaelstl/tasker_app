@@ -1,11 +1,11 @@
 import {
-  ArchiveBoxArrowDownIcon,
-  BeakerIcon,
-  CalendarDaysIcon,
+  ArchiveBoxArrowDownIconOutline,
+  BeakerIconOutline,
+  CalendarDaysIconOutline,
   ClipboardDocumentCheckIcon,
-  RocketLaunchIcon,
-  UserGroupIcon,
-} from "@heroicons/react/24/outline"
+  RocketLaunchIconOutline,
+  UserGroupIconOutline,
+} from "@/components/icons/heroicons"
 import { EventCategory } from "@/service/types/events/event.dto"
 import Palette from "@/assets/palette"
 import { Card, Content, Details, Icon, ProjectTitle, Time, Title } from "./style"
@@ -27,18 +27,18 @@ interface EventCategoryIcon {
 function eventCategoryIcon(category: EventCategory): EventCategoryIcon {
   switch (category) {
     case EventCategory.RELEASE:
-      return { component: ArchiveBoxArrowDownIcon, color: Palette.lightBlue, backgroundColor: Palette.lightBlue_50 };
+      return { component: ArchiveBoxArrowDownIconOutline, color: Palette.lightBlue, backgroundColor: Palette.lightBlue_50 };
     case EventCategory.MEETING:
-      return { component: UserGroupIcon, color: Palette.green, backgroundColor: Palette.green_25 };
+      return { component: UserGroupIconOutline, color: Palette.green, backgroundColor: Palette.green_25 };
     case EventCategory.REVIEW:
       return { component: ClipboardDocumentCheckIcon, color: Palette.yellow, backgroundColor: Palette.yellow_25 };
     case EventCategory.TESTS:
-      return { component: BeakerIcon, color: Palette.red, backgroundColor: Palette.red_25 };
+      return { component: BeakerIconOutline, color: Palette.red, backgroundColor: Palette.red_25 };
     case EventCategory.LAUNCH:
-      return { component: RocketLaunchIcon, color: Palette.orange, backgroundColor: Palette.orange_25 };
+      return { component: RocketLaunchIconOutline, color: Palette.orange, backgroundColor: Palette.orange_25 };
     case EventCategory.PLANNING:
     default:
-      return { component: CalendarDaysIcon, color: Palette.purple, backgroundColor: Palette.purple_25 };
+      return { component: CalendarDaysIconOutline, color: Palette.purple, backgroundColor: Palette.purple_25 };
   }
 }
 

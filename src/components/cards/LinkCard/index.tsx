@@ -1,4 +1,4 @@
-import { LinkIcon, XMarkIcon } from "@heroicons/react/16/solid"
+import { LinkIcon, XMarkIcon } from "@/components/icons/heroicons"
 import { Close, Container, Leading, Link } from "./style"
 
 interface LinkCardProps {

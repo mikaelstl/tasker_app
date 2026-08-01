@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { LinkIcon, XMarkIcon } from "@heroicons/react/16/solid";
+import { LinkIcon, XMarkIcon } from "@/components/icons/heroicons";
 import {
   Actions,
   CloseButton,

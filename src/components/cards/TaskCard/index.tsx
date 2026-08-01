@@ -1,6 +1,6 @@
 import { TaskPriority } from "@/service/types/task/priority.dto";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, Code, CodeContainer, Description, HeaderContainer, TitleContainer } from "./style";
-import { CheckCircleIcon } from "@heroicons/react/16/solid";
+import { CheckCircleIcon } from "@/components/icons/heroicons";
 import { PriorityBadge } from "@/maps/priority";
 import { User } from "@/components/misc/User";
 import { DateBadge } from "@/components/badge/DateBadge";
