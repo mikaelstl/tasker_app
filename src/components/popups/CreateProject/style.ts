@@ -30,7 +30,6 @@ const Card = styled.div`
   height: fit-content;
   max-height: 90%;
 
-  border: 1px solid ${Palette.details};
   border-radius: 6px;
 
   overflow: hidden;

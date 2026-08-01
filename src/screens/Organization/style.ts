@@ -95,7 +95,6 @@ const AddMemberForm = styled.form`
   align-items: end;
   gap: 12px;
   padding: 16px;
-  border: 1px solid ${Palette.details};
   border-radius: 10px;
   background: ${Palette.items};
 
@@ -118,7 +117,6 @@ const FormControl = styled.div`
   input, select {
     min-height: 40px;
     padding: 8px 10px;
-    border: 1px solid ${Palette.details};
     border-radius: 6px;
     color: ${Palette.white};
     background: ${Palette.content};
@@ -150,7 +148,6 @@ const DeleteDialog = styled.div`
 
   width: min(520px, 100%);
   padding: 24px;
-  border: 1px solid ${Palette.details};
   border-radius: 12px;
 
   background-color: ${Palette.content};
@@ -205,7 +202,6 @@ const DeleteDialogButton = styled.button`
 `;
 
 const DeleteDialogSecondaryButton = styled(DeleteDialogButton)`
-  border: 1px solid ${Palette.details};
   background-color: ${Palette.items};
 `;
 

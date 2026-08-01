@@ -11,7 +11,6 @@ const Container = styled.div`
 
   width: 100%;
   height: fit-content;
-  border: 1px solid ${Palette.details};
   border-radius: 8px;
   overflow: hidden;
 
@@ -116,7 +115,6 @@ const Button = styled.button`
   width: 32px;
   height: 32px;
   padding: 0;
-  border: 1px solid ${Palette.details};
   border-radius: 6px;
 
   color: ${Palette.white_50};
@@ -126,7 +124,6 @@ const Button = styled.button`
   transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
 
   &:hover {
-    border-color: ${Palette.lightBlue};
     color: ${Palette.lightBlue};
     background-color: ${Palette.lightBlue_50};
   }

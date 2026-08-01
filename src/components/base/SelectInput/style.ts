@@ -14,13 +14,11 @@ const Select = styled.select`
   padding: 0 14px;
   color: ${Palette.white};
   background: ${Palette.items};
-  border: 1px solid ${Palette.details};
   border-radius: 12px;
   font-size: 14px;
   outline: none;
 
   &:focus {
-    border-color: ${Palette.blue};
     box-shadow: 0 0 0 2px rgba(74, 103, 229, 0.18);
   }
 

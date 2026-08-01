@@ -87,7 +87,6 @@ const IconBubble = styled.div`
 const InviteCard = styled.section`
   min-height: 98px;
   padding: 16px;
-  border: 1px solid ${Palette.details};
   border-radius: 12px;
   background: ${Palette.items};
 
@@ -170,7 +169,6 @@ const StatusNote = styled.div`
   padding: 16px;
   border-radius: 12px;
   background: ${Palette.items};
-  border: 1px solid ${Palette.details};
   color: ${Palette.white};
 
   display: flex;
@@ -227,12 +225,11 @@ const BaseButton = styled.button`
   min-height: 45px;
   padding: 0 16px;
   border-radius: 999px;
-  border: 1px solid transparent;
 
   color: ${Palette.white};
   font-size: 15px;
   font-weight: 600;
-  transition: filter 120ms ease, opacity 120ms ease, border-color 120ms ease, background-color 120ms ease;
+  transition: filter 120ms ease, opacity 120ms ease, background-color 120ms ease;
 
   &:hover:not(:disabled) {
     filter: brightness(1.12);
@@ -260,7 +257,6 @@ const PrimaryButton = styled(BaseButton)`
 
 const SecondaryButton = styled(BaseButton)`
   background: ${Palette.items};
-  border-color: ${Palette.details};
 `;
 
 export {

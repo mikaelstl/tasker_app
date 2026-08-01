@@ -10,8 +10,8 @@ import { TasksProgressCard } from "@/components/cards/TasksProgressCard";
 import { useOrganization } from "@/hooks/useOrganization";
 import { Greating, Infos, Items, Main } from "../style";
 import { useManagerDashboard } from "./useManagerDashboard";
-import { MemberStatsAccordion } from "@/components/accordions/MemberStatsAccordion";
 import { ProjectFilter, ProjectSelect } from "./style";
+import { MemberStatTile } from "@/components/tiles/MemberStatTile";
 
 interface ManagerContentProps {
   username: string;
@@ -98,16 +98,15 @@ export function ManagerContent({ username }: ManagerContentProps) {
           <Title>Estatísticas dos membros</Title>
           {selectedMembersStats.length > 0 ? (
             selectedMembersStats.map((member) => (
-              <MemberStatsAccordion
-                key={`${member.username}-${member.project}`}
-                username={member.username}
-                project={member.project}
-                tasks={{
-                  started: member.started,
-                  review: member.review,
-                  delayed: member.overdue,
-                  done: member.done,
-                }}
+              <MemberStatTile
+                key={member.memberId}
+                affiliationId={member.user.affiliationId}
+                project={selectedProject?.project.title ?? ""}
+                started={member.startedTasks}
+                review={member.reviewTasks}
+                done={member.completedTasks}
+                overdue={member.delayedTasks}
+                tasks={member.tasks}
               />
             ))
           ) : (

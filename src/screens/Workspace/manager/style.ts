@@ -19,17 +19,16 @@ const ProjectFilter = styled.div`
 const ProjectSelect = styled.select`
   width: 100%;
   padding: 10px 12px;
-  border: 1px solid ${Palette.details};
   border-radius: 6px;
 
   color: ${Palette.white};
-  background-color: ${Palette.content};
+  background-color: ${Palette.items};
+
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
 
   &:focus-visible {
-    border-color: ${Palette.lightBlue};
     outline: 2px solid ${Palette.lightBlue_50};
   }
 
@@ -39,7 +38,7 @@ const ProjectSelect = styled.select`
   }
 
   option {
-    background-color: ${Palette.content};
+    background-color: ${Palette.items};
   }
 `;
 

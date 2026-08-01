@@ -17,7 +17,6 @@ const Card = styled.div`
   min-width: 360px; height: 200px;
   max-width: 100%;
 
-  border: 1px solid ${Palette.details};
   border-radius: 12px;
 
   background-color: ${Palette.items};
@@ -25,7 +24,7 @@ const Card = styled.div`
   cursor: pointer;
 
   &:hover .tskr-open-proj-btn {
-    border: 1px solid ${Palette.blue_50};
+    box-shadow: 0 0 0 1px ${Palette.blue_50};
   }
 
   &:hover .tskr-open-proj-btn svg {
@@ -78,7 +77,6 @@ const OpenProjectButton = styled.button`
   padding: 0;
 
   color: ${Palette.gray};
-  border: 1px solid ${Palette.details};
   border-radius: 9999px;
   background-color: transparent;
 

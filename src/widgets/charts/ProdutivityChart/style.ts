@@ -6,7 +6,6 @@ const SelectUser = styled.div`
   align-items: center;
   gap: 8px;
 
-  border: 1px solid ${Palette.details};
   border-radius: 6px;
 
   padding: 8px;

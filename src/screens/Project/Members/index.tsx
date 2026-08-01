@@ -12,9 +12,7 @@ import { useToast, type ToastNotifications } from "@/hooks/useToast";
 import type { AffiliationDTO } from "@/service/types/affiliation/affiliation.dto";
 import type { ProjectMember } from "@/service/types/member/member.dto";
 import type { ProjectDTO } from "@/service/types/project/project.dto";
-import type { StatsTask } from "@/service/types/stats/stats.types";
-import { TaskStage } from "@/service/types/task/stage.dto";
-import type { TaskDTO } from "@/service/types/task/task.dto";
+import type { MemberStats } from "@/service/types/stats/stats.types";
 import type { ApiError } from "@/service/types/response/error";
 import {
   Container,
@@ -39,26 +37,6 @@ function reportApiError(
   errors.forEach((item) => {
     notifications[item.level](item.message);
   });
-}
-
-function toStatsTasks(tasks: TaskDTO[]): StatsTask[] {
-  return tasks.map((task) => ({
-    code: task.code,
-    name: task.name,
-    stage: task.stage,
-    delayed: task.delayed,
-    spentMinutes: 0,
-    deadline: task.deadline,
-  }));
-}
-
-function getTaskCounts(tasks: TaskDTO[]) {
-  return {
-    started: tasks.filter((task) => task.stage === TaskStage.STARTED).length,
-    review: tasks.filter((task) => task.stage === TaskStage.REVIEW).length,
-    done: tasks.filter((task) => task.stage === TaskStage.DONE).length,
-    overdue: tasks.filter((task) => task.delayed).length,
-  };
 }
 
 function getProjectMemberName(member: ProjectMember) {
@@ -98,6 +76,7 @@ export function Members() {
 
   const [project, setProject] = useState<ProjectDTO | null>(null);
   const [members, setMembers] = useState<ProjectMember[]>([]);
+  const [memberStats, setMemberStats] = useState<MemberStats[]>([]);
   const [affiliations, setAffiliations] = useState<AffiliationDTO[]>([]);
   const [loadingProject, setLoadingProject] = useState(true);
   const [loadingMembers, setLoadingMembers] = useState(true);
@@ -160,11 +139,18 @@ export function Members() {
       setLoadingMembers(true);
 
       try {
-        const response = await MemberService.list(id);
+        const [membersResponse, statsResponse] = await Promise.all([
+          MemberService.list(id),
+          ProjectService.getProjectMemberStats(id),
+        ]);
 
         if (!active) return;
 
-        setMembers(response.data);
+        console.log(statsResponse);
+        
+
+        setMembers(membersResponse.data);
+        setMemberStats(statsResponse.data);
       } catch (error) {
         if (!active) return;
 
@@ -182,7 +168,7 @@ export function Members() {
     return () => {
       active = false;
     };
-  }, [MemberService, id, navigate, notifications]);
+  }, [MemberService, ProjectService, id, navigate, notifications]);
 
   useEffect(() => {
     let active = true;
@@ -254,6 +240,8 @@ export function Members() {
       });
 
       setMembers((current) => [...current, response.data]);
+      const statsResponse = await ProjectService.getProjectMemberStats(id);
+      setMemberStats(statsResponse.data);
       notifications.info("Membro adicionado ao projeto.");
     } catch (error) {
       reportApiError(error, "Não foi possível adicionar o membro ao projeto.", notifications);
@@ -267,6 +255,7 @@ export function Members() {
       await MemberService.delete(memberkey);
 
       setMembers((current) => current.filter((item) => item.id !== memberkey));
+      setMemberStats((current) => current.filter((item) => item.user.affiliationId !== memberkey));
       notifications.info("Membro removido do projeto.");
     } catch (error) {
       reportApiError(error, "Não foi possível remover o membro do projeto.", notifications);
@@ -294,20 +283,20 @@ export function Members() {
           ) : filteredProjectMembers.length > 0 ? (
             <Scroller orientation="vertical" gap={16}>
               {filteredProjectMembers.map((member) => {
-                const counts = getTaskCounts(member.tasks);
-                const statsTasks = toStatsTasks(member.tasks);
+                const stats = memberStats.find((item) => item.user.affiliationId === member.userkey);
+                
+                if (!stats) return null;
 
                 return (
                   <MemberStatTile
-                    key={member.id}
-                    username={getProjectMemberUsername(member)}
-                    name={getProjectMemberName(member)}
+                    key={stats.memberId}
+                    affiliationId={stats.user.affiliationId}
                     project={projectTitle}
-                    started={counts.started}
-                    review={counts.review}
-                    done={counts.done}
-                    overdue={counts.overdue}
-                    tasks={statsTasks}
+                    started={stats.startedTasks}
+                    done={stats.completedTasks}
+                    overdue={stats.delayedTasks}
+                    review={stats.reviewTasks}
+                    tasks={stats.tasks}
                   />
                 );
               })}

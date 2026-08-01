@@ -18,7 +18,6 @@ const Card = styled.div`
 
   min-height: 78px;
   padding: 16px;
-  border: 1px solid ${Palette.details};
   border-radius: 12px;
 
   background-color: ${Palette.items};

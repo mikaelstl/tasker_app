@@ -4,6 +4,7 @@ import { PlusIcon, TrashIcon } from "@heroicons/react/16/solid";
 
 interface ProjectMemberCardProps {
   id: string;
+  affiliationId: string;
   memberId?: string;
   username: string;
   actorName: string;
@@ -15,8 +16,8 @@ interface ProjectMemberCardProps {
 
 export function ProjectMemberCard({
   id,
+  affiliationId,
   memberId,
-  username,
   actorName,
   isAlreadyAdded,
   disabled = false,
@@ -38,9 +39,7 @@ export function ProjectMemberCard({
     <Card key={id} $active={isAlreadyAdded}>
       <Infos>
         <User
-          username={username}
-          actorName={actorName}
-          actorUsername={username}
+          affiliationId={affiliationId}
         />
       </Infos>
       <Actions>

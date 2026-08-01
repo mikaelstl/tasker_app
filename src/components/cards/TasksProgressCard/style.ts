@@ -6,7 +6,7 @@ const Container = styled.div`
   flex-direction: column;
   gap: 12px;
 
-  width: 100%;
+  width: 50%;
 `;
 
 const Header = styled.div`
@@ -32,7 +32,6 @@ const Card = styled.div<CardProps>`
 
   width: 100%;
 
-  border: 1px solid ${props => props.$borderColor ?? Palette.lightBlue};
   border-radius: 4px;
 
   .tskr-title {
@@ -78,7 +77,6 @@ const SelectProjId = styled.div`
   align-items: center;
   gap: 8px;
 
-  border: 1px solid ${Palette.details};
   border-radius: 6px;
 
   padding: 8px;

@@ -56,6 +56,10 @@ input {
   }
 }
 
+select {
+  border: none;
+}
+
 button {
   cursor: pointer;
   border: none;

@@ -63,7 +63,6 @@ const SeeMoreBtn = styled(Button)`
   justify-content: center;
 
   width: 100%;
-  border: 1px dashed ${Palette.gray};
   background-color: ${Palette.gray_25};
 `;
 

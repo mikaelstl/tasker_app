@@ -8,7 +8,6 @@ const Card = styled.div<{ $active?: boolean }>`
   gap: 16px;
 
   padding: 14px 16px;
-  border: 1px solid ${Palette.details};
   border-radius: 12px;
   background-color: ${({ $active }) => $active ? Palette.tool_bars : Palette.items};
 `
@@ -31,7 +30,6 @@ const ActionButton = styled.button<{ $danger?: boolean; $loading?: boolean }>`
   width: 34px;
   height: 34px;
   padding: 0;
-  border: 1px solid ${Palette.details};
   border-radius: 10px;
 
   background-color: ${Palette.transparent};
@@ -39,7 +37,6 @@ const ActionButton = styled.button<{ $danger?: boolean; $loading?: boolean }>`
   cursor: pointer;
 
   &:hover:not(:disabled) {
-    border-color: ${({ $danger }) => $danger ? Palette.red : Palette.lightBlue};
     color: ${({ $danger }) => $danger ? Palette.red : Palette.lightBlue};
   }
 

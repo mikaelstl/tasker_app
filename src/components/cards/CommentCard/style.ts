@@ -8,7 +8,6 @@ const Card = styled.article`
   width: 100%;
   padding: 2px 0;
   box-shadow: none;
-  border: 1px solid ${Palette.details};
   border-radius: 18px;
   background: ${Palette.tool_bars};
   position: relative;
@@ -31,7 +30,6 @@ const Bubble = styled.div`
   padding: 14px 16px;
   border-radius: 18px 18px 18px 6px;
   background: ${Palette.items};
-  border: 1px solid ${Palette.details};
   position: relative;
 
   &::before {
@@ -42,8 +40,6 @@ const Bubble = styled.div`
     width: 12px;
     height: 12px;
     background: ${Palette.items};
-    border-left: 1px solid ${Palette.details};
-    border-bottom: 1px solid ${Palette.details};
     transform: rotate(45deg);
   }
 `;
@@ -89,7 +85,6 @@ const ActionButton = styled.button<{ $danger?: boolean }>`
   width: 30px;
   height: 30px;
   padding: 6px;
-  border: 1px solid ${({ $danger }) => $danger ? Palette.red : Palette.details};
   border-radius: 6px;
   color: ${({ $danger }) => $danger ? Palette.red : Palette.white_50};
   background: ${Palette.items};

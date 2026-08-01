@@ -6,6 +6,8 @@ import type { GenerateStatsReportDTO } from "../../types/stats/generate-stats-re
 import type { ProjectStatsQueryDTO } from "../../types/stats/project-stats-query.dto";
 import type {
   ProjectStats,
+  MemberStats,
+  ProjectMemberPerformance,
   ProjectStatsReport,
 } from "../../types/stats/stats.types";
 
@@ -28,6 +30,14 @@ export interface ProjectServiceI {
   update(id: string, data: EditProjectDTO): Promise<ApiResponse<ProjectDTO>>;
   delete(id: string): Promise<ApiResponse<ProjectDTO>>;
   stats(id: string, params?: ProjectStatsQueryDTO): Promise<ApiResponse<ProjectStats>>;
+  getProjectMemberStats(
+    id: string,
+    params?: ProjectStatsQueryDTO,
+  ): Promise<ApiResponse<MemberStats[]>>;
+  getProjectMemberPerformance(
+    id: string,
+    params?: ProjectStatsQueryDTO,
+  ): Promise<ApiResponse<ProjectMemberPerformance>>;
   generateReport(
     id: string,
     data?: GenerateStatsReportDTO,
@@ -92,6 +102,30 @@ export class ProjectService implements ProjectServiceI {
   ): Promise<ApiResponse<ProjectStats>> {
     const response = await this.api.load<ProjectStats, ProjectStatsQueryDTO>({
       route: projectStatsRoute(id),
+      params,
+    });
+
+    return response;
+  }
+
+  async getProjectMemberStats(
+    id: string,
+    params?: ProjectStatsQueryDTO,
+  ): Promise<ApiResponse<MemberStats[]>> {
+    const response = await this.api.load<MemberStats[], ProjectStatsQueryDTO>({
+      route: `${projectStatsRoute(id)}/members`,
+      params,
+    });
+
+    return response;
+  }
+
+  async getProjectMemberPerformance(
+    id: string,
+    params?: ProjectStatsQueryDTO,
+  ): Promise<ApiResponse<ProjectMemberPerformance>> {
+    const response = await this.api.load<ProjectMemberPerformance, ProjectStatsQueryDTO>({
+      route: `${projectStatsRoute(id)}/members/performance`,
       params,
     });
 

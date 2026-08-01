@@ -19,18 +19,22 @@ export type StatsPeriod = {
 };
 
 export type StatsUser = {
+  affiliationId: string;
   username: string;
   name: string;
   photoUrl: string | null;
 };
 
 export type StatsTask = {
+  id: string;
   code: string;
   name: string;
   stage: TaskStage;
   delayed: boolean;
   spentMinutes: number;
   deadline: string;
+  startedAt: string | null;
+  doneAt: string | null;
 };
 
 export type MemberPerformance = {
@@ -41,6 +45,26 @@ export type MemberPerformance = {
     averageHours: number;
   }>;
   averageHoursPerMonth: number;
+};
+
+export type ProjectMemberPerformance = {
+  generatedAt: string;
+  cutoffAt: string;
+  project: {
+    id: string;
+    title: string;
+  };
+  members: Array<MemberPerformance & {
+    totalTasks: number;
+    completedTasks: number;
+    completionRate: number;
+    delayedTasks: number;
+    delayRate: number;
+    startedTasks: number;
+    reviewTasks: number;
+    spentMinutes: number;
+    spentHours: number;
+  }>;
 };
 
 export type MemberProductivity = {

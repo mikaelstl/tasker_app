@@ -356,6 +356,7 @@ export function EditProject() {
                       <ProjectMemberCard
                         key={member.id}
                         id={member.id}
+                        affiliationId={member.id}
                         memberId={projectMember?.id}
                         username={formatAffiliationUsername(member)}
                         actorName={formatAffiliationName(member)}
@@ -390,6 +391,7 @@ export function EditProject() {
                 <ManagerCurrent>
                   {currentManager ? (
                     <User
+                      affiliationId={currentManager.id}
                       username={formatAffiliationUsername(currentManager)}
                       actorName={formatAffiliationName(currentManager)}
                       actorUsername={formatAffiliationUsername(currentManager)}

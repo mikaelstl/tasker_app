@@ -33,7 +33,6 @@ const Header = styled.div`
   
   padding: 6px 12px;
   
-  border: 1px solid ${Palette.details};
   border-radius: 10px;
   
   width: 100%;

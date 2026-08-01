@@ -84,6 +84,7 @@ export function AddProjectMember({
                 return (
                   <ProjectMemberCard
                     id={projectMember?.id ?? `proj-member-${index}`}
+                    affiliationId={member.id}
                     memberId={projectMember?.id}
                     username={getAffiliationUsername(member)}
                     actorName={getAffiliationName(member)}

@@ -3,7 +3,6 @@ import Palette from "../../../assets/palette";
 
 const Container = styled.div`
   background-color: ${Palette.items};
-  border: 1px solid ${Palette.details};
   border-left: 3px solid ${Palette.blue};
   border-radius: 6px;
   overflow: hidden;

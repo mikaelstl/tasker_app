@@ -30,7 +30,6 @@ const Identity = styled.section`
   align-items: center;
   gap: 20px;
   padding: 24px;
-  border: 1px solid ${Palette.details};
   border-radius: 12px;
   background: ${Palette.items};
 
@@ -47,7 +46,6 @@ const IdentityAvatar = styled.div`
   flex: 0 0 auto;
   width: 88px;
   height: 88px;
-  border: 1px solid ${Palette.details};
   border-radius: 18px;
   background:
     linear-gradient(145deg, ${Palette.content}, ${Palette.items});
@@ -97,7 +95,6 @@ const OrganizationList = styled.div`
 
 const EmptyState = styled.div`
   padding: 20px;
-  border: 1px dashed ${Palette.details};
   border-radius: 12px;
   color: ${Palette.gray};
 `;
@@ -129,7 +126,6 @@ const Form = styled.form`
   flex-direction: column;
   gap: 18px;
   padding: 22px;
-  border: 1px solid ${Palette.details};
   border-radius: 12px;
   background: ${Palette.items};
 `;
@@ -146,14 +142,12 @@ const Field = styled.label`
 const Input = styled.input`
   width: 100%;
   padding: 11px 12px;
-  border: 1px solid ${Palette.details};
   border-radius: 7px;
   background: ${Palette.content};
   color: ${Palette.white};
   font: inherit;
 
   &:focus {
-    border-color: ${Palette.lightBlue};
     outline: 2px solid ${Palette.lightBlue_50};
     outline-offset: 1px;
   }

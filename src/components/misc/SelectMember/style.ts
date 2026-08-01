@@ -43,7 +43,6 @@ const Close = styled.button`
   display: flex;
   align-items: center;
 
-  border: 1px solid red;
 `;
 
 const Options = styled.div`
@@ -52,7 +51,6 @@ const Options = styled.div`
   left: 0;
   right: 0;
   background: ${Palette.items};
-  border: 1px solid ${Palette.details};
   border-radius: 8px;
   max-height: 200px;
   overflow-y: auto;

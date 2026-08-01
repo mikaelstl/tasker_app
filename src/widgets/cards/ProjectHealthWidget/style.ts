@@ -15,7 +15,6 @@ const HealthTile = styled.div<HealthTileProps>`
   width: 100%;
 
   background-color: ${props => props.$backgroundColor ?? 'none'};
-  border: 1px solid ${props => props.$borderColor ?? 'transparent'};
 `;
 
 export {

@@ -74,7 +74,6 @@ const EventList = styled.div`
 
 const EmptyState = styled.div`
   padding: 24px;
-  border: 1px dashed ${Palette.details};
   border-radius: 8px;
   text-align: center;
 `;

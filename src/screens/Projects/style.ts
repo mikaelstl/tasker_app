@@ -53,7 +53,6 @@ const StageFilterControl = styled.label`
 
     color: ${Palette.white};
     background-color: ${Palette.items};
-    border: 1px solid ${Palette.details};
     border-radius: 8px;
     outline: none;
   }

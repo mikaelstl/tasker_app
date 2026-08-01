@@ -144,6 +144,27 @@ export class AffiliationMockService implements AffiliationServiceI {
     return createMockResponse(affiliations, path);
   }
 
+  async findById(id: string): Promise<ApiResponse<AffiliationDTO>> {
+    const path = `/affiliations/find/${encodeURIComponent(id)}`;
+    const { orgkey } = requireMockOrgRequest(path, mockData.affiliations);
+    const affiliation = mockData.affiliations.find(
+      (item) => item.orgkey === orgkey && item.id === id,
+    );
+
+    if (!affiliation) {
+      throw createMockRequestError(path, 404, "Afiliação do usuário não encontrada.");
+    }
+
+    return createMockResponse(
+      {
+        ...affiliation,
+        user: affiliation.user ?? mockData.users.find((item) => item.username === affiliation.userkey),
+      },
+      path,
+      "Afiliação encontrada com sucesso.",
+    );
+  }
+
   async participates(orgkey: string): Promise<ApiResponse<boolean>> {
     const path = `/affiliations/participates/${orgkey}`;
     const currentAccount = requireMockCurrentAccount(path);

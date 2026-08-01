@@ -16,7 +16,6 @@ const Container = styled.button`
   min-height: 98px;
   box-sizing: border-box;
 
-  border: 1px solid ${Palette.details};
   border-radius: 12px;
 
   background-color: ${Palette.items};
@@ -26,14 +25,12 @@ const Container = styled.button`
   cursor: pointer;
 
   transition:
-    border-color 160ms ease,
     box-shadow 160ms ease,
     transform 160ms ease,
     background-color 160ms ease;
 
   &:hover {
-    border-color: ${Palette.lightBlue};
-    box-shadow: 0 0 0 1px ${Palette.lightBlue_50};
+    box-shadow: 0 0 0 2px ${Palette.lightBlue_50};
     background-color: #201d2b;
   }
 `;

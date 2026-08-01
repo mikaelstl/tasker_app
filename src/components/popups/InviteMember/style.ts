@@ -21,7 +21,6 @@ const Dialog = styled.div`
 
   width: min(560px, 100%);
   padding: 24px;
-  border: 1px solid ${Palette.items};
   border-radius: 12px;
 
   background-color: ${Palette.content};
@@ -80,7 +79,6 @@ const InviteInput = styled.input`
   min-width: 0;
   height: 40px;
   padding: 0 12px;
-  border: 1px solid ${Palette.details};
   border-radius: 6px;
 
   background-color: ${Palette.content};
@@ -113,7 +111,6 @@ const PrimaryButton = styled.button`
 `;
 
 const SecondaryButton = styled(PrimaryButton)`
-  border: 1px solid ${Palette.details};
   background-color: ${Palette.items};
 `;
 

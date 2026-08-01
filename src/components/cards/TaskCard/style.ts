@@ -9,17 +9,15 @@ const Card = styled.div`
 
   background-color: ${Palette.items};
 
-  border: 1px solid transparent;
   border-radius: 0.75rem;
 
   color: ${Palette.white};
 
   transition:
-    border-color 150ms ease,
     background-color 150ms ease;
 
   &:hover {
-    border-color: ${Palette.blue};
+    background-color: ${Palette.tool_bars};
   }
 
   &:focus-visible {

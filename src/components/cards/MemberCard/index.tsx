@@ -5,6 +5,7 @@ import { Actions, ActionButton, Card } from "./style";
 import { User } from "@/components/misc/User";
 
 interface MemberCardProps {
+  affiliationId: string;
   name: string;
   username: string;
   role: OrgRole;
@@ -15,8 +16,8 @@ interface MemberCardProps {
 }
 
 export function MemberCard({
+  affiliationId,
   name,
-  username,
   role,
   disabled = false,
   onPromote,
@@ -26,9 +27,7 @@ export function MemberCard({
   return (
     <Card>
       <User
-        username={username}
-        actorName={name}
-        actorUsername={username}
+        affiliationId={affiliationId}
       />
       {RoleBadge(role)}
       {(onPromote || onDemote || onRemove) && (

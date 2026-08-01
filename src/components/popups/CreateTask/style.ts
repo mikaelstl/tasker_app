@@ -35,7 +35,6 @@ const Card = styled.div`
   min-height: min-content; max-height: 90%;
 
   padding: 0px 20px 20px 20px;
-  border: 1px solid ${Palette.details};
   border-radius: 6px;
 
   z-index: 99999;
@@ -48,7 +47,6 @@ const Close = styled.button`
   align-items: center;
 
   * {
-    border: 1px solid;
   }
 `;
 

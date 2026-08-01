@@ -1,7 +1,7 @@
 const Palette = {
   tool_bars: '#0B0A0F',
   content: '#0F0E14',
-  items: '#1D1B27',
+  items: '#17161F',
   details: '#322E43',
   
   white: '#FFFFFF',

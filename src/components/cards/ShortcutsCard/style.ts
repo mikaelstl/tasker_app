@@ -22,7 +22,6 @@ const Action = styled.button`
 
   width: 100%;
 
-  border: 1px solid ${Palette.details};
 `;
 
 const Actions = styled.div`

@@ -23,7 +23,6 @@ const Card = styled.div<CardProps>`
   background-color: ${props => props.$backgroundColor ?? Palette.lightBlue_50};
   
   margin-left: 28px;
-  border: 1px solid ${props => props.$borderColor ?? Palette.lightBlue};
   border-radius: 4px;
 
   .tskr-title {

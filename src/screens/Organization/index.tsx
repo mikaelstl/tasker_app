@@ -292,6 +292,7 @@ export function Organization() {
                     {roleMembers.map((member) => (
                       <MemberCard
                         key={member.id}
+                        affiliationId={member.id}
                         name={member.user?.name ?? member.userkey}
                         username={member.user?.username ?? member.userkey}
                         role={member.role}

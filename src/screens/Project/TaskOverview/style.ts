@@ -31,8 +31,6 @@ const Comments = styled.div`
   
   padding: 20px;
 
-  border: 1px solid ${Palette.items};
-
   > ${Scroller} {
     flex: 1;
     min-height: 0;

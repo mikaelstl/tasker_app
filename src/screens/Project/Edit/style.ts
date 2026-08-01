@@ -118,7 +118,6 @@ const ManagerCurrent = styled.div`
   padding: 12px 14px;
   border-radius: 12px;
   background: ${Palette.items};
-  border: 1px solid ${Palette.details};
 `;
 
 const ManagerSelect = styled.select`
@@ -127,13 +126,11 @@ const ManagerSelect = styled.select`
   padding: 0 14px;
   color: ${Palette.white};
   background: ${Palette.items};
-  border: 1px solid ${Palette.details};
   border-radius: 12px;
   font-size: 14px;
   outline: none;
 
   &:focus {
-    border-color: ${Palette.blue};
     box-shadow: 0 0 0 2px rgba(74, 103, 229, 0.18);
   }
 
@@ -177,7 +174,6 @@ const MembersEmpty = styled.p`
   padding: 14px;
   border-radius: 12px;
   background: ${Palette.items};
-  border: 1px dashed ${Palette.details};
 `;
 
 export {

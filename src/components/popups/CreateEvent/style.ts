@@ -28,7 +28,6 @@ const Card = styled.div`
 
   width: 60%;
 
-  border: 1px solid ${Palette.details};
   border-radius: 6px;
 `;
 
@@ -57,7 +56,6 @@ const AddMember = styled.button`
   height: 32px; width: 32px;
 
   border-radius: 50%;
-  border: 3px solid ${Palette.gray};
 `;
 
 export {

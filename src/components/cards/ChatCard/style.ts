@@ -9,7 +9,6 @@ const Container = styled.div`
   width: 100%;
 
   padding: 16px;
-  border: 1px solid ${Palette.details};
   border-radius: 6px;
 `;
 

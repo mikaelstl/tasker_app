@@ -4,7 +4,6 @@ import Palette from "../../../assets/palette";
 const Container = styled.article`
   width: 100%;
   overflow: hidden;
-  border: 1px solid ${Palette.details};
   border-radius: 12px;
   background-color: ${Palette.content};
 `;

@@ -2,12 +2,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useServices } from "@/hooks/useServices";
 import type { EventDTO } from "@/service/types/events/event.dto";
-import type { MemberStatDTO } from "@/service/types/member/member-stat.dto";
-import type { ProjectMember } from "@/service/types/member/member.dto";
 import { ProjectStage, type ProjectDTO } from "@/service/types/project/project.dto";
 import type { ApiError } from "@/service/types/response/error";
-import { TaskStage } from "@/service/types/task/stage.dto";
-import type { TaskDTO } from "@/service/types/task/task.dto";
+import type { MemberStats, ProjectStatsSummary } from "@/service/types/stats/stats.types";
 
 interface ManagerStats {
   started: number;
@@ -26,7 +23,7 @@ interface Deadline {
 interface ManagerDashboardData {
   stats: ManagerStats;
   deadlines: Deadline[];
-  membersStats: MemberStatDTO[];
+  membersStats: MemberStats[];
   events: EventDTO[];
   projects: ProjectDTO[];
   projectData: ManagerProjectData[];
@@ -36,7 +33,7 @@ interface ManagerProjectData {
   project: ProjectDTO;
   stats: ManagerStats;
   deadlines: Deadline[];
-  membersStats: MemberStatDTO[];
+  membersStats: MemberStats[];
   events: EventDTO[];
 }
 
@@ -54,14 +51,12 @@ function getErrorMessage(error: unknown): string {
   return apiError.errors?.[0]?.message ?? "Não foi possível carregar o dashboard.";
 }
 
-function getStats(tasks: TaskDTO[]): ManagerStats {
+function getStats(summary: ProjectStatsSummary): ManagerStats {
   return {
-    started: tasks.filter((task) => task.stage === TaskStage.STARTED).length,
-    done: tasks.filter((task) => task.stage === TaskStage.DONE).length,
-    review: tasks.filter((task) => task.stage === TaskStage.REVIEW).length,
-    overdue: tasks.filter((task) => (
-      task.delayed
-    )).length,
+    started: summary.startedTasks,
+    done: summary.doneTasks,
+    review: summary.reviewTasks,
+    overdue: summary.delayedTasks,
   };
 }
 
@@ -79,40 +74,10 @@ function getDeadlines(projects: ProjectDTO[]): Deadline[] {
     .sort((left, right) => left.daysRemaining - right.daysRemaining);
 }
 
-function getMemberUsername(member: ProjectMember): string {
-  return member.user?.user?.username ?? member.user?.userkey ?? member.userkey;
-}
-
-function getMemberStats(
-  project: ProjectDTO,
-  members: ProjectMember[],
-  tasks: TaskDTO[],
-): MemberStatDTO[] {
-  return members.map((member) => {
-    const username = getMemberUsername(member);
-    const memberTasks = tasks.filter((task) => (
-      task.ownerkey === member.id
-    ));
-
-    return {
-      username,
-      project: project.title,
-      started: memberTasks.filter((task) => task.stage === TaskStage.STARTED).length,
-      review: memberTasks.filter((task) => task.stage === TaskStage.REVIEW).length,
-      done: memberTasks.filter((task) => task.stage === TaskStage.DONE).length,
-      overdue: memberTasks.filter((task) => (
-        task.delayed
-      )).length,
-    };
-  });
-}
-
 export function useManagerDashboard(orgId?: string) {
   const { user } = useAuth();
   const {
     ProjectService,
-    TaskService,
-    MemberService,
     EventService,
   } = useServices();
   const requestId = useRef(0);
@@ -138,24 +103,32 @@ export function useManagerDashboard(orgId?: string) {
       const projectsResponse = await ProjectService.list();
       const projects = projectsResponse.data;
       const projectsData = await Promise.all(projects.map(async (project) => {
-        const [tasks, members, events] = await Promise.all([
-          TaskService.list(project.id),
-          MemberService.list(project.id),
+        const [stats, members, events] = await Promise.all([
+          ProjectService.stats(project.id),
+          ProjectService.getProjectMemberStats(project.id),
           EventService.list({ projectkey: project.id }),
         ]);
 
         return {
           project,
-          tasks: tasks.data,
-          stats: getStats(tasks.data),
+          stats: getStats(stats.data.summary),
           deadlines: getDeadlines([project]),
-          membersStats: getMemberStats(project, members.data, tasks.data),
+          membersStats: members.data,
           events: events.data,
         };
       }));
-      const tasks = projectsData.flatMap((project) => project.tasks);
+
+      const stats = projectsData.reduce<ManagerStats>(
+        (total, project) => ({
+          started: total.started + project.stats.started,
+          done: total.done + project.stats.done,
+          review: total.review + project.stats.review,
+          overdue: total.overdue + project.stats.overdue,
+        }),
+        { started: 0, done: 0, review: 0, overdue: 0 },
+      );
       const nextData: ManagerDashboardData = {
-        stats: getStats(tasks),
+        stats,
         deadlines: getDeadlines(projects),
         membersStats: projectsData.flatMap((project) => project.membersStats),
         events: projectsData.flatMap((project) => project.events),
@@ -179,9 +152,7 @@ export function useManagerDashboard(orgId?: string) {
     }
   }, [
     EventService,
-    MemberService,
     ProjectService,
-    TaskService,
     orgId,
     user?.username,
   ]);

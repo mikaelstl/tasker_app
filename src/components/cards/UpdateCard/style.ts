@@ -61,7 +61,6 @@ const Content = styled.div`
   min-width: 0;
   padding: 14px 16px 16px;
 
-  border: 1px solid ${Palette.details};
   border-radius: 14px;
   background-color: ${Palette.items};
   box-shadow: none;

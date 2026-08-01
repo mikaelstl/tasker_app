@@ -29,14 +29,12 @@ import {
 } from "./style";
 
 export interface MemberStatTileProps {
-  username: string;
+  affiliationId: string;
   project: string;
   started: number;
   done: number;
   overdue: number;
   review?: number;
-  name?: string;
-  photoUrl?: string | null;
   tasks?: StatsTask[];
   defaultOpen?: boolean;
 }
@@ -91,14 +89,12 @@ const getStatusColors = (task: StatsTask) => {
 };
 
 export function MemberStatTile({
-  username,
+  affiliationId,
   project,
   started,
   done,
   overdue,
   review = 0,
-  name,
-  photoUrl = null,
   tasks = [],
   defaultOpen = false,
 }: MemberStatTileProps) {
@@ -117,9 +113,7 @@ export function MemberStatTile({
       >
         <HeaderIdentity>
           <User
-            actorName={name ?? username}
-            actorUsername={name ? username : null}
-            actorPhotoUrl={photoUrl}
+            affiliationId={affiliationId}
           />
           <ProjectName>{project}</ProjectName>
         </HeaderIdentity>
@@ -161,7 +155,7 @@ export function MemberStatTile({
       {open && (
         <Content id={contentId}>
           {tasks.length > 0 ? (
-            <TaskList role="table" aria-label={`Tarefas de ${name ?? username}`}>
+            <TaskList role="table" aria-label='Tarefas'>
               <TableHeader role="row">
                 <span role="columnheader">Tarefa</span>
                 <span role="columnheader">Etapa</span>

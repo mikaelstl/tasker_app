@@ -12,7 +12,6 @@ const Card = styled.div`
   white-space: pre-wrap;
 
   padding: 8px 24px;
-  border: 1px solid ${Palette.details};
   border-radius: 25px;
 
   &.sent {

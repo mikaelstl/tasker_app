@@ -12,7 +12,9 @@ import type { ProjectStatsQueryDTO } from "../../types/stats/project-stats-query
 import {
   ProjectHealthStatus,
   StatsPeriodType,
+  type MemberStats,
   type ProjectStats,
+  type ProjectMemberPerformance,
   type ProjectStatsReport,
 } from "../../types/stats/stats.types";
 import { TaskStage } from "../../types/task/stage.dto";
@@ -198,6 +200,7 @@ export class ProjectMockService implements ProjectServiceI {
       (task) => task.stage !== TaskStage.DONE && new Date(task.deadline) < cutoffAt,
     ).length;
     const deadline = new Date(project?.deadline ?? cutoffAt);
+    const performance = this.buildMemberPerformance(id, cutoffAt);
     const stats: ProjectStats = {
       generatedAt: new Date().toISOString(),
       cutoffAt: cutoffAt.toISOString(),
@@ -234,7 +237,12 @@ export class ProjectMockService implements ProjectServiceI {
           : "O projeto está dentro do prazo.",
         projectedDeliveryAt: null,
       },
-      performancePerMember: [],
+      performancePerMember: performance.members.map((member) => ({
+        memberId: member.memberId,
+        user: member.user,
+        months: member.months,
+        averageHoursPerMonth: member.averageHoursPerMonth,
+      })),
       productivity: [],
       members: [],
       events: mockData.events
@@ -254,6 +262,127 @@ export class ProjectMockService implements ProjectServiceI {
       project ? 200 : 404,
       !project,
     );
+  }
+
+  async getProjectMemberPerformance(
+    id: string,
+    params?: ProjectStatsQueryDTO,
+  ): Promise<ApiResponse<ProjectMemberPerformance>> {
+    const path = `/project/${id}/stats/members/performance`;
+    const { orgkey } = requireMockOrgRequest(path, mockData.affiliations);
+    const project = mockData.projects.find((item) => item.id === id && item.orgkey === orgkey);
+    const cutoffAt = params?.cutoffAt ? new Date(params.cutoffAt) : new Date();
+
+    if (!project) {
+      throw createMockRequestError(path, 404, "Projeto não encontrado.");
+    }
+
+    return createMockResponse(this.buildMemberPerformance(id, cutoffAt), path);
+  }
+
+  async getProjectMemberStats(
+    id: string,
+    params?: ProjectStatsQueryDTO,
+  ): Promise<ApiResponse<MemberStats[]>> {
+    const path = `/project/${id}/stats/members`;
+    const { orgkey } = requireMockOrgRequest(path, mockData.affiliations);
+    const project = mockData.projects.find((item) => item.id === id && item.orgkey === orgkey);
+    const cutoffAt = params?.cutoffAt ? new Date(params.cutoffAt) : new Date();
+
+    if (!project) {
+      throw createMockRequestError(path, 404, "Projeto não encontrado.");
+    }
+
+    return createMockResponse(this.buildMemberStats(id, cutoffAt), path);
+  }
+
+  private buildMemberStats(id: string, cutoffAt: Date): MemberStats[] {
+    return mockData.members
+      .filter((member) => member.projectkey === id)
+      .map((member) => {
+        const user = mockData.affiliations.find((item) => item.id === member.userkey)?.user;
+        const tasks = mockData.tasks.filter(
+          (task) => task.projectkey === id && task.ownerkey === member.id
+            && new Date(task.created_at) <= cutoffAt,
+        );
+
+        return {
+          memberId: member.id,
+          user: {
+            affiliationId: member.userkey,
+            username: user?.username ?? member.userkey,
+            name: user?.name ?? member.userkey,
+            photoUrl: null,
+          },
+          completedTasks: tasks.filter((task) => task.stage === TaskStage.DONE
+            && (!task.done_at || new Date(task.done_at) <= cutoffAt)).length,
+          delayedTasks: tasks.filter((task) => task.stage !== TaskStage.DONE
+            && new Date(task.deadline) < cutoffAt).length,
+          startedTasks: tasks.filter((task) => task.stage === TaskStage.STARTED).length,
+          reviewTasks: tasks.filter((task) => task.stage === TaskStage.REVIEW).length,
+          tasks: tasks.map((task) => ({
+            id: task.id,
+            code: task.code,
+            name: task.name,
+            stage: task.stage,
+            delayed: task.stage !== TaskStage.DONE && new Date(task.deadline) < cutoffAt,
+            spentMinutes: 0,
+            deadline: task.deadline,
+            startedAt: task.started_at,
+            doneAt: task.done_at,
+          })),
+        };
+      });
+  }
+
+  private buildMemberPerformance(id: string, cutoffAt: Date): ProjectMemberPerformance {
+    const project = mockData.projects.find((item) => item.id === id);
+    const members = mockData.members.filter((item) => item.projectkey === id);
+
+    return {
+      generatedAt: new Date().toISOString(),
+      cutoffAt: cutoffAt.toISOString(),
+      project: {
+        id,
+        title: project?.title ?? "Projeto não encontrado",
+      },
+      members: members.map((member) => {
+        const user = mockData.affiliations.find((item) => item.id === member.userkey)?.user;
+        const tasks = mockData.tasks.filter(
+          (task) => task.projectkey === id && task.ownerkey === member.id,
+        );
+        const completedTasks = tasks.filter(
+          (task) => task.stage === TaskStage.DONE && (!task.done_at || new Date(task.done_at) <= cutoffAt),
+        ).length;
+        const delayedTasks = tasks.filter(
+          (task) => task.stage !== TaskStage.DONE && new Date(task.deadline) < cutoffAt,
+        ).length;
+        const startedTasks = tasks.filter((task) => task.stage === TaskStage.STARTED).length;
+        const reviewTasks = tasks.filter((task) => task.stage === TaskStage.REVIEW).length;
+        const totalTasks = tasks.length;
+
+        return {
+          memberId: member.id,
+          user: {
+            affiliationId: member.userkey,
+            username: user?.username ?? member.userkey,
+            name: user?.name ?? member.userkey,
+            photoUrl: null,
+          },
+          totalTasks,
+          completedTasks,
+          completionRate: totalTasks ? Number(((completedTasks / totalTasks) * 100).toFixed(2)) : 0,
+          delayedTasks,
+          delayRate: totalTasks ? Number(((delayedTasks / totalTasks) * 100).toFixed(2)) : 0,
+          startedTasks,
+          reviewTasks,
+          spentMinutes: 0,
+          spentHours: 0,
+          averageHoursPerMonth: 0,
+          months: [],
+        };
+      }),
+    };
   }
 
   async generateReport(

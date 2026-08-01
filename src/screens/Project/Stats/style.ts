@@ -77,7 +77,6 @@ const Controls = styled.div`
   gap: 12px;
   width: 100%;
   padding: 16px;
-  border: 1px solid ${Palette.details};
   border-radius: 8px;
   background: ${Palette.content};
 
@@ -101,7 +100,6 @@ const Control = styled.div`
   input, select {
     min-height: 40px;
     padding: 8px 10px;
-    border: 1px solid ${Palette.details};
     border-radius: 6px;
     color: ${Palette.white};
     background: ${Palette.items};
@@ -131,7 +129,6 @@ const Facts = styled.div`
     flex-direction: column;
     gap: 3px;
     padding: 12px;
-    border: 1px solid ${Palette.details};
     border-radius: 8px;
     background: ${Palette.items};
   }
@@ -176,7 +173,6 @@ const ReportList = styled.div`
     flex-direction: column;
     gap: 4px;
     padding: 12px;
-    border: 1px solid ${Palette.details};
     border-radius: 8px;
     color: ${Palette.white};
     text-align: left;

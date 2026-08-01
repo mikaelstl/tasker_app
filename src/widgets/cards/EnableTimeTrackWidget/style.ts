@@ -11,7 +11,6 @@ const Container = styled.div`
   row-gap: 12px;
 
   padding: 10px;
-  border: 1px solid ${Palette.details};
   border-radius: 6px;
 `;
 

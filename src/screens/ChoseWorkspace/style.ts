@@ -25,7 +25,6 @@ const WorkspaceScroller = styled(Scroller)`
   height: fit-content;
 
   gap: 12px;
-  border: 1px solid;
 `;
 
 const Actions = styled.div`
@@ -47,13 +46,11 @@ const CreateOrganizationButton = styled(Button)`
   width: 100%;
 
   background: ${Palette.items};
-  border: 1px solid ${Palette.details};
 
   cursor: pointer;
 
   &:hover {
     background: ${Palette.details};
-    border: 1px solid ${Palette.gray};
   }
 `;
 

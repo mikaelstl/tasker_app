@@ -25,7 +25,6 @@ const Card = styled.button`
   font: inherit;
   text-align: left;
   background-color: ${Palette.content};
-  border: 1px solid ${Palette.details};
   border-radius: 12px;
   cursor: pointer;
 

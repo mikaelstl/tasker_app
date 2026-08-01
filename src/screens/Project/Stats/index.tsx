@@ -37,6 +37,8 @@ import { useToast, type ToastNotifications } from "../../../hooks/useToast";
 import type { ApiError } from "../../../service/types/response/error";
 import {
   StatsPeriodType,
+  type MemberStats,
+  type ProjectMemberPerformance,
   type ProjectStats,
   type ProjectStatsReport,
 } from "../../../service/types/stats/stats.types";
@@ -69,6 +71,8 @@ export function Stats() {
   const { ProjectService } = useServices();
   const notifications = useToast();
   const [stats, setStats] = useState<ProjectStats | null>(null);
+  const [memberPerformance, setMemberPerformance] = useState<ProjectMemberPerformance | null>(null);
+  const [memberStats, setMemberStats] = useState<MemberStats[]>([]);
   const [reports, setReports] = useState<ProjectStatsReport[]>([]);
   const [selectedReport, setSelectedReport] = useState<ProjectStatsReport | null>(null);
   const [cutoff, setCutoff] = useState("");
@@ -90,6 +94,18 @@ export function Stats() {
         if (active) setLoading(false);
       });
 
+    void ProjectService.getProjectMemberPerformance(id)
+      .then((response) => {
+        if (active) setMemberPerformance(response.data);
+      })
+      .catch((error) => notify(error, "Não foi possível carregar o desempenho dos membros.", notifications));
+
+    void ProjectService.getProjectMemberStats(id)
+      .then((response) => {
+        if (active) setMemberStats(response.data);
+      })
+      .catch((error) => notify(error, "Não foi possível carregar os membros do projeto.", notifications));
+
     void ProjectService.listReports(id)
       .then((response) => {
         if (active) setReports(response.data);
@@ -109,8 +125,14 @@ export function Stats() {
 
     setLoading(true);
     try {
-      const response = await ProjectService.stats(id, { cutoffAt });
-      setStats(response.data);
+      const [statsResponse, memberStatsResponse, performanceResponse] = await Promise.all([
+        ProjectService.stats(id, { cutoffAt }),
+        ProjectService.getProjectMemberStats(id, { cutoffAt }),
+        ProjectService.getProjectMemberPerformance(id, { cutoffAt }),
+      ]);
+      setStats(statsResponse.data);
+      setMemberStats(memberStatsResponse.data);
+      setMemberPerformance(performanceResponse.data);
     } catch (error) {
       notify(error, "Não foi possível atualizar as estatísticas.", notifications);
     } finally {
@@ -226,20 +248,18 @@ export function Stats() {
         </Facts>
 
         <WidgetsContainer className="tskr-charts">
-          <PerformanceChart performance={stats.performancePerMember} />
+          <PerformanceChart performance={memberPerformance?.members ?? stats.performancePerMember} />
           <ProdutivityChart productivity={stats.productivity} members={stats.members} />
         </WidgetsContainer>
 
         <Members>
           <Title>Membros</Title>
           <div>
-            {stats.members.length === 0 ? <Text>Nenhum membro com estatísticas.</Text> : stats.members.map((member) => (
+            {memberStats.length === 0 ? <Text>Nenhum membro com estatísticas.</Text> : memberStats.map((member) => (
               <MemberStatTile
                 key={member.memberId}
                 project={stats.project.title}
-                username={member.user.username}
-                name={member.user.name}
-                photoUrl={member.user.photoUrl}
+                affiliationId={member.user.affiliationId}
                 started={member.startedTasks}
                 done={member.completedTasks}
                 overdue={member.delayedTasks}

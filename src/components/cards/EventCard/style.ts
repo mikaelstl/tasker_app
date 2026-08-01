@@ -7,7 +7,6 @@ const Card = styled.article`
   gap: 8px;
 
   padding: 12px;
-  border: 1px solid ${Palette.details};
   border-radius: 8px;
   background-color: ${Palette.content};
 
