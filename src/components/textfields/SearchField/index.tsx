@@ -1,4 +1,4 @@
-import { AdjustmentsHorizontalIcon, ChevronUpIcon, MagnifyingGlassIcon } from "@/components/icons/heroicons";
+import { Tuning2 as AdjustmentsHorizontalIcon, AltArrowUp as ChevronUpIcon, Magnifer as MagnifyingGlassIcon } from "@/components/icons/solar-icons";
 import { Text } from "../../base/Text";
 import { Button, Container, Search } from "./style";
 

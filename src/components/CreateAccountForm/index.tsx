@@ -1,9 +1,9 @@
 import {
-  EnvelopeIcon,
-  KeyIcon,
-  TagIcon,
-  UserIcon,
-} from "@/components/icons/heroicons";
+  Key,
+  Letter,
+  Tag,
+  User,
+} from "@/components/icons/solar-icons";
 import { TextInput } from "../misc/Form/TextInput";
 import { Container, Form, Inputs, SubmitButton } from "../misc/Form/style";
 import { useState } from "react";
@@ -47,7 +47,7 @@ export function CreateAccountForm({
           <TextInput
             label="Nome"
             name="name"
-            icon={<UserIcon style={{ width: 24, height: 24 }} />}
+            icon={<User style={{ width: 24, height: 24 }} />}
             placeholder="Nome"
             value={name}
             onChange={(value) => setName(value)}
@@ -56,7 +56,7 @@ export function CreateAccountForm({
             label="E-mail"
             name="email"
             type="email"
-            icon={<EnvelopeIcon style={{ width: 24, height: 24 }} />}
+            icon={<Letter style={{ width: 24, height: 24 }} />}
             placeholder="E-mail"
             value={email}
             onChange={(value) => setEmail(value)}
@@ -64,7 +64,7 @@ export function CreateAccountForm({
           <TextInput
             label="Nome de usuário"
             name="username"
-            icon={<TagIcon style={{ width: 24, height: 24 }} />}
+            icon={<Tag style={{ width: 24, height: 24 }} />}
             placeholder="Nome de usuário"
             value={username}
             onChange={(value) => setUsername(value)}
@@ -73,7 +73,7 @@ export function CreateAccountForm({
             label="Senha"
             name="password"
             type="password"
-            icon={<KeyIcon style={{ width: 24, height: 24 }} />}
+            icon={<Key style={{ width: 24, height: 24 }} />}
             placeholder="Senha"
             value={password}
             onChange={(value) => setPassword(value)}

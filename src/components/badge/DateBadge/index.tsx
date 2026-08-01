@@ -1,4 +1,4 @@
-import { CalendarIcon } from "@/components/icons/heroicons"
+import { Calendar as CalendarIcon } from "@/components/icons/solar-icons"
 import { Container } from "./style"
 import type { DateTime } from "luxon";
 import Palette from "../../../assets/palette";

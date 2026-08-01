@@ -1,6 +1,6 @@
 import { User } from "@/components/misc/User";
 import { ActionButton, Actions, Card, Infos } from "./style";
-import { PlusIcon, TrashIcon } from "@/components/icons/heroicons";
+import { AddCircle as PlusIcon, TrashBin2 as TrashIcon } from "@/components/icons/solar-icons";
 
 interface ProjectMemberCardProps {
   id: string;
@@ -40,6 +40,8 @@ export function ProjectMemberCard({
       <Infos>
         <User
           affiliationId={affiliationId}
+          username={username}
+          actorName={actorName}
         />
       </Infos>
       <Actions>

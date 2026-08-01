@@ -1,4 +1,4 @@
-import { ChatBubbleOvalLeftIcon } from '@/components/icons/heroicons';
+import { ChatRound as ChatBubbleOvalLeftIcon } from '@/components/icons/solar-icons';
 import { PaperAirplaneIcon } from "@/components/icons/PaperAirplaneIcon";
 import { Text } from "../../base/Text";
 import { Button, Container, Field } from "./style";

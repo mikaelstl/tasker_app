@@ -1,8 +1,8 @@
 import {
-  CheckIcon,
-  ExclamationCircleIcon,
-  ExclamationTriangleIcon,
-} from "@/components/icons/heroicons";
+  CheckSquare as CheckIcon,
+  DangerCircle as ExclamationCircleIcon,
+  DangerTriangle as ExclamationTriangleIcon,
+} from "@/components/icons/solar-icons";
 import { toast, type ToastOptions } from "react-toastify";
 import Palette from "@/assets/palette";
 

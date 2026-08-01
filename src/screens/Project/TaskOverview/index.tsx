@@ -289,7 +289,7 @@ const TaskTags = ({ task }: { task: TaskWithOwnerDTO }) => (
   <Tags className="tskr-task-tag">
     <TaskTag label="Código"><Text>{task.code}</Text></TaskTag>
     <TaskTag label="Prioridade">{PriorityBadge[task.priority]}</TaskTag>
-    <TaskTag label="Responsável"><User username={task.ownerkey} /></TaskTag>
+    <TaskTag label="Responsável"><User affiliationId={task.owner.userkey} username={task.ownerkey} /></TaskTag>
     <TaskTag label="Prazo"><Text>{formatDateTime(task.deadline)}</Text></TaskTag>
     <TaskTag label="Iniciada em"><Text>{formatDateTime(task.started_at)}</Text></TaskTag>
     <TaskTag label="Concluída em"><Text>{formatDateTime(task.done_at)}</Text></TaskTag>

@@ -1,11 +1,12 @@
 import { TaskPriority } from "@/service/types/task/priority.dto";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, Code, CodeContainer, Description, HeaderContainer, TitleContainer } from "./style";
-import { CheckCircleIcon } from "@/components/icons/heroicons";
+import { CheckCircle } from "@/components/icons/solar-icons";
 import { PriorityBadge } from "@/maps/priority";
 import { User } from "@/components/misc/User";
 import { DateBadge } from "@/components/badge/DateBadge";
 import { DateTime } from "luxon";
 import { useNavigate } from "react-router-dom";
+import Palette from "@/assets/palette";
 
 interface TaskCardProps {
   projectkey: string;
@@ -57,7 +58,7 @@ export function TaskCard({
         <HeaderContainer>
           <TitleContainer>
             <CodeContainer>
-              <CheckCircleIcon width={16} />
+              <CheckCircle width={16}  fill={Palette.lightBlue}/>
 
               <Code>{code}</Code>
             </CodeContainer>

@@ -1,11 +1,11 @@
 import {
-  ArchiveBoxArrowDownIconOutline,
-  BeakerIconOutline,
-  CalendarDaysIconOutline,
-  ClipboardDocumentCheckIcon,
-  RocketLaunchIconOutline,
-  UserGroupIconOutline,
-} from "@/components/icons/heroicons"
+  ArchiveDown as ArchiveBoxArrowDownIconOutline,
+  TestTube as BeakerIconOutline,
+  Calendar as CalendarDaysIconOutline,
+  ClipboardCheck as ClipboardDocumentCheckIcon,
+  Rocket as RocketLaunchIconOutline,
+  UsersGroupRounded as UserGroupIconOutline,
+} from "@/components/icons/solar-icons"
 import { EventCategory } from "@/service/types/events/event.dto"
 import Palette from "@/assets/palette"
 import { Card, Content, Details, Icon, ProjectTitle, Time, Title } from "./style"

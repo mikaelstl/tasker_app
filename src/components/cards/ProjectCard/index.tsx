@@ -9,10 +9,7 @@ import type { ProjectMember } from "@/service/types/member/member.dto";
 import { ProjectStageBadge } from "@/maps/project-stage";
 import { Team } from "@/components/misc/Team";
 import { User } from "@/components/misc/User";
-import { ChevronRightIcon } from "@/components/icons/heroicons";
-import { useServices } from "@/hooks/useServices";
-import type { ToastNotifications } from "@/hooks/useToast";
-import type { ApiError } from "@/service/types/response/error";
+import { AltArrowRight } from "@/components/icons/solar-icons";
 
 interface ProjectCardProps {
   id: string;
@@ -20,25 +17,8 @@ interface ProjectCardProps {
   description: string;
   deadline: string;
   stage: ProjectStage;
-  managerkey?: string | null;
+  managerkey: string;
   members: readonly ProjectMember[];
-}
-
-function reportApiError(
-  error: unknown,
-  fallback: string,
-  notifications: ToastNotifications,
-) {
-  const { errors } = error as ApiError;
-
-  if (!errors?.length) {
-    notifications.error(fallback);
-    return;
-  }
-
-  errors.forEach((item) => {
-    notifications[item.level](item.message);
-  });
 }
 
 export function ProjectCard({
@@ -51,16 +31,6 @@ export function ProjectCard({
   stage
 }: ProjectCardProps) {
   const navigate = useNavigate();
-
-  const { AffiliationService } = useServices();
-
-  // const loadManagerInfos = () => { 
-  //   try {
-  //     const response = await AffiliationService.({ username: })
-  //   } catch (error) {
-  //     api
-  //   }
-  // }
  
   const goToProjectPage = () => navigate(`/home/project/${id}/overview`)
 
@@ -80,7 +50,7 @@ export function ProjectCard({
         <Team members={members} />
         {managerkey && (
           <User
-            username={managerkey}
+            affiliationId={managerkey}
             avatarSize={28}
           />
         )}
@@ -90,7 +60,7 @@ export function ProjectCard({
       </Footer>
       <Trailing className="tskr-card-Trailing">
         <OpenProjectButton className="tskr-open-proj-btn" type="button" aria-label={`Abrir projeto ${title}`}>
-          <ChevronRightIcon width={20}/>
+          <AltArrowRight width={20}/>
         </OpenProjectButton>
       </Trailing>
     </Card>

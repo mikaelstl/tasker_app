@@ -1,4 +1,4 @@
-import { UserIcon } from "@/components/icons/heroicons";
+import { User } from "@/components/icons/solar-icons";
 import { Container, Image } from "./style.ts";
 import Palette from "../../../assets/palette.ts";
 
@@ -11,7 +11,7 @@ interface AvatarProps {
 export function Avatar(props: AvatarProps) {
   return (
     <Container className={`tskr-avatar ${props.size}`}>
-      { props.image !== "" ? <Image src={props.image}/> : <UserIcon fill={Palette.items}/>}
+      { props.image !== "" ? <Image src={props.image}/> : <User color={Palette.items}/>}
     </Container>
   )
 }

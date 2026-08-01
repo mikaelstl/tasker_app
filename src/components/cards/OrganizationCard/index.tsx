@@ -1,4 +1,4 @@
-import { FolderOpenIcon20, UserGroupIcon20 } from "@/components/icons/heroicons";
+import { FolderOpen as FolderOpenIcon20, UsersGroupRounded as UserGroupIcon20 } from "@/components/icons/solar-icons";
 import { RoleBadge } from "@/maps/role-badge";
 import type { OrgRole } from "@/utils/enums/OrgRole";
 import { formatOrgAvatar } from "@/utils/formatOrgAvatar";

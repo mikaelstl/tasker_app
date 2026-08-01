@@ -16,10 +16,6 @@ const Content = styled.div`
 
   width: 100%;
   min-height: 0;
-
-  overflow-x: hidden;
-
-
 `;
 
 const Comments = styled.div`

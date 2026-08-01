@@ -1,6 +1,6 @@
 import Palette from "@/assets/palette";
 import { useEffect, useState } from "react";
-import { ComputerDesktopIcon } from "@/components/icons/heroicons";
+import { Monitor } from "@/components/icons/solar-icons";
 import { useOrganization } from "@/hooks/useOrganization";
 import { useServices } from "@/hooks/useServices";
 import type { UserDTO } from "@/service/types/user/user.dto";
@@ -23,6 +23,9 @@ export function User({
   online = false,
   affiliationId,
   username,
+  actorName,
+  actorUsername,
+  actorPhotoUrl,
   isSystem = false,
   className,
   avatarSize = 32,
@@ -31,50 +34,46 @@ export function User({
   const { org } = useOrganization();
   const [user, setUser] = useState<UserDTO | null>(null);
 
-  const loadInfos = async () => {
+  useEffect(() => {
     let active = true;
 
-    try {
-      if (!affiliationId || !org?.orgkey || isSystem) {
-        return () => {
-          active = false;
-        };
-      }
-
-      const result = await AffiliationService.findById(affiliationId);
-
-      console.log(result.data);
-      
-
-      setUser(result.data.user ?? null);
-      
+    if (isSystem || !affiliationId || !org?.orgkey) {
+      setUser(null);
       return () => {
+        active = false;
+      };
+    }
+
+    void AffiliationService.findById(affiliationId)
+      .then((result) => {
+        if (active) setUser(result.data.user ?? null);
+      })
+      .catch(() => {
+        if (active) setUser(null);
+      });
+
+    return () => {
       active = false;
     };
-  } catch (error) {
-    
-    setUser(null);
-  }
-}
+  }, [AffiliationService, affiliationId, isSystem, org?.orgkey]);
 
-useEffect(() => {
-  loadInfos();
-}, [AffiliationService, affiliationId, isSystem, org?.orgkey]);
+  useEffect(() => console.log(user), [user])
 
-const displayName = user?.name ?? username ?? "Usuário removido";
-const displayUsername = user?.username;
+  const displayName = user?.name ?? actorName ?? username ?? "Usuário removido";
+  const displayUsername = user?.username ?? actorUsername;
+  const displayPhotoUrl = actorPhotoUrl ?? "";
 
-return (
-  <Actor className={`tskr-user${className ? ` ${className}` : ""}`}>
-    <ActorAvatar $size={avatarSize}>
-      {isSystem
-        ? <ComputerDesktopIcon fill={Palette.gray} aria-hidden="true" />
-        : <Avatar online={online} size="small" image="" />}
-    </ActorAvatar>
-    <ActorIdentity>
-      <ActorName>{displayName}</ActorName>
-      {displayUsername && <span>@{displayUsername}</span>}
-    </ActorIdentity>
-  </Actor>
-)
+  return (
+    <Actor className={`tskr-user${className ? ` ${className}` : ""}`}>
+      <ActorAvatar $size={avatarSize}>
+        {isSystem
+          ? <Monitor fill={Palette.gray} aria-hidden="true" />
+          : <Avatar online={online} size="small" image={displayPhotoUrl} />}
+      </ActorAvatar>
+      <ActorIdentity>
+        <ActorName>{displayName}</ActorName>
+        {displayUsername && <span>@{displayUsername}</span>}
+      </ActorIdentity>
+    </Actor>
+  );
 }

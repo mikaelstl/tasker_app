@@ -1,9 +1,9 @@
 import { useId, useState } from "react";
 import {
-  CalendarDaysIconOutline,
-  ChevronDownIconOutline,
-  ClockIcon,
-} from "@/components/icons/heroicons";
+  Calendar as CalendarDaysIconOutline,
+  AltArrowDown as ChevronDownIconOutline,
+  ClockCircle as ClockIcon,
+} from "@/components/icons/solar-icons";
 import Palette from "../../../assets/palette";
 import type { StatsTask } from "../../../service/types/stats/stats.types";
 import { User } from "../../misc/User";

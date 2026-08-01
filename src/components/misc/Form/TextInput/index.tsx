@@ -1,4 +1,4 @@
-import { EyeIcon, EyeSlashIcon } from "@/components/icons/heroicons";
+import { Eye, EyeClosed } from "@/components/icons/solar-icons";
 import { Container, Field, Input, Label, ShowPassword } from "./style";
 import { useId, useState } from "react";
 
@@ -42,7 +42,7 @@ export function TextInput(props: TextInputProps) {
         {
           props.type === 'password'
             ? <ShowPassword type="button" onClick={handleToggle}>
-                {type === 'text' ? <EyeIcon width={24}/> : <EyeSlashIcon width={24}/>}
+                {type === 'text' ? <Eye width={24}/> : <EyeClosed width={24}/>}
               </ShowPassword>
             : <></>
         }

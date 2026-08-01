@@ -1,4 +1,4 @@
-import { CalendarIcon, ChevronDownIcon, ChevronUpIcon } from "@/components/icons/heroicons";
+import { Calendar as CalendarIcon, AltArrowDown as ChevronDownIcon, AltArrowUp as ChevronUpIcon } from "@/components/icons/solar-icons";
 import { DateTime } from "luxon";
 import { useEffect, useState } from "react";
 import { Accordion, Activated, Content, Tag } from "./style";

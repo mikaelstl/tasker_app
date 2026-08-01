@@ -1,6 +1,6 @@
 import { RoleBadge } from "@/maps/role-badge";
 import type { OrgRole } from "@/utils/enums/OrgRole";
-import { ArrowDownIcon, ArrowUpIcon, TrashIcon } from "@/components/icons/heroicons";
+import { ArrowDown as ArrowDownIcon, ArrowUp as ArrowUpIcon, TrashBin2 as TrashIcon } from "@/components/icons/solar-icons";
 import { Actions, ActionButton, Card } from "./style";
 import { User } from "@/components/misc/User";
 
@@ -28,6 +28,7 @@ export function MemberCard({
     <Card>
       <User
         affiliationId={affiliationId}
+        username={username}
       />
       {RoleBadge(role)}
       {(onPromote || onDemote || onRemove) && (

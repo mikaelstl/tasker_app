@@ -8,7 +8,8 @@ const Container = styled.div`
   width: 100%;
 
   background-color: ${Palette.items};
-  padding: 10px 15px;
+  padding: 8px;
+  padding-left: 12px;
   border-radius: 50px;
 `
   
@@ -40,7 +41,9 @@ const Button = styled.button`
 
   width: min-content;
 
-  background: none;
+  background: ${Palette.blue};
+  padding: 8px 10px;
+  border-radius: 9999px;
 
   font-weight: 600;
 

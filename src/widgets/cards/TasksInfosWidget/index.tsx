@@ -1,9 +1,9 @@
-import { CheckIcon20, } from "@/components/icons/heroicons";
+import { CheckSquare as CheckIcon20, } from "@/components/icons/solar-icons";
 import { Text } from "../../../components/base/Text";
 import { Title } from "../../../components/base/Title";
 import { Content } from "./style";
 import Palette from "../../../assets/palette";
-import { ArrowTrendingUpIcon, ExclamationTriangleIcon } from "@/components/icons/heroicons";
+import { GraphUp as ArrowTrendingUpIcon, DangerTriangle as ExclamationTriangleIcon } from "@/components/icons/solar-icons";
 import { Container, Header, Tile } from "../../base/style";
 
 interface TasksInfosWidgetProps {

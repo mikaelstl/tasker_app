@@ -1,4 +1,4 @@
-import { BellIcon, ClipboardIcon20 } from "@/components/icons/heroicons";
+import { Bell as BellIcon, Clipboard as ClipboardIcon20 } from "@/components/icons/solar-icons";
 import { Container } from "./style";
 
 type CalendarFlagType = 'event' | 'tasks';

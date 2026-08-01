@@ -1,12 +1,12 @@
-import { ArrowLeftStartOnRectangleIcon, ChevronDownIcon, ChevronUpIcon } from "@/components/icons/heroicons"
-import { BuildingOffice2Icon, InboxStackIcon, WindowIcon } from "@/components/icons/heroicons"
+import { Logout as ArrowLeftStartOnRectangleIcon, AltArrowDown as ChevronDownIcon, AltArrowUp as ChevronUpIcon } from "@/components/icons/solar-icons"
+import { Buildings2 as BuildingOffice2Icon, Inbox as InboxStackIcon, WindowFrame as WindowIcon } from "@/components/icons/solar-icons"
 import Palette from "../../../assets/palette"
 import { Accordion, Actions, Container, Leading, Nav, NavItem, ProjectNav } from "./style"
 import { useLocation, useMatch, useNavigate } from "react-router-dom"
 import { useAuth } from "../../../hooks/useAuth"
-import { FolderOpenIcon as FolderOpenIcon20 } from "@/components/icons/heroicons"
+import { FolderOpen as FolderOpenIcon20 } from "@/components/icons/solar-icons"
 import { useEffect, useState } from "react"
-import { ArrowsRightLeftIcon, CalendarIcon, ChartBarIcon, ClipboardIcon, UserIcon } from "@/components/icons/heroicons"
+import { TransferHorizontal as ArrowsRightLeftIcon, Calendar as CalendarIcon, Chart as ChartBarIcon, Clipboard as ClipboardIcon, User as UserIcon } from "@/components/icons/solar-icons"
 import { useOrganization } from "../../../hooks/useOrganization"
 
 interface ProjectNavAccordionProps {

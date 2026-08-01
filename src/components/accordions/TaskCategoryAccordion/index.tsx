@@ -1,4 +1,4 @@
-import { ChevronDownIcon, ChevronUpIcon } from "@/components/icons/heroicons";
+import { AltArrowDown as ChevronDownIcon, AltArrowUp as ChevronUpIcon } from "@/components/icons/solar-icons";
 import { useEffect, useState } from "react";
 import { Accordion, Header, Tasks } from "./style";
 import { Scroller } from "../../misc/Scroller";

@@ -1,4 +1,4 @@
-import { ArrowTrendingUpIcon, Cog6ToothIcon, PlusIcon } from "@/components/icons/heroicons";
+import { GraphUp as ArrowTrendingUpIcon, Settings as Cog6ToothIcon, AddCircle as PlusIcon } from "@/components/icons/solar-icons";
 import { Title } from "../../base/Title";
 import { Action, Actions, Container, Header } from "./style";
 

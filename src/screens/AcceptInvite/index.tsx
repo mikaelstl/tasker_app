@@ -1,13 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
-  ArrowPathIcon,
-  CalendarDaysIcon,
-  ExclamationTriangleIcon,
-  HomeIcon,
-  ShieldCheckIcon,
-  UserPlusIcon,
-} from "@/components/icons/heroicons";
+  Restart as ArrowPathIcon,
+  Calendar as CalendarDaysIcon,
+  DangerTriangle as ExclamationTriangleIcon,
+  Home as HomeIcon,
+  ShieldCheck as ShieldCheckIcon,
+  UserPlus as UserPlusIcon,
+} from "@/components/icons/solar-icons";
 import { DateTime } from "luxon";
 import { Logo } from "@/components/images/Logo";
 import { useAuth } from "@/hooks/useAuth";

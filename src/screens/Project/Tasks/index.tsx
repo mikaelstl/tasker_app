@@ -12,7 +12,7 @@ import type { ApiError } from "../../../service/types/response/error";
 import { TaskStage } from "../../../service/types/task/stage.dto";
 import Palette from "../../../assets/palette";
 import { ContentHeader } from "../../../components/base/ContentHeader";
-import { PlusIcon } from "@/components/icons/heroicons";
+import { AddCircle as PlusIcon } from "@/components/icons/solar-icons";
 import { Text } from "../../../components/base/Text";
 import { useNavigate, useParams } from "react-router-dom";
 import { useToast } from "@/hooks/useToast";

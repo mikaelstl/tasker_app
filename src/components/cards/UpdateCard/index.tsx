@@ -16,7 +16,7 @@ import {
   UpdateDate,
 } from "./style";
 import { User } from "@/components/misc/User";
-import { ArrowsRightLeftIconOutline } from "@/components/icons/heroicons";
+import { TransferHorizontal as ArrowsRightLeftIconOutline } from "@/components/icons/solar-icons";
 
 interface UpdateCardDTO {
   readonly actorName: string;

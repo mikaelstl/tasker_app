@@ -1,4 +1,4 @@
-import { ExclamationTriangleIconSolid, ShieldCheckIconSolid, ShieldExclamationIcon } from "@/components/icons/heroicons";
+import { DangerTriangle as ExclamationTriangleIconSolid, ShieldCheck as ShieldCheckIconSolid, ShieldWarning as ShieldExclamationIcon } from "@/components/icons/solar-icons";
 import Palette from "../../assets/palette";
 import { Badge } from "../../components/badge/Badge";
 import { Title } from "../../components/base/Title";

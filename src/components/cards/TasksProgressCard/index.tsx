@@ -1,9 +1,9 @@
 import {
-  CheckCircleIconOutline,
-  ClockIcon,
-  EyeIconOutline,
-  ExclamationTriangleIconOutline,
-} from "@/components/icons/heroicons";
+  CheckCircle as CheckCircleIconOutline,
+  ClockCircle as ClockIcon,
+  Eye as EyeIconOutline,
+  DangerTriangle as ExclamationTriangleIconOutline,
+} from "@/components/icons/solar-icons";
 import { Title } from "../../base/Title";
 import { Card, Cards, Container, Header, StageInfos } from "./style";
 import Palette from "../../../assets/palette";

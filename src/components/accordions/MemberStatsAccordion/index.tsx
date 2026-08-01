@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Palette from "../../../assets/palette";
 import { Button, Container, Content, Header, Indicator, Indicators, Leading, MemberBadge, MemberSubtitle, MemberTitle, MemberUser, StatDetail, Task } from "./style";
-import { ChevronDownIconSolid, ChevronUpIconSolid } from "@/components/icons/heroicons";
+import { AltArrowDown as ChevronDownIconSolid, AltArrowUp as ChevronUpIconSolid } from "@/components/icons/solar-icons";
 import { formatNumber } from "@/utils/formatNumber";
 import type { StatsTask } from "../../../service/types/stats/stats.types";
 

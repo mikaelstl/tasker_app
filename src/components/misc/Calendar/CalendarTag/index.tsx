@@ -1,4 +1,4 @@
-import { ClipboardIcon, FlagIcon } from "@/components/icons/heroicons";
+import { Clipboard as ClipboardIcon, Flag as FlagIcon } from "@/components/icons/solar-icons";
 import { Tag } from "./style";
 
 interface CalendarTagProps {

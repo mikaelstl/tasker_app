@@ -21,6 +21,7 @@ import { TaskCategoryAccordion } from "../../../components/accordions/TaskCatego
 import { EditButton } from "../../../components/buttons/EditBtn";
 import { useServices } from "../../../hooks/useServices";
 import type { EventDTO } from "../../../service/types/events/event.dto";
+import { Scroller } from "@/components/misc/Scroller";
 
 export function Overview() {
   const navigate = useNavigate();
@@ -36,7 +37,7 @@ export function Overview() {
   const [tasks, setTasks] = useState<TaskDTO[]>([]);
   const [comments, setComments] = useState<CommentDTO[]>([]);
   const [events, setEvents] = useState<EventDTO[]>([]);
-  
+
   const showError = useCallback((error: unknown, fallback: string) => {
     const apiError = error as ApiError;
     if (!apiError.errors?.length) {
@@ -53,7 +54,7 @@ export function Overview() {
       setComments(response.data);
     } catch (error) {
       console.log(error);
-      
+
       showError(error, "Não foi possível carregar a atividade do projeto.");
     }
   }, [CommentService, id, showError]);
@@ -89,7 +90,7 @@ export function Overview() {
 
   // const deleteComment = async (comment: CommentDTO) => {
   //   if (!window.confirm("Excluir este comentário?")) return;
-    
+
   //   try {
   //     await CommentService.delete(comment.id);
   //     setComments((current) => current.filter((item) => item.id !== comment.id));
@@ -129,45 +130,47 @@ export function Overview() {
 
   return (
     <Container className="tskr-proj-overview">
-      <Content className="tskr-proj-content">
-        <ProjectInfo>
-          <SectionTitle>{project?.title}</SectionTitle>
-          <Subtitle>
-            Iniciado em: {project.started_at ? new Date(project.started_at).toLocaleString("pt-BR") : "não iniciado"}
-            {" · "}Prazo: {new Date(project.deadline).toLocaleString("pt-BR")}
-          </Subtitle>
-          {ProjectStageBadge(project.stage)}
-          <EditButton type="button" onClick={() => navigate('../edit')} />
-          <Description>
-            <Subtitle>Descrição</Subtitle>
-            <Text>{project.description}</Text>
-          </Description>
-        </ProjectInfo>
-        <TaskCategoryAccordion
-          visible
-          title="Mais importantes"
-          tasks={tasks}
-        />
-        <Comments className="tskr-overview-comments">
-          <Title>Atividade</Title>
-          {
-            comments.length !== 0
-              ? <>{
-                comments.map((comment) => <CommentCard
-                  key={comment.id}
-                  id={comment.id}
-                  content={comment.content}
-                  date={DateTime.fromISO(comment.date, { zone: 'utc' })}
-                  owner={comment.ownerkey}
-                  createdAt={comment.created_at}
-                  updatedAt={comment.updated_at}
-                />)
-              }</>
-              : <ItalicTitle>Sem comentários</ItalicTitle>
-          }
-          <MessageField send={sendComment} />
-        </Comments>
-      </Content>
+      <Scroller orientation="vertical">
+        <Content className="tskr-proj-content">
+          <ProjectInfo>
+            <SectionTitle>{project?.title}</SectionTitle>
+            <Subtitle>
+              Iniciado em: {project.started_at ? new Date(project.started_at).toLocaleString("pt-BR") : "não iniciado"}
+              {" · "}Prazo: {new Date(project.deadline).toLocaleString("pt-BR")}
+            </Subtitle>
+            {ProjectStageBadge(project.stage)}
+            <EditButton type="button" onClick={() => navigate('../edit')} />
+            <Description>
+              <Subtitle>Descrição</Subtitle>
+              <Text>{project.description}</Text>
+            </Description>
+          </ProjectInfo>
+          <TaskCategoryAccordion
+            visible
+            title="Mais importantes"
+            tasks={tasks}
+          />
+          <Comments className="tskr-overview-comments">
+            <Title>Atividade</Title>
+            {
+              comments.length !== 0
+                ? <>{
+                  comments.map((comment) => <CommentCard
+                    key={comment.id}
+                    id={comment.id}
+                    content={comment.content}
+                    date={DateTime.fromISO(comment.date, { zone: 'utc' })}
+                    owner={comment.ownerkey}
+                    createdAt={comment.created_at}
+                    updatedAt={comment.updated_at}
+                  />)
+                }</>
+                : <ItalicTitle>Sem comentários</ItalicTitle>
+            }
+            <MessageField send={sendComment} />
+          </Comments>
+        </Content>
+      </Scroller>
       <ImportantDates events={events} projects={[project]} />
     </Container>
   )

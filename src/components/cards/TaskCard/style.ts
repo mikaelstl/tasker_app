@@ -56,10 +56,6 @@ const CodeContainer = styled.div`
   gap: 0.25rem;
 
   color: ${Palette.lightBlue};
-
-  svg {
-    fill: ${Palette.lightBlue};
-  }
 `;
 
 const Code = styled.p`
@@ -91,6 +87,10 @@ const CardTitle = styled.h3`
 
 const CardContent = styled.div`
   padding: 0 1.5rem 1rem;
+
+  height: 100%;
+
+  border: 1px solid;
 `;
 
 const Description = styled.p`

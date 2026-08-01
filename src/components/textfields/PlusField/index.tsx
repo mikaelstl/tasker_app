@@ -1,6 +1,6 @@
 import { Button, Container, Field } from "./style";
 import { useState } from "react";
-import { PlusIcon } from "@/components/icons/heroicons";
+import { AddCircle as PlusIcon } from "@/components/icons/solar-icons";
 
 interface PlusFieldProps {
   add: (value: string) => void

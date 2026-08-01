@@ -1,4 +1,4 @@
-import { ClockIcon, ExclamationTriangleIconSolid } from "@/components/icons/heroicons";
+import { ClockCircle as ClockIcon, DangerTriangle as ExclamationTriangleIconSolid } from "@/components/icons/solar-icons";
 import { DateTime } from "luxon";
 import { useNavigate } from "react-router-dom";
 import Palette from "../../../assets/palette";

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { LinkIcon, XMarkIcon } from "@/components/icons/heroicons";
+import { Link as LinkIcon, CloseCircle as XMarkIcon } from "@/components/icons/solar-icons";
 import {
   Actions,
   CloseButton,

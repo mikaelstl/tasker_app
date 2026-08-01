@@ -25,12 +25,11 @@ const Container = styled.button`
   cursor: pointer;
 
   transition:
-    box-shadow 160ms ease,
-    transform 160ms ease,
+    border 160ms ease,
     background-color 160ms ease;
 
   &:hover {
-    box-shadow: 0 0 0 2px ${Palette.lightBlue_50};
+    border: 1px solid ${Palette.lightBlue_50};
     background-color: #201d2b;
   }
 `;

@@ -57,14 +57,14 @@ export function SelectMember({
                 placeholder="Pesquisar..."
                 onChange={(evt) => setQuery(evt.target.value)}
               />
-            : selected ? <User username={selected.username}/> : <span>Nenhum membro</span>}
+            : selected ? <User affiliationId={selected.id} username={selected.username}/> : <span>Nenhum membro</span>}
         </Selected>
         {
           showContent && (
             <Options>
               {
                 options.map(
-                  opt => <Option key={opt.id} onClick={() => handleSelect(opt)}><User username={opt.username}/></Option>
+                  opt => <Option key={opt.id} onClick={() => handleSelect(opt)}><User affiliationId={opt.id} username={opt.username}/></Option>
                 )
               }
             </Options>

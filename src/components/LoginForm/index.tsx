@@ -1,4 +1,4 @@
-import { KeyIcon, UserIcon } from "@/components/icons/heroicons";
+import { Key as KeyIcon, User as UserIcon } from "@/components/icons/solar-icons";
 import { TextInput } from "../misc/Form/TextInput";
 import { Container, Form, SubmitButton, Inputs } from "../misc/Form/style";
 import { CreateAccount } from "./CreateAccount";

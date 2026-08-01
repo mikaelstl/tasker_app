@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useServices } from "@/hooks/useServices";
 import { Logo } from "@/components/images/Logo";
 import { useToast } from "@/hooks/useToast";
-import { BuildingOfficeIcon } from "@/components/icons/heroicons";
+import { Buildings as BuildingOfficeIcon } from "@/components/icons/solar-icons";
 import { SectionTitle } from "@/components/base/SectionTitle";
 import {
   Container,

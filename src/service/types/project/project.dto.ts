@@ -13,7 +13,7 @@ export interface ProjectDTO {
   readonly title: string;
   readonly description: string;
   readonly orgkey: string;
-  readonly managerkey: string | null;
+  readonly managerkey: string;
   readonly deadline: string;
   readonly started_at: string | null;
   readonly done_at: string | null;
