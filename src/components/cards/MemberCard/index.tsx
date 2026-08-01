@@ -7,7 +7,6 @@ import { User } from "@/components/misc/User";
 interface MemberCardProps {
   affiliationId: string;
   name: string;
-  username: string;
   role: OrgRole;
   disabled?: boolean;
   onPromote?: () => void;
@@ -28,7 +27,6 @@ export function MemberCard({
     <Card>
       <User
         affiliationId={affiliationId}
-        username={username}
       />
       {RoleBadge(role)}
       {(onPromote || onDemote || onRemove) && (

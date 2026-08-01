@@ -17,6 +17,7 @@ export interface TaskDTO {
   readonly delayed: boolean;
   readonly created_at: string;
   readonly updated_at: string;
+  readonly owner: MemberRecordDTO;
 }
 
 export interface TaskWithOwnerDTO extends TaskDTO {

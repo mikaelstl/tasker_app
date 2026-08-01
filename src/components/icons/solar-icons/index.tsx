@@ -53,6 +53,7 @@ import {
 } from "@solar-icons/react";
 import type { IconProps } from "@solar-icons/react";
 import type { Icon } from "@solar-icons/react/lib/types";
+import Palette from "@/assets/palette";
 
 type SolarIconProps = IconProps & {
   fill?: string;
@@ -73,7 +74,7 @@ function solarIcon(IconComponent: Icon): ComponentType<SolarIconProps> {
     return (
       <IconComponent
         {...props}
-        color={color ?? fill}
+        color={color ?? fill ?? Palette.white}
         size={size ?? width}
         width={width}
         height={height}

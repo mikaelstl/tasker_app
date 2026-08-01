@@ -14,10 +14,12 @@ const Card = styled.div`
   color: ${Palette.white};
 
   transition:
+    border 150ms ease
     background-color 150ms ease;
 
   &:hover {
-    background-color: ${Palette.tool_bars};
+    border: 1px solid ${Palette.blue};
+    background-color: ${Palette.gray_25};
   }
 
   &:focus-visible {
@@ -29,6 +31,10 @@ const Card = styled.div`
 `;
 
 const CardHeader = styled.div`
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+
   padding: 0.75rem;
 `;
 
@@ -61,7 +67,7 @@ const CodeContainer = styled.div`
 const Code = styled.p`
   margin: 0;
 
-  color: ${Palette.gray};
+  color: ${Palette.lightBlue};
 
   font-size: 0.75rem;
   line-height: 1rem;

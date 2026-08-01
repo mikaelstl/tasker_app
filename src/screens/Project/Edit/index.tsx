@@ -8,7 +8,6 @@ import { SelectInput } from "../../../components/base/SelectInput";
 import { CreateButton } from "../../../components/buttons/CreateButton";
 import { DeleteBtn } from "../../../components/buttons/DeleteBtn";
 import { User } from "../../../components/misc/User";
-import { Scroller } from "../../../components/misc/Scroller";
 import { ProjectMemberCard } from "@/components/cards/ProjectMemberCard";
 import { DeleteWidget } from "../../../widgets/cards/DeleteWidget";
 import { useServices } from "../../../hooks/useServices";
@@ -18,7 +17,6 @@ import type { ApiError } from "../../../service/types/response/error";
 import { OrgRole } from "../../../utils/enums/OrgRole";
 import type { ProjectWithMembersDTO } from "../../../service/types/project/project.dto";
 import { ProjectStage } from "../../../service/types/project/project.dto";
-import { ProjectStageBadge } from "../../../maps/project-stage";
 import { TextInput } from "@/components/base/TextInput";
 import {
   Container,
@@ -42,7 +40,6 @@ import {
   PanelTitle,
   SelectBlock,
   SideColumn,
-  StagePreview,
 } from "./style";
 
 const toLocalInput = (iso: string) => {
@@ -358,7 +355,6 @@ export function EditProject() {
                         id={member.id}
                         affiliationId={member.id}
                         memberId={projectMember?.id}
-                        username={formatAffiliationUsername(member)}
                         actorName={formatAffiliationName(member)}
                         isAlreadyAdded={isAlreadyAdded}
                         disabled={busyMemberId === member.id || busyMemberId === projectMember?.id}

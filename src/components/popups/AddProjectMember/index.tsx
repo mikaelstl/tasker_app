@@ -11,10 +11,6 @@ function getAffiliationName(member: AffiliationDTO) {
   return member.user?.name ?? member.userkey;
 }
 
-function getAffiliationUsername(member: AffiliationDTO) {
-  return member.user?.username ?? member.userkey;
-}
-
 interface MemberModalProps {
   open: boolean;
   loading: boolean;
@@ -86,7 +82,6 @@ export function AddProjectMember({
                     id={projectMember?.id ?? `proj-member-${index}`}
                     affiliationId={member.id}
                     memberId={projectMember?.id}
-                    username={getAffiliationUsername(member)}
                     actorName={getAffiliationName(member)}
                     isAlreadyAdded={isAlreadyAdded}
                     onAdd={onAddMember}

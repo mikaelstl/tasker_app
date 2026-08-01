@@ -77,7 +77,7 @@ export function TaskCard({
       )}
 
       <CardFooter>
-        <User username={owner} />
+        <User affiliationId={owner} />
         <DateBadge date={DateTime.fromISO(deadline)} />
       </CardFooter>
     </Card>

@@ -11,7 +11,7 @@ interface AvatarProps {
 export function Avatar(props: AvatarProps) {
   return (
     <Container className={`tskr-avatar ${props.size}`}>
-      { props.image !== "" ? <Image src={props.image}/> : <User color={Palette.items}/>}
+      { props.image !== "" ? <Image src={props.image}/> : <User color={Palette.tool_bars}/>}
     </Container>
   )
 }

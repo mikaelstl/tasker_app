@@ -6,7 +6,6 @@ interface ProjectMemberCardProps {
   id: string;
   affiliationId: string;
   memberId?: string;
-  username: string;
   actorName: string;
   isAlreadyAdded: boolean;
   disabled?: boolean;
@@ -40,8 +39,6 @@ export function ProjectMemberCard({
       <Infos>
         <User
           affiliationId={affiliationId}
-          username={username}
-          actorName={actorName}
         />
       </Infos>
       <Actions>

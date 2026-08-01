@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100..900;1,100..900&display=swap');
 
 :root {
-  color: white;
   background-color: #0F0E14;
 }
 
@@ -10,12 +9,36 @@
   padding: 0px;
   margin: 0px;
   font-family: "Poppins", sans-serif;
-  color: white;
 
   /* A barra so ganha cor quando a area rolavel esta sob o mouse. */
   scrollbar-width: thin;
   scrollbar-color: transparent transparent;
   scrollbar-gutter: auto;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+a,
+label,
+button,
+input,
+textarea,
+select,
+option,
+li,
+td,
+th,
+small,
+strong,
+em,
+code,
+span {
+  color: white;
 }
 
 *:hover {

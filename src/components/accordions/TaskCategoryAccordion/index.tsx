@@ -42,7 +42,7 @@ export function TaskCategoryAccordion(props: { visible?: boolean, title: string,
                                               projectkey={task.projectkey}
                                               code={task.code}
                                               title={task.name}
-                                              owner={task.ownerkey}
+                                              owner={task.owner?.userkey}
                                               priority={task.priority}
                                               deadline={task.deadline}
                                             />)

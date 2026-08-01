@@ -1,5 +1,4 @@
-import { ChatRound as ChatBubbleOvalLeftIcon } from '@/components/icons/solar-icons';
-import { PaperAirplaneIcon } from "@/components/icons/PaperAirplaneIcon";
+import { ChatRound, Plane } from '@/components/icons/solar-icons';
 import { Text } from "../../base/Text";
 import { Button, Container, Field } from "./style";
 import { useState } from "react";
@@ -27,7 +26,7 @@ export function MessageField({ send }: MessageFieldProps) {
   return (
     <Container className="tskr-search-field">
       <Field id="search">
-        <ChatBubbleOvalLeftIcon width="24"/>
+        <ChatRound width="24"/>
         <input
           type="text"
           placeholder="Escreva algo..."
@@ -40,7 +39,7 @@ export function MessageField({ send }: MessageFieldProps) {
         />
       </Field>
       <Button type="button" id="send" onClick={() => void handleSend()} disabled={sending || !message.trim()}>
-        <PaperAirplaneIcon size={15}/>
+        <Plane width='18'/>
         <Text>{sending ? "Enviando..." : "Enviar"}</Text>
       </Button>
     </Container>
