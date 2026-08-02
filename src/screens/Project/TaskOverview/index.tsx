@@ -1,18 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
-import { DateBadge } from "../../../components/badge/DateBadge";
 import { Text } from "../../../components/base/Text";
-import { Title } from "../../../components/base/Title";
-import { CommentCard } from "../../../components/cards/CommentCard";
-import { Scroller } from "../../../components/misc/Scroller";
-import { Actions, Comments, Container, Description, EditForm, Links, Tag, Tags, TaskInfo } from "./style";
+import { Actions, CloseButton, Container, Description, Dialog, EditForm, HeaderActions, Links, ModalHeader, Tag, Tags, TaskInfo, TaskLayout } from "./style";
 import type { ApiError } from "../../../service/types/response/error";
 import { useToast } from "../../../hooks/useToast";
 import { useNavigate, useParams } from "react-router-dom";
-import { DateTime } from "luxon";
-import { ItalicTitle } from "../../../components/base/ItalicTitle";
-import { MessageField } from "../../../components/textfields/MessageField";
-import { useAuth } from "../../../hooks/useAuth";
-import type { CommentDTO } from "../../../service/types/comment/comment.dto";
 import { SectionTitle } from "../../../components/base/SectionTitle";
 import { Subtitle } from "../../../components/base/Subtitle";
 import { EditButton } from "../../../components/buttons/EditBtn";
@@ -31,6 +22,7 @@ import { TaskStage } from "../../../service/types/task/stage.dto";
 import { CreateButton } from "../../../components/buttons/CreateButton";
 import { Badge } from "../../../components/badge/Badge";
 import Palette from "../../../assets/palette";
+import { CloseCircle as CloseIcon } from "../../../components/icons/solar-icons";
 
 const toLocalInput = (iso: string) => {
   const date = new Date(iso);
@@ -43,7 +35,12 @@ const formatDateTime = (value: string | null) => (
 );
 
 const TaskStageBadge = ({ stage }: { stage: TaskStage }) => {
-  const badges: Record<TaskStage, { label: string; color: string }> = {
+  const badges: {
+    [TaskStage.PENDING]: { label: string; color: string };
+    [TaskStage.STARTED]: { label: string; color: string };
+    [TaskStage.REVIEW]: { label: string; color: string };
+    [TaskStage.DONE]: { label: string; color: string };
+  } = {
     [TaskStage.PENDING]: { label: "PENDENTE", color: Palette.gray_25 },
     [TaskStage.STARTED]: { label: "INICIADA", color: Palette.blue_50 },
     [TaskStage.REVIEW]: { label: "EM REVISÃO", color: Palette.yellow_25 },
@@ -57,13 +54,9 @@ const TaskStageBadge = ({ stage }: { stage: TaskStage }) => {
 export function TaskOverview() {
   const navigate = useNavigate();
   const notifications = useToast();
-  const { CommentService, TaskService } = useServices();
-  const { user } = useAuth();
+  const { TaskService } = useServices();
   const { id: projectkey, code } = useParams();
   const [task, setTask] = useState<TaskWithOwnerDTO | null>(null);
-  const [comments, setComments] = useState<CommentDTO[]>([]);
-  const [busyCommentId, setBusyCommentId] = useState<string | null>(null);
-  const [inspectedCommentId, setInspectedCommentId] = useState<string | null>(null);
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [name, setName] = useState("");
@@ -86,12 +79,6 @@ export function TaskOverview() {
     if (!apiError.errors?.length) return notifications.error(fallback);
     apiError.errors.forEach((item) => notifications[item.level](item.message));
   }, [notifications]);
-
-  const loadComments = useCallback(async () => {
-    if (!projectkey) return;
-    const response = await CommentService.list({ projectkey });
-    setComments(response.data);
-  }, [CommentService, projectkey]);
 
   useEffect(() => {
     if (!projectkey || !code) return;
@@ -120,57 +107,20 @@ export function TaskOverview() {
     };
 
     void load();
-    void loadComments().catch((error) => {
-      if (active) showError(error, "Não foi possível carregar a atividade do projeto.");
-    });
     return () => { active = false; };
-  }, [TaskService, code, hydrateTask, loadComments, navigate, projectkey, showError]);
+  }, [TaskService, code, hydrateTask, navigate, projectkey, showError]);
 
-  const sendComment = async (message: string) => {
-    if (!projectkey || !user) return;
-    try {
-      const response = await CommentService.create({
-        content: message,
-        projectkey,
-        ownerkey: user.username,
-        date: new Date().toISOString(),
-      });
-      notifications.info(response.message);
-      await loadComments();
-    } catch (error) {
-      showError(error, "Não foi possível criar o comentário.");
-      throw error;
-    }
-  };
+  useEffect(() => {
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") navigate(`/home/project/${projectkey}/tasks`);
+    };
 
-  const inspectComment = async (commentId: string) => {
-    setBusyCommentId(commentId);
-    try {
-      const response = await CommentService.find(commentId);
-      setComments((current) => current.map((comment) => (
-        comment.id === commentId ? response.data : comment
-      )));
-      setInspectedCommentId(commentId);
-    } catch (error) {
-      showError(error, "Não foi possível consultar o comentário.");
-    } finally {
-      setBusyCommentId(null);
-    }
-  };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [navigate, projectkey]);
 
-  const deleteComment = async (comment: CommentDTO) => {
-    if (!window.confirm("Excluir este comentário?")) return;
-    setBusyCommentId(comment.id);
-    try {
-      await CommentService.delete(comment.id);
-      setComments((current) => current.filter((item) => item.id !== comment.id));
-      if (inspectedCommentId === comment.id) setInspectedCommentId(null);
-      notifications.info("Comentário excluído.");
-    } catch (error) {
-      showError(error, "Não foi possível excluir o comentário.");
-    } finally {
-      setBusyCommentId(null);
-    }
+  const closeModal = () => {
+    navigate(`/home/project/${projectkey}/tasks`);
   };
 
   const editTask = async () => {
@@ -216,67 +166,69 @@ export function TaskOverview() {
     }
   };
 
-  if (!task) return <Container><Text>Carregando tarefa...</Text></Container>;
+  if (!task) {
+    return (
+      <Container onMouseDown={closeModal}>
+        <Dialog role="dialog" aria-modal="true" aria-label="Detalhes da tarefa" onMouseDown={(event) => event.stopPropagation()}>
+          <Text>Carregando tarefa...</Text>
+        </Dialog>
+      </Container>
+    );
+  }
 
   return (
-    <Container className="tskr-task-overview">
-      <TaskInfo>
-        <Links>
-          <Link href="../../overview">{task.projectkey}</Link>
-          <Subtitle>/</Subtitle>
-          <Subtitle>{task.code}</Subtitle>
-        </Links>
-        <SectionTitle>{task.name}</SectionTitle>
-        <DateBadge date={DateTime.fromISO(task.deadline)} />
-        <TaskStageBadge stage={task.stage} />
-        <Actions>
-          <EditButton type="button" onClick={() => setEditing(true)} />
-          <DeleteBtn label="Excluir tarefa" onClick={() => void deleteTask()} />
-        </Actions>
-        <TaskTags task={task} />
-      </TaskInfo>
-      <Description className="tskr-task-description">
-        <Subtitle>Descrição</Subtitle>
-        {editing
-          ? <EditForm>
-            <TextInput label="Nome" value={name} onChange={setName} />
-            <TextAreaInput label="Descrição" value={description} onChange={setDescription} />
-            <CalendarInput label="Prazo" value={deadline} onChange={setDeadline} />
-            <SelectInput label="Prioridade" type={TaskPriority} value={priority} onChange={(value) => setPriority(value as TaskPriority)} />
-            <SelectInput label="Estágio" type={TaskStage} value={stage} onChange={(value) => setStage(value as TaskStage)} />
-            <Actions>
-              <CreateButton type="button" disabled={saving} onClick={() => void editTask()}>
-                <Text>{saving ? "Salvando..." : "Salvar alterações"}</Text>
-              </CreateButton>
-              <DeleteBtn label="Cancelar edição" onClick={() => {
-                hydrateTask(task);
-                setEditing(false);
-              }} />
-            </Actions>
-          </EditForm>
-          : <Text>{task.description}</Text>}
-      </Description>
-      <Comments className="tskr-task-activity">
-        <Title>Atividade do projeto</Title>
-        {comments.length !== 0 ? (
-          <Scroller orientation="vertical">
-            {comments.map((comment) => <CommentCard
-              key={comment.id}
-              id={comment.id}
-              content={comment.content}
-              date={DateTime.fromISO(comment.date, { zone: 'utc' })}
-              owner={comment.ownerkey}
-              createdAt={comment.created_at}
-              updatedAt={comment.updated_at}
-              expanded={inspectedCommentId === comment.id}
-              disabled={busyCommentId === comment.id}
-              onInspect={() => void inspectComment(comment.id)}
-              onDelete={() => void deleteComment(comment)}
-            />)}
-          </Scroller>
-        ) : <ItalicTitle>Sem comentários</ItalicTitle>}
-        <MessageField send={sendComment} />
-      </Comments>
+    <Container className="tskr-task-overview" onMouseDown={closeModal}>
+      <Dialog
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="task-overview-title"
+        onMouseDown={(event) => event.stopPropagation()}
+      >
+        <ModalHeader>
+          <div>
+            <Links>
+              <Link href="../../overview">{task.projectkey}</Link>
+              <Subtitle>/</Subtitle>
+              <Subtitle>{task.code}</Subtitle>
+            </Links>
+            <SectionTitle id="task-overview-title">{task.name}</SectionTitle>
+          </div>
+          <HeaderActions>
+            <EditButton type="button" onClick={() => setEditing(true)} />
+            <DeleteBtn label="Excluir tarefa" onClick={() => void deleteTask()} />
+            <CloseButton type="button" onClick={closeModal} aria-label="Fechar detalhes da tarefa">
+              <CloseIcon width={22} />
+            </CloseButton>
+          </HeaderActions>
+        </ModalHeader>
+        <TaskLayout>
+          <Description className="tskr-task-description">
+            <Subtitle>Descrição</Subtitle>
+            {editing
+              ? <EditForm>
+                <TextInput label="Nome" value={name} onChange={setName} />
+                <TextAreaInput label="Descrição" value={description} onChange={setDescription} />
+                <CalendarInput label="Prazo" value={deadline} onChange={setDeadline} />
+                <SelectInput label="Prioridade" type={TaskPriority} value={priority} onChange={(value) => setPriority(value as TaskPriority)} />
+                <SelectInput label="Estágio" type={TaskStage} value={stage} onChange={(value) => setStage(value as TaskStage)} />
+                <Actions>
+                  <CreateButton type="button" disabled={saving} onClick={() => void editTask()}>
+                    <Text>{saving ? "Salvando..." : "Salvar alterações"}</Text>
+                  </CreateButton>
+                  <DeleteBtn label="Cancelar edição" onClick={() => {
+                    hydrateTask(task);
+                    setEditing(false);
+                  }} />
+                </Actions>
+              </EditForm>
+              : <Text>{task.description}</Text>}
+          </Description>
+          <TaskInfo aria-label="Informações da tarefa">
+            <Subtitle>Informações da tarefa</Subtitle>
+            <TaskTags task={task} />
+          </TaskInfo>
+        </TaskLayout>
+      </Dialog>
     </Container>
   );
 }
@@ -289,8 +241,9 @@ const TaskTags = ({ task }: { task: TaskWithOwnerDTO }) => (
   <Tags className="tskr-task-tag">
     <TaskTag label="Código"><Text>{task.code}</Text></TaskTag>
     <TaskTag label="Prioridade">{PriorityBadge[task.priority]}</TaskTag>
-    <TaskTag label="Responsável"><User affiliationId={task.owner.userkey} username={task.ownerkey} /></TaskTag>
+    <TaskTag label="Responsável"><User affiliationId={task.owner.userkey} /></TaskTag>
     <TaskTag label="Prazo"><Text>{formatDateTime(task.deadline)}</Text></TaskTag>
+    <TaskTag label="Status"><TaskStageBadge stage={task.stage} /></TaskTag>
     <TaskTag label="Iniciada em"><Text>{formatDateTime(task.started_at)}</Text></TaskTag>
     <TaskTag label="Concluída em"><Text>{formatDateTime(task.done_at)}</Text></TaskTag>
     <TaskTag label="Situação do prazo"><Text>{task.delayed ? "Atrasada" : "Dentro do prazo"}</Text></TaskTag>
