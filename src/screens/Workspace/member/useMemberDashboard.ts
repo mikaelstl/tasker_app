@@ -2,14 +2,13 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useServices } from "@/hooks/useServices";
 import type { EventDTO } from "@/service/types/events/event.dto";
-import type { ProjectMember } from "@/service/types/member/member.dto";
 import type { ProjectDTO } from "@/service/types/project/project.dto";
 import type { ApiError } from "@/service/types/response/error";
 import { TaskStage } from "@/service/types/task/stage.dto";
-import type { TaskDTO } from "@/service/types/task/task.dto";
+import type { TaskWithOwnerDTO } from "@/service/types/task/task.dto";
 
 interface MemberDashboardData {
-  tasks: TaskDTO[];
+  tasks: TaskWithOwnerDTO[];
   events: EventDTO[];
   projects: ProjectDTO[];
 }
@@ -21,10 +20,10 @@ const initialData: MemberDashboardData = {
 };
 
 export interface MemberTaskCategories {
-  today: TaskDTO[];
-  thisWeek: TaskDTO[];
-  pending: TaskDTO[];
-  overdue: TaskDTO[];
+  today: TaskWithOwnerDTO[];
+  thisWeek: TaskWithOwnerDTO[];
+  pending: TaskWithOwnerDTO[];
+  overdue: TaskWithOwnerDTO[];
 }
 
 function getErrorMessage(error: unknown): string {
@@ -32,13 +31,7 @@ function getErrorMessage(error: unknown): string {
   return apiError.errors?.[0]?.message ?? "Não foi possível carregar o dashboard.";
 }
 
-function belongsToUser(member: ProjectMember, username: string): boolean {
-  return member.userkey === username
-    || member.user?.userkey === username
-    || member.user?.user?.username === username;
-}
-
-function categorizeTasks(tasks: TaskDTO[]): MemberTaskCategories {
+function categorizeTasks(tasks: TaskWithOwnerDTO[]): MemberTaskCategories {
   const now = new Date();
   const endOfWeek = new Date(now);
   endOfWeek.setDate(now.getDate() + 7);
@@ -61,7 +54,7 @@ function categorizeTasks(tasks: TaskDTO[]): MemberTaskCategories {
 
 export function useMemberDashboard(orgId?: string) {
   const { user } = useAuth();
-  const { ProjectService, TaskService, EventService, MemberService } = useServices();
+  const { ProjectService, TaskService, EventService } = useServices();
   const requestId = useRef(0);
   const [data, setData] = useState<MemberDashboardData>(initialData);
   const [loading, setLoading] = useState(true);
@@ -90,23 +83,11 @@ export function useMemberDashboard(orgId?: string) {
       };
 
       for (const project of projects) {
-        const members = await MemberService.list(project.id);
-        const membershipKeys = members.data
-          .filter((member) => belongsToUser(member, username))
-          .flatMap((member) => [member.id, member.userkey]);
-
-        if (membershipKeys.length === 0) {
-          continue;
-        }
 
         const tasks = await TaskService.list(project.id);
         const events = await EventService.list({ projectkey: project.id });
 
-        nextData.tasks.push(
-          ...tasks.data.filter((task) => (
-            membershipKeys.includes(task.ownerkey)
-          )),
-        );
+        nextData.tasks.push(...tasks.data);
         nextData.events.push(...events.data);
         nextData.projects.push(project);
       }
@@ -119,7 +100,7 @@ export function useMemberDashboard(orgId?: string) {
     } finally {
       if (currentRequest === requestId.current) setLoading(false);
     }
-  }, [EventService, MemberService, ProjectService, TaskService, orgId, user?.username]);
+  }, [EventService, ProjectService, TaskService, orgId, user?.username]);
 
   useEffect(() => {
     void loadDashboard();

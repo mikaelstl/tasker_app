@@ -34,6 +34,7 @@ import {
   Link as LinkIcon,
   Logout as LogoutIcon,
   Magnifer as MagniferIcon,
+  MenuDots as MenuDotsIcon,
   Monitor as MonitorIcon,
   Restart as RestartIcon,
   Rocket as RocketIcon,
@@ -118,6 +119,7 @@ export const Letter = solarIcon(LetterIcon);
 export const Link = solarIcon(LinkIcon);
 export const Logout = solarIcon(LogoutIcon);
 export const Magnifer = solarIcon(MagniferIcon);
+export const MenuDots = solarIcon(MenuDotsIcon);
 export const Monitor = solarIcon(MonitorIcon);
 export const Restart = solarIcon(RestartIcon);
 export const Rocket = solarIcon(RocketIcon);

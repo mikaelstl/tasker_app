@@ -144,7 +144,7 @@ export class AffiliationMockService implements AffiliationServiceI {
     return createMockResponse(affiliations, path);
   }
 
-  async findById(id: string): Promise<ApiResponse<AffiliationDTO>> {
+  async find(id: string): Promise<ApiResponse<AffiliationDTO>> {
     const path = `/affiliations/find/${encodeURIComponent(id)}`;
     const { orgkey } = requireMockOrgRequest(path, mockData.affiliations);
     const affiliation = mockData.affiliations.find(

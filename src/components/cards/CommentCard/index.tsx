@@ -1,33 +1,20 @@
-import { DateTime } from "luxon";
-import { Eye as EyeIcon, TrashBin2 as TrashIcon } from "@/components/icons/solar-icons";
+import { Text } from "@/components/base/Text";
 import { Subtitle } from "../../base/Subtitle";
-import { Text } from "../../base/Text";
-import { Avatar } from "../../misc/Avatar";
 import {
-  Actions,
-  ActionButton,
-  Bubble,
-  BubbleContent,
-  BubbleHeader,
   Card,
-  Details,
-  Meta,
-  Texts,
+  Content,
+  Footer,
+  Header,
 } from "./style";
-import { Title } from "../../base/Title";
+import { User } from "@/components/misc/User";
 
 interface CommentCardProps {
   readonly id: string;
   readonly content: string;
-  readonly date: DateTime;
+  readonly date: string;
   readonly owner: string;
-  readonly createdAt: string;
-  readonly updatedAt: string;
-  readonly expanded?: boolean;
-  readonly disabled?: boolean;
-  readonly onInspect?: () => void;
-  readonly onDelete?: () => void;
 }
+
 const formatDateTime = (value: string) => new Intl.DateTimeFormat("pt-BR", {
   dateStyle: "short",
   timeStyle: "short",
@@ -40,22 +27,14 @@ export function CommentCard({
   owner,
 }: CommentCardProps) {
   return (
-    <Card className="comment-card">
-      <Avatar size="medium" image=""/>
-      <Texts>
-        <Bubble>
-          <BubbleHeader>
-            <div>
-              <Title>{owner}</Title>
-              <Meta>{date.setLocale("pt-BR").toFormat("dd LLL, HH:mm")}</Meta>
-            </div>
-          </BubbleHeader>
-
-          <BubbleContent>
-            <Text>{content}</Text>
-          </BubbleContent>
-        </Bubble>
-      </Texts>
+    <Card className="tskr-comment-card" key={id}>
+      <Content>
+        <Text>{content}</Text>
+      </Content>
+      <Footer>
+        <User affiliationId={owner}/>
+        <Subtitle>{formatDateTime(date)}</Subtitle>
+      </Footer>
     </Card>
   );
 }

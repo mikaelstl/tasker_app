@@ -39,8 +39,8 @@ const ActorIdentity = styled.div`
   display: flex;
   flex-direction: column;
   min-width: 0;
-  color: ${Palette.white_50};
-  font-size: 11px;
+  color: ${Palette.white};
+  font-size: 12px;
 
   span {
     overflow: hidden;

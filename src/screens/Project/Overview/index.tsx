@@ -3,12 +3,11 @@ import { Text } from "../../../components/base/Text";
 import { Title } from "../../../components/base/Title";
 import { CommentCard } from "../../../components/cards/CommentCard";
 import { ImportantDates } from "../../../components/ImportantDates";
-import { Comments, Container, Content, Description, ProjectInfo } from "./style";
+import { Comments, Container, Content, Description, MainPanel, MessageComposer, ProjectInfo, ProjectScroller } from "./style";
 import type { ProjectDTO } from "../../../service/types/project/project.dto";
 import type { ApiError } from "../../../service/types/response/error";
 import { useToast } from "@/hooks/useToast";
 import { useNavigate, useParams } from "react-router-dom";
-import { DateTime } from "luxon";
 import type { TaskDTO } from "../../../service/types/task/task.dto";
 import { ItalicTitle } from "../../../components/base/ItalicTitle";
 import { ProjectStageBadge } from "../../../maps/project-stage";
@@ -21,7 +20,6 @@ import { TaskCategoryAccordion } from "../../../components/accordions/TaskCatego
 import { EditButton } from "../../../components/buttons/EditBtn";
 import { useServices } from "../../../hooks/useServices";
 import type { EventDTO } from "../../../service/types/events/event.dto";
-import { Scroller } from "@/components/misc/Scroller";
 
 export function Overview() {
   const navigate = useNavigate();
@@ -51,7 +49,10 @@ export function Overview() {
     try {
       if (!id) return;
       const response = await CommentService.list({ projectkey: id });
-      setComments(response.data);
+      const sortedComments = [...response.data].sort((left, right) => (
+        new Date(String(right.created_at)).getTime() - new Date(String(left.created_at)).getTime()
+      ));
+      setComments(sortedComments);
     } catch (error) {
       console.log(error);
 
@@ -130,8 +131,9 @@ export function Overview() {
 
   return (
     <Container className="tskr-proj-overview">
-      <Scroller orientation="vertical">
-        <Content className="tskr-proj-content">
+      <MainPanel>
+        <ProjectScroller orientation="vertical">
+          <Content className="tskr-proj-content">
           <ProjectInfo>
             <SectionTitle>{project?.title}</SectionTitle>
             <Subtitle>
@@ -151,7 +153,7 @@ export function Overview() {
             tasks={tasks}
           />
           <Comments className="tskr-overview-comments">
-            <Title>Atividade</Title>
+            <Title>Comentários</Title>
             {
               comments.length !== 0
                 ? <>{
@@ -159,18 +161,19 @@ export function Overview() {
                     key={comment.id}
                     id={comment.id}
                     content={comment.content}
-                    date={DateTime.fromISO(comment.date, { zone: 'utc' })}
-                    owner={comment.ownerkey}
-                    createdAt={comment.created_at}
-                    updatedAt={comment.updated_at}
+                    date={comment.date}
+                    owner={comment.owner?.userkey ?? ""}
                   />)
                 }</>
                 : <ItalicTitle>Sem comentários</ItalicTitle>
             }
-            <MessageField send={sendComment} />
           </Comments>
-        </Content>
-      </Scroller>
+          </Content>
+        </ProjectScroller>
+        <MessageComposer>
+          <MessageField send={sendComment} />
+        </MessageComposer>
+      </MainPanel>
       <ImportantDates events={events} projects={[project]} />
     </Container>
   )

@@ -17,7 +17,7 @@ export interface APIMessage {
 export interface AffiliationServiceI {
   list(): Promise<ApiResponse<UserOrganizationSummaryDTO[]>>;
   listByOrganization(orgkey: string): Promise<ApiResponse<AffiliationDTO[]>>;
-  findById(id: string): Promise<ApiResponse<AffiliationDTO>>;
+  find(id: string): Promise<ApiResponse<AffiliationDTO>>;
   create(data: DefineAffiliationDTO): Promise<ApiResponse<AffiliationDTO>>;
   participates(orgkey: string): Promise<ApiResponse<boolean>>;
   createInvite(orgkey: string): Promise<ApiResponse<OrganizationInviteCreateResponse>>;
@@ -59,7 +59,7 @@ export class AffiliationService implements AffiliationServiceI {
     return response;
   }
 
-  async findById(id: string): Promise<ApiResponse<AffiliationDTO>> {
+  async find(id: string): Promise<ApiResponse<AffiliationDTO>> {
     const response = await this.api.load<AffiliationDTO, void>({
       route: `/affiliations/find/${encodeURIComponent(id)}`,
     });

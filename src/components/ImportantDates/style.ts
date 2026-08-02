@@ -11,7 +11,6 @@ const Container = styled.div`
   padding: 20px 20px 0px 20px;
 
   width: 35%;
-  min-width: 320px;
   height: 100%;
   background-color: ${Palette.tool_bars};
 

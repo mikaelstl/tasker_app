@@ -39,6 +39,7 @@ em,
 code,
 span {
   color: white;
+  font-size: 14px;
 }
 
 *:hover {

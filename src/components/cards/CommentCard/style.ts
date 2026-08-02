@@ -1,104 +1,42 @@
 import styled from "styled-components";
 import Palette from "../../../assets/palette";
 
-const Card = styled.article`
+const Card = styled.div`
   display: flex;
-  align-items: flex-end;
+  flex-direction: column;
   gap: 12px;
+
   width: 100%;
-  padding: 2px 0;
-  box-shadow: none;
+  
+  padding: 8px 12px;
+  
   border-radius: 18px;
-  background: ${Palette.tool_bars};
-  position: relative;
+  
+  background-color: ${Palette.items};
 `;
 
-const Texts = styled.div`
+const Header = styled.div`
   display: flex;
-  flex-direction: column;
-  gap: 0;
-  min-width: 0;
-  flex: 1;
-`;
-
-const Bubble = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 100%;
-  min-width: 0;
-  padding: 14px 16px;
-  border-radius: 18px 18px 18px 6px;
-  background: ${Palette.items};
-  position: relative;
-
-  &::before {
-    content: "";
-    position: absolute;
-    left: -7px;
-    bottom: 18px;
-    width: 12px;
-    height: 12px;
-    background: ${Palette.items};
-    transform: rotate(45deg);
-  }
-`;
-
-const BubbleHeader = styled.div`
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
   gap: 12px;
-  min-width: 0;
 
-  h2, h3, p {
-    margin: 0;
-  }
-`;
-
-const Meta = styled.span`
-  display: inline-flex;
-  align-items: center;
-  margin-top: 4px;
   color: ${Palette.gray};
-  font-size: 11px;
-  font-weight: 500;
+  
+  font-size: 14px;
 `;
 
-const BubbleContent = styled.div`
-  min-width: 0;
-
-  p {
-    overflow-wrap: anywhere;
-    line-height: 1.55;
-  }
+const Content = styled.div`
+  padding: 10px;
 `;
 
-const Actions = styled.div`
+const Footer = styled.div`
   display: flex;
-  gap: 6px;
-  flex-shrink: 0;
+  justify-content: space-between;
+  align-items: end;
 `;
 
-const ActionButton = styled.button<{ $danger?: boolean }>`
-  display: grid;
-  width: 30px;
-  height: 30px;
-  padding: 6px;
-  border-radius: 6px;
-  color: ${({ $danger }) => $danger ? Palette.red : Palette.white_50};
-  background: ${Palette.items};
-  cursor: pointer;
-
-  &:disabled { opacity: .5; cursor: not-allowed; }
-`;
-
-const Details = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding-top: 2px;
-  border-top: 1px solid ${Palette.details};
-`;
-
-export { Actions, ActionButton, Bubble, BubbleContent, BubbleHeader, Card, Details, Meta, Texts };
+export {
+  Card,
+  Header,
+  Content,
+  Footer
+};

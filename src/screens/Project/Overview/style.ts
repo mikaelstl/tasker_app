@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import Palette from "../../../assets/palette";
+import { Scroller } from "../../../components/misc/Scroller";
 
 const Container = styled.div`
   height: 100%;
@@ -7,6 +8,21 @@ const Container = styled.div`
   overflow: hidden;
   
   display: flex;
+`;
+
+const MainPanel = styled.div`
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+`;
+
+const ProjectScroller = styled(Scroller)`
+  flex: 1 1 auto;
+  height: auto;
 `;
 
 const Content = styled.div`
@@ -20,24 +36,18 @@ const Content = styled.div`
 
 const Comments = styled.div`
   display: flex;
+
   flex: 1;
   flex-direction: column;
   justify-content: flex-start;
+  
   gap: 10px;
   min-height: 0;
-  
-  overflow: hidden;
   
   width: 100%;
   
   padding: 0px 20px;
   padding-bottom: 20px;
-
-  > .vertical {
-    flex: 1;
-    min-height: 0;
-    height: auto;
-  }
 `;
 
 const AbstractItem = styled.div`
@@ -69,11 +79,21 @@ const Description = styled.div`
   width: 100%;
 `;
 
+const MessageComposer = styled.div`
+  flex: 0 0 auto;
+
+  padding: 0 20px 20px;
+  background: ${Palette.content};
+`;
+
 export {
   Container,
   Content,
   Comments,
   AbstractItem,
   ProjectInfo,
-  Description
+  Description,
+  MainPanel,
+  MessageComposer,
+  ProjectScroller,
 }
