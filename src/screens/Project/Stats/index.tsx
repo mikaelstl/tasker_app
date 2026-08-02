@@ -36,7 +36,6 @@ import { useServices } from "../../../hooks/useServices";
 import { useToast, type ToastNotifications } from "../../../hooks/useToast";
 import type { ApiError } from "../../../service/types/response/error";
 import {
-  StatsPeriodType,
   type MemberStats,
   type ProjectMemberPerformance,
   type ProjectStats,
@@ -50,12 +49,6 @@ function notify(error: unknown, fallback: string, notifications: ToastNotificati
   apiError.errors.forEach((item) => notifications[item.level](item.message));
 }
 
-const localDateTimeToIso = (value: string) => {
-  if (!value) return undefined;
-  const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? undefined : date.toISOString();
-};
-
 const formatDate = (value: string | null) => value
   ? new Intl.DateTimeFormat("pt-BR", { dateStyle: "medium" }).format(new Date(value))
   : "—";
@@ -64,6 +57,17 @@ const formatDateTime = (value: string) => new Intl.DateTimeFormat("pt-BR", {
   dateStyle: "short",
   timeStyle: "short",
 }).format(new Date(value));
+
+const currentMonth = () => {
+  const date = new Date();
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+};
+
+const monthFromDate = (value: string) => {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return currentMonth();
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+};
 
 export function Stats() {
   const navigate = useNavigate();
@@ -75,36 +79,20 @@ export function Stats() {
   const [memberStats, setMemberStats] = useState<MemberStats[]>([]);
   const [reports, setReports] = useState<ProjectStatsReport[]>([]);
   const [selectedReport, setSelectedReport] = useState<ProjectStatsReport | null>(null);
-  const [cutoff, setCutoff] = useState("");
-  const [periodType, setPeriodType] = useState(StatsPeriodType.WEEK);
+  const [month, setMonth] = useState(currentMonth);
+  const [projectCreatedAt, setProjectCreatedAt] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
 
   useEffect(() => {
     if (!id) return;
     let active = true;
-    setLoading(true);
 
-    void ProjectService.stats(id)
+    void ProjectService.find(id)
       .then((response) => {
-        if (active) setStats(response.data);
+        if (active) setProjectCreatedAt(response.data.created_at);
       })
-      .catch((error) => notify(error, "Não foi possível carregar as estatísticas.", notifications))
-      .finally(() => {
-        if (active) setLoading(false);
-      });
-
-    void ProjectService.getProjectMemberPerformance(id)
-      .then((response) => {
-        if (active) setMemberPerformance(response.data);
-      })
-      .catch((error) => notify(error, "Não foi possível carregar o desempenho dos membros.", notifications));
-
-    void ProjectService.getProjectMemberStats(id)
-      .then((response) => {
-        if (active) setMemberStats(response.data);
-      })
-      .catch((error) => notify(error, "Não foi possível carregar os membros do projeto.", notifications));
+      .catch((error) => notify(error, "Não foi possível carregar os dados do projeto.", notifications));
 
     void ProjectService.listReports(id)
       .then((response) => {
@@ -115,42 +103,37 @@ export function Stats() {
     return () => { active = false; };
   }, [ProjectService, id, notifications]);
 
-  const refreshStats = async () => {
+  useEffect(() => {
     if (!id) return;
-    const cutoffAt = localDateTimeToIso(cutoff);
-    if (cutoff && !cutoffAt) {
-      notifications.error("Informe uma data de corte válida.");
-      return;
-    }
-
+    let active = true;
     setLoading(true);
-    try {
-      const [statsResponse, memberStatsResponse, performanceResponse] = await Promise.all([
-        ProjectService.stats(id, { cutoffAt }),
-        ProjectService.getProjectMemberStats(id, { cutoffAt }),
-        ProjectService.getProjectMemberPerformance(id, { cutoffAt }),
-      ]);
-      setStats(statsResponse.data);
-      setMemberStats(memberStatsResponse.data);
-      setMemberPerformance(performanceResponse.data);
-    } catch (error) {
-      notify(error, "Não foi possível atualizar as estatísticas.", notifications);
-    } finally {
-      setLoading(false);
-    }
-  };
+
+    const loadStats = async () => {
+      try {
+        const statsResponse = await ProjectService.stats(id, { month });
+        if (active) setStats(statsResponse.data);
+
+        const memberStatsResponse = await ProjectService.getProjectMemberStats(id, { month });
+        if (active) setMemberStats(memberStatsResponse.data);
+
+        const performanceResponse = await ProjectService.getProjectMemberPerformance(id, { month });
+        if (active) setMemberPerformance(performanceResponse.data);
+      } catch (error) {
+        if (active) notify(error, "Não foi possível carregar as estatísticas.", notifications);
+      } finally {
+        if (active) setLoading(false);
+      }
+    };
+
+    void loadStats();
+    return () => { active = false; };
+  }, [ProjectService, id, month, notifications]);
 
   const generateReport = async () => {
     if (!id) return;
-    const cutoffAt = localDateTimeToIso(cutoff);
-    if (cutoff && !cutoffAt) {
-      notifications.error("Informe uma data de corte válida.");
-      return;
-    }
-
     setGenerating(true);
     try {
-      await ProjectService.generateReport(id, { periodType, cutoffAt });
+      await ProjectService.generateReport(id, { month });
       const response = await ProjectService.listReports(id);
       setReports(response.data);
       notifications.info("Relatório gerado e baixado.");
@@ -176,6 +159,20 @@ export function Stats() {
 
   const stage = stats.project.stage as ProjectStage;
   const badge = ProjectStageBadge(stage);
+  const minimumMonth = projectCreatedAt ? monthFromDate(projectCreatedAt) : undefined;
+  const maximumMonth = currentMonth();
+
+  const selectMonth = (value: string) => {
+    if (minimumMonth && value < minimumMonth) {
+      notifications.error("Selecione um mês a partir da criação do projeto.");
+      return;
+    }
+    if (value > maximumMonth) {
+      notifications.error("Selecione o mês atual ou meses anteriores.");
+      return;
+    }
+    setMonth(value);
+  };
 
   return (
     <Container className="tskr-proj-stats">
@@ -184,7 +181,7 @@ export function Stats() {
         <Subtitle>
           Iniciado em: {formatDate(stats.project.startedAt)}
           {" · "}Prazo: {formatDate(stats.project.deadline)}
-          {" · "}Corte: {formatDateTime(stats.cutoffAt)}
+          {" · "}Mês: {stats.month}
         </Subtitle>
         {badge}
         <Actions>
@@ -194,31 +191,18 @@ export function Stats() {
       </ProjectInfo>
 
       <Content className="tskr-proj-stats-content">
-        <Controls aria-label="Recorte das estatísticas e do relatório">
+        <Controls aria-label="Mês das estatísticas e do relatório">
           <Control>
-            <label htmlFor="stats-cutoff">Data de corte</label>
+            <label htmlFor="stats-month">Mês</label>
             <input
-              id="stats-cutoff"
-              type="datetime-local"
-              value={cutoff}
-              onChange={(event) => setCutoff(event.target.value)}
+              id="stats-month"
+              type="month"
+              value={month}
+              min={minimumMonth}
+              max={maximumMonth}
+              onChange={(event) => selectMonth(event.target.value)}
             />
           </Control>
-          <Control>
-            <label htmlFor="stats-period">Período do relatório</label>
-            <select
-              id="stats-period"
-              value={periodType}
-              onChange={(event) => setPeriodType(event.target.value as StatsPeriodType)}
-            >
-              <option value={StatsPeriodType.WEEK}>Semana</option>
-              <option value={StatsPeriodType.MONTH}>Mês</option>
-              <option value={StatsPeriodType.QUARTER}>Trimestre</option>
-            </select>
-          </Control>
-          <CreateButton type="button" disabled={loading} onClick={() => void refreshStats()}>
-            <Text>{loading ? "Atualizando..." : "Atualizar recorte"}</Text>
-          </CreateButton>
           <CreateButton type="button" disabled={generating} onClick={() => void generateReport()}>
             <Text>{generating ? "Gerando PDF..." : "Gerar relatório PDF"}</Text>
           </CreateButton>
@@ -244,7 +228,7 @@ export function Stats() {
           <Text><strong>{stats.summary.openTasks}</strong> abertas</Text>
           <Text><strong>{stats.summary.reviewTasks}</strong> em revisão</Text>
           <Text><strong>{stats.project.delayed ? "Sim" : "Não"}</strong> projeto atrasado</Text>
-          <Text><strong>{stats.period ? `${formatDate(stats.period.start)} – ${formatDate(stats.period.end)}` : "Tempo integral"}</strong> período calculado</Text>
+          <Text><strong>{formatDate(stats.period.start)} – {formatDate(stats.period.end)}</strong> período calculado</Text>
         </Facts>
 
         <WidgetsContainer className="tskr-charts">
@@ -293,7 +277,7 @@ export function Stats() {
               {reports.map((report) => (
                 <button key={report.id} type="button" onClick={() => void inspectReport(report.id)}>
                   <span>{formatDateTime(report.generated_at)}</span>
-                  <small>{report.period_type} · corte em {formatDateTime(report.cutoff_at)}</small>
+                  <small>{report.period_type} · mês {report.payload_json?.stats.month ?? "—"}</small>
                 </button>
               ))}
             </ReportList>

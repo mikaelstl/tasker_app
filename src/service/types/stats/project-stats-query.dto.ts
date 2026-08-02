@@ -1,3 +1,3 @@
 export interface ProjectStatsQueryDTO {
-  readonly cutoffAt?: string;
+  readonly month?: string;
 }

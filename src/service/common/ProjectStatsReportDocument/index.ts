@@ -2,12 +2,11 @@ import { jsPDF } from "jspdf";
 import type {
   ProjectStats,
   ProjectStatsPeriodSnapshot,
-  StatsPeriodType,
 } from "@/service/types/stats/stats.types";
 
 export type ProjectStatsReportSource = {
   reportId: string;
-  periodType: StatsPeriodType;
+  month: string;
   stats: ProjectStats;
   historicalSnapshots: ProjectStatsPeriodSnapshot[];
 };
@@ -92,10 +91,10 @@ export class ProjectStatsReportDocument {
       ["ORGANIZAÇÃO", stats.project.organization],
       [
         "PERÍODO AVALIADO",
-        `${this.date(stats.project.startedAt ?? stats.generatedAt)} a ${this.date(stats.cutoffAt)}`,
+        `${this.date(stats.period.start)} a ${this.date(stats.period.end)}`,
       ],
       ["RESPONSÁVEL", stats.project.manager ?? "Não definido"],
-      ["DATA DE CORTE", this.dateTime(stats.cutoffAt)],
+      ["MÊS AVALIADO", stats.month],
     ];
     let y = 110;
 
@@ -200,7 +199,7 @@ export class ProjectStatsReportDocument {
       stats.project.stage,
       this.date(stats.project.startedAt),
       this.date(stats.project.deadline),
-      this.dateTime(stats.cutoffAt),
+      stats.month,
     ]]);
   }
 
@@ -221,7 +220,7 @@ export class ProjectStatsReportDocument {
         this.healthLabel(snapshot.health_status),
       ])
       : [[
-        this.periodName(source.periodType),
+        source.month,
         `${stats.summary.progress}%`,
         `${stats.health.score}/100`,
         this.healthLabel(stats.health.status),
@@ -330,9 +329,13 @@ export class ProjectStatsReportDocument {
       "Eventos, riscos e ações gerenciais recomendadas.",
     );
     this.text(document, "PRÓXIMOS EVENTOS", PAGE.margin, 50, 9, COLORS.blue, "bold");
-    const cutoff = this.asDate(stats.cutoffAt).getTime();
+    const periodStart = this.asDate(stats.period.start).getTime();
+    const periodEnd = this.asDate(stats.period.end).getTime();
     const events = stats.events
-      .filter((event) => this.asDate(event.date).getTime() >= cutoff)
+      .filter((event) => {
+        const eventTime = this.asDate(event.date).getTime();
+        return eventTime >= periodStart && eventTime < periodEnd;
+      })
       .slice(0, 6);
     const eventRows = events.length > 0
       ? events.map((event) => [
@@ -391,7 +394,7 @@ export class ProjectStatsReportDocument {
 
     this.wrappedText(
       document,
-      `Rastreabilidade: periodType=${source.periodType} • cutoffAt=${this.asDate(stats.cutoffAt).toISOString()} • reportId=${source.reportId}`,
+      `Rastreabilidade: month=${source.month} • reportId=${source.reportId}`,
       PAGE.margin,
       275,
       CONTENT_WIDTH,
@@ -537,14 +540,6 @@ export class ProjectStatsReportDocument {
       WARNING: COLORS.amber,
       CRITICAL: COLORS.red,
     }[status] ?? COLORS.muted;
-  }
-
-  private periodName(period: StatsPeriodType): string {
-    return {
-      WEEK: "Semana atual",
-      MONTH: "Mês atual",
-      QUARTER: "Trimestre atual",
-    }[period];
   }
 
   private duration(minutes: number): string {

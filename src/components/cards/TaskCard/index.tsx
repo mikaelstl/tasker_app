@@ -5,7 +5,7 @@ import { PriorityBadge } from "@/maps/priority";
 import { User } from "@/components/misc/User";
 import { DateBadge } from "@/components/badge/DateBadge";
 import { DateTime } from "luxon";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Palette from "@/assets/palette";
 
 interface TaskCardProps {
@@ -31,13 +31,17 @@ export function TaskCard({
   onClick,
 }: TaskCardProps) {
   const navigate = useNavigate();
+  const location = useLocation();
   const openTask = () => {
     if (onClick) {
       onClick();
       return;
     }
 
-    navigate(`/home/project/${encodeURIComponent(projectkey)}/task/${encodeURIComponent(code)}`);
+    navigate(
+      `/home/project/${encodeURIComponent(projectkey)}/task/${encodeURIComponent(code)}`,
+      { state: { backgroundLocation: location } },
+    );
   };
 
   return (

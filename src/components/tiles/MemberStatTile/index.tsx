@@ -52,8 +52,14 @@ function stageLabel(task: StatsTask): string {
 
 const formatDuration = (minutes: number) => {
   const safeMinutes = Math.max(0, Math.round(minutes));
+  const days = Math.floor(safeMinutes / (24 * 60));
   const hours = Math.floor(safeMinutes / 60);
   const remainingMinutes = safeMinutes % 60;
+
+  if (days > 0) {
+    const remainingHours = hours % 24;
+    return `${days} dias ${remainingHours}h ${String(remainingMinutes).padStart(2, "0")}min`;
+  }
 
   if (hours === 0) return `${remainingMinutes}min`;
   return `${hours}h ${String(remainingMinutes).padStart(2, "0")}min`;

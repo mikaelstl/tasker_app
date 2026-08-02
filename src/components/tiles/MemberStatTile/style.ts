@@ -22,6 +22,10 @@ const Header = styled.button`
   cursor: pointer;
   transition: background-color 0.15s ease;
 
+  &[aria-expanded="true"] {
+    background-color: ${Palette.items};
+  }
+
   &:hover {
     background-color: ${Palette.items};
   }

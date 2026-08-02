@@ -1,4 +1,5 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom"
+import type { Location } from "react-router-dom"
 import { Login } from "./pages/Login"
 import { Workspace } from "./screens/Workspace"
 import { Projects } from "./screens/Projects"
@@ -23,11 +24,18 @@ import { ProtectedRoute } from "./routes/ProtectedRoute"
 import { Profile } from "./screens/Profile"
 import { EditProfile } from "./screens/Profile/Edit"
 
-function App() {
+interface AppLocationState {
+  backgroundLocation?: Location;
+}
+
+function AppRoutes() {
+  const location = useLocation();
+  const navigationState = location.state as AppLocationState | null;
+  const backgroundLocation = navigationState?.backgroundLocation;
+
   return (
-    <Screen>
-      <BrowserRouter>
-        <Routes>
+    <>
+        <Routes location={backgroundLocation ?? location}>
           <Route path="*" element={<Navigate to="/home" replace />} />
 
           <Route path="/login" element={<Login />} />
@@ -66,9 +74,27 @@ function App() {
             </Route>
           </Route>
         </Routes>
+        {backgroundLocation ? (
+          <Routes location={location}>
+            <Route element={<PrivateRoute />}>
+              <Route element={<ProtectedRoute />}>
+                <Route path="/home/project/:id/task/:code" element={<TaskOverview />} />
+              </Route>
+            </Route>
+          </Routes>
+        ) : null}
+    </>
+  )
+}
+
+function App() {
+  return (
+    <Screen>
+      <BrowserRouter>
+        <AppRoutes />
       </BrowserRouter>
     </Screen>
-  )
+  );
 }
 
 export default App

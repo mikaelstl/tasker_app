@@ -7,12 +7,6 @@ export enum ProjectHealthStatus {
   CRITICAL='CRITICAL'
 };
 
-export enum StatsPeriodType {
-  WEEK='WEEK',
-  MONTH='MONTH',
-  QUARTER='QUARTER'
-};
-
 export type StatsPeriod = {
   start: string;
   end: string;
@@ -49,7 +43,7 @@ export type MemberPerformance = {
 
 export type ProjectMemberPerformance = {
   generatedAt: string;
-  cutoffAt: string;
+  month: string;
   project: {
     id: string;
     title: string;
@@ -86,8 +80,8 @@ export type MemberStats = {
 
 export type ProjectStats = {
   generatedAt: string;
-  cutoffAt: string;
-  period: StatsPeriod | null;
+  month: string;
+  period: StatsPeriod;
   project: {
     id: string;
     title: string;
@@ -146,7 +140,7 @@ export type ProjectStatsPeriodTask = {
 export type ProjectStatsPeriodSnapshot = {
   id: string;
   projectkey: string;
-  period_type: StatsPeriodType;
+  period_type: "MONTH";
   period_start: string;
   period_end: string;
   generated_at: string;
@@ -176,7 +170,7 @@ export type ProjectStatsReport = {
   projectkey: string;
   generated_at: string;
   cutoff_at: string;
-  period_type: StatsPeriodType;
+  period_type: "MONTH";
   snapshotkey: string | null;
   file_url: string | null;
   payload_json: ProjectStatsReportPayload | null;
@@ -194,14 +188,12 @@ export type RecordTaskWorkLogInput = {
 
 export type GenerateSnapshotInput = {
   projectkey: string;
-  periodType: StatsPeriodType;
-  cutoffAt?: string;
+  month: string;
 };
 
 export type GenerateReportInput = {
   projectkey: string;
-  periodType: StatsPeriodType;
-  cutoffAt?: string;
+  month: string;
 };
 
 export type GeneratedProjectReport = {

@@ -11,7 +11,6 @@ import type { GenerateStatsReportDTO } from "../../types/stats/generate-stats-re
 import type { ProjectStatsQueryDTO } from "../../types/stats/project-stats-query.dto";
 import {
   ProjectHealthStatus,
-  StatsPeriodType,
   type MemberStats,
   type ProjectStats,
   type ProjectMemberPerformance,
@@ -23,6 +22,30 @@ import { downloadDocument } from "../../common/downloadDocument";
 import { mockData, createMockId, createMockProject, createMockResponse } from "../data";
 import { createMockRequestError, requireMockOrgRequest } from "../request-context";
 import { OrgRole } from "@/utils/enums/OrgRole";
+
+const INVALID_PERIOD_MESSAGE = "Período inválido. Selecione o mês atual ou meses anteriores.";
+
+function resolveMonth(month?: string): { month: string; start: Date; end: Date } {
+  const current = new Date();
+  const currentMonth = `${current.getUTCFullYear()}-${String(current.getUTCMonth() + 1).padStart(2, "0")}`;
+  const selectedMonth = month ?? currentMonth;
+  if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(selectedMonth) || selectedMonth > currentMonth) {
+    throw createMockRequestError("/project/stats", 400, INVALID_PERIOD_MESSAGE);
+  }
+
+  const [year, monthNumber] = selectedMonth.split("-").map(Number);
+  return {
+    month: selectedMonth,
+    start: new Date(Date.UTC(year, monthNumber - 1, 1)),
+    end: new Date(Date.UTC(year, monthNumber, 1)),
+  };
+}
+
+function overlapsMonth(createdAt: string, doneAt: string | null, start: Date, end: Date): boolean {
+  const created = new Date(createdAt);
+  const done = doneAt ? new Date(doneAt) : null;
+  return created < end && (!done || done >= start);
+}
 
 function matchesProjectQuery(project: ProjectDTO, params?: ProjectQueryDTO): boolean {
   if (!params) {
@@ -191,20 +214,21 @@ export class ProjectMockService implements ProjectServiceI {
     params?: ProjectStatsQueryDTO,
   ): Promise<ApiResponse<ProjectStats>> {
     const project = mockData.projects.find((item) => item.id === id);
-    const cutoffAt = params?.cutoffAt ? new Date(params.cutoffAt) : new Date();
-    const tasks = mockData.tasks.filter((task) => task.projectkey === id);
+    const period = resolveMonth(params?.month);
+    const tasks = mockData.tasks.filter((task) => task.projectkey === id
+      && overlapsMonth(task.created_at, task.done_at, period.start, period.end));
     const doneTasks = tasks.filter((task) => task.stage === TaskStage.DONE).length;
     const reviewTasks = tasks.filter((task) => task.stage === TaskStage.REVIEW).length;
     const startedTasks = tasks.filter((task) => task.stage === TaskStage.STARTED).length;
     const delayedTasks = tasks.filter(
-      (task) => task.stage !== TaskStage.DONE && new Date(task.deadline) < cutoffAt,
+      (task) => task.delayed || (task.stage !== TaskStage.DONE && new Date(task.deadline) < period.end),
     ).length;
-    const deadline = new Date(project?.deadline ?? cutoffAt);
-    const performance = this.buildMemberPerformance(id, cutoffAt);
+    const deadline = new Date(project?.deadline ?? period.end);
+    const performance = this.buildMemberPerformance(id, period);
     const stats: ProjectStats = {
       generatedAt: new Date().toISOString(),
-      cutoffAt: cutoffAt.toISOString(),
-      period: null,
+      month: period.month,
+      period: { start: period.start.toISOString(), end: period.end.toISOString() },
       project: {
         id: project?.id ?? id,
         title: project?.title ?? "Projeto não encontrado",
@@ -212,7 +236,7 @@ export class ProjectMockService implements ProjectServiceI {
         startedAt: project?.started_at ?? null,
         doneAt: project?.done_at ?? null,
         deadline: deadline.toISOString(),
-        delayed: deadline < cutoffAt && project?.stage !== ProjectStage.COMPLETED,
+        delayed: project?.delayed ?? (deadline < period.end && project?.stage !== ProjectStage.COMPLETED),
         organization: project?.orgkey ?? "",
         manager: project?.managerkey ?? null,
       },
@@ -227,7 +251,7 @@ export class ProjectMockService implements ProjectServiceI {
       },
       deadline: {
         dueDate: deadline.toISOString(),
-        daysLeft: Math.ceil((deadline.getTime() - cutoffAt.getTime()) / 86_400_000),
+        daysLeft: Math.ceil((deadline.getTime() - period.end.getTime()) / 86_400_000),
       },
       health: {
         status: delayedTasks > 0 ? ProjectHealthStatus.WARNING : ProjectHealthStatus.SAFE,
@@ -246,7 +270,8 @@ export class ProjectMockService implements ProjectServiceI {
       productivity: [],
       members: [],
       events: mockData.events
-        .filter((event) => event.projectkey === id)
+        .filter((event) => event.projectkey === id
+          && new Date(event.date) >= period.start && new Date(event.date) < period.end)
         .map((event) => ({
           id: event.id,
           title: event.title,
@@ -271,13 +296,13 @@ export class ProjectMockService implements ProjectServiceI {
     const path = `/project/${id}/stats/members/performance`;
     const { orgkey } = requireMockOrgRequest(path, mockData.affiliations);
     const project = mockData.projects.find((item) => item.id === id && item.orgkey === orgkey);
-    const cutoffAt = params?.cutoffAt ? new Date(params.cutoffAt) : new Date();
+    const period = resolveMonth(params?.month);
 
     if (!project) {
       throw createMockRequestError(path, 404, "Projeto não encontrado.");
     }
 
-    return createMockResponse(this.buildMemberPerformance(id, cutoffAt), path);
+    return createMockResponse(this.buildMemberPerformance(id, period), path);
   }
 
   async getProjectMemberStats(
@@ -287,23 +312,23 @@ export class ProjectMockService implements ProjectServiceI {
     const path = `/project/${id}/stats/members`;
     const { orgkey } = requireMockOrgRequest(path, mockData.affiliations);
     const project = mockData.projects.find((item) => item.id === id && item.orgkey === orgkey);
-    const cutoffAt = params?.cutoffAt ? new Date(params.cutoffAt) : new Date();
+    const period = resolveMonth(params?.month);
 
     if (!project) {
       throw createMockRequestError(path, 404, "Projeto não encontrado.");
     }
 
-    return createMockResponse(this.buildMemberStats(id, cutoffAt), path);
+    return createMockResponse(this.buildMemberStats(id, period), path);
   }
 
-  private buildMemberStats(id: string, cutoffAt: Date): MemberStats[] {
+  private buildMemberStats(id: string, period: { start: Date; end: Date }): MemberStats[] {
     return mockData.members
       .filter((member) => member.projectkey === id)
       .map((member) => {
         const user = mockData.affiliations.find((item) => item.id === member.userkey)?.user;
         const tasks = mockData.tasks.filter(
           (task) => task.projectkey === id && task.ownerkey === member.id
-            && new Date(task.created_at) <= cutoffAt,
+            && overlapsMonth(task.created_at, task.done_at, period.start, period.end),
         );
 
         return {
@@ -315,9 +340,9 @@ export class ProjectMockService implements ProjectServiceI {
             photoUrl: null,
           },
           completedTasks: tasks.filter((task) => task.stage === TaskStage.DONE
-            && (!task.done_at || new Date(task.done_at) <= cutoffAt)).length,
+            && (!task.done_at || new Date(task.done_at) < period.end)).length,
           delayedTasks: tasks.filter((task) => task.stage !== TaskStage.DONE
-            && new Date(task.deadline) < cutoffAt).length,
+            && (task.delayed || new Date(task.deadline) < period.end)).length,
           startedTasks: tasks.filter((task) => task.stage === TaskStage.STARTED).length,
           reviewTasks: tasks.filter((task) => task.stage === TaskStage.REVIEW).length,
           tasks: tasks.map((task) => ({
@@ -325,7 +350,7 @@ export class ProjectMockService implements ProjectServiceI {
             code: task.code,
             name: task.name,
             stage: task.stage,
-            delayed: task.stage !== TaskStage.DONE && new Date(task.deadline) < cutoffAt,
+            delayed: task.delayed || (task.stage !== TaskStage.DONE && new Date(task.deadline) < period.end),
             spentMinutes: 0,
             deadline: task.deadline,
             startedAt: task.started_at,
@@ -335,13 +360,13 @@ export class ProjectMockService implements ProjectServiceI {
       });
   }
 
-  private buildMemberPerformance(id: string, cutoffAt: Date): ProjectMemberPerformance {
+  private buildMemberPerformance(id: string, period: { month: string; start: Date; end: Date }): ProjectMemberPerformance {
     const project = mockData.projects.find((item) => item.id === id);
     const members = mockData.members.filter((item) => item.projectkey === id);
 
     return {
       generatedAt: new Date().toISOString(),
-      cutoffAt: cutoffAt.toISOString(),
+      month: period.month,
       project: {
         id,
         title: project?.title ?? "Projeto não encontrado",
@@ -349,13 +374,14 @@ export class ProjectMockService implements ProjectServiceI {
       members: members.map((member) => {
         const user = mockData.affiliations.find((item) => item.id === member.userkey)?.user;
         const tasks = mockData.tasks.filter(
-          (task) => task.projectkey === id && task.ownerkey === member.id,
+          (task) => task.projectkey === id && task.ownerkey === member.id
+            && overlapsMonth(task.created_at, task.done_at, period.start, period.end),
         );
         const completedTasks = tasks.filter(
-          (task) => task.stage === TaskStage.DONE && (!task.done_at || new Date(task.done_at) <= cutoffAt),
+          (task) => task.stage === TaskStage.DONE && (!task.done_at || new Date(task.done_at) < period.end),
         ).length;
         const delayedTasks = tasks.filter(
-          (task) => task.stage !== TaskStage.DONE && new Date(task.deadline) < cutoffAt,
+          (task) => task.delayed || (task.stage !== TaskStage.DONE && new Date(task.deadline) < period.end),
         ).length;
         const startedTasks = tasks.filter((task) => task.stage === TaskStage.STARTED).length;
         const reviewTasks = tasks.filter((task) => task.stage === TaskStage.REVIEW).length;
@@ -394,8 +420,8 @@ export class ProjectMockService implements ProjectServiceI {
       id: `report-${this.reports.length + 1}`,
       projectkey: id,
       generated_at: now,
-      cutoff_at: data.cutoffAt ?? now,
-      period_type: data.periodType ?? StatsPeriodType.WEEK,
+      cutoff_at: resolveMonth(data.month).end.toISOString(),
+      period_type: "MONTH",
       snapshotkey: null,
       file_url: null,
       payload_json: null,
@@ -404,13 +430,13 @@ export class ProjectMockService implements ProjectServiceI {
     };
 
     this.reports.unshift(report);
-    const statsResponse = await this.stats(id, { cutoffAt: data.cutoffAt });
+    const statsResponse = await this.stats(id, { month: data.month });
     const { ProjectStatsReportDocument } = await import(
       "../../common/ProjectStatsReportDocument"
     );
     const document = await new ProjectStatsReportDocument().generate({
       reportId: report.id,
-      periodType: report.period_type,
+      month: statsResponse.data.month,
       stats: statsResponse.data,
       historicalSnapshots: this.reports
         .filter((item) => item.projectkey === id)
@@ -447,7 +473,7 @@ export class ProjectMockService implements ProjectServiceI {
       projectkey: id,
       generated_at: "",
       cutoff_at: "",
-      period_type: StatsPeriodType.WEEK,
+      period_type: "MONTH",
       snapshotkey: null,
       file_url: null,
       payload_json: null,
