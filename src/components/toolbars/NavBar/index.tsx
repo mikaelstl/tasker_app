@@ -183,7 +183,7 @@ export function NavBar() {
           Settings
         </NavItem> */}
         <NavItem className="tskr-nav-item log-out" onClick={onLogout}>
-          <Logout width="20" color={Palette.red} />
+          <Logout width="22" color={Palette.red} />
           Sair
         </NavItem>
       </Actions>

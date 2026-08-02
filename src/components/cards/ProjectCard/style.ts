@@ -28,7 +28,7 @@ const Card = styled.div`
   }
 
   &:hover .tskr-open-proj-btn svg {
-    fill: ${Palette.lightBlue};
+    color: ${Palette.lightBlue};
   }
 `;
 
@@ -79,6 +79,8 @@ const OpenProjectButton = styled.button`
   color: ${Palette.gray};
   border-radius: 9999px;
   background-color: transparent;
+
+  border: 1px solid ${Palette.gray_50};
 
   cursor: pointer;
 `;

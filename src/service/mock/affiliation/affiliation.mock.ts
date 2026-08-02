@@ -65,6 +65,7 @@ function buildSummary(username: string): UserOrganizationSummaryDTO[] {
 
       return [{
         orgkey: organization.id,
+        affiliationId: currentAffiliation.id,
         role: currentAffiliation.role,
         name: organization.name,
         projects: mockData.projects.filter(

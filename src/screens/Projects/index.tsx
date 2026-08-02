@@ -93,7 +93,7 @@ export function Projects() {
     <Container className="projects-content">
       <CreateProjectPopup showPopup={isPopupOpen} closePopup={handlePopup} />
       <ContentHeader
-        title=""
+        title="Projects"
       >
         {
           org?.role === OrgRole.OWNER

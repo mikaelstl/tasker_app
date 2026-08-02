@@ -5,25 +5,16 @@ import { useCallback, useMemo, useState } from "react";
 import { STORAGE_KEYS, clearOrganizationStorage } from "@/config/storage";
 
 function readStoredOrg(): CurrentOrg | null {
-  const orgkey = localStorage.getItem(STORAGE_KEYS.organization.orgkey);
-  const role = localStorage.getItem(STORAGE_KEYS.organization.role) as OrgRole | null;
-
-  if (orgkey && role) {
-    return {
-      orgkey,
-      role
-    };
-  }
-
   const storedOrg = localStorage.getItem(STORAGE_KEYS.organization.current);
   if (!storedOrg) return null;
 
   try {
     const parsed = JSON.parse(storedOrg) as CurrentOrg;
 
-    if (!parsed.orgkey || !parsed.role) return null;
+    if (!parsed.affiliationId || !parsed.orgkey || !parsed.role) return null;
 
     return {
+      affiliationId: parsed.affiliationId,
       orgkey: parsed.orgkey,
       role: parsed.role
     };
@@ -48,8 +39,9 @@ export function OrganizationProvider({ children }: { children: React.ReactNode }
     localStorage.setItem(STORAGE_KEYS.organization.current, JSON.stringify(nextOrg));
   }, []);
 
-  const setOrg = useCallback((nextOrgkey: string, role: OrgRole) => {
+  const setOrg = useCallback((nextOrgkey: string, role: OrgRole, affiliationId: string) => {
     persistOrg({
+      affiliationId,
       orgkey: nextOrgkey,
       role
     });

@@ -19,7 +19,7 @@ import { Content, HeaderContainer } from "./style";
 
 export function CreateOrg(): React.ReactNode {
   const navigate = useNavigate();
-  const { OrganizationService } = useServices();
+  const { AffiliationService, OrganizationService } = useServices();
   const { error } = useToast();
 
   const { setOrg } = useOrganization();
@@ -36,7 +36,14 @@ export function CreateOrg(): React.ReactNode {
 
       const data = response.data;
 
-      setOrg(data.id, OrgRole.OWNER);
+      const affiliationsResponse = await AffiliationService.list();
+      const createdOrganization = affiliationsResponse.data.find((item) => item.orgkey === data.id);
+
+      if (!createdOrganization) {
+        throw new Error("A afiliação da organização criada não foi encontrada.");
+      }
+
+      setOrg(data.id, OrgRole.OWNER, createdOrganization.affiliationId);
 
       navigate("/home");
     } catch (err) {

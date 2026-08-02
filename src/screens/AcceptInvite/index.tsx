@@ -172,7 +172,7 @@ export function AcceptInvite() {
       if (action === "accept") {
         const response = await AffiliationService.acceptInvite(token);
 
-        defineOrg(response.data.orgkey, response.data.role);
+        defineOrg(response.data.orgkey, response.data.role, response.data.id);
         await AffiliationService.list();
         clearPendingInviteToken();
         setStatus("accepted");

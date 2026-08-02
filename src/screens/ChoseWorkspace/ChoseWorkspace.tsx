@@ -55,7 +55,7 @@ export function ChoseWorkspace() {
   }, [])
 
   const selectWorkspace = (workspace: UserOrganizationSummaryDTO) => {
-    defineOrg(workspace.orgkey, workspace.role);
+    defineOrg(workspace.orgkey, workspace.role, workspace.affiliationId);
     navigate('/home');
   };
 

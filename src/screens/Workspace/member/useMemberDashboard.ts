@@ -6,6 +6,7 @@ import type { ProjectDTO } from "@/service/types/project/project.dto";
 import type { ApiError } from "@/service/types/response/error";
 import { TaskStage } from "@/service/types/task/stage.dto";
 import type { TaskWithOwnerDTO } from "@/service/types/task/task.dto";
+import { useOrganization } from "@/hooks/useOrganization";
 
 interface MemberDashboardData {
   tasks: TaskWithOwnerDTO[];
@@ -54,6 +55,7 @@ function categorizeTasks(tasks: TaskWithOwnerDTO[]): MemberTaskCategories {
 
 export function useMemberDashboard(orgId?: string) {
   const { user } = useAuth();
+  const { org } = useOrganization();
   const { ProjectService, TaskService, EventService } = useServices();
   const requestId = useRef(0);
   const [data, setData] = useState<MemberDashboardData>(initialData);
@@ -75,7 +77,9 @@ export function useMemberDashboard(orgId?: string) {
     setError(null);
 
     try {
-      const projects = (await ProjectService.list()).data;
+      const result = await ProjectService.list();
+      const projects = result.data;
+
       const nextData: MemberDashboardData = {
         tasks: [],
         events: [],
@@ -84,8 +88,11 @@ export function useMemberDashboard(orgId?: string) {
 
       for (const project of projects) {
 
-        const tasks = await TaskService.list(project.id);
-        const events = await EventService.list({ projectkey: project.id });
+        const tasks = await TaskService.list(project.id, { ownerkey: org?.affiliationId });
+        const events = await EventService.list({
+          projectkey: project.id
+
+        });
 
         nextData.tasks.push(...tasks.data);
         nextData.events.push(...events.data);
