@@ -17,6 +17,14 @@ import { Text } from "../../../components/base/Text";
 import { useNavigate, useParams } from "react-router-dom";
 import { useToast } from "@/hooks/useToast";
 import { useServices } from "../../../hooks/useServices";
+import { TaskPriority } from "../../../service/types/task/priority.dto";
+
+const priorityOrder = [
+  TaskPriority.EXTREME,
+  TaskPriority.HIGH,
+  TaskPriority.MEDIUM,
+  TaskPriority.LOW,
+];
 
 function normalizeSearchTerm(value: string) {
   return value
@@ -65,14 +73,16 @@ export function Tasks() {
   }, [isPopupOpen, loadTasks]);
 
   const normalizedSearch = normalizeSearchTerm(search);
-  const filteredTasks = tasks.filter((task) => {
-    if (!normalizedSearch) return true;
+  const filteredTasks = tasks
+    .filter((task) => {
+      if (!normalizedSearch) return true;
 
-    const name = normalizeSearchTerm(task.name);
-    const code = normalizeSearchTerm(task.code);
+      const name = normalizeSearchTerm(task.name);
+      const code = normalizeSearchTerm(task.code);
 
-    return name.includes(normalizedSearch) || code.includes(normalizedSearch);
-  });
+      return name.includes(normalizedSearch) || code.includes(normalizedSearch);
+    })
+    .sort((left, right) => priorityOrder.indexOf(right.priority) - priorityOrder.indexOf(left.priority));
 
   return (
     <Container className="tasks">
@@ -106,7 +116,7 @@ export function Tasks() {
                       projectkey={task.projectkey}
                       code={task.code}
                       title={task.name}
-                      owner={task.ownerkey}
+                      owner={task.owner.userkey}
                       deadline={task.deadline}
                       priority={task.priority}
                     />
@@ -127,7 +137,7 @@ export function Tasks() {
                       projectkey={task.projectkey}
                       code={task.code}
                       title={task.name}
-                      owner={task.ownerkey}
+                      owner={task.owner.userkey}
                       deadline={task.deadline}
                       priority={task.priority}
                     />
@@ -148,7 +158,7 @@ export function Tasks() {
                       projectkey={task.projectkey}
                       code={task.code}
                       title={task.name}
-                      owner={task.ownerkey}
+                      owner={task.owner.userkey}
                       deadline={task.deadline}
                       priority={task.priority}
                     />
@@ -169,7 +179,7 @@ export function Tasks() {
                       projectkey={task.projectkey}
                       code={task.code}
                       title={task.name}
-                      owner={task.ownerkey}
+                      owner={task.owner.userkey}
                       deadline={task.deadline}
                       priority={task.priority}
                     />
@@ -190,7 +200,7 @@ export function Tasks() {
                       projectkey={task.projectkey}
                       code={task.code}
                       title={task.name}
-                      owner={task.ownerkey}
+                      owner={task.owner.userkey}
                       deadline={task.deadline}
                       priority={task.priority}
                     />

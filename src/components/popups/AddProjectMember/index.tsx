@@ -1,5 +1,4 @@
 import type { AffiliationDTO } from "@/service/types/affiliation/affiliation.dto";
-import type { ProjectMember } from "@/service/types/member/member.dto";
 import { useEffect } from "react";
 import { ModalCloseButton, ModalContent, ModalDescription, ModalDialog, ModalHeader, ModalOverlay, ModalTitle } from "./style";
 import { CloseCircle as XMarkIcon } from "@/components/icons/solar-icons";
@@ -11,12 +10,17 @@ function getAffiliationName(member: AffiliationDTO) {
   return member.user?.name ?? member.userkey;
 }
 
+export interface ProjectMemberReference {
+  readonly id: string;
+  readonly userkey: string;
+}
+
 interface MemberModalProps {
   open: boolean;
   loading: boolean;
   projectTitle: string;
   members: AffiliationDTO[];
-  projectMembers: ProjectMember[];
+  projectMembers: ProjectMemberReference[];
   onClose: () => void;
   onAddMember: (memberkey: string) => void;
   onRemoveMember: (memberkey: string) => void;

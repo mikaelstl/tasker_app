@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Text } from "../../../components/base/Text";
 import { Title } from "../../../components/base/Title";
 import { CommentCard } from "../../../components/cards/CommentCard";
@@ -20,6 +20,16 @@ import { TaskCategoryAccordion } from "../../../components/accordions/TaskCatego
 import { EditButton } from "../../../components/buttons/EditBtn";
 import { useServices } from "../../../hooks/useServices";
 import type { EventDTO } from "../../../service/types/events/event.dto";
+import { useOrganization } from "../../../hooks/useOrganization";
+import { OrgRole } from "../../../utils/enums/OrgRole";
+import { TaskPriority } from "../../../service/types/task/priority.dto";
+
+const priorityOrder = [
+  TaskPriority.EXTREME,
+  TaskPriority.HIGH,
+  TaskPriority.MEDIUM,
+  TaskPriority.LOW,
+];
 
 export function Overview() {
   const navigate = useNavigate();
@@ -28,6 +38,7 @@ export function Overview() {
   const { ProjectService, TaskService, CommentService, EventService } = useServices();
 
   const { user } = useAuth();
+  const { org } = useOrganization();
 
   const { id } = useParams();
 
@@ -35,6 +46,15 @@ export function Overview() {
   const [tasks, setTasks] = useState<TaskDTO[]>([]);
   const [comments, setComments] = useState<CommentDTO[]>([]);
   const [events, setEvents] = useState<EventDTO[]>([]);
+
+  const importantTasks = useMemo(() => {
+    const visibleTasks = org?.role === OrgRole.MEMBER
+      ? tasks.filter((task) => task.owner?.userkey === org.affiliationId)
+      : tasks;
+
+    return [...visibleTasks]
+      .sort((left, right) => priorityOrder.indexOf(right.priority) - priorityOrder.indexOf(left.priority));
+  }, [org?.affiliationId, org?.role, tasks]);
 
   const showError = useCallback((error: unknown, fallback: string) => {
     const apiError = error as ApiError;
@@ -150,7 +170,7 @@ export function Overview() {
           <TaskCategoryAccordion
             visible
             title="Mais importantes"
-            tasks={tasks}
+            tasks={importantTasks}
           />
           <Comments className="tskr-overview-comments">
             <Title>Comentários</Title>

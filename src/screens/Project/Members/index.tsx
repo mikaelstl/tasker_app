@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ContentHeader } from "@/components/base/ContentHeader";
 import { CreateButton } from "@/components/buttons/CreateButton";
@@ -10,7 +10,6 @@ import { useOrganization } from "@/hooks/useOrganization";
 import { useServices } from "@/hooks/useServices";
 import { useToast, type ToastNotifications } from "@/hooks/useToast";
 import type { AffiliationDTO } from "@/service/types/affiliation/affiliation.dto";
-import type { ProjectMember } from "@/service/types/member/member.dto";
 import type { ProjectDTO } from "@/service/types/project/project.dto";
 import type { MemberStats } from "@/service/types/stats/stats.types";
 import type { ApiError } from "@/service/types/response/error";
@@ -20,7 +19,10 @@ import {
   EmptyState,
   MembersArea
 } from "./style";
-import { AddProjectMember } from "@/components/popups/AddProjectMember";
+import {
+  AddProjectMember,
+  type ProjectMemberReference,
+} from "@/components/popups/AddProjectMember";
 
 function reportApiError(
   error: unknown,
@@ -39,16 +41,12 @@ function reportApiError(
   });
 }
 
-function getProjectMemberName(member: ProjectMember) {
-  return member.user?.user?.name
-    ?? member.user?.userkey
-    ?? member.userkey;
+function getMemberName(member: MemberStats) {
+  return member.user.name || member.user.username;
 }
 
-function getProjectMemberUsername(member: ProjectMember) {
-  return member.user?.user?.username
-    ?? member.user?.userkey
-    ?? member.userkey;
+function getMemberUsername(member: MemberStats) {
+  return member.user.username;
 }
 
 function getAffiliationName(member: AffiliationDTO) {
@@ -75,7 +73,7 @@ export function Members() {
   const { AffiliationService, MemberService, ProjectService } = useServices();
 
   const [project, setProject] = useState<ProjectDTO | null>(null);
-  const [members, setMembers] = useState<ProjectMember[]>([]);
+
   const [memberStats, setMemberStats] = useState<MemberStats[]>([]);
   const [affiliations, setAffiliations] = useState<AffiliationDTO[]>([]);
   const [loadingProject, setLoadingProject] = useState(true);
@@ -86,134 +84,84 @@ export function Members() {
 
   const loading = loadingProject || loadingMembers || loadingAffiliations;
   const projectTitle = project?.title ?? "";
-  const projectMemberIds = useMemo(
-    () => new Set(members.map((member) => member.userkey)),
-    [members],
-  );
+
+  const loadProject = useCallback(async () => {
+    if (!id) return;
+
+    setLoadingProject(true);
+
+    try {
+      const response = await ProjectService.find(id);
+      setProject(response.data);
+    } catch (error) {
+      reportApiError(error, "Não foi possível carregar o projeto.", notifications);
+      navigate("..");
+    } finally {
+      setLoadingProject(false);
+    }
+  }, [ProjectService, id, navigate, notifications]);
+
+  const loadMemberStats = useCallback(async () => {
+    if (!id) return;
+
+    setLoadingMembers(true);
+
+    try {
+      const response = await ProjectService.getProjectMemberStats(id);
+      setMemberStats(response.data);
+    } catch (error) {
+      reportApiError(error, "Não foi possível carregar os membros do projeto.", notifications);
+      navigate("..");
+    } finally {
+      setLoadingMembers(false);
+    }
+  }, [ProjectService, id, navigate, notifications]);
+
+  const loadAffiliations = useCallback(async () => {
+    if (!org?.orgkey) return;
+
+    setLoadingAffiliations(true);
+
+    try {
+      const response = await AffiliationService.listByOrganization(org.orgkey);
+      setAffiliations(response.data);
+    } catch (error) {
+      reportApiError(error, "Não foi possível carregar os membros da organização.", notifications);
+      navigate("..");
+    } finally {
+      setLoadingAffiliations(false);
+    }
+  }, [AffiliationService, navigate, notifications, org?.orgkey]);
 
   useEffect(() => {
     if (!id || !org?.orgkey) {
       navigate("..");
+      return;
     }
-  }, [id, navigate, org?.orgkey]);
-
-  useEffect(() => {
-    let active = true;
-
-    const loadProject = async () => {
-      if (!id) return;
-
-      setLoadingProject(true);
-
-      try {
-        const response = await ProjectService.find(id);
-
-        if (!active) return;
-
-        setProject(response.data);
-      } catch (error) {
-        if (!active) return;
-
-        reportApiError(error, "Não foi possível carregar o projeto.", notifications);
-        navigate("..");
-      } finally {
-        if (active) {
-          setLoadingProject(false);
-        }
-      }
-    };
 
     void loadProject();
-
-    return () => {
-      active = false;
-    };
-  }, [ProjectService, id, navigate, notifications]);
-
-  useEffect(() => {
-    let active = true;
-
-    const loadMembers = async () => {
-      if (!id) return;
-
-      setLoadingMembers(true);
-
-      try {
-        const [membersResponse, statsResponse] = await Promise.all([
-          MemberService.list(id),
-          ProjectService.getProjectMemberStats(id),
-        ]);
-
-        if (!active) return;
-
-        console.log(statsResponse);
-        
-
-        setMembers(membersResponse.data);
-        setMemberStats(statsResponse.data);
-      } catch (error) {
-        if (!active) return;
-
-        reportApiError(error, "Não foi possível carregar os membros do projeto.", notifications);
-        navigate("..");
-      } finally {
-        if (active) {
-          setLoadingMembers(false);
-        }
-      }
-    };
-
-    void loadMembers();
-
-    return () => {
-      active = false;
-    };
-  }, [MemberService, ProjectService, id, navigate, notifications]);
-
-  useEffect(() => {
-    let active = true;
-
-    const loadAffiliations = async () => {
-      if (!org?.orgkey) return;
-
-      setLoadingAffiliations(true);
-
-      try {
-        const response = await AffiliationService.listByOrganization(org.orgkey);
-
-        if (!active) return;
-
-        setAffiliations(response.data);
-      } catch (error) {
-        if (!active) return;
-
-        reportApiError(error, "Não foi possível carregar os membros da organização.", notifications);
-        navigate("..");
-      } finally {
-        if (active) {
-          setLoadingAffiliations(false);
-        }
-      }
-    };
-
+    void loadMemberStats();
     void loadAffiliations();
-
-    return () => {
-      active = false;
-    };
-  }, [AffiliationService, navigate, notifications, org?.orgkey]);
+  }, [id, loadAffiliations, loadMemberStats, loadProject, navigate, org?.orgkey]);
 
   const searchValue = normalizeSearchTerm(search);
 
-  const filteredProjectMembers = useMemo(() => (
-    members.filter((member) => {
+  const filteredMemberStats = useMemo(() => (
+    memberStats.filter((member) => {
       if (!searchValue) return true;
 
-      const name = normalizeSearchTerm(getProjectMemberName(member));
-      const username = normalizeSearchTerm(getProjectMemberUsername(member));
+      const name = normalizeSearchTerm(getMemberName(member));
+      const username = normalizeSearchTerm(getMemberUsername(member));
       return name.includes(searchValue) || username.includes(searchValue);
     })
-  ), [members, searchValue]);
+  ), [memberStats, searchValue]);
+
+  const projectMembers = useMemo<ProjectMemberReference[]>(() => (
+    memberStats.map((member) => ({
+      id: member.memberId,
+      userkey: member.user.username,
+    }))
+  ), [memberStats]);
 
   const filteredOrganizationMembers = useMemo(() => (
     affiliations.filter((member) => {
@@ -228,20 +176,18 @@ export function Members() {
   const addProjectMember = async (memberkey: string) => {
     if (!id) return;
 
-    if (projectMemberIds.has(memberkey)) {
+    if (projectMembers.some((member) => member.userkey === memberkey)) {
       notifications.info("Esse membro já está no projeto.");
       return;
     }
 
     try {
-      const response = await MemberService.create({
+      await MemberService.create({
         project: id,
         user: memberkey,
       });
 
-      setMembers((current) => [...current, response.data]);
-      const statsResponse = await ProjectService.getProjectMemberStats(id);
-      setMemberStats(statsResponse.data);
+      await loadMemberStats();
       notifications.info("Membro adicionado ao projeto.");
     } catch (error) {
       reportApiError(error, "Não foi possível adicionar o membro ao projeto.", notifications);
@@ -254,8 +200,7 @@ export function Members() {
     try {
       await MemberService.delete(memberkey);
 
-      setMembers((current) => current.filter((item) => item.id !== memberkey));
-      setMemberStats((current) => current.filter((item) => item.user.affiliationId !== memberkey));
+      await loadMemberStats();
       notifications.info("Membro removido do projeto.");
     } catch (error) {
       reportApiError(error, "Não foi possível remover o membro do projeto.", notifications);
@@ -280,12 +225,11 @@ export function Members() {
         <MembersArea>
           {loading ? (
             <EmptyState>Carregando membros do projeto...</EmptyState>
-          ) : filteredProjectMembers.length > 0 ? (
+          ) : filteredMemberStats.length > 0 ? (
             <Scroller orientation="vertical" gap={16}>
-              {filteredProjectMembers.map((member) => {
-                const stats = memberStats.find((item) => item.user.affiliationId === member.userkey);
-                
-                if (!stats) return null;
+              {filteredMemberStats.map((stats) => {
+                console.log(stats.user.username);
+                console.log(stats.user.affiliationId);
 
                 return (
                   <MemberStatTile
@@ -312,7 +256,7 @@ export function Members() {
         loading={loading}
         projectTitle={projectTitle}
         members={filteredOrganizationMembers}
-        projectMembers={members}
+        projectMembers={projectMembers}
         onClose={() => setModalOpen(false)}
         onAddMember={addProjectMember}
         onRemoveMember={removeProjectMember}

@@ -2,19 +2,16 @@ import styled from "styled-components";
 import Palette from "../../../assets/palette";
 
 const Overlay = styled.div`
-  position: absolute;
+  position: fixed;
+  inset: 0;
+  z-index: 20;
 
   display: flex;
-  flex: 1 1 auto;
   align-items: center;
   justify-content: center;
+  padding: 20px;
 
-  background-color: #00000095;
-
-  height: 100%;
-  width: 100%;
-
-  z-index: 9999;
+  background: #00000080;
 `;
 
 const Card = styled.div`
@@ -23,23 +20,29 @@ const Card = styled.div`
   display: grid;
   grid-template-areas:
     "tskr-content-header tskr-content-header"
-    "tskr-form           tskr-select-member"
-  ;
+    "tskr-form           tskr-select-member";
   grid-template-rows: min-content auto;
-  grid-template-columns: 2fr 1fr;
-  gap: 16px;
-  
-  background-color: ${Palette.content};
+  grid-template-columns: minmax(0, 2fr) minmax(220px, 1fr);
+  gap: 20px;
 
-  width: 60%;
-  min-height: min-content; max-height: 90%;
+  width: min(760px, 100%);
+  max-height: min(720px, 90vh);
+  min-height: 0;
 
-  padding: 0px 20px 20px 20px;
-  border-radius: 6px;
-
-  z-index: 99999;
-
+  border: 1px solid ${Palette.items};
+  border-radius: 14px;
+  background: ${Palette.tool_bars};
+  box-shadow: 0 20px 60px #00000066;
   overflow: hidden;
+
+  @media (max-width: 680px) {
+    grid-template-areas:
+      "tskr-content-header"
+      "tskr-form"
+      "tskr-select-member";
+    grid-template-columns: minmax(0, 1fr);
+    overflow-y: auto;
+  }
 `;
 
 const Close = styled.button`
@@ -50,8 +53,28 @@ const Close = styled.button`
   }
 `;
 
+const MemberSection = styled.div`
+  grid-area: tskr-select-member;
+  min-width: 0;
+  padding: 0 20px 20px 0;
+
+  @media (max-width: 680px) {
+    padding: 0 20px 20px;
+  }
+`;
+
+const Notice = styled.div`
+  grid-column: 1 / -1;
+  padding: 0 20px 20px;
+  color: ${Palette.white_50};
+  font-size: 14px;
+  line-height: 1.5;
+`;
+
 export {
   Overlay,
   Card,
   Close,
+  MemberSection,
+  Notice,
 }

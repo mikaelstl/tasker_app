@@ -1,5 +1,5 @@
 import { Card, Content, Infos, Overlay } from "./style";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { CreateButton } from "../../buttons/CreateButton";
 import type { CreateProjectDTO } from "../../../service/types/project/create.dto";
 import type { PopupProps } from "../popup.props";
@@ -25,12 +25,12 @@ export function CreateProjectPopup(props: PopupProps) {
   const [dueDate, setDueDate] = useState<string>('');
   const [submitting, setSubmitting] = useState(false);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setDescription('');
     setDueDate('');
     setProjectName('');
     props.closePopup();
-  }
+  }, [props.closePopup]);
 
   const onSubmit = async (ev: React.FormEvent) => {
     ev.preventDefault();
@@ -78,13 +78,33 @@ export function CreateProjectPopup(props: PopupProps) {
     }
   }
 
+  useEffect(() => {
+    if (!props.showPopup) return;
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") handleClose();
+    };
+
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [handleClose, props.showPopup]);
+
   if (!props.showPopup) return null;
 
   return (
-    <Overlay className="tskr-popup-overlay">
-      <Card as="form" className="tskr-popup-create-project" onSubmit={onSubmit}>
+    <Overlay className="tskr-popup-overlay" onMouseDown={handleClose}>
+      <Card
+        as="form"
+        className="tskr-popup-create-project"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="create-project-title"
+        onSubmit={onSubmit}
+        onMouseDown={(event) => event.stopPropagation()}
+      >
         <ContentHeader
           title="Criar projeto"
+          titleId="create-project-title"
         >
           <DeleteBtn onClick={handleClose} />
           <CreateButton type="submit" disabled={submitting}>

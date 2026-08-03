@@ -1,8 +1,8 @@
-import { Card, Overlay } from "./style";
+import { Card, MemberSection, Notice, Overlay } from "./style";
 import { TextInput } from "../../base/TextInput";
 import { TextAreaInput } from "../../base/TextAreaInput";
 import { CalendarInput } from "../../base/CalendarInput";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { CreateButton } from "../../buttons/CreateButton";
 import { Form } from "../../misc/Form/style";
 import type { PopupProps } from "../popup.props";
@@ -35,14 +35,14 @@ export function CreateTaskPopup(props: PopupProps) {
   const [owner, setOwner] = useState<string>('');
   const [submitting, setSubmitting] = useState(false);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setDescription('');
     setDueDate('');
     setTaskName('');
     setOwner('');
     setPriority(TaskPriority.LOW);
     props.closePopup();
-  }
+  }, [props.closePopup]);
 
   const onSubmit = async (ev: React.FormEvent) => {
     ev.preventDefault();
@@ -98,13 +98,31 @@ export function CreateTaskPopup(props: PopupProps) {
     });
   }, [ProjectService, id, props.showPopup]);
 
+  useEffect(() => {
+    if (!props.showPopup) return;
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") handleClose();
+    };
+
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [handleClose, props.showPopup]);
+
   if (!props.showPopup) return null;
 
   return (
-    <Overlay className="tskr-popup-overlay">
-      <Card className="tskr-popup-create-project">
+    <Overlay className="tskr-popup-overlay" onMouseDown={handleClose}>
+      <Card
+        className="tskr-popup-create-task"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="create-task-title"
+        onMouseDown={(event) => event.stopPropagation()}
+      >
         <ContentHeader
           title="Criar nova tarefa"
+          titleId="create-task-title"
         >
           <DeleteBtn onClick={handleClose} />
           <CreateButton type="submit" form="create-task-form" disabled={submitting || members.length === 0}>
@@ -138,12 +156,14 @@ export function CreateTaskPopup(props: PopupProps) {
             onChange={(value) => setPriority(value as TaskPriority)}
           />
         </Form>
-        <SelectMember
-          label="Responsável"
-          data={members}
-          onChange={setOwner}
-        />
-        {members.length === 0 ? <Text>O projeto não possui membros disponíveis para atribuição.</Text> : null}
+        <MemberSection>
+          <SelectMember
+            label="Responsável"
+            data={members}
+            onChange={setOwner}
+          />
+        </MemberSection>
+        {members.length === 0 ? <Notice>O projeto não possui membros disponíveis para atribuição.</Notice> : null}
       </Card>
     </Overlay>
   )

@@ -115,10 +115,10 @@ export function Calendar({
         <Title>{month?.name}, {firstDay?.year}</Title>
         <div id="actions">
           <button type="button" onClick={prevMonth}>
-            <ChevronLeftIcon width="32" fill={Palette.gray}/>
+            <ChevronLeftIcon width="20" fill={Palette.gray}/>
           </button>
           <button type="button" onClick={nextMonth}>
-            <ChevronRightIcon width="32" fill={Palette.gray}/>
+            <ChevronRightIcon width="20" fill={Palette.gray}/>
           </button>
         </div>
       </Header >

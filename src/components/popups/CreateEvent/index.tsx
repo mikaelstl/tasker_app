@@ -1,9 +1,8 @@
-import { Card, Overlay } from "./style";
+import { Card, Content, Overlay } from "./style";
 import { TextInput } from "../../base/TextInput";
 import { CalendarInput } from "../../base/CalendarInput";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { CreateButton } from "../../buttons/CreateButton";
-import { Form } from "../../misc/Form/style";
 import type { PopupProps } from "../popup.props";
 import type { CreateEventDTO } from "../../../service/types/events/event.create.dto";
 import { useParams } from "react-router-dom";
@@ -24,48 +23,82 @@ export function CreateEventPopup(props: PopupProps) {
   const [eventName, setEventName] = useState<string>('');
   const [date, setDate] = useState<string>('');
   const [category, setCategory] = useState<EventCategory>(EventCategory.MEETING);
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setDate('');
     setEventName('');
     setCategory(EventCategory.MEETING);
     props.closePopup();
-  }
+  }, [props.closePopup]);
 
   const onSubmit = async (ev:React.FormEvent) => {
     ev.preventDefault();
 
+    if (!id || !eventName.trim() || !date) {
+      showError('Preencha nome e data do evento');
+      return;
+    }
+
+    const parsedDate = new Date(date);
+    if (Number.isNaN(parsedDate.getTime())) {
+      showError('Informe uma data válida');
+      return;
+    }
+
     const event: CreateEventDTO = {
-      title: eventName,
-      date: new Date(date).toISOString(),
-      project: id!,
+      title: eventName.trim(),
+      date: parsedDate.toISOString(),
+      project: id,
       category,
     }
 
     try {
+      setSubmitting(true);
       const response = await EventService.create(event);
-      info(response.message as string);
-      props.closePopup();
-    } catch (requestError) {
-      console.error(requestError);
+      info(response.message || 'Evento criado com sucesso');
+      handleClose();
+    } catch {
       showError('Não foi possível criar o evento');
+    } finally {
+      setSubmitting(false);
     }
   }
+
+  useEffect(() => {
+    if (!props.showPopup) return;
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") handleClose();
+    };
+
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [handleClose, props.showPopup]);
 
   if (!props.showPopup) return null;
 
   return (
-    <Overlay className="tskr-popup-overlay">
-      <Card className="tskr-popup-create-project">
+    <Overlay className="tskr-popup-overlay" onMouseDown={handleClose}>
+      <Card
+        as="form"
+        className="tskr-popup-create-event"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="create-event-title"
+        onSubmit={onSubmit}
+        onMouseDown={(event) => event.stopPropagation()}
+      >
         <ContentHeader
           title="Adicionar evento"
+          titleId="create-event-title"
         >
-          <CreateButton type="submit">
-            <Text>Adicionar evento</Text>
+          <CreateButton type="submit" disabled={submitting}>
+            <Text>{submitting ? "Adicionando..." : "Adicionar evento"}</Text>
           </CreateButton>
           <DeleteBtn onClick={handleClose}/>
         </ContentHeader>
-        <Form onSubmit={onSubmit}>
+        <Content>
           <TextInput
             label="Nome do evento"
             value={eventName}
@@ -82,7 +115,7 @@ export function CreateEventPopup(props: PopupProps) {
             type={EventCategory}
             onChange={(value) => setCategory(value as EventCategory)}
           />
-        </Form>
+        </Content>
       </Card>
     </Overlay>
   )

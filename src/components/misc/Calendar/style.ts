@@ -64,6 +64,8 @@ const Weekday = styled.ul`
   border-bottom: 1px solid ${Palette.items};
   
   font-weight: 500;
+
+  color: white
 `;
 
 const Day = styled.li`
@@ -109,7 +111,7 @@ const Events = styled.div`
   
   padding-left: 10px;
   
-  border-left: 2px solid ${Palette.items};
+  border-left: 1px solid ${Palette.items};
 `;
 
 export {

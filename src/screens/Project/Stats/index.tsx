@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Text } from "../../../components/base/Text";
 import { ProjectStageBadge } from "../../../maps/project-stage";
@@ -84,58 +84,125 @@ export function Stats() {
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
 
+  const loadProject = useCallback(async () => {
+    if (!id) return null;
+
+    const response = await ProjectService.find(id);
+    return response.data;
+  }, [ProjectService, id]);
+
+  const loadReports = useCallback(async () => {
+    if (!id) return null;
+
+    const response = await ProjectService.listReports(id);
+    return response.data;
+  }, [ProjectService, id]);
+
+  const loadStats = useCallback(async () => {
+    if (!id) return null;
+
+    const response = await ProjectService.stats(id, { month });
+    return response.data;
+  }, [ProjectService, id, month]);
+
+  const loadMemberStats = useCallback(async () => {
+    if (!id) return null;
+
+    const response = await ProjectService.getProjectMemberStats(id, { month });
+    return response.data;
+  }, [ProjectService, id, month]);
+
+  const loadMemberPerformance = useCallback(async () => {
+    if (!id) return null;
+
+    const response = await ProjectService.getProjectMemberPerformance(id, { month });
+    return response.data;
+  }, [ProjectService, id, month]);
+
+  const loadReport = useCallback(async (reportkey: string) => {
+    if (!id) return null;
+
+    const response = await ProjectService.findReport(id, reportkey);
+    return response.data;
+  }, [ProjectService, id]);
+
   useEffect(() => {
-    if (!id) return;
     let active = true;
 
-    void ProjectService.find(id)
-      .then((response) => {
-        if (active) setProjectCreatedAt(response.data.created_at);
+    void loadProject()
+      .then((project) => {
+        if (active && project) setProjectCreatedAt(project.created_at);
       })
       .catch((error) => notify(error, "Não foi possível carregar os dados do projeto.", notifications));
 
-    void ProjectService.listReports(id)
-      .then((response) => {
-        if (active) setReports(response.data);
+    return () => { active = false; };
+  }, [loadProject, notifications]);
+
+  useEffect(() => {
+    let active = true;
+
+    void loadReports()
+      .then((projectReports) => {
+        if (active && projectReports) setReports(projectReports);
       })
       .catch((error) => notify(error, "Não foi possível carregar o histórico de relatórios.", notifications));
 
     return () => { active = false; };
-  }, [ProjectService, id, notifications]);
+  }, [loadReports, notifications]);
 
   useEffect(() => {
-    if (!id) return;
     let active = true;
     setLoading(true);
 
-    const loadStats = async () => {
-      try {
-        const statsResponse = await ProjectService.stats(id, { month });
-        if (active) setStats(statsResponse.data);
-
-        const memberStatsResponse = await ProjectService.getProjectMemberStats(id, { month });
-        if (active) setMemberStats(memberStatsResponse.data);
-
-        const performanceResponse = await ProjectService.getProjectMemberPerformance(id, { month });
-        if (active) setMemberPerformance(performanceResponse.data);
-      } catch (error) {
+    void loadStats()
+      .then((projectStats) => {
+        if (active && projectStats) setStats(projectStats);
+      })
+      .catch((error) => {
         if (active) notify(error, "Não foi possível carregar as estatísticas.", notifications);
-      } finally {
+      })
+      .finally(() => {
         if (active) setLoading(false);
-      }
-    };
+      });
 
-    void loadStats();
     return () => { active = false; };
-  }, [ProjectService, id, month, notifications]);
+  }, [loadStats, notifications]);
+
+  useEffect(() => {
+    let active = true;
+
+    void loadMemberStats()
+      .then((members) => {
+        if (active && members) setMemberStats(members);
+      })
+      .catch((error) => {
+        if (active) notify(error, "Não foi possível carregar as estatísticas dos membros.", notifications);
+      });
+
+    return () => { active = false; };
+  }, [loadMemberStats, notifications]);
+
+  useEffect(() => {
+    let active = true;
+
+    void loadMemberPerformance()
+      .then((performance) => {
+        if (active && performance) setMemberPerformance(performance);
+      })
+      .catch((error) => {
+        if (active) notify(error, "Não foi possível carregar o desempenho dos membros.", notifications);
+      });
+
+    return () => { active = false; };
+  }, [loadMemberPerformance, notifications]);
 
   const generateReport = async () => {
     if (!id) return;
     setGenerating(true);
     try {
       await ProjectService.generateReport(id, { month });
-      const response = await ProjectService.listReports(id);
-      setReports(response.data);
+      const projectReports = await loadReports();
+      if (projectReports) setReports(projectReports);
       notifications.info("Relatório gerado e baixado.");
     } catch (error) {
       notify(error, "Não foi possível gerar o relatório.", notifications);
@@ -145,10 +212,9 @@ export function Stats() {
   };
 
   const inspectReport = async (reportkey: string) => {
-    if (!id) return;
     try {
-      const response = await ProjectService.findReport(id, reportkey);
-      setSelectedReport(response.data);
+      const report = await loadReport(reportkey);
+      if (report) setSelectedReport(report);
     } catch (error) {
       notify(error, "Não foi possível consultar o relatório.", notifications);
     }

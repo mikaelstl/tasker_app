@@ -2,17 +2,16 @@ import styled from "styled-components";
 import Palette from "../../../assets/palette";
 
 const Overlay = styled.div`
-  position: absolute;
+  position: fixed;
+  inset: 0;
+  z-index: 20;
 
   display: flex;
-  flex: 1 1 auto;
   align-items: center;
   justify-content: center;
+  padding: 20px;
 
-  background-color: #00000080;
-
-  height: 100%;
-  width: 100%;
+  background: #00000080;
 `;
 
 const Card = styled.div`
@@ -20,19 +19,22 @@ const Card = styled.div`
 
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  
-  background-color: ${Palette.tool_bars};
+  gap: 20px;
+  width: min(680px, 100%);
+  max-height: min(720px, 90vh);
+  min-height: 0;
+  padding: 0 20px 20px;
 
-  padding: 20px;
-
-  width: 60%;
-  height: fit-content;
-  max-height: 90%;
-
-  border-radius: 6px;
+  border: 1px solid ${Palette.items};
+  border-radius: 14px;
+  background: ${Palette.tool_bars};
+  box-shadow: 0 20px 60px #00000066;
 
   overflow: hidden;
+
+  @media (max-width: 560px) {
+    max-height: 90vh;
+  }
 `;
 
 const Header = styled.div`
@@ -56,15 +58,15 @@ const Content = styled.div`
 
   width: 100%;
 
+  min-height: 0;
   overflow: auto;
-  overflow: overlay;
 `;
 
 const Infos = styled.div`
   grid-area: tskr-proj-infos;
 
   display: grid;
-  gap: 8px;
+  gap: 20px;
 
   width: 100%;
 `;
