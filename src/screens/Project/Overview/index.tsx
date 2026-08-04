@@ -53,7 +53,7 @@ export function Overview() {
       : tasks;
 
     return [...visibleTasks]
-      .sort((left, right) => priorityOrder.indexOf(right.priority) - priorityOrder.indexOf(left.priority));
+      .sort((left, right) => priorityOrder.indexOf(left.priority)-priorityOrder.indexOf(right.priority));
   }, [org?.affiliationId, org?.role, tasks]);
 
   const showError = useCallback((error: unknown, fallback: string) => {

@@ -345,7 +345,7 @@ export function EditProject() {
                 <MembersEmpty>Carregando participantes...</MembersEmpty>
               ) : sortedAffiliations.length > 0 ? (
                 <>
-                  {sortedAffiliations.map((member) => {
+                  {sortedAffiliations.filter(member => projectMemberIds.has(member.id)).map((member) => {
                     const projectMember = projectMembers.find((item) => item.userkey === member.id);
                     const isAlreadyAdded = projectMemberIds.has(member.id);
 
@@ -388,7 +388,6 @@ export function EditProject() {
                   {currentManager ? (
                     <User
                       affiliationId={currentManager.id}
-                      username={formatAffiliationUsername(currentManager)}
                       actorName={formatAffiliationName(currentManager)}
                       actorUsername={formatAffiliationUsername(currentManager)}
                     />

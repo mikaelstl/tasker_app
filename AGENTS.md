@@ -18,6 +18,9 @@ Use the npm scripts defined in `package.json`:
 
 The README mentions `npm start`, but this project currently defines `npm run dev` instead.
 
+## Operational Context
+Before running commands or changing a feature, consult the relevant content in `context/` to understand the current state of the affected area. When you finish a task, update the corresponding context and, if a prompt/task file is in use, mark the task as completed and add a short summary below it.
+
 ## Coding Style & Naming Conventions
 Use TypeScript and modern React function components. Follow the existing ESLint setup in `eslint.config.js`; it targets `*.ts` and `*.tsx` files and enforces React Hooks rules.
 
@@ -28,6 +31,9 @@ Prefer:
 - folder-per-feature patterns with `index.tsx` or `index.ts`
 
 Keep styling colocated when a screen needs its own styles, usually in `style.ts`.
+
+## Typing
+Avoid `Omit`, `Partial`, `Record`, `Pick`, `RecordResult`, and other derived types that build a new object from another one. Always prefer explicit contracts with `interfaces` and `types`.
 
 ## Testing & Validation
 There is no dedicated test runner configured yet. Before opening a change, run `npm run lint` and `npm run build` to catch type and integration issues. If you add tests, place them near the feature they cover and name them clearly, such as `ComponentName.test.tsx`.

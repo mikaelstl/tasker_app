@@ -159,7 +159,7 @@ export function Members() {
   const projectMembers = useMemo<ProjectMemberReference[]>(() => (
     memberStats.map((member) => ({
       id: member.memberId,
-      userkey: member.user.username,
+      userkey: member.user.affiliationId,
     }))
   ), [memberStats]);
 
@@ -176,7 +176,7 @@ export function Members() {
   const addProjectMember = async (memberkey: string) => {
     if (!id) return;
 
-    if (projectMembers.some((member) => member.userkey === memberkey)) {
+    if (projectMembers.some((member) => member.id === memberkey)) {
       notifications.info("Esse membro já está no projeto.");
       return;
     }

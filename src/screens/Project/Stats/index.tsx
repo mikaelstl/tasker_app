@@ -12,16 +12,11 @@ import {
   Control,
   Controls,
   EmptyState,
-  EventsGrid,
-  Facts,
   Members,
   ProgressBar,
   ProgressCard,
   ProgressContainer,
   ProjectInfo,
-  ReportDetails,
-  ReportList,
-  Section,
   WidgetsContainer,
 } from "./style";
 import { TasksInfosWidget } from "../../../widgets/cards/TasksInfosWidget";
@@ -30,7 +25,6 @@ import { Title } from "../../../components/base/Title";
 import { ProjectHealthWidget } from "../../../widgets/cards/ProjectHealthWidget";
 import { PerformanceChart } from "../../../widgets/charts/PerformanceChart";
 import { ProdutivityChart } from "../../../widgets/charts/ProdutivityChart";
-import { EventCard } from "../../../components/cards/EventCard";
 import { MemberStatTile } from "../../../components/tiles/MemberStatTile";
 import { useServices } from "../../../hooks/useServices";
 import { useToast, type ToastNotifications } from "../../../hooks/useToast";
@@ -52,11 +46,6 @@ function notify(error: unknown, fallback: string, notifications: ToastNotificati
 const formatDate = (value: string | null) => value
   ? new Intl.DateTimeFormat("pt-BR", { dateStyle: "medium" }).format(new Date(value))
   : "—";
-
-const formatDateTime = (value: string) => new Intl.DateTimeFormat("pt-BR", {
-  dateStyle: "short",
-  timeStyle: "short",
-}).format(new Date(value));
 
 const currentMonth = () => {
   const date = new Date();
@@ -290,13 +279,6 @@ export function Stats() {
           />
         </WidgetsContainer>
 
-        <Facts>
-          <Text><strong>{stats.summary.openTasks}</strong> abertas</Text>
-          <Text><strong>{stats.summary.reviewTasks}</strong> em revisão</Text>
-          <Text><strong>{stats.project.delayed ? "Sim" : "Não"}</strong> projeto atrasado</Text>
-          <Text><strong>{formatDate(stats.period.start)} – {formatDate(stats.period.end)}</strong> período calculado</Text>
-        </Facts>
-
         <WidgetsContainer className="tskr-charts">
           <PerformanceChart performance={memberPerformance?.members ?? stats.performancePerMember} />
           <ProdutivityChart productivity={stats.productivity} members={stats.members} />
@@ -319,44 +301,6 @@ export function Stats() {
             ))}
           </div>
         </Members>
-
-        <Section>
-          <Title>Eventos no recorte</Title>
-          {stats.events.length === 0 ? <Text>Nenhum evento encontrado.</Text> : (
-            <EventsGrid>
-              {stats.events.map((event) => (
-                <EventCard
-                  key={event.id}
-                  title={event.title}
-                  time={formatDateTime(event.date)}
-                  category={event.category}
-                />
-              ))}
-            </EventsGrid>
-          )}
-        </Section>
-
-        <Section>
-          <Title>Relatórios gerados</Title>
-          {reports.length === 0 ? <Text>Nenhum relatório gerado.</Text> : (
-            <ReportList>
-              {reports.map((report) => (
-                <button key={report.id} type="button" onClick={() => void inspectReport(report.id)}>
-                  <span>{formatDateTime(report.generated_at)}</span>
-                  <small>{report.period_type} · mês {report.payload_json?.stats.month ?? "—"}</small>
-                </button>
-              ))}
-            </ReportList>
-          )}
-          {selectedReport ? (
-            <ReportDetails>
-              <Subtitle>Relatório selecionado</Subtitle>
-              <Text>ID: {selectedReport.id}</Text>
-              <Text>Snapshot: {selectedReport.snapshotkey ?? "não vinculado"}</Text>
-              <Text>Arquivo persistido: {selectedReport.file_url ?? "não — o backend entrega o PDF apenas na geração"}</Text>
-            </ReportDetails>
-          ) : null}
-        </Section>
       </Content>
     </Container>
   );

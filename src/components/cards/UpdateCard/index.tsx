@@ -4,11 +4,6 @@ import {
   Card,
   Content,
   Description,
-  Detail,
-  DetailField,
-  DetailIcon,
-  DetailValue,
-  Details,
   Header,
   ResourceBadge,
   TrackerDot,
@@ -16,7 +11,6 @@ import {
   UpdateDate,
 } from "./style";
 import { User } from "@/components/misc/User";
-import { TransferHorizontal as ArrowsRightLeftIconOutline } from "@/components/icons/solar-icons";
 
 interface UpdateCardDTO {
   readonly actorName: string;
@@ -79,22 +73,6 @@ export function UpdateCard({
             isSystem={isSystem}
           />
         </ActorDetails>
-
-        {details.length > 0 && (
-          <Details>
-            {details.map((detail) => (
-              <Detail key={detail.field}>
-                <DetailIcon aria-hidden="true">
-                  <ArrowsRightLeftIconOutline />
-                </DetailIcon>
-                <DetailField>{detail.field}</DetailField>
-                <DetailValue>
-                  {detail.oldValue} <span aria-hidden="true">→</span> {detail.newValue}
-                </DetailValue>
-              </Detail>
-            ))}
-          </Details>
-        )}
       </Content>
     </Card>
   );

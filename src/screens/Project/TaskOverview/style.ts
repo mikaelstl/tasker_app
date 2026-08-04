@@ -70,18 +70,16 @@ const TaskInfo = styled.aside`
   display: flex;
   flex-direction: column;
   gap: 18px;
-  min-width: 0;
-  min-height: 0;
+  
   overflow-y: auto;
 
   padding: 22px;
   border-left: 1px solid ${Palette.items};
-  background: ${Palette.items};
 `;
 
 const TaskLayout = styled.div`
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 280px;
+  grid-template-columns: minmax(0, 1fr) 360px;
   flex: 1 1 auto;
   min-height: 0;
 

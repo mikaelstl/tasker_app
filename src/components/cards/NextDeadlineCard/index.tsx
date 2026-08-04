@@ -15,7 +15,7 @@ export function NextDeadlineCard({ deadline }: NextDeadlineCardProps) {
   return (
     <Container className="tskr-next-deadline-card">
       <Header>
-        <Title>Próximo prazo</Title>
+        <Title>Prazo final</Title>
         <CalendarIcon width={20}/>
       </Header>
       <Infos>

@@ -16,7 +16,6 @@ export function CalendarInput(props: CalendarInputProps) {
       <Label htmlFor="text-input">{props.label}</Label>
       <Input name="calendar-input"
         type="datetime-local"
-        min={now.toFormat("yyyy-LL-dd'T'HH:mm")}
         value={props.value}
         onChange={(evt) => {
             evt.preventDefault()

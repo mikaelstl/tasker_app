@@ -16,15 +16,17 @@ const Palette = {
   
   lightBlue: '#508CEE',
   lightBlue_50: 'rgba(80, 140, 238, 0.50)',
+  lightBlue_25: 'rgba(80, 140, 238, 0.25)',
   
   blue: '#29449D',
   blue_50: 'rgba(41, 68, 157, 0.50)',
+  blue_25: 'rgba(41, 68, 157, 0.25)',
   
   green: '#26998D',
   green_25: 'rgba(38, 153, 141, 0.25)',
   green_50: 'rgba(38, 153, 141, 0.50)',
   
-  red: '#B23243',
+  red: '#ca3448',
   red_25: 'rgba(188, 59, 76, 0.25)',
   red_50: 'rgba(188, 59, 76, 0.50)',
   

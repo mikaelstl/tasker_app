@@ -3,7 +3,7 @@ import { Text } from "../../../components/base/Text";
 import { Actions, CloseButton, Container, Description, Dialog, EditForm, HeaderActions, Links, ModalHeader, Tag, Tags, TaskInfo, TaskLayout } from "./style";
 import type { ApiError } from "../../../service/types/response/error";
 import { useToast } from "../../../hooks/useToast";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { SectionTitle } from "../../../components/base/SectionTitle";
 import { Subtitle } from "../../../components/base/Subtitle";
 import { EditButton } from "../../../components/buttons/EditBtn";
@@ -53,6 +53,7 @@ const TaskStageBadge = ({ stage }: { stage: TaskStage }) => {
 
 export function TaskOverview() {
   const navigate = useNavigate();
+  const location = useLocation();
   const notifications = useToast();
   const { TaskService } = useServices();
   const { id: projectkey, code } = useParams();
@@ -79,6 +80,15 @@ export function TaskOverview() {
     if (!apiError.errors?.length) return notifications.error(fallback);
     apiError.errors.forEach((item) => notifications[item.level](item.message));
   }, [notifications]);
+
+  const closeModal = useCallback(() => {
+    if (location.state?.backgroundLocation) {
+      navigate(-1);
+      return;
+    }
+
+    navigate(`/home/project/${projectkey}/tasks`, { replace: true });
+  }, [location.state, navigate, projectkey]);
 
   useEffect(() => {
     if (!projectkey || !code) return;
@@ -112,16 +122,12 @@ export function TaskOverview() {
 
   useEffect(() => {
     const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") navigate(`/home/project/${projectkey}/tasks`);
+      if (event.key === "Escape") closeModal();
     };
 
     window.addEventListener("keydown", closeOnEscape);
     return () => window.removeEventListener("keydown", closeOnEscape);
-  }, [navigate, projectkey]);
-
-  const closeModal = () => {
-    navigate(`/home/project/${projectkey}/tasks`);
-  };
+  }, [closeModal]);
 
   const editTask = async () => {
     if (!task || !projectkey || !code) return;
@@ -160,7 +166,7 @@ export function TaskOverview() {
     try {
       await TaskService.delete(task.id);
       notifications.info("Tarefa excluída.");
-      navigate(`/home/project/${projectkey}/tasks`, { replace: true });
+      closeModal();
     } catch (error) {
       showError(error, "Não foi possível excluir a tarefa.");
     }
@@ -241,12 +247,16 @@ const TaskTags = ({ task }: { task: TaskWithOwnerDTO }) => (
   <Tags className="tskr-task-tag">
     <TaskTag label="Código"><Text>{task.code}</Text></TaskTag>
     <TaskTag label="Prioridade">{PriorityBadge[task.priority]}</TaskTag>
+    <TaskTag label="Status"><TaskStageBadge stage={task.stage} /></TaskTag>
+    <TaskTag label="Situação do prazo">
+      {task.delayed
+        ? <Badge bg={Palette.red_25} text={Palette.red}>Atrasada</Badge>
+        : <Text>Dentro do prazo</Text>}
+    </TaskTag>
     <TaskTag label="Responsável"><User affiliationId={task.owner.userkey} /></TaskTag>
     <TaskTag label="Prazo"><Text>{formatDateTime(task.deadline)}</Text></TaskTag>
-    <TaskTag label="Status"><TaskStageBadge stage={task.stage} /></TaskTag>
     <TaskTag label="Iniciada em"><Text>{formatDateTime(task.started_at)}</Text></TaskTag>
     <TaskTag label="Concluída em"><Text>{formatDateTime(task.done_at)}</Text></TaskTag>
-    <TaskTag label="Situação do prazo"><Text>{task.delayed ? "Atrasada" : "Dentro do prazo"}</Text></TaskTag>
     <TaskTag label="Criada em"><Text>{formatDateTime(task.created_at)}</Text></TaskTag>
     <TaskTag label="Última atualização"><Text>{formatDateTime(task.updated_at)}</Text></TaskTag>
   </Tags>
