@@ -11,7 +11,7 @@ import { ProjectCard } from "@/components/cards/ProjectCard/index.tsx";
 import { useToast } from "@/hooks/useToast.tsx";
 import type { ApiError } from "@/service/types/response/error.ts";
 import { useOrganization } from "@/hooks/useOrganization.ts";
-import { OrgRole } from "@/utils/enums/OrgRole.ts";
+import { useAccessControl } from "@/hooks/useAccessControl.ts";
 
 type StageFilter = ProjectStage | "ALL";
 
@@ -40,6 +40,7 @@ export function Projects() {
   const notifications = useToast();
 
   const { org } = useOrganization();
+  const { canCreateProject } = useAccessControl();
 
   const [projects, setProjects] = useState<ProjectDTO[]>([]);
   const [search, setSearch] = useState("");
@@ -96,7 +97,7 @@ export function Projects() {
         title="Projects"
       >
         {
-          org?.role === OrgRole.OWNER
+          canCreateProject()
             ? <CreateButton type="button" onClick={handlePopup}>
               <Text>
                 Criar novo projeto

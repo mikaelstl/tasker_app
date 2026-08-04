@@ -36,6 +36,7 @@ import { DeleteBtn } from "@/components/buttons/DeleteBtn";
 import { useNavigate } from "react-router-dom";
 import type { OrganizationSummaryDTO } from "@/service/types/organization/summary.dto";
 import { buildInviteUrl } from "@/config/invite";
+import { useAccessControl } from "@/hooks/useAccessControl";
 
 const ROLE_ORDER: OrgRole[] = [OrgRole.OWNER, OrgRole.MANAGER, OrgRole.MEMBER];
 
@@ -69,6 +70,7 @@ export function Organization() {
   const { org, clearOrg } = useOrganization();
   const { AffiliationService, OrganizationService } = useServices();
   const notifications = useToast();
+  const { canManageOrganization } = useAccessControl();
   
   const [organization, setOrganization] = useState<OrganizationSummaryDTO | null>(null);
   const [members, setMembers] = useState<AffiliationDTO[]>([]);
@@ -142,7 +144,7 @@ export function Organization() {
     }))
   ), [members]);
 
-  const isOwner = org?.role === OrgRole.OWNER;
+  const isOwner = canManageOrganization();
 
   const deleteOrganization = async () => {
     if (!org?.orgkey || !organization) return;
@@ -265,7 +267,7 @@ export function Organization() {
             <Text>Convidar membro</Text>
           </CreateButton>
         )}
-        {organization && (
+        {organization && canManageOrganization() && (
           <DeleteBtn
             label={deletingOrganization ? "Excluindo..." : "Excluir organização"}
             disabled={deletingOrganization}

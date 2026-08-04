@@ -23,6 +23,7 @@ import { CreateButton } from "../../../components/buttons/CreateButton";
 import { Badge } from "../../../components/badge/Badge";
 import Palette from "../../../assets/palette";
 import { CloseCircle as CloseIcon } from "../../../components/icons/solar-icons";
+import { useAccessControl } from "../../../hooks/useAccessControl";
 
 const toLocalInput = (iso: string) => {
   const date = new Date(iso);
@@ -56,6 +57,7 @@ export function TaskOverview() {
   const location = useLocation();
   const notifications = useToast();
   const { TaskService } = useServices();
+  const { canEditTask, canDeleteTask } = useAccessControl();
   const { id: projectkey, code } = useParams();
   const [task, setTask] = useState<TaskWithOwnerDTO | null>(null);
   const [editing, setEditing] = useState(false);
@@ -200,8 +202,12 @@ export function TaskOverview() {
             <SectionTitle id="task-overview-title">{task.name}</SectionTitle>
           </div>
           <HeaderActions>
-            <EditButton type="button" onClick={() => setEditing(true)} />
-            <DeleteBtn label="Excluir tarefa" onClick={() => void deleteTask()} />
+            {canEditTask(task.owner.userkey) && (
+              <EditButton type="button" onClick={() => setEditing(true)} />
+            )}
+            {canDeleteTask(task.owner.userkey) && (
+              <DeleteBtn label="Excluir tarefa" onClick={() => void deleteTask()} />
+            )}
             <CloseButton type="button" onClick={closeModal} aria-label="Fechar detalhes da tarefa">
               <CloseIcon width={22} />
             </CloseButton>

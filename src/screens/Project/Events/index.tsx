@@ -10,12 +10,14 @@ import { Text } from "../../../components/base/Text";
 import { useToast } from "@/hooks/useToast";
 import { useNavigate, useParams } from "react-router-dom";
 import { useServices } from "../../../hooks/useServices";
+import { useAccessControl } from "../../../hooks/useAccessControl";
 
 export function Events() {
   const navigate = useNavigate();
   const notifications = useToast();
   const { id } = useParams();
   const { EventService } = useServices();
+  const { canCreateEvent } = useAccessControl();
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const handleOpenPopup = () => {
@@ -54,9 +56,11 @@ export function Events() {
       <ContentHeader
         title=""
       >
+      {canCreateEvent() && (
         <CreateButton type="button" onClick={handleOpenPopup}>
           <Text>Novo evento</Text>
         </CreateButton>
+      )}
       </ContentHeader>
       <CalendarArea id="calendar-area">
         <Calendar events={events}/>

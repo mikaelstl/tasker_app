@@ -36,6 +36,7 @@ import {
   type ProjectStatsReport,
 } from "../../../service/types/stats/stats.types";
 import { ProjectStage } from "../../../service/types/project/project.dto";
+import { useAccessControl } from "../../../hooks/useAccessControl";
 
 function notify(error: unknown, fallback: string, notifications: ToastNotifications) {
   const apiError = error as ApiError;
@@ -63,6 +64,7 @@ export function Stats() {
   const { id } = useParams();
   const { ProjectService } = useServices();
   const notifications = useToast();
+  const { canEditProject, canGenerateProjectStatsReport } = useAccessControl();
   const [stats, setStats] = useState<ProjectStats | null>(null);
   const [memberPerformance, setMemberPerformance] = useState<ProjectMemberPerformance | null>(null);
   const [memberStats, setMemberStats] = useState<MemberStats[]>([]);
@@ -240,7 +242,7 @@ export function Stats() {
         </Subtitle>
         {badge}
         <Actions>
-          <EditButton type="button" onClick={() => navigate("../edit")} />
+          {canEditProject() && <EditButton type="button" onClick={() => navigate("../edit")} />}
         </Actions>
         <ProjectProgressSection progress={stats.summary.progress} />
       </ProjectInfo>
@@ -258,9 +260,11 @@ export function Stats() {
               onChange={(event) => selectMonth(event.target.value)}
             />
           </Control>
-          <CreateButton type="button" disabled={generating} onClick={() => void generateReport()}>
-            <Text>{generating ? "Gerando PDF..." : "Gerar relatório PDF"}</Text>
-          </CreateButton>
+          {canGenerateProjectStatsReport() && (
+            <CreateButton type="button" disabled={generating} onClick={() => void generateReport()}>
+              <Text>{generating ? "Gerando PDF..." : "Gerar relatório PDF"}</Text>
+            </CreateButton>
+          )}
         </Controls>
 
         <WidgetsContainer className="tskr-project-infos-widget">

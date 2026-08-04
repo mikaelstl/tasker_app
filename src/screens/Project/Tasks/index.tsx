@@ -18,6 +18,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useToast } from "@/hooks/useToast";
 import { useServices } from "../../../hooks/useServices";
 import { TaskPriority } from "../../../service/types/task/priority.dto";
+import { useAccessControl } from "../../../hooks/useAccessControl";
 
 const priorityOrder = [
   TaskPriority.EXTREME,
@@ -39,6 +40,7 @@ export function Tasks() {
   const notifications = useToast();
   const { id } = useParams();
   const { TaskService } = useServices();
+  const { canCreateTask } = useAccessControl();
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -88,13 +90,12 @@ export function Tasks() {
     <Container className="tasks">
       <CreateTaskPopup showPopup={isPopupOpen} closePopup={handleClosePopup} />
       <ContentHeader title="">
-        <CreateButton
-          type="button"
-          onClick={handleOpenPopup}
-        >
-          <PlusIcon width={20} />
-          <Text>Nova tarefa</Text>
-        </CreateButton>
+        {canCreateTask() && (
+          <CreateButton type="button" onClick={handleOpenPopup}>
+            <PlusIcon width={20} />
+            <Text>Nova tarefa</Text>
+          </CreateButton>
+        )}
       </ContentHeader>
       <Margin margin="0px 20px">
         <SearchField

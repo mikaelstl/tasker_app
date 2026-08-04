@@ -18,6 +18,7 @@ import {
   FolderOpen
 } from "@/components/icons/solar-icons"
 import { useOrganization } from "../../../hooks/useOrganization"
+import { useAccessControl } from "../../../hooks/useAccessControl"
 
 interface ProjectNavAccordionProps {
   isOpen: boolean
@@ -29,6 +30,7 @@ const ProjectNavAccordion = ({
   projectId
 }: ProjectNavAccordionProps) => {
   const navigate = useNavigate();
+  const { canViewProjectStats } = useAccessControl();
 
   const location = useLocation();
   const projectPath = `/home/project/${projectId}`;
@@ -101,15 +103,17 @@ const ProjectNavAccordion = ({
               <User width="18" />
               Membros
             </NavItem>
-            <NavItem 
-              className="tskr-nav-item"
-              type="button"
-              onClick={() => navigate(`${projectPath}/stats`)}
-              $activated={path === `${projectPath}/stats`}
-            >
-              <Chart width="18" />
-              Estatísticas
-            </NavItem>
+            {canViewProjectStats() && (
+              <NavItem
+                className="tskr-nav-item"
+                type="button"
+                onClick={() => navigate(`${projectPath}/stats`)}
+                $activated={path === `${projectPath}/stats`}
+              >
+                <Chart width="18" />
+                Estatísticas
+              </NavItem>
+            )}
           </Nav>
           : <></>
       }

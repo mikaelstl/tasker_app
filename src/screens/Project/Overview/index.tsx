@@ -23,6 +23,7 @@ import type { EventDTO } from "../../../service/types/events/event.dto";
 import { useOrganization } from "../../../hooks/useOrganization";
 import { OrgRole } from "../../../utils/enums/OrgRole";
 import { TaskPriority } from "../../../service/types/task/priority.dto";
+import { useAccessControl } from "../../../hooks/useAccessControl";
 
 const priorityOrder = [
   TaskPriority.EXTREME,
@@ -39,6 +40,7 @@ export function Overview() {
 
   const { user } = useAuth();
   const { org } = useOrganization();
+  const { canEditProject } = useAccessControl();
 
   const { id } = useParams();
 
@@ -49,7 +51,7 @@ export function Overview() {
 
   const importantTasks = useMemo(() => {
     const visibleTasks = org?.role === OrgRole.MEMBER
-      ? tasks.filter((task) => task.owner?.userkey === org.affiliationId)
+      ? tasks.filter((task) => task.ownerkey === org.affiliationId)
       : tasks;
 
     return [...visibleTasks]
@@ -161,7 +163,7 @@ export function Overview() {
               {" · "}Prazo: {new Date(project.deadline).toLocaleString("pt-BR")}
             </Subtitle>
             {ProjectStageBadge(project.stage)}
-            <EditButton type="button" onClick={() => navigate('../edit')} />
+            {canEditProject() && <EditButton type="button" onClick={() => navigate('../edit')} />}
             <Description>
               <Subtitle>Descrição</Subtitle>
               <Text>{project.description}</Text>

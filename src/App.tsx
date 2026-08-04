@@ -9,7 +9,6 @@ import { Events } from "./screens/Project/Events"
 import { Members } from "./screens/Project/Members"
 import { Tasks } from "./screens/Project/Tasks"
 import { Register } from "./pages/Register"
-// import { PrivateRoute } from "./routes/PrivateRoute"
 import { Home } from "./pages/Home"
 import { Stats } from "./screens/Project/Stats"
 import { EditProject } from "./screens/Project/Edit"
@@ -23,6 +22,7 @@ import { CreateOrg } from "./screens/CreateOrg"
 import { ProtectedRoute } from "./routes/ProtectedRoute"
 import { Profile } from "./screens/Profile"
 import { EditProfile } from "./screens/Profile/Edit"
+import { PermissionRoute } from "./routes/PermissionRoute"
 
 interface AppLocationState {
   backgroundLocation?: Location;
@@ -66,8 +66,16 @@ function AppRoutes() {
                   <Route path="tasks" element={<Tasks />} />
                   <Route path="members" element={<Members />} />
                   <Route path="calendar" element={<Events />} />
-                  <Route path="stats" element={<Stats />} />
-                  <Route path="edit" element={<EditProject />} />
+                  <Route path="stats" element={(
+                    <PermissionRoute permission="viewProjectStats">
+                      <Stats />
+                    </PermissionRoute>
+                  )} />
+                  <Route path="edit" element={(
+                    <PermissionRoute permission="editProject">
+                      <EditProject />
+                    </PermissionRoute>
+                  )} />
                   <Route path="task/:code" element={<TaskOverview />} />
                 </Route>
               </Route>

@@ -23,6 +23,7 @@ import {
   AddProjectMember,
   type ProjectMemberReference,
 } from "@/components/popups/AddProjectMember";
+import { useAccessControl } from "@/hooks/useAccessControl";
 
 function reportApiError(
   error: unknown,
@@ -70,6 +71,7 @@ export function Members() {
   const notifications = useToast();
   const { id } = useParams();
   const { org } = useOrganization();
+  const { canManageProjectMembers } = useAccessControl();
   const { AffiliationService, MemberService, ProjectService } = useServices();
 
   const [project, setProject] = useState<ProjectDTO | null>(null);
@@ -210,9 +212,11 @@ export function Members() {
   return (
     <Container className="tskr-proj-members">
       <ContentHeader title="Membros do projeto">
-        <CreateButton type="button" onClick={() => setModalOpen(true)} disabled={loading}>
-          <Text>Editar Membros</Text>
-        </CreateButton>
+        {canManageProjectMembers() && (
+          <CreateButton type="button" onClick={() => setModalOpen(true)} disabled={loading}>
+            <Text>Editar Membros</Text>
+          </CreateButton>
+        )}
       </ContentHeader>
 
       <Content id="team">
@@ -252,7 +256,7 @@ export function Members() {
       </Content>
 
       <AddProjectMember
-        open={modalOpen}
+        open={modalOpen && canManageProjectMembers()}
         loading={loading}
         projectTitle={projectTitle}
         members={filteredOrganizationMembers}
