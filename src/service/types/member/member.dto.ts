@@ -13,3 +13,7 @@ export interface ProjectMember extends MemberRecordDTO {
   readonly user?: AffiliationDTO;
   readonly tasks: TaskDTO[];
 }
+
+export interface ProjectMemberWithTasks extends MemberRecordDTO {
+  readonly tasks: TaskDTO[];
+}

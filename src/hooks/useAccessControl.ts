@@ -3,6 +3,7 @@ import { OrgRole } from "../utils/enums/OrgRole";
 
 export type AccessPermission =
   | "viewProjectStats"
+  | "viewAllProjectTasks"
   | "generateProjectStatsReport"
   | "editProject"
   | "manageProjectMembers"
@@ -16,6 +17,7 @@ export type AccessPermission =
 interface AccessControl {
   can: (permission: AccessPermission, ownerAffiliationId?: string) => boolean;
   canViewProjectStats: () => boolean;
+  canViewAllProjectTasks: () => boolean;
   canGenerateProjectStatsReport: () => boolean;
   canEditProject: () => boolean;
   canManageProjectMembers: () => boolean;
@@ -31,6 +33,7 @@ type PermissionCheck = (ownerAffiliationId?: string) => boolean;
 
 interface PermissionChecks {
   viewProjectStats: PermissionCheck;
+  viewAllProjectTasks: PermissionCheck;
   generateProjectStatsReport: PermissionCheck;
   editProject: PermissionCheck;
   manageProjectMembers: PermissionCheck;
@@ -49,6 +52,7 @@ export function useAccessControl(): AccessControl {
 
   const permissionChecks: PermissionChecks = {
     viewProjectStats: () => role === OrgRole.OWNER || role === OrgRole.MANAGER,
+    viewAllProjectTasks: () => role === OrgRole.OWNER || role === OrgRole.MANAGER,
     generateProjectStatsReport: () => role === OrgRole.OWNER || role === OrgRole.MANAGER,
     editProject: () => role === OrgRole.OWNER,
     manageProjectMembers: () => role === OrgRole.OWNER || role === OrgRole.MANAGER,
@@ -75,6 +79,7 @@ export function useAccessControl(): AccessControl {
   return {
     can,
     canViewProjectStats: () => can("viewProjectStats"),
+    canViewAllProjectTasks: () => can("viewAllProjectTasks"),
     canGenerateProjectStatsReport: () => can("generateProjectStatsReport"),
     canEditProject: () => can("editProject"),
     canManageProjectMembers: () => can("manageProjectMembers"),

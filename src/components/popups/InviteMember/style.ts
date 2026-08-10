@@ -83,6 +83,11 @@ const InviteInput = styled.input`
 
   background-color: ${Palette.content};
   color: ${Palette.white};
+
+  &::placeholder {
+    color: ${Palette.gray};
+    font-weight: 400;
+  }
 `;
 
 const PrimaryButton = styled.button`

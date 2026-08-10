@@ -90,8 +90,8 @@ export function MemberStatsAccordion({
   )
 }
 
-const formatDuration = (minutes: number) => {
-  const safeMinutes = Math.max(0, Math.round(minutes));
+const formatDuration = (time: number) => {
+  const safeMinutes = Math.max(0, Math.round(time / 60_000));
   return `${Math.floor(safeMinutes / 60)}h ${String(safeMinutes % 60).padStart(2, "0")}m`;
 };
 
@@ -102,7 +102,7 @@ const PerformanceTile = ({ task }: { task: StatsTask }) => {
         <MemberSubtitle>{task.code} · {task.stage}{task.delayed ? " · ATRASADA" : ""}</MemberSubtitle>
         <MemberTitle>{task.name}</MemberTitle>
       </Task>
-      <MemberTitle>{formatDuration(task.spentMinutes)}</MemberTitle>
+      <MemberTitle>{formatDuration(task.time)}</MemberTitle>
     </StatDetail>
   )
 }

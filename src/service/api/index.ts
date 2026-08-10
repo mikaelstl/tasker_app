@@ -24,7 +24,7 @@ export class ApiClient {
     const configuredTimeout = Number(dotenv.REQUEST_TIMEOUT);
 
     this.api = axios.create({
-      baseURL: dotenv.API_BASE_URL || "http://localhost:3000",
+      baseURL: dotenv.API_BASE_URL || "http://localhost:3000/api/v1",
       timeout: Number.isFinite(configuredTimeout) && configuredTimeout > 0
         ? configuredTimeout
         : 10_000,

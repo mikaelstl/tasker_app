@@ -151,6 +151,11 @@ const Input = styled.input`
     outline: 2px solid ${Palette.lightBlue_50};
     outline-offset: 1px;
   }
+
+  &::placeholder {
+    color: ${Palette.gray};
+    font-weight: 400;
+  }
 `;
 
 const Hint = styled.p`

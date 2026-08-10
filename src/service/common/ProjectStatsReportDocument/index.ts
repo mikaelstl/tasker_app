@@ -305,7 +305,7 @@ export class ProjectStatsReportDocument {
           task.code,
           task.name,
           task.delayed ? "ATRASADA" : task.stage,
-          this.duration(task.spentMinutes),
+          this.duration(task.time),
           this.date(task.deadline),
         ])
         : [["—", "Nenhuma tarefa atribuída", "—", "0h 00min", "—"]];
@@ -542,7 +542,8 @@ export class ProjectStatsReportDocument {
     }[status] ?? COLORS.muted;
   }
 
-  private duration(minutes: number): string {
+  private duration(time: number): string {
+    const minutes = Math.max(0, Math.round(time / 60_000));
     return `${Math.floor(minutes / 60)}h ${String(minutes % 60).padStart(2, "0")}min`;
   }
 

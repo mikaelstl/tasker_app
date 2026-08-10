@@ -25,7 +25,7 @@ export type StatsTask = {
   name: string;
   stage: TaskStage;
   delayed: boolean;
-  spentMinutes: number;
+  time: number;
   deadline: string;
   startedAt: string | null;
   doneAt: string | null;
@@ -37,8 +37,13 @@ export type MemberPerformance = {
   months: Array<{
     month: string;
     averageHours: number;
+    weeks?: Array<{
+      week: string;
+      averageHours: number;
+    }>;
   }>;
   averageHoursPerMonth: number;
+  averageHoursPerTask?: number;
 };
 
 export type ProjectMemberPerformance = {
@@ -56,7 +61,7 @@ export type ProjectMemberPerformance = {
     delayRate: number;
     startedTasks: number;
     reviewTasks: number;
-    spentMinutes: number;
+    time: number;
     spentHours: number;
   }>;
 };
@@ -130,7 +135,7 @@ export type ProjectStatsPeriodTask = {
   snapshotkey: string;
   taskkey: string;
   memberkey: string;
-  spent_minutes: number;
+  time: number;
   started_at: string | null;
   done_at: string | null;
   created_at?: string;

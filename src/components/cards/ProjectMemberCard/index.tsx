@@ -31,7 +31,7 @@ export function ProjectMemberCard({
       return;
     }
 
-    onAdd(id);
+    onAdd(affiliationId);
   };
 
   return (

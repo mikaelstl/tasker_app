@@ -56,8 +56,6 @@ export function User({
     };
   }, [AffiliationService, affiliationId, isSystem, org?.orgkey]);
 
-  useEffect(() => console.log(user), [user])
-
   const displayName = user?.name ?? actorName ?? "Usuário removido";
   const displayUsername = user?.username ?? actorUsername;
   const displayPhotoUrl = actorPhotoUrl ?? "";

@@ -27,9 +27,8 @@ const Field = styled.div`
   input::placeholder {
     font-size: 14px;
     opacity: 100%;
-    color: white;
-    font-weight: 500;
     color: ${Palette.gray};
+    font-weight: 400;
   }
 `;
 

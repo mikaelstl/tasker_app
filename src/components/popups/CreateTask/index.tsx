@@ -10,24 +10,49 @@ import type { CreateTaskDTO } from "../../../service/types/task/create.dto";
 import { useParams } from "react-router-dom";
 import { TaskPriority } from "../../../service/types/task/priority.dto";
 import { SelectInput } from "../../base/SelectInput";
-import { SelectMember } from "../../misc/SelectMember";
-import { useToast } from "@/hooks/useToast";
+import { useToast, type ToastNotifications } from "@/hooks/useToast";
 import { ContentHeader } from "../../base/ContentHeader";
 import { Text } from "../../base/Text";
 import { DeleteBtn } from "../../buttons/DeleteBtn";
-import type { SelectMemberOption } from "../../misc/SelectMember";
 import { useServices } from "../../../hooks/useServices";
 import type { ApiError } from "../../../service/types/response/error";
+import type { ProjectMember } from "@/service/types/member/member.dto";
+import { User } from "../../misc/User";
+import {
+  InfoLabel,
+  ManagerCurrent,
+  ManagerField,
+  ManagerSelect,
+} from "../../../screens/Project/Edit/style";
+import { useOrganization } from "@/hooks/useOrganization";
+import { OrgRole } from "@/utils/enums/OrgRole";
+
+function reportApiError(
+  error: unknown,
+  fallback: string,
+  notifications: ToastNotifications,
+) {
+  const { errors } = error as ApiError;
+
+  if (!errors?.length) {
+    notifications.error(fallback);
+    return;
+  }
+
+  errors.forEach((item) => {
+    notifications[item.level](item.message);
+  });
+}
 
 export function CreateTaskPopup(props: PopupProps) {
-  const { ProjectService, TaskService } = useServices();
+  const { MemberService, TaskService } = useServices();
   const notifications = useToast();
 
-  // const navigate = useNavigate();
+  const { org } = useOrganization();
 
   const { id } = useParams();
 
-  const [members, setMembers] = useState<SelectMemberOption[]>([]);
+  const [members, setMembers] = useState<ProjectMember[]>([]);
   const [taskName, setTaskName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [dueDate, setDueDate] = useState<string>('');
@@ -84,19 +109,33 @@ export function CreateTaskPopup(props: PopupProps) {
     }
   }
 
+  const loadMembers = useCallback(async () => {
+    if (!id) return;
+
+    try {
+      const response = await MemberService.list(id);
+
+      setMembers(response.data);
+      const loggedMember = response.data.find((member) => member.userkey === org?.affiliationId);
+      const defaultOwner = org?.role === OrgRole.MEMBER
+        ? loggedMember?.id ?? ""
+        : response.data[0]?.id ?? "";
+
+      setOwner(defaultOwner);
+    } catch (error) {
+      reportApiError(error, "Não foi possível carregar os membros do projeto.", notifications);
+      props.closePopup();
+    }
+  }, [MemberService, id, notifications, org?.affiliationId, org?.role, props.closePopup]);
+
   useEffect(() => {
     if (!props.showPopup || !id) return;
 
-    void ProjectService.find(id).then(({ data }) => {
-      setMembers(data.members.map((member) => ({
-        id: member.id,
-        username: member.userkey,
-      })));
-    }).catch(() => {
-      setMembers([]);
-      setOwner('');
-    });
-  }, [ProjectService, id, props.showPopup]);
+    void loadMembers();
+  }, [id, loadMembers, props.showPopup]);
+
+  const selectedMember = members.find((member) => member.id === owner);
+  const isMember = org?.role === OrgRole.MEMBER;
 
   useEffect(() => {
     if (!props.showPopup) return;
@@ -131,6 +170,7 @@ export function CreateTaskPopup(props: PopupProps) {
         </ContentHeader>
         <Form
           id="create-task-form"
+          as="form"
           className="tskr-create-task-form"
           onSubmit={onSubmit}
         >
@@ -156,13 +196,36 @@ export function CreateTaskPopup(props: PopupProps) {
             onChange={(value) => setPriority(value as TaskPriority)}
           />
         </Form>
+
         <MemberSection>
-          <SelectMember
-            label="Responsável"
-            data={members}
-            onChange={setOwner}
-          />
+          <ManagerField>
+            <InfoLabel>Responsável</InfoLabel>
+            <ManagerCurrent>
+              {selectedMember ? (
+                <User affiliationId={selectedMember.userkey} />
+              ) : (
+                <Text>Nenhum responsável definido</Text>
+              )}
+            </ManagerCurrent>
+
+            {
+              org?.role !== OrgRole.MEMBER
+                ? (<ManagerSelect
+                  value={owner}
+                  onChange={(event) => setOwner(event.target.value)}
+                  disabled={isMember || members.length === 0}
+                >
+                  <option value="">Selecione um responsável</option>
+                  {members.map((member) => (
+                    <option key={member.id} value={member.id}>
+                      {member.user?.userkey ?? member.user?.user?.username ?? member.userkey}
+                    </option>
+                  ))}
+                </ManagerSelect>
+                ) : null}
+          </ManagerField>
         </MemberSection>
+
         {members.length === 0 ? <Notice>O projeto não possui membros disponíveis para atribuição.</Notice> : null}
       </Card>
     </Overlay>

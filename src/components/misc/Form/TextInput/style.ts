@@ -47,6 +47,7 @@ const Input = styled.input`
     font-size: 14px;
     font-family: 'Poppins';
     color: ${Palette.gray};
+    font-weight: 400;
   }
 `;
 

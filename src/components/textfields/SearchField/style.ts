@@ -31,7 +31,7 @@ const Search = styled.div`
     font-size: 14px;
     opacity: 100%;
     color: ${Palette.gray};
-    font-weight: 500;
+    font-weight: 400;
   }
 `;
 

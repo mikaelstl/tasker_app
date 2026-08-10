@@ -147,6 +147,7 @@ export function Stats() {
 
     void loadStats()
       .then((projectStats) => {
+        console.log("[Stats] retorno das estatísticas do projeto", projectStats);
         if (active && projectStats) setStats(projectStats);
       })
       .catch((error) => {
@@ -164,6 +165,7 @@ export function Stats() {
 
     void loadMemberStats()
       .then((members) => {
+        console.log("[Stats] retorno das estatísticas dos membros", members);
         if (active && members) setMemberStats(members);
       })
       .catch((error) => {
@@ -178,6 +180,7 @@ export function Stats() {
 
     void loadMemberPerformance()
       .then((performance) => {
+        console.log("[Stats] retorno do desempenho dos membros", performance);
         if (active && performance) setMemberPerformance(performance);
       })
       .catch((error) => {

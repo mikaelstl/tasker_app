@@ -183,6 +183,9 @@ export function Members() {
       return;
     }
 
+    console.log(memberkey);
+    
+
     try {
       await MemberService.create({
         project: id,
@@ -232,8 +235,6 @@ export function Members() {
           ) : filteredMemberStats.length > 0 ? (
             <Scroller orientation="vertical" gap={16}>
               {filteredMemberStats.map((stats) => {
-                console.log(stats.user.username);
-                console.log(stats.user.affiliationId);
 
                 return (
                   <MemberStatTile

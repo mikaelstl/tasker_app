@@ -39,7 +39,6 @@ export function ChoseWorkspace() {
     } catch (error) {
       const { errors } = error as ApiError;
 
-      console.log(error);
       
 
       errors?.forEach(

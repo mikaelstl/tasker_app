@@ -21,7 +21,6 @@ import { EditButton } from "../../../components/buttons/EditBtn";
 import { useServices } from "../../../hooks/useServices";
 import type { EventDTO } from "../../../service/types/events/event.dto";
 import { useOrganization } from "../../../hooks/useOrganization";
-import { OrgRole } from "../../../utils/enums/OrgRole";
 import { TaskPriority } from "../../../service/types/task/priority.dto";
 import { useAccessControl } from "../../../hooks/useAccessControl";
 
@@ -40,7 +39,7 @@ export function Overview() {
 
   const { user } = useAuth();
   const { org } = useOrganization();
-  const { canEditProject } = useAccessControl();
+  const { canEditProject, canViewAllProjectTasks } = useAccessControl();
 
   const { id } = useParams();
 
@@ -50,13 +49,16 @@ export function Overview() {
   const [events, setEvents] = useState<EventDTO[]>([]);
 
   const importantTasks = useMemo(() => {
-    const visibleTasks = org?.role === OrgRole.MEMBER
-      ? tasks.filter((task) => task.ownerkey === org.affiliationId)
+    const affiliationId = org?.affiliationId;
+    const visibleTasks = !canViewAllProjectTasks()
+      ? affiliationId
+        ? tasks.filter((task) => task.owner?.userkey === affiliationId)
+        : []
       : tasks;
 
     return [...visibleTasks]
       .sort((left, right) => priorityOrder.indexOf(left.priority)-priorityOrder.indexOf(right.priority));
-  }, [org?.affiliationId, org?.role, tasks]);
+  }, [canViewAllProjectTasks, org?.affiliationId, tasks]);
 
   const showError = useCallback((error: unknown, fallback: string) => {
     const apiError = error as ApiError;
@@ -76,7 +78,6 @@ export function Overview() {
       ));
       setComments(sortedComments);
     } catch (error) {
-      console.log(error);
 
       showError(error, "Não foi possível carregar a atividade do projeto.");
     }

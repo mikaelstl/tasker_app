@@ -15,7 +15,7 @@ const Input = styled.input`
   background: none;
 
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 400;
 
   padding: 10px;
   border-radius: 6px;
@@ -23,7 +23,8 @@ const Input = styled.input`
   background-color: ${Palette.items};
 
   &::placeholder {
-    color: ${Palette.white};
+    color: ${Palette.gray};
+    font-weight: 400;
   }
 `;
 

@@ -14,7 +14,7 @@ export const Container = styled.div<TeamContainerProps>`
 
   width: fit-content;
 
-  --team-avatar-outline: ${({ $outlineColor }) => $outlineColor ?? Palette.content};
+  --team-avatar-outline: ${({ $outlineColor }) => $outlineColor ?? Palette.items};
 
   > * + * {
     margin-left: -8px;
@@ -44,6 +44,7 @@ const AvatarBase = styled.span`
   &:hover {
     z-index: 1;
     transform: translateY(-2px);
+    outline: none;
   }
 `;
 

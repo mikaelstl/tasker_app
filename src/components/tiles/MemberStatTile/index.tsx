@@ -50,8 +50,8 @@ function stageLabel(task: StatsTask): string {
   }
 }
 
-const formatDuration = (minutes: number) => {
-  const safeMinutes = Math.max(0, Math.round(minutes));
+const formatDuration = (time: number) => {
+  const safeMinutes = Math.max(0, Math.round(time / 60_000));
   const days = Math.floor(safeMinutes / (24 * 60));
   const hours = Math.floor(safeMinutes / 60);
   const remainingMinutes = safeMinutes % 60;
@@ -106,7 +106,7 @@ export function MemberStatTile({
 }: MemberStatTileProps) {
   const [open, setOpen] = useState(defaultOpen);
   const contentId = useId();
-  const totalMinutes = tasks.reduce((total, task) => total + task.spentMinutes, 0);
+  const totalTime = tasks.reduce((total, task) => total + task.time, 0);
   const totalTasks = tasks.length || started + review + done;
 
   return (
@@ -131,7 +131,7 @@ export function MemberStatTile({
           </HeaderMetric>
           <HeaderMetric>
             <SummaryLabel>Tempo registrado</SummaryLabel>
-            <SummaryValue><ClockIcon /> {formatDuration(totalMinutes)}</SummaryValue>
+            <SummaryValue><ClockIcon /> {formatDuration(totalTime)}</SummaryValue>
           </HeaderMetric>
           {started > 0 && (
             <StatusBadge $background={Palette.lightBlue_50} $color={Palette.lightBlue}>
@@ -184,7 +184,7 @@ export function MemberStatTile({
                       </StatusBadge>
                     </div>
                     <TaskMeta role="cell"><CalendarDaysIconOutline /> {formatDate(task.deadline)}</TaskMeta>
-                    <TaskMeta role="cell"><ClockIcon /> {formatDuration(task.spentMinutes)}</TaskMeta>
+                    <TaskMeta role="cell"><ClockIcon /> {formatDuration(task.time)}</TaskMeta>
                   </TaskRow>
                 );
               })}

@@ -43,7 +43,9 @@ export function PerformanceChart({ performance }: { performance: MemberPerforman
     id: item.user.username,
     label: item.user.name,
     color: [Palette.green, Palette.yellow, Palette.blue, Palette.red][index % 4],
-    data: item.months.map((month) => ({ x: month.month, y: month.averageHours })),
+    data: item.months.flatMap((month) =>
+      (month.weeks ?? []).map((week) => ({ x: week.week, y: week.averageHours }))
+    ),
   }));
   const [selectedId, setSelectedId] = useState(data[0]?.id ?? "");
   const user = data.find((item) => item.id === selectedId) ?? data[0];

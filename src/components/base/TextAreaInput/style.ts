@@ -24,7 +24,8 @@ const TextArea = styled.textarea`
   resize: none;
 
   &::placeholder {
-    color: ${Palette.white};
+    color: ${Palette.gray};
+    font-weight: 400;
   }
 `;
 

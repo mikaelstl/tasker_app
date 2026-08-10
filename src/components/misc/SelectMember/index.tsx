@@ -1,11 +1,11 @@
 import { Container, Wrapper, Selected, Options, Option, Field } from "./style";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { User } from "../User";
-import { Label } from "../../base/Label";
+import { Label } from "./style";
 
 export interface SelectMemberOption {
   id: string;
-  username: string;
+  // username: string;
 }
 
 interface SelectMemberProps {
@@ -25,7 +25,8 @@ export function SelectMember({
   const handleSelect = (opt: SelectMemberOption) => {
     setSelected(opt);
     onChange?.(opt.id);
-    handleShowContent();
+    setQuery('');
+    setShowContent(false);
   }
   
   const [query, setQuery] = useState<string>('');
@@ -35,15 +36,19 @@ export function SelectMember({
   const [showContent, setShowContent] = useState<boolean>(false);
   const handleShowContent = () => {
     setQuery('');
-    setShowContent(!showContent);
+    setShowContent((isVisible) => !isVisible);
   }
 
-  const options = data.filter((user) => user.username.includes(query));
+  const lastNotifiedId = useRef<string | undefined>();
+  const options = data.filter((user) => user.id.toLowerCase().includes(query.toLowerCase()));
 
   useEffect(() => {
     const first = data[0];
     setSelected(first);
-    if (first) onChange?.(first.id);
+    if (first && lastNotifiedId.current !== first.id) {
+      lastNotifiedId.current = first.id;
+      onChange?.(first.id);
+    }
   }, [data, onChange]);
 
   const Card = () => {
@@ -57,14 +62,14 @@ export function SelectMember({
                 placeholder="Pesquisar..."
                 onChange={(evt) => setQuery(evt.target.value)}
               />
-            : selected ? <User affiliationId={selected.id} username={selected.username}/> : <span>Nenhum membro</span>}
+            : selected ? <User affiliationId={selected.id} /> : <span>Nenhum membro</span>}
         </Selected>
         {
           showContent && (
             <Options>
               {
                 options.map(
-                  opt => <Option key={opt.id} onClick={() => handleSelect(opt)}><User affiliationId={opt.id} username={opt.username}/></Option>
+                  opt => <Option key={opt.id} onClick={() => handleSelect(opt)}><User affiliationId={opt.id}/></Option>
                 )
               }
             </Options>
@@ -76,7 +81,7 @@ export function SelectMember({
 
   return (
     <Container className="tskr-select-member">
-      <Label htmlFor="search-member">{label}</Label>
+      <Label>{label}</Label>
       <Card />
     </Container>
   )

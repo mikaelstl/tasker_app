@@ -25,11 +25,10 @@ const ActorIdentity = styled.div`
 `;
 
 const ActorName = styled.strong`
+  display: inline-flex;
   color: ${Palette.white};
   font-size: 13px;
   font-weight: 500;
-  overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
 `;
 
