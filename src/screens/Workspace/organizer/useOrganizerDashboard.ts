@@ -53,6 +53,16 @@ function summarizeProjects(projects: ProjectDTO[]): ProjectSummary {
   }, { total: 0, safe: 0, warning: 0, critical: 0 });
 }
 
+function getMostRecentActivityTime(project: ProjectDTO): number {
+  return Math.max(Date.parse(project.created_at), Date.parse(project.updated_at));
+}
+
+function sortProjectsByRecency(projects: ProjectWithMembersDTO[]): ProjectWithMembersDTO[] {
+  return [...projects].sort(
+    (left, right) => getMostRecentActivityTime(right) - getMostRecentActivityTime(left),
+  );
+}
+
 function getDeadlineAlerts(projects: ProjectDTO[]): Deadline[] {
   return projects
     .filter((project) => project.stage !== ProjectStage.COMPLETED)
@@ -104,10 +114,11 @@ export function useOrganizerDashboard(orgId?: string) {
         ProjectService.list(),
         AuditLogService.list(orgId, { page: 1, limit: 20 }),
       ]);
-      const projects = await Promise.all(listedProjects.data.map(async (project) => {
+      const projectsWithMembers = await Promise.all(listedProjects.data.map(async (project) => {
         const members = await MemberService.list(project.id);
         return { ...project, members: members.data };
       }));
+      const projects = sortProjectsByRecency(projectsWithMembers);
       const nextData: OrganizerDashboardData = {
         projects,
         updates: listedAuditLogs.data.items,

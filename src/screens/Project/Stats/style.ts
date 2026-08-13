@@ -71,41 +71,6 @@ const ProgressBar = styled.div<{ progress: number }>`
   background-color: ${Palette.blue};
 `;
 
-const Controls = styled.div`
-  display: flex;
-  align-items: end;
-  gap: 12px;
-  width: 100%;
-  padding: 16px;
-  border-radius: 8px;
-  background: ${Palette.content};
-
-  @media (max-width: 900px) {
-    flex-wrap: wrap;
-  }
-`;
-
-const Control = styled.div`
-  display: flex;
-  flex: 1 1 190px;
-  flex-direction: column;
-  gap: 7px;
-
-  label {
-    color: ${Palette.gray};
-    font-size: 12px;
-    font-weight: 600;
-  }
-
-  input, select {
-    min-height: 40px;
-    padding: 8px 10px;
-    border-radius: 6px;
-    color: ${Palette.white};
-    background: ${Palette.items};
-  }
-`;
-
 const WidgetsContainer = styled.div`
   display: flex;
   gap: 20px;
@@ -204,8 +169,6 @@ export {
   Actions,
   Container,
   Content,
-  Control,
-  Controls,
   EmptyState,
   EventsGrid,
   Facts,

@@ -5,18 +5,22 @@ import { CreateButton } from "@/components/buttons/CreateButton";
 import { Text } from "@/components/base/Text";
 import { Scroller } from "@/components/misc/Scroller";
 import { SearchField } from "@/components/textfields/SearchField";
-import { MemberStatTile } from "@/components/tiles/MemberStatTile";
+import { MemberStatsAccordion } from "@/components/accordions/MemberStatsAccordion";
+import { User } from "@/components/misc/User";
 import { useOrganization } from "@/hooks/useOrganization";
 import { useServices } from "@/hooks/useServices";
 import { useToast, type ToastNotifications } from "@/hooks/useToast";
 import type { AffiliationDTO } from "@/service/types/affiliation/affiliation.dto";
+import type { ProjectMember } from "@/service/types/member/member.dto";
 import type { ProjectDTO } from "@/service/types/project/project.dto";
 import type { MemberStats } from "@/service/types/stats/stats.types";
 import type { ApiError } from "@/service/types/response/error";
+import { OrgRole } from "@/utils/enums/OrgRole";
 import {
   Container,
   Content,
   EmptyState,
+  MemberCard,
   MembersArea
 } from "./style";
 import {
@@ -74,9 +78,12 @@ export function Members() {
   const { canManageProjectMembers } = useAccessControl();
   const { AffiliationService, MemberService, ProjectService } = useServices();
 
+  const isMember = org?.role === OrgRole.MEMBER;
+
   const [project, setProject] = useState<ProjectDTO | null>(null);
 
   const [memberStats, setMemberStats] = useState<MemberStats[]>([]);
+  const [members, setMembers] = useState<ProjectMember[]>([]);
   const [affiliations, setAffiliations] = useState<AffiliationDTO[]>([]);
   const [loadingProject, setLoadingProject] = useState(true);
   const [loadingMembers, setLoadingMembers] = useState(true);
@@ -119,6 +126,22 @@ export function Members() {
     }
   }, [ProjectService, id, navigate, notifications]);
 
+  const loadMembers = useCallback(async () => {
+    if (!id) return;
+
+    setLoadingMembers(true);
+
+    try {
+      const response = await MemberService.list(id);
+      setMembers(response.data);
+    } catch (error) {
+      reportApiError(error, "Não foi possível carregar os membros do projeto.", notifications);
+      navigate("..");
+    } finally {
+      setLoadingMembers(false);
+    }
+  }, [MemberService, id, navigate, notifications]);
+
   const loadAffiliations = useCallback(async () => {
     if (!org?.orgkey) return;
 
@@ -142,9 +165,13 @@ export function Members() {
     }
 
     void loadProject();
-    void loadMemberStats();
+    if (isMember) {
+      void loadMembers();
+    } else {
+      void loadMemberStats();
+    }
     void loadAffiliations();
-  }, [id, loadAffiliations, loadMemberStats, loadProject, navigate, org?.orgkey]);
+  }, [id, isMember, loadAffiliations, loadMemberStats, loadMembers, loadProject, navigate, org?.orgkey]);
 
   const searchValue = normalizeSearchTerm(search);
 
@@ -157,6 +184,17 @@ export function Members() {
       return name.includes(searchValue) || username.includes(searchValue);
     })
   ), [memberStats, searchValue]);
+
+  const filteredMembers = useMemo(() => (
+    members.filter((member) => {
+      if (!searchValue) return true;
+      if (!member.user) return false;
+
+      const name = normalizeSearchTerm(getAffiliationName(member.user));
+      const username = normalizeSearchTerm(getAffiliationUsername(member.user));
+      return name.includes(searchValue) || username.includes(searchValue);
+    })
+  ), [members, searchValue]);
 
   const projectMembers = useMemo<ProjectMemberReference[]>(() => (
     memberStats.map((member) => ({
@@ -232,23 +270,28 @@ export function Members() {
         <MembersArea>
           {loading ? (
             <EmptyState>Carregando membros do projeto...</EmptyState>
+          ) : isMember ? (
+            filteredMembers.length > 0 ? (
+              <Scroller orientation="vertical" gap={16}>
+                {filteredMembers.map((member) => (
+                  <MemberCard key={member.id}>
+                    <User affiliationId={member.userkey} />
+                  </MemberCard>
+                ))}
+              </Scroller>
+            ) : (
+              <EmptyState>Nenhum membro encontrado para este projeto.</EmptyState>
+            )
           ) : filteredMemberStats.length > 0 ? (
             <Scroller orientation="vertical" gap={16}>
-              {filteredMemberStats.map((stats) => {
-
-                return (
-                  <MemberStatTile
-                    key={stats.memberId}
-                    affiliationId={stats.user.affiliationId}
-                    project={projectTitle}
-                    started={stats.startedTasks}
-                    done={stats.completedTasks}
-                    overdue={stats.delayedTasks}
-                    review={stats.reviewTasks}
-                    tasks={stats.tasks}
-                  />
-                );
-              })}
+              {filteredMemberStats.map((stats) => (
+                <MemberStatsAccordion
+                  key={stats.memberId}
+                  affiliationId={stats.user.affiliationId}
+                  project={projectTitle}
+                  tasks={stats.tasks}
+                />
+              ))}
             </Scroller>
           ) : (
             <EmptyState>Nenhum membro encontrado para este projeto.</EmptyState>

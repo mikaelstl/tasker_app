@@ -17,20 +17,17 @@ export function Chart({
 }: BarChartProps) {
   const keys = Object.keys(data[0] || {}).filter(k => k !== 'week');
 
-  const generateTicks = (step: number) => {
-    const values: number[] = [];
+  const generateTicks = (targetTickCount: number) => {
+    const values = data.flatMap((d) => [d['done'], d['overdue']]);
+    const maxValue = Math.max(0, ...values);
+
+    if (maxValue === 0) return [0];
+
+    const step = Math.max(1, Math.ceil(maxValue / targetTickCount));
     const ticks: number[] = [];
 
-    data.forEach(
-      (d) => {
-        values.push(d['done'])
-        values.push(d['overdue'])
-      }
-    );
-
-    values.sort();
-
-    for (let value = 0; value <= Math.max(...values); value += step) ticks.push(value);
+    for (let value = 0; value <= maxValue; value += step) ticks.push(value);
+    if (ticks[ticks.length - 1] !== maxValue) ticks.push(maxValue);
 
     return ticks;
   }
@@ -62,7 +59,7 @@ export function Chart({
           legendOffset: 36,
         }}
         axisLeft={{
-          tickValues: generateTicks(25),
+          tickValues: generateTicks(5),
           tickSize: 5,
           tickPadding: 8,
           tickRotation: 0,

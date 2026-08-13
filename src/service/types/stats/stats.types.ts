@@ -25,7 +25,7 @@ export type StatsTask = {
   name: string;
   stage: TaskStage;
   delayed: boolean;
-  time: number;
+  spentMinutes: number;
   deadline: string;
   startedAt: string | null;
   doneAt: string | null;

@@ -41,9 +41,20 @@ const EmptyState = styled.p`
   text-align: center;
 `
 
+const MemberCard = styled.div`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 78px;
+  padding: 16px;
+  border-radius: 12px;
+  background-color: ${Palette.items};
+`
+
 export {
   Container,
   Content,
   MembersArea,
-  EmptyState
+  EmptyState,
+  MemberCard
 }

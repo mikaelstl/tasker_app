@@ -267,13 +267,13 @@ export function Organization() {
             <Text>Convidar membro</Text>
           </CreateButton>
         )}
-        {organization && canManageOrganization() && (
+        {/* {organization && canManageOrganization() && (
           <DeleteBtn
             label={deletingOrganization ? "Excluindo..." : "Excluir organização"}
             disabled={deletingOrganization}
             onClick={() => setDeleteModalOpen(true)}
           />
-        )}
+        )} */}
       </ContentHeader>
       <Content>
         {loading ? (

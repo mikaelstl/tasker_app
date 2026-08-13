@@ -9,8 +9,6 @@ import {
   Actions,
   Container,
   Content,
-  Control,
-  Controls,
   EmptyState,
   Members,
   ProgressBar,
@@ -23,15 +21,13 @@ import { TasksInfosWidget } from "../../../widgets/cards/TasksInfosWidget";
 import { DeadlineWidget } from "../../../widgets/cards/DeadlineWidget";
 import { Title } from "../../../components/base/Title";
 import { ProjectHealthWidget } from "../../../widgets/cards/ProjectHealthWidget";
-import { PerformanceChart } from "../../../widgets/charts/PerformanceChart";
 import { ProdutivityChart } from "../../../widgets/charts/ProdutivityChart";
-import { MemberStatTile } from "../../../components/tiles/MemberStatTile";
+import { MemberStatsAccordion } from "../../../components/accordions/MemberStatsAccordion";
 import { useServices } from "../../../hooks/useServices";
 import { useToast, type ToastNotifications } from "../../../hooks/useToast";
 import type { ApiError } from "../../../service/types/response/error";
 import {
   type MemberStats,
-  type ProjectMemberPerformance,
   type ProjectStats,
   type ProjectStatsReport,
 } from "../../../service/types/stats/stats.types";
@@ -53,12 +49,6 @@ const currentMonth = () => {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
 };
 
-const monthFromDate = (value: string) => {
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return currentMonth();
-  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
-};
-
 export function Stats() {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -66,21 +56,11 @@ export function Stats() {
   const notifications = useToast();
   const { canEditProject, canGenerateProjectStatsReport } = useAccessControl();
   const [stats, setStats] = useState<ProjectStats | null>(null);
-  const [memberPerformance, setMemberPerformance] = useState<ProjectMemberPerformance | null>(null);
   const [memberStats, setMemberStats] = useState<MemberStats[]>([]);
   const [reports, setReports] = useState<ProjectStatsReport[]>([]);
   const [selectedReport, setSelectedReport] = useState<ProjectStatsReport | null>(null);
-  const [month, setMonth] = useState(currentMonth);
-  const [projectCreatedAt, setProjectCreatedAt] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
-
-  const loadProject = useCallback(async () => {
-    if (!id) return null;
-
-    const response = await ProjectService.find(id);
-    return response.data;
-  }, [ProjectService, id]);
 
   const loadReports = useCallback(async () => {
     if (!id) return null;
@@ -92,23 +72,16 @@ export function Stats() {
   const loadStats = useCallback(async () => {
     if (!id) return null;
 
-    const response = await ProjectService.stats(id, { month });
+    const response = await ProjectService.stats(id, { month: currentMonth() });
     return response.data;
-  }, [ProjectService, id, month]);
+  }, [ProjectService, id]);
 
   const loadMemberStats = useCallback(async () => {
     if (!id) return null;
 
-    const response = await ProjectService.getProjectMemberStats(id, { month });
+    const response = await ProjectService.getProjectMemberStats(id, { month: currentMonth() });
     return response.data;
-  }, [ProjectService, id, month]);
-
-  const loadMemberPerformance = useCallback(async () => {
-    if (!id) return null;
-
-    const response = await ProjectService.getProjectMemberPerformance(id, { month });
-    return response.data;
-  }, [ProjectService, id, month]);
+  }, [ProjectService, id]);
 
   const loadReport = useCallback(async (reportkey: string) => {
     if (!id) return null;
@@ -116,18 +89,6 @@ export function Stats() {
     const response = await ProjectService.findReport(id, reportkey);
     return response.data;
   }, [ProjectService, id]);
-
-  useEffect(() => {
-    let active = true;
-
-    void loadProject()
-      .then((project) => {
-        if (active && project) setProjectCreatedAt(project.created_at);
-      })
-      .catch((error) => notify(error, "Não foi possível carregar os dados do projeto.", notifications));
-
-    return () => { active = false; };
-  }, [loadProject, notifications]);
 
   useEffect(() => {
     let active = true;
@@ -175,26 +136,11 @@ export function Stats() {
     return () => { active = false; };
   }, [loadMemberStats, notifications]);
 
-  useEffect(() => {
-    let active = true;
-
-    void loadMemberPerformance()
-      .then((performance) => {
-        console.log("[Stats] retorno do desempenho dos membros", performance);
-        if (active && performance) setMemberPerformance(performance);
-      })
-      .catch((error) => {
-        if (active) notify(error, "Não foi possível carregar o desempenho dos membros.", notifications);
-      });
-
-    return () => { active = false; };
-  }, [loadMemberPerformance, notifications]);
-
   const generateReport = async () => {
     if (!id) return;
     setGenerating(true);
     try {
-      await ProjectService.generateReport(id, { month });
+      await ProjectService.generateReport(id, { month: currentMonth() });
       const projectReports = await loadReports();
       if (projectReports) setReports(projectReports);
       notifications.info("Relatório gerado e baixado.");
@@ -219,20 +165,6 @@ export function Stats() {
 
   const stage = stats.project.stage as ProjectStage;
   const badge = ProjectStageBadge(stage);
-  const minimumMonth = projectCreatedAt ? monthFromDate(projectCreatedAt) : undefined;
-  const maximumMonth = currentMonth();
-
-  const selectMonth = (value: string) => {
-    if (minimumMonth && value < minimumMonth) {
-      notifications.error("Selecione um mês a partir da criação do projeto.");
-      return;
-    }
-    if (value > maximumMonth) {
-      notifications.error("Selecione o mês atual ou meses anteriores.");
-      return;
-    }
-    setMonth(value);
-  };
 
   return (
     <Container className="tskr-proj-stats">
@@ -246,30 +178,16 @@ export function Stats() {
         {badge}
         <Actions>
           {canEditProject() && <EditButton type="button" onClick={() => navigate("../edit")} />}
-        </Actions>
-        <ProjectProgressSection progress={stats.summary.progress} />
-      </ProjectInfo>
-
-      <Content className="tskr-proj-stats-content">
-        <Controls aria-label="Mês das estatísticas e do relatório">
-          <Control>
-            <label htmlFor="stats-month">Mês</label>
-            <input
-              id="stats-month"
-              type="month"
-              value={month}
-              min={minimumMonth}
-              max={maximumMonth}
-              onChange={(event) => selectMonth(event.target.value)}
-            />
-          </Control>
           {canGenerateProjectStatsReport() && (
             <CreateButton type="button" disabled={generating} onClick={() => void generateReport()}>
               <Text>{generating ? "Gerando PDF..." : "Gerar relatório PDF"}</Text>
             </CreateButton>
           )}
-        </Controls>
+        </Actions>
+        <ProjectProgressSection progress={stats.summary.progress} />
+      </ProjectInfo>
 
+      <Content className="tskr-proj-stats-content">
         <WidgetsContainer className="tskr-project-infos-widget">
           <TasksInfosWidget
             total={stats.summary.totalTasks}
@@ -287,27 +205,22 @@ export function Stats() {
         </WidgetsContainer>
 
         <WidgetsContainer className="tskr-charts">
-          <PerformanceChart performance={memberPerformance?.members ?? stats.performancePerMember} />
           <ProdutivityChart productivity={stats.productivity} members={stats.members} />
         </WidgetsContainer>
 
-        <Members>
+        {/* <Members>
           <Title>Membros</Title>
           <div>
             {memberStats.length === 0 ? <Text>Nenhum membro com estatísticas.</Text> : memberStats.map((member) => (
-              <MemberStatTile
+              <MemberStatsAccordion
                 key={member.memberId}
                 project={stats.project.title}
                 affiliationId={member.user.affiliationId}
-                started={member.startedTasks}
-                done={member.completedTasks}
-                overdue={member.delayedTasks}
-                review={member.reviewTasks}
                 tasks={member.tasks}
               />
             ))}
           </div>
-        </Members>
+        </Members> */}
       </Content>
     </Container>
   );

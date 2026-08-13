@@ -1,108 +1,178 @@
-import { useEffect, useState } from "react";
-import Palette from "../../../assets/palette";
-import { Button, Container, Content, Header, Indicator, Indicators, Leading, MemberBadge, MemberSubtitle, MemberTitle, MemberUser, StatDetail, Task } from "./style";
-import { AltArrowDown as ChevronDownIconSolid, AltArrowUp as ChevronUpIconSolid } from "@/components/icons/solar-icons";
-import { formatNumber } from "@/utils/formatNumber";
-import type { StatsTask } from "../../../service/types/stats/stats.types";
+import { useId, useState } from "react";
+import Palette from "@/assets/palette";
+import { Calendar as CalendarDaysIconOutline, AltArrowDown as ChevronDownIconOutline } from "@/components/icons/solar-icons";
+import { User } from "@/components/misc/User";
+import type { StatsTask } from "@/service/types/stats/stats.types";
+import {
+  Container,
+  Content,
+  EmptyState,
+  Header,
+  HeaderIdentity,
+  HeaderMetric,
+  HeaderMetrics,
+  ProjectName,
+  StatusBadge,
+  SummaryLabel,
+  SummaryValue,
+  TableHeader,
+  TaskInfo,
+  TaskList,
+  TaskMeta,
+  TaskName,
+  TaskRow,
+  ToggleIcon,
+} from "./style";
 
-interface MemberStatsAccordionProps {
-  project?: string;
-  username: string;
-  name?: string;
-  tasksDetails?: StatsTask[];
-  tasks?: {
-    started: number,
-    review: number,
-    delayed: number,
-    done: number,
-  },
+export interface MemberStatsAccordionProps {
+  affiliationId: string;
+  project: string;
+  tasks?: StatsTask[];
+  defaultOpen?: boolean;
 }
 
-export function MemberStatsAccordion({
-  project,
-  username,
-  name,
-  tasks,
-  tasksDetails = [],
-}: MemberStatsAccordionProps) {
-  const [visible, setVisible] = useState(false);
-
-  const [icon, setIcon] = useState(<ChevronDownIconSolid width={24} />)
-
-  const handleVisible = () => {
-    setVisible(!visible)
+function stageLabel(task: StatsTask): string {
+  switch (task.stage) {
+    case "STARTED": return "Iniciada";
+    case "REVIEW": return "Em revisão";
+    case "DONE": return "Concluída";
+    case "PENDING":
+    default:
+      return "Pendente";
   }
-
-  useEffect(() => {
-    if (visible) {
-      setIcon(<ChevronUpIconSolid width={24} />)
-    } else {
-      setIcon(<ChevronDownIconSolid width={24} />)
-    }
-  }, [visible])
-
-  return (
-  <Container
-    className="tskr-member-stats-accordion"
-    onClick={handleVisible}
-  >
-    {project ? (
-      <MemberSubtitle className="tskr-memberstat-project-title">{project}</MemberSubtitle>
-    ) : null}
-    <Header>
-      <Leading>
-        <MemberUser username={name ? `${name} (@${username})` : username} />
-      </Leading>
-      <Indicators>
-        <Indicator>
-          <MemberSubtitle>Iniciadas</MemberSubtitle>
-          <MemberBadge bg={Palette.lightBlue_50} text={Palette.lightBlue}>{formatNumber(tasks?.started ?? 0, 2)}</MemberBadge>
-        </Indicator>
-        <Indicator>
-          <MemberSubtitle>Concluídas</MemberSubtitle>
-          <MemberBadge bg={Palette.green_25} text={Palette.green}>{formatNumber(tasks?.done ?? 0, 2)}</MemberBadge>
-        </Indicator>
-        <Indicator>
-          <MemberSubtitle>Revisão</MemberSubtitle>
-          <MemberBadge bg={Palette.yellow_25} text={Palette.yellow}>{formatNumber(tasks?.review ?? 0, 2)}</MemberBadge>
-        </Indicator>
-        <Indicator>
-          <MemberSubtitle>Atrasadas</MemberSubtitle>
-          <MemberBadge bg={Palette.red_25} text={Palette.red}>{formatNumber(tasks?.delayed ?? 0, 2)}</MemberBadge>
-        </Indicator>
-      </Indicators>
-      <Button type="button" onClick={handleVisible}>
-        {icon}
-      </Button>
-    </Header>
-    {
-      visible
-        ? <Content>
-          {tasksDetails.length > 0
-            ? tasksDetails.map((task) => (
-              <PerformanceTile key={`${task.code}-${task.deadline}`} task={task} />
-            ))
-            : <MemberSubtitle>Nenhuma tarefa atribuída.</MemberSubtitle>}
-        </Content>
-        : <></>
-    }
-  </Container>
-  )
 }
 
-const formatDuration = (time: number) => {
-  const safeMinutes = Math.max(0, Math.round(time / 60_000));
-  return `${Math.floor(safeMinutes / 60)}h ${String(safeMinutes % 60).padStart(2, "0")}m`;
+function summarizeTasks(tasks: StatsTask[]) {
+  return tasks.reduce((summary, task) => {
+    if (task.delayed) summary.delayed += 1;
+
+    switch (task.stage) {
+      case "PENDING": summary.pending += 1; break;
+      case "STARTED": summary.started += 1; break;
+      case "DONE": summary.completed += 1; break;
+      default: break;
+    }
+
+    return summary;
+  }, { pending: 0, started: 0, completed: 0, delayed: 0 });
+}
+
+const formatDate = (value: string) => {
+  const date = new Date(/^\d{4}-\d{2}-\d{2}$/.test(value) ? `${value}T12:00:00` : value);
+
+  if (Number.isNaN(date.getTime())) return "Não informado";
+
+  return new Intl.DateTimeFormat("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  }).format(date);
 };
 
-const PerformanceTile = ({ task }: { task: StatsTask }) => {
+const getStatusColors = (task: StatsTask) => {
+  if (task.delayed) {
+    return { background: Palette.red_25, color: Palette.red };
+  }
+
+  switch (task.stage) {
+    case "DONE":
+      return { background: Palette.green_25, color: Palette.green };
+    case "REVIEW":
+      return { background: Palette.yellow_25, color: Palette.yellow };
+    case "STARTED":
+      return { background: Palette.lightBlue_50, color: Palette.lightBlue };
+    default:
+      return { background: Palette.gray_25, color: Palette.white_50 };
+  }
+};
+
+export function MemberStatsAccordion({
+  affiliationId,
+  project,
+  tasks = [],
+  defaultOpen = false,
+}: MemberStatsAccordionProps) {
+  const [open, setOpen] = useState(defaultOpen);
+  const contentId = useId();
+  const summary = summarizeTasks(tasks);
+
   return (
-    <StatDetail className="tskr-performance-tile">
-      <Task className="tskr-task-infos">
-        <MemberSubtitle>{task.code} · {task.stage}{task.delayed ? " · ATRASADA" : ""}</MemberSubtitle>
-        <MemberTitle>{task.name}</MemberTitle>
-      </Task>
-      <MemberTitle>{formatDuration(task.time)}</MemberTitle>
-    </StatDetail>
-  )
+    <Container className="tskr-member-stats-accordion">
+      <Header
+        type="button"
+        aria-expanded={open}
+        aria-controls={contentId}
+        onClick={() => setOpen((current) => !current)}
+      >
+        <HeaderIdentity>
+          <User affiliationId={affiliationId} />
+          <ProjectName>{project}</ProjectName>
+        </HeaderIdentity>
+
+        <HeaderMetrics>
+          <HeaderMetric>
+            <SummaryLabel>Tarefas</SummaryLabel>
+            <SummaryValue>{tasks.length}</SummaryValue>
+          </HeaderMetric>
+          {summary.pending > 0 && (
+            <StatusBadge $background={Palette.gray_25} $color={Palette.white_50}>
+              {summary.pending} pendente{summary.pending === 1 ? "" : "s"}
+            </StatusBadge>
+          )}
+          {summary.started > 0 && (
+            <StatusBadge $background={Palette.lightBlue_50} $color={Palette.lightBlue}>
+              {summary.started} iniciada{summary.started === 1 ? "" : "s"}
+            </StatusBadge>
+          )}
+          <StatusBadge $background={Palette.green_25} $color={Palette.green}>
+            {summary.completed} concluída{summary.completed === 1 ? "" : "s"}
+          </StatusBadge>
+          {summary.delayed > 0 && (
+            <StatusBadge $background={Palette.red_25} $color={Palette.red}>
+              {summary.delayed} atrasada{summary.delayed === 1 ? "" : "s"}
+            </StatusBadge>
+          )}
+        </HeaderMetrics>
+
+        <ToggleIcon $open={open} aria-hidden="true">
+          <ChevronDownIconOutline />
+        </ToggleIcon>
+      </Header>
+
+      {open && (
+        <Content id={contentId}>
+          {tasks.length > 0 ? (
+            <TaskList role="table" aria-label="Tarefas">
+              <TableHeader role="row">
+                <span role="columnheader">Tarefa</span>
+                <span role="columnheader">Etapa</span>
+                <span role="columnheader">Prazo</span>
+              </TableHeader>
+
+              {tasks.map((task) => {
+                const colors = getStatusColors(task);
+
+                return (
+                  <TaskRow role="row" key={`${task.code}-${task.deadline}`}>
+                    <TaskInfo role="cell">
+                      <TaskMeta>{task.code}</TaskMeta>
+                      <TaskName>{task.name}</TaskName>
+                    </TaskInfo>
+                    <div role="cell">
+                      <StatusBadge $background={colors.background} $color={colors.color}>
+                        {task.delayed ? "Atrasada" : stageLabel(task)}
+                      </StatusBadge>
+                    </div>
+                    <TaskMeta role="cell"><CalendarDaysIconOutline /> {formatDate(task.deadline)}</TaskMeta>
+                  </TaskRow>
+                );
+              })}
+            </TaskList>
+          ) : (
+            <EmptyState>Nenhuma tarefa atribuída.</EmptyState>
+          )}
+        </Content>
+      )}
+    </Container>
+  );
 }
