@@ -11,7 +11,7 @@ import { useOrganization } from "@/hooks/useOrganization";
 import { Greating, Infos, Items, Main } from "../style";
 import { useManagerDashboard } from "./useManagerDashboard";
 import { ProjectFilter, ProjectSelect } from "./style";
-import { MemberStatTile } from "@/components/tiles/MemberStatTile";
+import { MemberStatsAccordion } from "@/components/accordions/MemberStatsAccordion";
 
 interface ManagerContentProps {
   username: string;
@@ -98,14 +98,10 @@ export function ManagerContent({ username }: ManagerContentProps) {
           <Title>Estatísticas dos membros</Title>
           {selectedMembersStats.length > 0 ? (
             selectedMembersStats.map((member) => (
-              <MemberStatTile
+              <MemberStatsAccordion
                 key={member.memberId}
                 affiliationId={member.user.affiliationId}
                 project={selectedProject?.project.title ?? ""}
-                started={member.startedTasks}
-                review={member.reviewTasks}
-                done={member.completedTasks}
-                overdue={member.delayedTasks}
                 tasks={member.tasks}
               />
             ))

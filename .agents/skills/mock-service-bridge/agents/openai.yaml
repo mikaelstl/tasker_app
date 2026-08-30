@@ -1,0 +1,7 @@
+interface:
+  display_name: "Mock Service Bridge"
+  short_description: "Structure mock services without UI coupling"
+  default_prompt: "Use $mock-service-bridge to implement or refactor a service so the component only consumes `useServices()` and never needs to know whether the data comes from mock or API."
+
+policy:
+  allow_implicit_invocation: true
